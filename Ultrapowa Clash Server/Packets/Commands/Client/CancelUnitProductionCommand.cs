@@ -1,0 +1,43 @@
+﻿using System.IO;
+using UCS.Core;
+using UCS.Files.Logic;
+using UCS.Helpers;
+using UCS.Logic;
+
+namespace UCS.PacketProcessing.Commands.Client
+{
+    internal class CancelUnitProductionCommand : Command
+    {
+        public int BuildingId;
+        public int Count;
+        public int UnitType;
+        public uint Unknown1;
+        public uint Unknown3;
+        public uint Unknown4;
+
+        public CancelUnitProductionCommand(PacketReader br)
+        {
+            BuildingId = br.ReadInt32(); 
+            Unknown1 = br.ReadUInt32();
+            UnitType = br.ReadInt32();
+            Count = br.ReadInt32();
+            Unknown3 = br.ReadUInt32();
+            Unknown4 = br.ReadUInt32();
+        }
+
+        public override void Execute(Level level)
+        {
+            GameObject gameObjectById = level.GameObjectManager.GetGameObjectByID(BuildingId);
+            if (Count <= 0)
+              return;
+            UnitProductionComponent productionComponent = ((ConstructionItem)gameObjectById).GetUnitProductionComponent(false);
+            CombatItemData dataById = (CombatItemData)CSVManager.DataTables.GetDataById(UnitType);
+            do
+            {
+                productionComponent.RemoveUnit(dataById);
+                Count = Count - 1;
+            }
+            while (Count > 0);
+        }
+    }
+}
