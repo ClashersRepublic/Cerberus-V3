@@ -63,7 +63,9 @@ namespace UCS.Core.Network
             try { buffer = message.GetRawData(); }
             catch (Exception ex)
             {
-                Logger.Error($"Exception while encoding message {message.GetType()}: " + ex);
+                // Exit early since buffer will be null, we can't send a null buffer to the client.
+                Logger.Error($"Exception while constructing message {message.GetType()}: " + ex);
+                return;
             }
 
             var socket = client.Socket;
@@ -105,7 +107,7 @@ namespace UCS.Core.Network
             var transferred = e.BytesTransferred;
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
-                ResourcesManager.AddClient(client);
+                ResourcesManager.DropClient(client.GetSocketHandle());
                 Recycle(e);
             }
             else

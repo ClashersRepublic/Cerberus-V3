@@ -46,7 +46,7 @@ namespace UCS.PacketProcessing.Messages.Client
             var alliances = ObjectManager.GetInMemoryAlliances();
 
             if (ResourcesManager.GetInMemoryAlliances().Count == 0)
-                 alliances = DatabaseManager.Single().GetAllAlliances();
+                 alliances = DatabaseManager.Instance.GetAllAlliances();
 
             var joinableAlliances = new List<Alliance>();
             var i = 0;

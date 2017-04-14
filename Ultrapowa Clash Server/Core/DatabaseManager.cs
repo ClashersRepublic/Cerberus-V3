@@ -1,28 +1,32 @@
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Core;
-using MySql.Data.MySqlClient;
 using System.Linq;
-using UCS.Database;
-using UCS.Logic;
-using UCS.Core.Settings;
-using static UCS.Core.Logger;
 using System.Threading.Tasks;
 using UCS.Core.Database;
+using UCS.Core.Settings;
+using UCS.Database;
+using UCS.Logic;
+using static UCS.Core.Logger;
 
 namespace UCS.Core
 {
+    // This thing should have been a static class since the beginning.
+
     internal class DatabaseManager
     {
+        private static DatabaseManager s_singleton = new DatabaseManager();
+
         public DatabaseManager()
         {
             m_vConnectionString = ConfigurationManager.AppSettings["databaseConnectionName"];
         }
 
-        public static DatabaseManager Single() => new DatabaseManager();
+        public static DatabaseManager Instance => s_singleton;
 
         readonly string m_vConnectionString;
 
@@ -30,7 +34,7 @@ namespace UCS.Core
         {
             try
             {
-                using (ucsdbEntities db = new ucsdbEntities(m_vConnectionString))
+                using (var db = new ucsdbEntities(m_vConnectionString))
                 {
                     db.player.Add(
                         new player
@@ -57,7 +61,7 @@ namespace UCS.Core
         {
             try
             {
-                using (ucsdbEntities db = new ucsdbEntities(m_vConnectionString))
+                using (var db = new ucsdbEntities(m_vConnectionString))
                 {
                     db.clan.Add(
                         new clan
@@ -66,7 +70,7 @@ namespace UCS.Core
                             LastUpdateTime = DateTime.Now,
                             Data = a.SaveToJSON()
                         }
-                        );
+                    );
                     db.SaveChanges();
                 }
             }
@@ -76,14 +80,14 @@ namespace UCS.Core
             }
         }
 
-        public async Task<Level> GetAccount(long playerId)
+        public Level GetAccount(long playerId)
         {
             Level account = null;
             try
             {
-                using (ucsdbEntities db = new ucsdbEntities(m_vConnectionString))
+                using (var db = new ucsdbEntities(m_vConnectionString))
                 {
-                    player p = await db.player.FindAsync(playerId);
+                    var p = db.player.Find(playerId);
 
                     if (p != null)
                     {
@@ -206,6 +210,7 @@ namespace UCS.Core
                 ids.AddRange(db.player.Select(p => p.PlayerId));
             return ids;
         }
+
         public List<long> GetAllClanIds()
         {
             List<long> ids = new List<long>();
@@ -332,16 +337,16 @@ namespace UCS.Core
                     c.Data = alliance.SaveToJSON();
                     context.Entry(c).State = EntityState.Modified;
                 }
-                else
-                {
-                    context.clan.Add(
-                        new clan
-                        {
-                            ClanId = alliance.GetAllianceId(),
-                            LastUpdateTime = DateTime.Now,
-                            Data = alliance.SaveToJSON()
-                        });
-                }
+                //else
+                //{
+                //    context.clan.Add(
+                //        new clan
+                //        {
+                //            ClanId = alliance.GetAllianceId(),
+                //            LastUpdateTime = DateTime.Now,
+                //            Data = alliance.SaveToJSON()
+                //        });
+                //}
                 await context.SaveChangesAsync();
             }
         }
@@ -363,20 +368,20 @@ namespace UCS.Core
                     p.GameObjects = avatar.SaveToJSON();
                     context.Entry(p).State = EntityState.Modified;
                 }
-                else
-                {
-                    context.player.Add(
-                        new player
-                        {
-                            PlayerId = avatar.GetPlayerAvatar().GetId(),
-                            AccountStatus = avatar.GetAccountStatus(),
-                            AccountPrivileges = avatar.GetAccountPrivileges(),
-                            LastUpdateTime = avatar.GetTime(),
-                            IPAddress = avatar.GetIPAddress(),
-                            Avatar = avatar.GetPlayerAvatar().SaveToJSON(),
-                            GameObjects = avatar.SaveToJSON()
-                        });
-                }
+                //else
+                //{
+                //    context.player.Add(
+                //        new player
+                //        {
+                //            PlayerId = avatar.GetPlayerAvatar().GetId(),
+                //            AccountStatus = avatar.GetAccountStatus(),
+                //            AccountPrivileges = avatar.GetAccountPrivileges(),
+                //            LastUpdateTime = avatar.GetTime(),
+                //            IPAddress = avatar.GetIPAddress(),
+                //            Avatar = avatar.GetPlayerAvatar().SaveToJSON(),
+                //            GameObjects = avatar.SaveToJSON()
+                //        });
+                //}
                 await context.SaveChangesAsync();
             }
         }
@@ -404,18 +409,18 @@ namespace UCS.Core
                                 p.GameObjects = pl.SaveToJSON();
                                 context.Entry(p).State = EntityState.Modified;
                             }
-                            else
-                                context.player.Add(
-                                    new player
-                                    {
-                                        PlayerId = pl.GetPlayerAvatar().GetId(),
-                                        AccountStatus = pl.GetAccountStatus(),
-                                        AccountPrivileges = pl.GetAccountPrivileges(),
-                                        LastUpdateTime = pl.GetTime(),
-                                        IPAddress = pl.GetIPAddress(),
-                                        Avatar = pl.GetPlayerAvatar().SaveToJSON(),
-                                        GameObjects = pl.SaveToJSON()
-                                    });
+                            //else
+                            //    context.player.Add(
+                            //        new player
+                            //        {
+                            //            PlayerId = pl.GetPlayerAvatar().GetId(),
+                            //            AccountStatus = pl.GetAccountStatus(),
+                            //            AccountPrivileges = pl.GetAccountPrivileges(),
+                            //            LastUpdateTime = pl.GetTime(),
+                            //            IPAddress = pl.GetIPAddress(),
+                            //            Avatar = pl.GetPlayerAvatar().SaveToJSON(),
+                            //            GameObjects = pl.SaveToJSON()
+                            //        });
                         }
                     }
                     await context.SaveChangesAsync();
@@ -445,17 +450,17 @@ namespace UCS.Core
                                 c.Data = alliance.SaveToJSON();
                                 context.Entry(c).State = EntityState.Modified;
                             }
-                            else
-                            {
-                                context.clan.Add(
-                                    new clan
-                                    {
-                                        ClanId = alliance.GetAllianceId(),
-                                        LastUpdateTime = DateTime.Now,
-                                        Data = alliance.SaveToJSON(),
+                            //else
+                            //{
+                            //    context.clan.Add(
+                            //        new clan
+                            //        {
+                            //            ClanId = alliance.GetAllianceId(),
+                            //            LastUpdateTime = DateTime.Now,
+                            //            Data = alliance.SaveToJSON(),
 
-                                    });
-                            }
+                            //        });
+                            //}
                         }
                     }
                     await context.SaveChangesAsync();
@@ -463,6 +468,7 @@ namespace UCS.Core
             }
             catch
             {
+                // 0 Actual fucks given.
             }
         }
     }

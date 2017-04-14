@@ -1,7 +1,6 @@
 ﻿using System;
 using UCS.Core;
 using UCS.Core.Network;
-using UCS.Core.Threading;
 using UCS.Logic;
 using UCS.Logic.AvatarStreamEntry;
 using UCS.PacketProcessing;

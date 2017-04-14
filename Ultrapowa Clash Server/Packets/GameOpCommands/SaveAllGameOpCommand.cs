@@ -24,7 +24,7 @@ namespace UCS.PacketProcessing.GameOpCommands
                 pm.SetLeagueId(22);
                 pm.SetPlayerName("UCS Bot");
                 pm.Send();
-                var levels = DatabaseManager.Single().Save(ResourcesManager.GetInMemoryLevels());
+                var levels = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryLevels());
                 levels.Wait();
                 var p = new GlobalChatLineMessage(level.GetClient());
                 /* Confirmation */
@@ -41,7 +41,7 @@ namespace UCS.PacketProcessing.GameOpCommands
                 pmm.SetChatMessage("Starting with saving of every Clan!");
                 pmm.Send();
                 /* Confirmation */
-                var clans = DatabaseManager.Single().Save(ResourcesManager.GetInMemoryAlliances());
+                var clans = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryAlliances());
                 clans.Wait();
                 var pmp = new GlobalChatLineMessage(level.GetClient());
                 pmp.SetPlayerId(0);

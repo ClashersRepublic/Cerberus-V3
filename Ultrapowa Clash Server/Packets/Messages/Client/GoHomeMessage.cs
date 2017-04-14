@@ -62,9 +62,9 @@ namespace UCS.PacketProcessing.Messages.Client
                     attacker.GetPlayerAvatar().AttackingInfo.Clear(); //Since we use userid for now,We need to clear to prevent overlapping
                     Resources(attacker);
 
-                    var attackerdb = DatabaseManager.Single().Save(attacker);
+                    var attackerdb = DatabaseManager.Instance.Save(attacker);
                     attackerdb.Wait();
-                    var defenderdb = DatabaseManager.Single().Save(defender);
+                    var defenderdb = DatabaseManager.Instance.Save(defender);
                     defenderdb.Wait();
 
                 }

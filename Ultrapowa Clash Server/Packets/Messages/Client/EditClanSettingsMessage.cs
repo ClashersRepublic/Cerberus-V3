@@ -101,7 +101,7 @@ namespace UCS.PacketProcessing.Messages.Client
                                                     }
                                                 }
                                                 List<AllianceMemberEntry>.Enumerator enumerator = new List<AllianceMemberEntry>.Enumerator();
-                                                DatabaseManager.Single().Save(alliance);
+                                                DatabaseManager.Instance.Save(alliance);
                                                 eventStreamEntry = (AllianceEventStreamEntry) null;
                                             }
                                             else

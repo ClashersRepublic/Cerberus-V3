@@ -115,7 +115,7 @@ namespace UCS.PacketProcessing.Messages.Client
             }
             else
             {
-                DatabaseManager.Single().RemoveAlliance(alliance);
+                DatabaseManager.Instance.RemoveAlliance(alliance);
             }
             new LeaveAllianceOkMessage(Client, alliance).Send();
         }

@@ -44,6 +44,7 @@ namespace UCS.PacketProcessing.Messages.Client
         public bool IsAdvertisingTrackingEnabled;
         public bool Android;
         public long UserID;
+
         public Level level;
 
         public override void Decode()
@@ -99,15 +100,15 @@ namespace UCS.PacketProcessing.Messages.Client
                     new RC4SessionKey(Client).Send();
                 }
 
-                if (ParserThread.GetMaintenanceMode() == true)
-                {
-                    var p = new LoginFailedMessage(Client);
-                    p.SetErrorCode(10);
-                    p.RemainingTime(ParserThread.GetMaintenanceTime());
-                    p.SetMessageVersion(8);
-                    p.Send();
-                    return;
-                }
+                //if (ParserThread.GetMaintenanceMode() == true)
+                //{
+                //    var p = new LoginFailedMessage(Client);
+                //    p.SetErrorCode(10);
+                //    p.RemainingTime(ParserThread.GetMaintenanceTime());
+                //    p.SetMessageVersion(8);
+                //    p.Send();
+                //    return;
+                //}
 
                 if (Constants.IsPremiumServer == false)
                 {
@@ -234,7 +235,7 @@ namespace UCS.PacketProcessing.Messages.Client
                 }
                 else
                 {
-                    var loginFailed = GetCleanUpLoginFailedMessage();
+                    var loginFailed = GetLoginFailedMessage(1);
                     loginFailed.Send();
                     return;
                 }
@@ -243,13 +244,13 @@ namespace UCS.PacketProcessing.Messages.Client
             {
                 if (UserToken == null)
                 {
-                    var loginFailed = GetCleanUpLoginFailedMessage();
+                    var loginFailed = GetLoginFailedMessage(2);
                     loginFailed.Send();
                     return;
                 }
                 else
                 {
-                    level = ResourcesManager.GetPlayer(UserID);
+                    level = ResourcesManager.GetPlayer(UserID, true);
 
                     var avatar = default(ClientAvatar);
                     // If level does not exists we create a new one with the specified
@@ -268,7 +269,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     // Check avatar/client password if matches user id.
                     if (avatar.GetUserToken() != UserToken)
                     {
-                        var loginFailed = GetCleanUpLoginFailedMessage();
+                        var loginFailed = GetLoginFailedMessage(3);
                         loginFailed.Send();
                     }
                     else
@@ -295,7 +296,7 @@ namespace UCS.PacketProcessing.Messages.Client
             level.GetPlayerAvatar().InitializeAccountCreationDate();
             level.GetPlayerAvatar().SetAndroid(Android);
 
-            var user = DatabaseManager.Single().Save(level);
+            var user = DatabaseManager.Instance.Save(level);
             LogUser();
         }
 
@@ -304,6 +305,14 @@ namespace UCS.PacketProcessing.Messages.Client
             var message = new LoginFailedMessage(Client);
             message.SetErrorCode(6);
             message.SetReason("We have detected an issue with your ID. Please clear your app data to continue playing! \n\nSettings -> Application Manager -> Clear App Data\n\nFor more informations, please check our official Website.\n\nhttps://www.clashofmagic.net/");
+            return message;
+        }
+
+        private LoginFailedMessage GetLoginFailedMessage(int errCode)
+        {
+            var message = new LoginFailedMessage(Client);
+            message.SetErrorCode(6);
+            message.SetReason($"CoM{errCode}\r\nWe have detected an issue with you ID, clean app data to continue.");
             return message;
         }
     }

@@ -122,7 +122,7 @@ namespace UCS.Helpers
 
         public static bool ParseConfigBoolean(string str) => Boolean.Parse(ConfigurationManager.AppSettings[str]);
 
-        public static string parseConfigString(string str) => ConfigurationManager.AppSettings[str];
+        public static string ParseConfigString(string str) => ConfigurationManager.AppSettings[str];
 
             public static byte[] ReadAllBytes(this BinaryReader br)
             {

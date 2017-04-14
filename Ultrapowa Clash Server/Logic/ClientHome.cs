@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Ionic.Zlib;
 using UCS.Helpers;
 using ZlibStream = UCS.Utilities.ZLib.ZlibStream;
 using System.IO;

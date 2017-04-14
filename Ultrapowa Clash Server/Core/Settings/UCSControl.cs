@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using UCS.Core.Threading;
-using UCS.Core.Web;
 using static System.Console;
 using static UCS.Core.Logger;
 
@@ -28,8 +26,8 @@ namespace UCS.Core.Settings
         {
             if (Console.Title.Contains("ONLINE"))
             {
-                UCSUI Gui = (UCSUI)Application.OpenForms["UCSUI"];
-                Gui.labelOnlineStatus.Text = "ONLINE";
+                //UCSUI Gui = (UCSUI)Application.OpenForms["UCSUI"];
+                //Gui.labelOnlineStatus.Text = "ONLINE";
             }
         }
 

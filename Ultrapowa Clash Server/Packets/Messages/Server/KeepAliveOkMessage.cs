@@ -6,7 +6,7 @@ namespace UCS.PacketProcessing.Messages.Server
     // Packet 20108
     internal class KeepAliveOkMessage : Message
     {
-        public KeepAliveOkMessage(PacketProcessing.Client client, KeepAliveMessage cka) : base(client)
+        public KeepAliveOkMessage(PacketProcessing.Client client) : base(client)
         {
             SetMessageType(20108);
         }

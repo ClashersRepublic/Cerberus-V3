@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.25928.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrapowa Clash Server", "Ultrapowa Clash Server\Ultrapowa Clash Server.csproj", "{0E72C402-09B2-4545-AAEB-6AB58971D2FC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KosmoSC", "Ultrapowa SC Editor\KosmoSC\KosmoSC.csproj", "{B415BDC7-DD70-4263-AC9F-2C929348D154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +21,6 @@ Global
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.ActiveCfg = Release|x64
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.Build.0 = Release|x64
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Debug|x64.Build.0 = Debug|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Release|x64.ActiveCfg = Release|Any CPU
-		{B415BDC7-DD70-4263-AC9F-2C929348D154}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

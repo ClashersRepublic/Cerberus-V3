@@ -17,7 +17,7 @@ namespace UCS.PacketProcessing.GameOpCommands
         {
             if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
             {
-                var user = DatabaseManager.Single().Save(level);
+                var user = DatabaseManager.Instance.Save(level);
                 user.Wait();
                 var p = new GlobalChatLineMessage(level.GetClient());
                 p.SetChatMessage("Game Successfuly Saved!");

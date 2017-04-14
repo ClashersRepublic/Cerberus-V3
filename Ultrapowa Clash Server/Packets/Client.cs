@@ -11,19 +11,24 @@ using UCS.Core.Settings;
 using UCS.Helpers;
 using UCS.Logic;
 using UCS.Logic.Enums;
+using UCS.PacketProcessing.Messages.Server;
 
 namespace UCS.PacketProcessing
 {
     internal class Client
     {
+        internal readonly KeepAliveOkMessage m_vKeepAliveOk;
         private readonly long m_vSocketHandle;
         private Level m_vLevel;
+
+        [Obsolete]
         internal State PlayerState;
 
         public Client(Socket so)
         {
             Socket = so;
             m_vSocketHandle = so.Handle.ToInt64();
+            m_vKeepAliveOk = new KeepAliveOkMessage(this);
 
             DataStream = new List<byte>();
             State = ClientState.Exception;
@@ -33,23 +38,32 @@ namespace UCS.PacketProcessing
 
             OutgoingPacketsKey = new byte[Key._RC4_EndecryptKey.Length];
             Array.Copy(Key._RC4_EndecryptKey, OutgoingPacketsKey, Key._RC4_EndecryptKey.Length);
+
+            LastKeepAlive = DateTime.Now;
+            NextKeepAlive = LastKeepAlive.AddSeconds(30);
         }
 
-        public Token Token { get; set; }
+        // Not even used, but ok xD.
         public string CIPAddress { get; set; }
+
         public byte[] CPublicKey { get; set; }
         public byte[] CRNonce { get; set; }
         public byte[] CSessionKey { get; set; }
         public byte[] CSharedKey { get; set; }
         public byte[] CSNonce { get; set; }
+
         public ClientState State { get; set; }
         public List<byte> DataStream { get; set; }
         public Socket Socket { get; set; }
+
         public Level GetLevel() => m_vLevel;
+
         public long GetSocketHandle() => m_vSocketHandle;
         public uint ClientSeed { get; set; }
+
         public byte[] IncomingPacketsKey { get; set; }
         public byte[] OutgoingPacketsKey { get; set; }
+
         public enum ClientState : int
         {
             Exception = 0,
@@ -57,64 +71,8 @@ namespace UCS.PacketProcessing
             LoginSuccess = 2,
         }
 
-        [Obsolete]
-        internal void Process(byte[] Buffer)
-        {
-            if (Buffer.Length < 7)
-                return;
-
-            using (PacketReader reader = new PacketReader(new MemoryStream(Buffer)))
-            {
-                ushort id = reader.ReadUInt16();
-                reader.Seek(1L, SeekOrigin.Current);
-                ushort len = reader.ReadUInt16();
-                ushort version = reader.ReadUInt16();
-
-                if (Buffer.Length - 7 < (int)len)
-                    return;
-
-                var nbuffer = new byte[Buffer.Length - 7];
-                System.Buffer.BlockCopy(Buffer, 7, nbuffer, 0, nbuffer.Length);
-
-                var instance = (Message)MessageFactory.Read(this, reader, id);
-                instance.SetMessageType(id);
-                instance.SetMessageVersion(version);
-                instance.SetData(nbuffer);
-                if (instance != null)
-                {
-                    //        Message instance = Activator.CreateInstance(MessageFactory.Messages[(int)id], new object[2]
-                    //        {
-                    //(object) this,
-                    //(object) reader
-                    //        }) as Message;
-                    //        instance.Identifier = id;
-                    //        instance.Length = len;
-                    //        instance.Version = version;
-                    //        instance.Reader = reader;
-                    try
-                    {
-                        Logger.Write("Message " + instance.GetType().Name + " is handled");
-                        instance.Decrypt();
-                        instance.Decode();
-                        instance.Process(m_vLevel);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Nice: Ignore errors since we're ucs right.
-                    }
-                }
-                else
-                {
-                    Logger.Write("Message " + (object)id + " is unhandled");
-                    CSNonce.Increment(2);
-                }
-
-                if (Buffer.Length - 7 - (int)len >= 7)
-                    this.Process(reader.ReadBytes(Buffer.Length - 7 - (int)len));
-                else
-                    this.Token.Reset();
-            }
-        }
+        public DateTime NextKeepAlive { get; set; }
+        public DateTime LastKeepAlive { get; set; }
 
         private static void TransformSessionKey(int clientSeed, byte[] sessionKey)
         {
@@ -289,19 +247,6 @@ namespace UCS.PacketProcessing
         public void Encrypt(byte[] data)
         {
             EnDecrypt(this.OutgoingPacketsKey, data);
-        }
-
-        [Obsolete]
-        public bool IsClientSocketConnected()
-        {
-            try
-            {
-                return !((Socket.Poll(1000, SelectMode.SelectRead) && (Socket.Available == 0)) || !Socket.Connected);
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public void SetLevel(Level l) => m_vLevel = l;

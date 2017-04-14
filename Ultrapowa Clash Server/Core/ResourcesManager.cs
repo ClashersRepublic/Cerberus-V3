@@ -19,22 +19,21 @@ namespace UCS.Core
         private static ConcurrentDictionary<long, Level> m_vInMemoryLevels;
         private static ConcurrentDictionary<long, Alliance> m_vInMemoryAlliances;
         private static List<Level> m_vOnlinePlayers;
-        private static DatabaseManager m_vDatabase;
+        //private static DatabaseManager m_vDatabase;
 
         public static void Initialize()
         {
-            m_vDatabase = new DatabaseManager(); // Nice 1 DB manager
+            //m_vDatabase = new DatabaseManager(); // Nice 1 DB manager
 
             m_vOnlinePlayers = new List<Level>();
             m_vClients = new ConcurrentDictionary<long, Client>();
+
             m_vInMemoryLevels = new ConcurrentDictionary<long, Level>();
             m_vInMemoryAlliances = new ConcurrentDictionary<long, Alliance>();
         }
 
         public static void AddClient(Client client)
         {
-            //Client c = new Client(s);
-            //c.CIPAddress = ((System.Net.IPEndPoint)s.RemoteEndPoint).Address.ToString();
             m_vClients.TryAdd(client.GetSocketHandle(), client);
             Program.TitleAd();
         }
@@ -46,7 +45,7 @@ namespace UCS.Core
                 var client = default(Client);
                 if (!m_vClients.TryRemove(socketHandle, out client))
                 {
-                    Logger.Write("Tried to drop a client who is not registered in the client dictionary.");
+                    Logger.Error("Tried to drop a client who is not registered in the client dictionary.");
                 }
                 else
                 {
@@ -71,9 +70,9 @@ namespace UCS.Core
             }
         }
 
-        public static List<long> GetAllPlayerIds() => m_vDatabase.GetAllPlayerIds();
+        public static List<long> GetAllPlayerIds() => DatabaseManager.Instance.GetAllPlayerIds();
 
-        public static List<long> GetAllClanIds() => m_vDatabase.GetAllClanIds();
+        public static List<long> GetAllClanIds() => DatabaseManager.Instance.GetAllClanIds();
 
         public static Client GetClient(long socketHandle) => m_vClients.ContainsKey(socketHandle) ? m_vClients[socketHandle] : null;
 
@@ -81,7 +80,7 @@ namespace UCS.Core
 
         public static void GetAllPlayersFromDB()
         {
-            var players = m_vDatabase.GetAllPlayers();
+            var players = DatabaseManager.Instance.GetAllPlayers();
 			Parallel.ForEach((players),t =>
 			{
 				if (!m_vInMemoryLevels.ContainsKey(t.Key))
@@ -101,20 +100,15 @@ namespace UCS.Core
 
         public static Level GetPlayer(long id, bool persistent = false)
         {
-            var result = GetInMemoryPlayer(id);
+            var result = GetInMemoryLevel(id);
             if (result == null)
             {
-                var acc = m_vDatabase.GetAccount(id);
-                acc.Wait();
-
-                result = acc.Result;
+                result = DatabaseManager.Instance.GetAccount(id);
                 if (persistent)
                     LoadLevel(result);
             }
             return result;
         }
-
-        public static bool IsClientConnected(long socketHandle) => m_vClients[socketHandle] != null && m_vClients[socketHandle].IsClientSocketConnected();
 
         public static bool IsPlayerOnline(Level l) => m_vOnlinePlayers.Contains(l);
 
@@ -146,7 +140,7 @@ namespace UCS.Core
             // we're not morons right.
             level.Tick();
 
-            var user = DatabaseManager.Single().Save(level);
+            var user = DatabaseManager.Instance.Save(level);
             // Waiting for asynchronous work because we're smart.
             user.Wait();
 
@@ -154,7 +148,7 @@ namespace UCS.Core
             m_vInMemoryLevels.TryRemove(level.GetPlayerAvatar().GetId());
         }
 
-        private static Level GetInMemoryPlayer(long id) => m_vInMemoryLevels.ContainsKey(id) ? m_vInMemoryLevels[id] : null;
+        private static Level GetInMemoryLevel(long id) => m_vInMemoryLevels.ContainsKey(id) ? m_vInMemoryLevels[id] : null;
 
         public static List<Alliance> GetInMemoryAlliances() => m_vInMemoryAlliances.Values.ToList();
 

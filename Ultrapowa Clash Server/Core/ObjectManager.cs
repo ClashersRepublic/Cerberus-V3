@@ -6,13 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UCS.Core.Network;
+using UCS.Database;
 using UCS.Files;
 using UCS.Files.CSV;
 using UCS.Files.Logic;
 using UCS.Logic;
 using UCS.PacketProcessing.Messages.Server;
-using Timer = System.Threading.Timer;
 using static UCS.Core.Logger;
+using Timer = System.Threading.Timer;
 
 namespace UCS.Core
 
@@ -23,7 +24,6 @@ namespace UCS.Core
         private static long m_vAvatarSeed;
         public static int m_vDonationSeed;
         private static int m_vRandomBaseAmount;
-        private static DatabaseManager m_vDatabase;
         private static string m_vHomeDefault;
         public static bool m_vTimerCanceled;
         public static Timer TimerReference;
@@ -35,13 +35,12 @@ namespace UCS.Core
         {
             m_vTimerCanceled = false;
 
-            m_vDatabase = new DatabaseManager(); // Another DB manager, because we need 2 right.
             NpcLevels = new Dictionary<int, string>();
             m_vRandomBases = new Dictionary<int, string>();
             FingerPrint = new FingerPrint();
 
-            m_vAvatarSeed = m_vDatabase.GetMaxPlayerId() + 1;
-            m_vAllianceSeed = m_vDatabase.GetMaxAllianceId() + 1;
+            m_vAvatarSeed = DatabaseManager.Instance.GetMaxPlayerId() + 1;
+            m_vAllianceSeed = DatabaseManager.Instance.GetMaxAllianceId() + 1;
             m_vHomeDefault = File.ReadAllText(@"Gamefiles/starting_home.json");
 
             //m_vDatabase.CheckConnection();
@@ -55,8 +54,8 @@ namespace UCS.Core
 
         private static void Save(object state)
         {
-            var level = m_vDatabase.Save(ResourcesManager.GetInMemoryLevels());
-            var alliance = m_vDatabase.Save(ResourcesManager.GetInMemoryAlliances());
+            var level = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryLevels());
+            var alliance = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryAlliances());
 
             level.Wait();
             alliance.Wait();
@@ -73,7 +72,7 @@ namespace UCS.Core
 
             alliance = new Alliance(seed);
             m_vAllianceSeed++;
-            m_vDatabase.CreateAlliance(alliance);
+            DatabaseManager.Instance.CreateAlliance(alliance);
             ResourcesManager.AddAllianceInMemory(alliance);
             return alliance;
         }
@@ -81,24 +80,30 @@ namespace UCS.Core
         public static Level CreateAvatar(long seed, string token)
         {
             var level = default(Level);
-            if (seed == 0)
+            if (seed == 0 || m_vAvatarSeed == seed)
                 seed = m_vAvatarSeed++;
+            else
+            {
+                if (seed > m_vAvatarSeed)
+                    m_vAvatarSeed = seed + 1;
+            }
 
             level = new Level(seed, token);
             level.LoadFromJSON(m_vHomeDefault);
 
-            m_vDatabase.CreateAccount(level);
+            DatabaseManager.Instance.CreateAccount(level);
 
             return level;
         }
 
         public static void Load100AlliancesFromDB()
         {
-            ResourcesManager.AddAllianceInMemory(m_vDatabase.Get100Alliances());
+            ResourcesManager.AddAllianceInMemory(DatabaseManager.Instance.Get100Alliances());
         }
+
         public static void LoadAllAlliancesFromDB()
         {
-            ResourcesManager.AddAllianceInMemory(m_vDatabase.GetAllAlliances());
+            ResourcesManager.AddAllianceInMemory(DatabaseManager.Instance.GetAllAlliances());
         }
 
         public static Alliance GetAlliance(long allianceId)
@@ -108,7 +113,7 @@ namespace UCS.Core
             {
                 return ResourcesManager.GetInMemoryAlliance(allianceId);
             }
-            var alliancedb = m_vDatabase.GetAlliance(allianceId);
+            var alliancedb = DatabaseManager.Instance.GetAlliance(allianceId);
             alliancedb.Wait();
 
             alliance = alliancedb.Result;

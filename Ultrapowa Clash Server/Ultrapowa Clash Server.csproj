@@ -159,31 +159,6 @@
       <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.Serialization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unofficial.Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ionic.ZLib, Version=2.0.0.14, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MarkerMetro.Unity.Ionic.Zlib.2.0.0.14\lib\net35\Ionic.ZLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MaterialSkin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialSkin.0.2.1\lib\MaterialSkin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroFramework.RunTime.1.2.0.3\lib\net40-Client\MetroFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MetroFramework.Design, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroFramework.Design.1.2.0.3\lib\net40\MetroFramework.Design.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MetroFramework.Fonts, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroFramework.Fonts.1.2.0.3\lib\net40\MetroFramework.Fonts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MySql.Data, Version=7.0.2.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.7.0.2-DMR\lib\net45\MySql.Data.dll</HintPath>
       <Private>True</Private>
@@ -194,14 +169,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Sodium, Version=0.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\libsodium-net.0.10.0-beta2\lib\Net40\Sodium.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -252,20 +219,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Checker\DirectoryChecker.cs" />
-    <Compile Include="Core\Checker\LicenseChecker.cs" />
-    <Compile Include="Core\Crypto\Key.cs" />
     <Compile Include="Core\CSVManager.cs" />
     <Compile Include="Core\Database\MySQL.cs" />
-    <Compile Include="Core\Database\Redis.cs" />
     <Compile Include="Core\Network\Gateway.cs" />
     <Compile Include="Core\Network\Pool.cs" />
-    <Compile Include="Core\Network\Reader.cs" />
-    <Compile Include="Core\Network\SocketAsyncEventArgsPool.cs" />
-    <Compile Include="Core\Network\Token.cs" />
     <Compile Include="Core\Settings\Constants.cs" />
     <Compile Include="Core\Settings\UCSControl.cs" />
-    <Compile Include="Core\Threading\CheckThread.cs" />
-    <Compile Include="Extensions\MySQL_Extensions.cs" />
     <Compile Include="Logic\DataSlots\DonationSlot.cs" />
     <Compile Include="Logic\Enums\State.cs" />
     <Compile Include="Logic\Manager\ObstacleManager.cs" />
@@ -347,7 +306,6 @@
     <Compile Include="Utilities\TweetNaCl\xsalsa20.cs" />
     <Compile Include="Utilities\TweetNaCl\xsalsa20poly1305.cs" />
     <Compile Include="Core\Logger.cs" />
-    <Compile Include="Core\Checker\VersionChecker.cs" />
     <Compile Include="Core\Performances.cs" />
     <Compile Include="Logic\StreamEntry\InvitationStreamEntry.cs" />
     <Compile Include="Logic\StreamEntry\ShareSteamEntry.cs" />
@@ -387,12 +345,6 @@
     <Compile Include="Packets\Messages\Server\PromoteAllianceMemberOkMessage.cs" />
     <Compile Include="Packets\Messages\Server\ReplayDataMessage.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="UCSUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UCSUI.Designer.cs">
-      <DependentUpon>UCSUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\ZLib\CRC32.cs" />
     <Compile Include="Utilities\ZLib\Deflate.cs" />
     <Compile Include="Utilities\ZLib\DeflateStream.cs" />
@@ -1001,7 +953,6 @@
     <None Include="ucsdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Ultrapowa Clash Server.psproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -1041,12 +992,6 @@
     <Content Include="Tools\ucsgflzma.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Library\libsodium-64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Library\libsodium.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -1054,8 +999,6 @@
   <ItemGroup>
     <Compile Include="Core\ResourcesManager.cs" />
     <Compile Include="Core\DatabaseManager.cs" />
-    <Compile Include="Core\Threading\MemoryThread.cs" />
-    <Compile Include="Core\Threading\NetworkThread.cs" />
     <Compile Include="Database\ucsdbEntities.cs" />
     <Compile Include="Database\clan.cs">
       <DependentUpon>ucsdb.tt</DependentUpon>
@@ -1121,7 +1064,6 @@
     <Compile Include="Files\Logic\CombatItemData.cs" />
     <Compile Include="Files\Logic\Data.cs" />
     <Compile Include="Files\FingerPrint.cs" />
-    <Compile Include="Core\Threading\ParserThread.cs" />
     <Compile Include="Helpers\PacketReader.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Logic\AvatarStreamEntry\AllianceKickOutStreamEntry.cs" />
@@ -1164,8 +1106,6 @@
     <Compile Include="Logic\GameObject.cs" />
     <Compile Include="Logic\Trap.cs" />
     <Compile Include="Logic\Building.cs" />
-    <Compile Include="Core\Network\OldGateway.cs" />
-    <Compile Include="Core\Network\PacketManager.cs" />
     <Compile Include="Packets\Client.cs" />
     <Compile Include="Packets\Commands\Client\CancelShieldCommand.cs" />
     <Compile Include="Packets\Commands\Client\EndOfBattleCommand.cs" />
@@ -1353,11 +1293,6 @@
       <Progid>1</Progid>
       <DefaultIcon>icone-ucs.ico</DefaultIcon>
     </FileAssociation>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UCSUI.resx">
-      <DependentUpon>UCSUI.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

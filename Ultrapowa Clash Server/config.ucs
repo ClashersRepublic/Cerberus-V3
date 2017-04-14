@@ -39,4 +39,7 @@
   <add key="LogLevel" value="0"/>
       <!-- Default for no log = 0, for Full Log = 1, Log only = 2-->
   <!-- _______________________________________________________________________________________ -->
+
+  <add key="pwd" value="12356" />
+  <add key="id" value="root" />
 </appSettings>

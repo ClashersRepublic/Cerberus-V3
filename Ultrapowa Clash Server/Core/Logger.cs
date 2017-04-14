@@ -18,6 +18,9 @@ namespace UCS.Core
         static string path = "Logs/log_" + timestamp + "_.txt";
         static SemaphoreSlim _fileLock = new SemaphoreSlim(1);
 
+        private static readonly string _errPath = "Logs/err_" + DateTime.Now.ToFileTime() + "_.log";
+        private static readonly StreamWriter _errWriter = new StreamWriter(_errPath);
+
         public static void Initialize()
         {
             if (logLevel > 2)
@@ -84,9 +87,12 @@ namespace UCS.Core
 
         public static void Error(string message)
         {
+            var text = "[ERROR]  " + message;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[ERROR]  " + message);
+            Console.WriteLine(text);
             Console.ResetColor();
+
+            _errWriter.WriteLine(text);
         }
 
         private static void LogLevelError()

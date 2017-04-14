@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UCS.Core.Network;
 using UCS.Helpers;
 using UCS.Logic;
@@ -10,11 +11,15 @@ namespace UCS.PacketProcessing.Messages.Client
     {
         public KeepAliveMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+
         }
 
         public override void Process(Level level)
         {
-            new KeepAliveOkMessage(Client, this).Send();
+            Client.LastKeepAlive = DateTime.Now;
+            Client.NextKeepAlive = Client.LastKeepAlive.AddSeconds(30);
+
+            Client.m_vKeepAliveOk.Send();
         }
     }
 }

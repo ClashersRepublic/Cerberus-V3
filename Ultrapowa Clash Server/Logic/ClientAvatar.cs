@@ -133,7 +133,10 @@ namespace UCS.Logic
         public int EndShieldTime { get; set; }
         public int LastUpdate { get; set; }
         public UserState State { get; set; }
+
+        // Not even used.
         public string Login { get; set; }
+
         public List<DataSlot> NpcLootedElixir { get; set; }
         public List<DataSlot> NpcLootedGold { get; set; }
         public List<DataSlot> NpcStars { get; set; }
@@ -327,12 +330,10 @@ namespace UCS.Logic
             }
 
             data.AddRange(BitConverter.GetBytes(ObjectManager.NpcLevels.Count).Reverse());
+            for (var i = 17000000; i < 17000050; i++)
             {
-                for (var i = 17000000; i < 17000050; i++)
-                {
-                    data.AddRange(BitConverter.GetBytes(i).Reverse());
-                    data.AddRange(BitConverter.GetBytes(rnd.Next(3, 3)).Reverse());
-                }
+                data.AddRange(BitConverter.GetBytes(i).Reverse());
+                data.AddRange(BitConverter.GetBytes(rnd.Next(3, 3)).Reverse());
             }
 
             data.AddDataSlots(NpcLootedGold);
