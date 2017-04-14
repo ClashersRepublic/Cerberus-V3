@@ -22,9 +22,32 @@
         /// Gets the seed.
         /// </summary>
         /// <returns>System.Int64.</returns>
-        internal static long GetSeed()
+        internal static long GetPlayerSeed()
         {
             const string SQL = "SELECT coalesce(MAX(PlayerId), 0) FROM player";
+            long Seed = -1;
+
+            using (MySqlConnection Conn = new MySqlConnection(Credentials))
+            {
+                Conn.Open();
+
+                using (MySqlCommand CMD = new MySqlCommand(SQL, Conn))
+                {
+                    CMD.Prepare();
+                    Seed = (long)CMD.ExecuteScalar();
+                }
+            }
+
+            return Seed;
+        }
+
+        /// <summary> //done
+        /// Gets the seed.
+        /// </summary>
+        /// <returns>System.Int64.</returns>
+        internal static long GetAllianceSeed()
+        {
+            const string SQL = "SELECT coalesce(MAX(ClanId), 0) FROM clan";
             long Seed = -1;
 
             using (MySqlConnection Conn = new MySqlConnection(Credentials))

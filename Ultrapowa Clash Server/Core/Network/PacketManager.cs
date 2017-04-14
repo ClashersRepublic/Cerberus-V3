@@ -8,6 +8,7 @@ using UCS.Packets.Messages.Server;
 
 namespace UCS.Core.Network
 {
+    [Obsolete]
 	internal static class PacketManager
 	{
 		public static void Receive(this Message p)
@@ -17,26 +18,27 @@ namespace UCS.Core.Network
 			p.Process(p.Client.GetLevel());
 		}
 
-        public static void Send(this Message p)
-        {
-            try
-            {
-                p.Encode();
-                if (p.GetMessageType() == 20000)
-                {
-                    byte[] sessionKey = ((RC4SessionKey)p).Key;
-                    p.Client.UpdateKey(sessionKey);
-                }
+        //[Obsolete]
+        //public static void Send(this Message p)
+        //{
+        //    try
+        //    {
+        //        p.Encode();
+        //        if (p.GetMessageType() == 20000)
+        //        {
+        //            byte[] sessionKey = ((RC4SessionKey)p).Key;
+        //            p.Client.UpdateKey(sessionKey);
+        //        }
 
-                var data = p.GetRawData();
-                p.Process(p.Client.GetLevel());
-                p.Client.Socket.BeginSend(data, 0, data.Length, 0, SendCallback, p);
-            }
-            catch (Exception)
-            {
+        //        var data = p.GetRawData();
+        //        p.Process(p.Client.GetLevel());
+        //        p.Client.Socket.BeginSend(data, 0, data.Length, 0, SendCallback, p);
+        //    }
+        //    catch (Exception)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         private static void SendCallback(IAsyncResult ar)
         {

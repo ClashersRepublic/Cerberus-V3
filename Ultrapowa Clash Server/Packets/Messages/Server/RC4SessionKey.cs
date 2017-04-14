@@ -20,5 +20,10 @@ namespace UCS.Packets.Messages.Server
             Encrypt(pack.ToArray());
         }
         public byte[] Key { get; set; }
+
+        public override void Process(Level level)
+        {
+            Client.UpdateKey(Key);
+        }
     }
 }

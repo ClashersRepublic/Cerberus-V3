@@ -21,6 +21,7 @@ namespace UCS.PacketProcessing.Messages.Client
     {
         public LoginMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+
         }
 
         public string AdvertisingGUID;
@@ -83,6 +84,7 @@ namespace UCS.PacketProcessing.Messages.Client
                 catch 
                 {
                     Client.State = ClientState.Exception;
+                    throw;
                 }
             }
         }

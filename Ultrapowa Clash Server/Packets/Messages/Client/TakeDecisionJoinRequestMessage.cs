@@ -111,7 +111,8 @@ namespace UCS.PacketProcessing.Messages.Client
                     {
                         AllianceStreamEntryMessage c = new AllianceStreamEntryMessage(player.GetClient());
                         c.SetStreamEntry(e);
-                        PacketManager.Send(c);
+                        //PacketManager.Send(c);
+                        c.Send();
                     }
                 }
             }

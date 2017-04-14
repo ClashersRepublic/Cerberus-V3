@@ -154,7 +154,8 @@ namespace UCS.PacketProcessing.Messages.Client
                             {
                                 AllianceStreamEntryMessage b = new AllianceStreamEntryMessage(aplayer.GetClient());
                                 b.SetStreamEntry(stream);
-                                PacketManager.Send(b);
+                                //PacketManager.Send(b);
+                                b.Send();
                             }
                         }
                     }

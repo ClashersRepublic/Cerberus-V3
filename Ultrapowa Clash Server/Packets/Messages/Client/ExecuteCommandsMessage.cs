@@ -27,41 +27,27 @@ namespace UCS.PacketProcessing.Messages.Client
                 NumberOfCommands = br.ReadUInt32WithEndian();
 
                 if (NumberOfCommands > 0 && NumberOfCommands < 120)
-                {
                     NestedCommands = br.ReadBytes(GetLength() - 12);
-                }
-                else
-                {
-                    NumberOfCommands = 0;
-                }
             }
         }
 
         public override void Process(Level level)
         {
-            try
-            {
-                level.Tick();
+            level.Tick();
 
-                if (NumberOfCommands > -1 && NumberOfCommands < 135)
+            if (NumberOfCommands > 0 && NumberOfCommands < 120)
+            {
+                using (var br = new PacketReader(new MemoryStream(NestedCommands)))
                 {
-                    using (var br = new PacketReader(new MemoryStream(NestedCommands)))
+                    for (var i = 0; i < NumberOfCommands; i++)
                     {
-                        for (var i = 0; i < NumberOfCommands; i++)
-                        {
-                            var obj = CommandFactory.Read(br, 0);
-                            if (obj != null)
-                            {
-                                ((Command)obj).Execute(level);
-                            }
-                            else
-                                break;
-                        }
+                        var cmd = (Command)CommandFactory.Read(br, 0);
+                        if (cmd != null)
+                            cmd.Execute(level);
+                        else
+                            break;
                     }
                 }
-            }
-            catch
-            {
             }
         }
     }

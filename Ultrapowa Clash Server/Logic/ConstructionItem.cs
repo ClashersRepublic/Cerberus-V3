@@ -39,15 +39,15 @@ namespace UCS.Logic
             {
                 var wasUpgrading = IsUpgrading();
                 m_vIsConstructing = false;
+
                 if (wasUpgrading)
-                {
                     SetUpgradeLevel(UpgradeLevel);
-                }
+
                 var bd = GetConstructionItemData();
                 var rd = bd.GetBuildResource(UpgradeLevel + 1);
                 var cost = bd.GetBuildCost(UpgradeLevel + 1);
                 var multiplier = CSVManager.DataTables.GetGlobals().GetGlobalData("BUILD_CANCEL_MULTIPLIER").NumberValue;
-                var resourceCount = (int) ((cost * multiplier * (long) 1374389535) >> 32);
+                var resourceCount = (int)((cost * multiplier * (long)1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
                 GetLevel().GetPlayerAvatar().CommodityCountChangeHelper(0, rd, resourceCount);
                 m_vLevel.WorkerManager.DeallocateWorker(this);
@@ -82,6 +82,7 @@ namespace UCS.Logic
         {
             m_vIsConstructing = false;
             m_vLevel.WorkerManager.DeallocateWorker(this);
+
             SetUpgradeLevel(GetUpgradeLevel() + 1);
             if (GetResourceProductionComponent() != null)
             {
@@ -92,9 +93,9 @@ namespace UCS.Logic
             var exp = (int)Math.Sqrt(constructionTime);
             GetLevel().GetPlayerAvatar().AddExperience(exp);
 
-            if (GetHeroBaseComponent(true) != null) 
+            if (GetHeroBaseComponent(true) != null)
             {
-                var data = (BuildingData) GetData();
+                var data = (BuildingData)GetData();
                 var hd = CSVManager.DataTables.GetHeroByName(data.HeroType);
                 GetLevel().GetPlayerAvatar().SetUnitUpgradeLevel(hd, 0);
                 GetLevel().GetPlayerAvatar().SetHeroHealth(hd, 0);
@@ -112,7 +113,7 @@ namespace UCS.Logic
             {
                 if (GetUnitProductionComponent().IsSpellForge())
                 {
-                  return CSVManager.DataTables.GetGlobals().GetGlobalData("SPELL_FACTORY_BOOST_MINS").NumberValue;
+                    return CSVManager.DataTables.GetGlobals().GetGlobalData("SPELL_FACTORY_BOOST_MINS").NumberValue;
                 }
                 return CSVManager.DataTables.GetGlobals().GetGlobalData("BARRACKS_BOOST_MINS").NumberValue;
             }
@@ -161,7 +162,7 @@ namespace UCS.Logic
             var comp = GetComponent(10, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (HeroBaseComponent) comp;
+                return (HeroBaseComponent)comp;
             }
             return null;
         }
@@ -179,7 +180,7 @@ namespace UCS.Logic
             var comp = GetComponent(5, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (ResourceProductionComponent) comp;
+                return (ResourceProductionComponent)comp;
             }
             return null;
         }
@@ -189,7 +190,7 @@ namespace UCS.Logic
             var comp = GetComponent(6, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (ResourceStorageComponent) comp;
+                return (ResourceStorageComponent)comp;
             }
             return null;
         }
@@ -199,7 +200,7 @@ namespace UCS.Logic
             var comp = GetComponent(3, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (UnitProductionComponent) comp;
+                return (UnitProductionComponent)comp;
             }
             return null;
         }
@@ -209,7 +210,7 @@ namespace UCS.Logic
             var comp = GetComponent(0, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (UnitStorageComponent) comp;
+                return (UnitStorageComponent)comp;
             }
             return null;
         }
@@ -219,7 +220,7 @@ namespace UCS.Logic
             var comp = GetComponent(9, enabled);
             if (comp != null && comp.Type != -1)
             {
-                return (UnitUpgradeComponent) comp;
+                return (UnitUpgradeComponent)comp;
             }
             return null;
         }
@@ -235,16 +236,21 @@ namespace UCS.Logic
         public new void Load(JObject jsonObject)
         {
             UpgradeLevel = jsonObject["lvl"].ToObject<int>();
+
+            // ??
             m_vLevel.WorkerManager.DeallocateWorker(this);
+
             var constTimeToken = jsonObject["const_t"];
             if (constTimeToken != null)
             {
                 m_vTimer = new Timer();
                 m_vIsConstructing = true;
+
                 var remainingConstructionTime = constTimeToken.ToObject<int>();
                 m_vTimer.StartTimer(remainingConstructionTime, m_vLevel.GetTime());
                 m_vLevel.WorkerManager.AllocateWorker(this);
             }
+
             Locked = false;
             var lockedToken = jsonObject["locked"];
             if (lockedToken != null)
@@ -266,34 +272,41 @@ namespace UCS.Logic
         public new JObject Save(JObject jsonObject)
         {
             jsonObject.Add("lvl", UpgradeLevel);
+
             if (IsConstructing())
                 jsonObject.Add("const_t", m_vTimer.GetRemainingSeconds(m_vLevel.GetTime()));
+
             if (Locked)
                 jsonObject.Add("locked", true);
+
             if (IsBoosted)
             {
-                if ((int) (m_vBoostEndTime - GetLevel().GetTime()).TotalSeconds >= 0)
+                if ((int)(m_vBoostEndTime - GetLevel().GetTime()).TotalSeconds >= 0)
                 {
-                    jsonObject.Add("boost_t", (int) (m_vBoostEndTime - GetLevel().GetTime()).TotalSeconds);
+                    jsonObject.Add("boost_t", (int)(m_vBoostEndTime - GetLevel().GetTime()).TotalSeconds);
                 }
                 jsonObject.Add("boost_endTime", m_vBoostEndTime);
             }
+
             base.Save(jsonObject);
+
             return jsonObject;
         }
 
         public void SetUpgradeLevel(int level)
         {
             UpgradeLevel = level;
+
             if (GetConstructionItemData().IsTownHall())
             {
                 GetLevel().GetPlayerAvatar().SetTownHallLevel(level);
             }
+
             if (UpgradeLevel > -1 || IsUpgrading() || !IsConstructing())
             {
                 if (GetUnitStorageComponent(true) != null)
                 {
-                    var data = (BuildingData) GetData();
+                    var data = (BuildingData)GetData();
                     if (data.GetUnitStorageCapacity(level) > 0)
                     {
                         if (!data.Bunker)
@@ -306,7 +319,7 @@ namespace UCS.Logic
                 var resourceStorageComponent = GetResourceStorageComponent(true);
                 if (resourceStorageComponent != null)
                 {
-                    var maxStoredResourcesList = ((BuildingData) GetData()).GetMaxStoredResourceCounts(UpgradeLevel);
+                    var maxStoredResourcesList = ((BuildingData)GetData()).GetMaxStoredResourceCounts(UpgradeLevel);
                     resourceStorageComponent.SetMaxArray(maxStoredResourcesList);
                 }
             }
@@ -338,17 +351,17 @@ namespace UCS.Logic
             }
             else
             {
+                m_vIsConstructing = true;
                 m_vTimer = new Timer();
                 m_vTimer.StartTimer(constructionTime, m_vLevel.GetTime());
                 m_vLevel.WorkerManager.AllocateWorker(this);
-                m_vIsConstructing = true;
             }
         }
 
         public void StartUpgrading()
         {
             var constructionTime = GetConstructionItemData().GetConstructionTime(UpgradeLevel + 1);
-            if (constructionTime <= 1) // Make 1 sec instant too, just incase.
+            if (constructionTime < 1)
             {
                 FinishConstruction();
             }

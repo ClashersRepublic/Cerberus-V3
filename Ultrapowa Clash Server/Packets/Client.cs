@@ -1,16 +1,16 @@
 ﻿using Sodium;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using UCS.Logic;
-using UCS.Helpers;
-using System;
-using UCS.Core.Crypto;
-using UCS.Core.Settings;
-using UCS.Logic.Enums;
-using UCS.Core.Network;
 using UCS.Core;
+using UCS.Core.Crypto;
+using UCS.Core.Network;
+using UCS.Core.Settings;
+using UCS.Helpers;
+using UCS.Logic;
+using UCS.Logic.Enums;
 
 namespace UCS.PacketProcessing
 {
@@ -24,11 +24,13 @@ namespace UCS.PacketProcessing
         {
             Socket = so;
             m_vSocketHandle = so.Handle.ToInt64();
+
             DataStream = new List<byte>();
             State = ClientState.Exception;
 
             IncomingPacketsKey = new byte[Key._RC4_EndecryptKey.Length];
             Array.Copy(Key._RC4_EndecryptKey, IncomingPacketsKey, Key._RC4_EndecryptKey.Length);
+
             OutgoingPacketsKey = new byte[Key._RC4_EndecryptKey.Length];
             Array.Copy(Key._RC4_EndecryptKey, OutgoingPacketsKey, Key._RC4_EndecryptKey.Length);
         }
@@ -55,6 +57,7 @@ namespace UCS.PacketProcessing
             LoginSuccess = 2,
         }
 
+        [Obsolete]
         internal void Process(byte[] Buffer)
         {
             if (Buffer.Length < 7)
@@ -79,22 +82,22 @@ namespace UCS.PacketProcessing
                 instance.SetData(nbuffer);
                 if (instance != null)
                 {
-            //        Message instance = Activator.CreateInstance(MessageFactory.Messages[(int)id], new object[2]
-            //        {
-            //(object) this,
-            //(object) reader
-            //        }) as Message;
-            //        instance.Identifier = id;
-            //        instance.Length = len;
-            //        instance.Version = version;
-            //        instance.Reader = reader;
+                    //        Message instance = Activator.CreateInstance(MessageFactory.Messages[(int)id], new object[2]
+                    //        {
+                    //(object) this,
+                    //(object) reader
+                    //        }) as Message;
+                    //        instance.Identifier = id;
+                    //        instance.Length = len;
+                    //        instance.Version = version;
+                    //        instance.Reader = reader;
                     try
                     {
                         Logger.Write("Message " + instance.GetType().Name + " is handled");
                         instance.Decrypt();
                         instance.Decode();
                         instance.Process(m_vLevel);
-                    } 
+                    }
                     catch (Exception ex)
                     {
                         // Nice: Ignore errors since we're ucs right.
@@ -113,7 +116,7 @@ namespace UCS.PacketProcessing
             }
         }
 
-        public static void TransformSessionKey(int clientSeed, byte[] sessionKey)
+        private static void TransformSessionKey(int clientSeed, byte[] sessionKey)
         {
             int[] buffer = new int[624];
             initialize_generator(clientSeed, buffer);
@@ -130,7 +133,7 @@ namespace UCS.PacketProcessing
         }
 
         // Initialize the generator from a seed
-        public static void initialize_generator(int seed, int[] buffer)
+        private static void initialize_generator(int seed, int[] buffer)
         {
             buffer[0] = seed;
             for (int i = 1; i < 624; ++i)
@@ -141,7 +144,7 @@ namespace UCS.PacketProcessing
         // Extract a tempered pseudorandom number based on the index-th value,
         // calling generate_numbers() every 624 numbers
 
-        public static int extract_number(int[] buffer, int ix)
+        private static int extract_number(int[] buffer, int ix)
         {
             if (ix == 0)
             {
@@ -163,7 +166,7 @@ namespace UCS.PacketProcessing
             return y % 256;
         }
 
-        public static void generate_numbers(int[] buffer)
+        private static void generate_numbers(int[] buffer)
         {
             for (int i = 0; i < 624; i++)
             {
@@ -250,7 +253,7 @@ namespace UCS.PacketProcessing
             Array.Copy(newKey, OutgoingPacketsKey, newKey.Length);
         }
 
-        public void EnDecrypt(Byte[] key, Byte[] data)
+        private void EnDecrypt(Byte[] key, Byte[] data)
         {
             int dataLen;
 
@@ -288,6 +291,7 @@ namespace UCS.PacketProcessing
             EnDecrypt(this.OutgoingPacketsKey, data);
         }
 
+        [Obsolete]
         public bool IsClientSocketConnected()
         {
             try
@@ -302,35 +306,54 @@ namespace UCS.PacketProcessing
 
         public void SetLevel(Level l) => m_vLevel = l;
 
-        [Obsolete]
         public bool TryGetPacket(out Message p)
         {
-            p = null;
-            bool result = false;
+            const int HEADER_LEN = 7;
+            p = default(Message);
+
+            var result = false;
             if (DataStream.Count >= 5)
             {
+                // Get packet length and type but ignore packet version.
                 int length = (DataStream[2] << 16) | (DataStream[3] << 8) | DataStream[4];
                 ushort type = (ushort)((DataStream[0] << 8) | DataStream[1]);
-                if (DataStream.Count - 7 >= length)
+
+                if (DataStream.Count - HEADER_LEN >= length)
                 {
-                    object obj;
-                    byte[] packet = DataStream.Take(7 + length).ToArray();
-                    using (PacketReader br = new PacketReader(new MemoryStream(packet)))
-                        obj = MessageFactory.Read(this, br, type);
-                    if (obj != null)
+                    // Avoid LINQ cause we can.
+                    var packet = new byte[length];
+                    for (int i = 0; i < packet.Length; i++)
+                        packet[i] = DataStream[i + HEADER_LEN];
+
+                    // We don't use BinaryReaders.
+                    p = (Message)MessageFactory.Read(this, null, type);
+
+                    if (p != null)
                     {
-                        p = (Message)obj;
                         result = true;
+
+                        p.SetData(packet);
+                        p.SetMessageType(type); // Just in case they don't do it in the constructor.
+
+                        p.Decrypt();
+
+                        try { p.Decode(); }
+                        catch (Exception ex)
+                        {
+                            Logger.Error($"Unable to decode message with ID: {type}");
+                        }
                     }
                     else
                     {
+                        // Make sure we don't break the RC4 stream.
                         if (Constants.IsRc4)
-                            //Update Decryption Key
-                            Decrypt(DataStream.Skip(7).Take(length).ToArray());
+                            Decrypt(packet);
                         else
                             CSNonce.Increment();
                     }
-                    DataStream.RemoveRange(0, 7 + length);
+
+                    // Clean up 
+                    DataStream.RemoveRange(0, HEADER_LEN + length);
                 }
             }
             return result;

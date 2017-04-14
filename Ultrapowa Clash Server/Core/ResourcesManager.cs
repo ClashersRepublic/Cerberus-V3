@@ -24,6 +24,7 @@ namespace UCS.Core
         public static void Initialize()
         {
             m_vDatabase = new DatabaseManager(); // Nice 1 DB manager
+
             m_vOnlinePlayers = new List<Level>();
             m_vClients = new ConcurrentDictionary<long, Client>();
             m_vInMemoryLevels = new ConcurrentDictionary<long, Level>();
@@ -42,25 +43,31 @@ namespace UCS.Core
         {
             try
             {
-                Client c;
-                Socket s = m_vClients[socketHandle].Socket;
-                string text = "Socket handle " + socketHandle + " dropped";
-
-                m_vClients.TryRemove(socketHandle, out c);
-                Program.TitleDe();
-                s.Shutdown(SocketShutdown.Both);
-                s.Close();
-
-                if (c.GetLevel() != null)
+                var client = default(Client);
+                if (!m_vClients.TryRemove(socketHandle, out client))
                 {
-                    text = "Client with socket handle " + socketHandle + " dropped";
-                    LogPlayerOut(c.GetLevel());
+                    Logger.Write("Tried to drop a client who is not registered in the client dictionary.");
                 }
-                Logger.Write(text);
+                else
+                {
+                    var socket = client.Socket;
+                    try { socket.Shutdown(SocketShutdown.Both); }
+                    catch { }
+                    try { socket.Dispose(); }
+                    catch { }
+
+                    // Clean level from memory if its Level has been loaded.
+                    var level = client.GetLevel();
+                    if (level != null)
+                        LogPlayerOut(level);
+
+                    Logger.Write($"Client with socket handle {socketHandle} has been dropped.");
+                    Program.TitleDe();
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger.Write("Dropping Client failed: " + e);
+                Logger.Error("Unable to drop client: " + ex);
             }
         }
 
@@ -134,8 +141,14 @@ namespace UCS.Core
 
         public static void LogPlayerOut(Level level)
         {
+            // Make sure to tick before dropping client because
+            // we're not morons right.
+            level.Tick();
+
             var user = DatabaseManager.Single().Save(level);
+            // Waiting for asynchronous work because we're smart.
             user.Wait();
+
             m_vOnlinePlayers.Remove(level);
             m_vInMemoryLevels.TryRemove(level.GetPlayerAvatar().GetId());
         }

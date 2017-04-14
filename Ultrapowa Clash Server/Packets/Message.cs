@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using UCS.Helpers;
-using UCS.Logic;
-using UCS.Core.Crypto.CustomNaCl;
-using UCS.Core.Crypto.Blake2b;
-using static System.Console;
 using UCS.Core;
 using UCS.Core.Crypto;
+using UCS.Core.Crypto.Blake2b;
+using UCS.Core.Crypto.CustomNaCl;
 using UCS.Core.Settings;
+using UCS.Helpers;
+using UCS.Logic;
 using UCS.Packets.Messages.Server;
+using static System.Console;
 using static UCS.PacketProcessing.Client;
 
 namespace UCS.PacketProcessing
@@ -69,7 +69,9 @@ namespace UCS.PacketProcessing
                         Client.Decrypt(m_vData);
                         if (m_vType == 10101)
                             Client.State = ClientState.Login;
-                        SetData(m_vData);
+
+                        // No need since the decryption occurs on same buffer.
+                        //SetData(m_vData);
                     }
                 }
                 else

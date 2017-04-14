@@ -13,14 +13,14 @@ namespace UCS.Core
     internal static class Logger
     {
         static bool ValidLogLevel;
-        static int getlevel = ToInt32(ConfigurationManager.AppSettings["LogLevel"]);
+        static int logLevel = ToInt32(ConfigurationManager.AppSettings["LogLevel"]);
         static string timestamp = Convert.ToString(DateTime.Today).Remove(10).Replace(".", "-").Replace("/", "-");
         static string path = "Logs/log_" + timestamp + "_.txt";
         static SemaphoreSlim _fileLock = new SemaphoreSlim(1);
 
         public static void Initialize()
         {
-            if (getlevel > 2)
+            if (logLevel > 2)
             {
                 ValidLogLevel = false;
                 LogLevelError();
@@ -30,30 +30,33 @@ namespace UCS.Core
                 ValidLogLevel = true;
             }
 
-            if (getlevel != 0 || ValidLogLevel == true)
+            if (logLevel != 0 || ValidLogLevel == true)
             {
                 if (!File.Exists("Logs/log_" + timestamp + "_.txt"))
-                    using (StreamWriter sw = new StreamWriter("Logs/log_" + timestamp + "_.txt"))
+                {
+                    using (var sw = new StreamWriter("Logs/log_" + timestamp + "_.txt"))
                     {
-                        sw.WriteLineAsync("Log file created at " + DateTime.Now);
-                        sw.WriteLineAsync();
+                        sw.WriteLine("Log file created at " + DateTime.Now);
+                        sw.WriteLine();
                     }
+                }
             }
         }
 
         public static async void Write(string text)
         {
-            if (getlevel != 0)
+            if (logLevel != 0)
             {
                 try
                 {
                     await _fileLock.WaitAsync();
-                    if (getlevel == 1)
+                    if (logLevel == 1)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("[LOG]    " + text);
                         Console.ResetColor();
                     }
+
                     using (StreamWriter sw = new StreamWriter(path, true))
                         await sw.WriteLineAsync("[LOG]    " + text + " at " + DateTime.UtcNow);
                 }

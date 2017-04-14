@@ -47,7 +47,7 @@ namespace UCS.Core
             //m_vDatabase.CheckConnection();
 
             LoadNpcLevels();
-            LoadRandomBase();
+            //LoadRandomBase(); // Don't waste time on this stuff, since not used.
 
             TimerReference = new Timer(Save, null, 0, 5000);
             Say("UCS Database has been successfully loaded.");

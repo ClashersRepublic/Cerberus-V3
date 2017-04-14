@@ -6,6 +6,7 @@ using UCS.Packets;
 
 namespace UCS.Core.Network
 {
+    [Obsolete]
     internal class Token
     {
         internal Client Client;

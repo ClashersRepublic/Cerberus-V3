@@ -135,7 +135,7 @@ namespace UCS.Core
                 {
                     DbSet<clan> a = db.clan;
                     int count = 0;
-                    Parallel.ForEach(a, (c, state)  =>
+                    Parallel.ForEach(a, (c, state) =>
                     {
                         Alliance alliance = new Alliance();
                         alliance.LoadFromJSON(c.Data);
@@ -218,20 +218,54 @@ namespace UCS.Core
         {
             try
             {
-                using (ucsdbEntities db = new ucsdbEntities(m_vConnectionString))
-                    return (from alliance in db.clan select (long?)alliance.ClanId ?? 0).DefaultIfEmpty().Max();
+                return MySQL.GetAllianceSeed();
             }
-            catch
+            catch (EntityException ex)
             {
-                return 0;
+                if (ConfigurationManager.AppSettings["databaseConnectionName"] == "mysql")
+                {
+                    Error("An exception occured when connecting to the MySQL Server.");
+                    Error("Please check your database configuration !");
+                    Error(Convert.ToString(ex));
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Error("An exception occured when connecting to the SQLite database.");
+                    Error("Please check your database configuration !");
+                    Error(Convert.ToString(ex));
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
             }
+            catch (MySqlException)
+            {
+                Say();
+                Error("An exception occured when reconnecting to the MySQL Server.");
+                Error("Please check your database configuration !");
+                //Reason
+                //Username is wrong
+                //Password is wrong
+                //IP Address is unauthorized by berkan
+                // Stfu aidid -> xD?  Faire enough
+            }
+            catch (Exception ex)
+            {
+                Error("An unknown exception occured when trying to connect to the sql server.");
+                Error("Please check your database configuration !");
+                Error(Convert.ToString(ex));
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            return 0;
         }
 
         public long GetMaxPlayerId()
         {
             try
             {
-                return MySQL.GetSeed();
+                return MySQL.GetPlayerSeed();
             }
             catch (EntityException ex)
             {
@@ -279,42 +313,42 @@ namespace UCS.Core
             long id = alliance.GetAllianceId();
             using (ucsdbEntities db = new ucsdbEntities(m_vConnectionString))
             {
-                db.clan.Remove(db.clan.Find((int) id));
+                db.clan.Remove(db.clan.Find((int)id));
                 db.SaveChanges();
             }
             ObjectManager.RemoveInMemoryAlliance(id);
         }
 
-		public async Task Save(Alliance alliance)
-		{
-			using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
-			{
-				context.Configuration.AutoDetectChangesEnabled = false;
-				context.Configuration.ValidateOnSaveEnabled = false;
-				clan c = await context.clan.FindAsync((int)alliance.GetAllianceId());
-				if (c != null)
-				{
-					c.LastUpdateTime = DateTime.Now;
-					c.Data = alliance.SaveToJSON();
+        public async Task Save(Alliance alliance)
+        {
+            using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+                context.Configuration.ValidateOnSaveEnabled = false;
+                clan c = await context.clan.FindAsync((int)alliance.GetAllianceId());
+                if (c != null)
+                {
+                    c.LastUpdateTime = DateTime.Now;
+                    c.Data = alliance.SaveToJSON();
                     context.Entry(c).State = EntityState.Modified;
                 }
-				else
-				{
-					context.clan.Add(
-						new clan
-						{
-							ClanId = alliance.GetAllianceId(),
-							LastUpdateTime = DateTime.Now,
-							Data = alliance.SaveToJSON()
-						});
+                else
+                {
+                    context.clan.Add(
+                        new clan
+                        {
+                            ClanId = alliance.GetAllianceId(),
+                            LastUpdateTime = DateTime.Now,
+                            Data = alliance.SaveToJSON()
+                        });
                 }
-				await context.SaveChangesAsync();
-			}
-		}
+                await context.SaveChangesAsync();
+            }
+        }
 
         public async Task Save(Level avatar)
         {
-            ucsdbEntities context = new ucsdbEntities(m_vConnectionString);
+            using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
             {
                 context.Configuration.AutoDetectChangesEnabled = false;
                 context.Configuration.ValidateOnSaveEnabled = false;
@@ -347,15 +381,15 @@ namespace UCS.Core
             }
         }
 
-		public async Task Save(List<Level> avatars)
-		{
-			try
-			{
-				using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
-				{
+        public async Task Save(List<Level> avatars)
+        {
+            try
+            {
+                using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
+                {
                     context.Configuration.AutoDetectChangesEnabled = false;
-					context.Configuration.ValidateOnSaveEnabled = false;
-                    foreach(Level pl in avatars)
+                    context.Configuration.ValidateOnSaveEnabled = false;
+                    foreach (Level pl in avatars)
                     {
                         lock (pl)
                         {
@@ -384,23 +418,23 @@ namespace UCS.Core
                                     });
                         }
                     }
-					await context.SaveChangesAsync();
-				}
-			}
-			catch 
-			{
-			}
-		}
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+            }
+        }
 
-		public async Task Save(List<Alliance> alliances)
-		{
-			try
-			{
-				using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
-				{
-					context.Configuration.AutoDetectChangesEnabled = false;
-					context.Configuration.ValidateOnSaveEnabled = false;
-                    foreach(Alliance alliance in alliances)
+        public async Task Save(List<Alliance> alliances)
+        {
+            try
+            {
+                using (ucsdbEntities context = new ucsdbEntities(m_vConnectionString))
+                {
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.Configuration.ValidateOnSaveEnabled = false;
+                    foreach (Alliance alliance in alliances)
                     {
                         lock (alliance)
                         {
@@ -419,17 +453,17 @@ namespace UCS.Core
                                         ClanId = alliance.GetAllianceId(),
                                         LastUpdateTime = DateTime.Now,
                                         Data = alliance.SaveToJSON(),
-                                        
+
                                     });
                             }
                         }
                     }
-					await context.SaveChangesAsync();
-				}
-			}
-			catch
-			{
-			}
-		}
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }

@@ -12,36 +12,25 @@ namespace UCS.Core.Checker
         public static void CheckDirectories()
         {
             if(!Directory.Exists("Logs"))
-            {
                 Directory.CreateDirectory("Logs");
-            }
+
             if (!Directory.Exists("Patch"))
-            {
                 Directory.CreateDirectory("Patch");
-            }
+
             if (!Directory.Exists("Tools"))
-            {
                 Directory.CreateDirectory("Tools");
-            }
+
             if (!Directory.Exists("Library"))
-            {
                 Directory.CreateDirectory("Library");
-            }
+
             if (!Directory.Exists("Gamefiles"))
-            {
                 Directory.CreateDirectory("Gamefiles");
-            }
         }
 
         public static void CheckFiles()
         {
 			if (!File.Exists("filter.ucs"))
-            {
-                using (var s = new StreamWriter("filter.ucs"))
-                {
-                    s.WriteLine("./savegame");
-                }
-            }
+                File.WriteAllText("filter.ucs", "./savegame");
         }
     }
 }
