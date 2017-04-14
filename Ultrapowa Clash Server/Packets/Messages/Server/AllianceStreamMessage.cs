@@ -29,11 +29,13 @@ namespace UCS.PacketProcessing.Messages.Server
 
             foreach (UCS.Logic.StreamEntry.StreamEntry streamEntry in list)
             {
-                    pack.AddRange((IEnumerable<byte>) streamEntry.Encode());
+                pack.AddRange((IEnumerable<byte>)streamEntry.Encode());
                 ++num;
                 if (num >= 150)
                     break;
             }
+
+            Encrypt(pack.ToArray());
         }
     }
 }

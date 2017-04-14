@@ -51,17 +51,32 @@ namespace UCS.Core.Network
 
         public static void Send(this Message message)
         {
-            message.Encode();
-
+            var buffer = default(byte[]);
             var client = message.Client;
-            var buffer = message.GetRawData();
+
+            try { message.Encode(); }
+            catch (Exception ex)
+            {
+                Logger.Error($"Exception while encoding message {message.GetType()}: " + ex);
+            }
+
+            try { buffer = message.GetRawData(); }
+            catch (Exception ex)
+            {
+                Logger.Error($"Exception while encoding message {message.GetType()}: " + ex);
+            }
+
             var socket = client.Socket;
 
             var args = GetArgs();
             args.SetBuffer(buffer, 0, buffer.Length);
             args.UserToken = client;
 
-            message.Process(client.GetLevel());
+            try { message.Process(client.GetLevel()); }
+            catch (Exception ex)
+            {
+                Logger.Error($"Exception while processing outgoing message {message.GetType()}: " + ex);
+            }
             StartSend(args);
         }
 
@@ -217,7 +232,7 @@ namespace UCS.Core.Network
                         try { message.Process(level); }
                         catch (Exception ex)
                         {
-                            Logger.Error($"Exception while processing message {message.GetType()}...");
+                            Logger.Error($"Exception while processing incoming message {message.GetType()}: " + ex);
                         }
                     }
                 }

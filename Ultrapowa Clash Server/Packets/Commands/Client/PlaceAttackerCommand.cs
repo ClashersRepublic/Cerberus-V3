@@ -18,17 +18,26 @@ namespace UCS.PacketProcessing.Commands.Client
         {
             X = br.ReadInt32();
             Y = br.ReadInt32();
-            Unit = (CombatItemData) br.ReadDataReference();
+            Unit = (CombatItemData)br.ReadDataReference();
             Tick = br.ReadUInt32();
         }
 
         public override void Execute(Level level)
         {
             level.GetPlayerAvatar().AddUsedTroop(Unit, 1);
+            var avatar = level.GetPlayerAvatar();
+            var units = avatar.GetUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (unit.Data.GetGlobalID() == Unit.GetGlobalID())
+                    unit.Value -= 1;
+            }
+
             var components = level.GetComponentManager().GetComponents(0);
             for (var i = 0; i < components.Count; i++)
             {
-                var c = (UnitStorageComponent) components[i];
+                var c = (UnitStorageComponent)components[i];
                 if (c.GetUnitTypeIndex(Unit) != -1)
                 {
                     var storageCount = c.GetUnitCountByData(Unit);

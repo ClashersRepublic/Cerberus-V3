@@ -43,7 +43,7 @@ namespace UCS.Core
                             Avatar = l.GetPlayerAvatar().SaveToJSON(),
                             GameObjects = l.SaveToJSON()
                         }
-                        );
+                    );
                     db.SaveChanges();
                 }
             }

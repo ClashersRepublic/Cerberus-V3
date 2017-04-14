@@ -43,6 +43,8 @@ namespace UCS.PacketProcessing.Messages.Server
             data.AddInt32(i);   
             data.AddRange(list);
             Encrypt(data.ToArray());
+
+            // xD
             Parallel.ForEach((rem), (im, l) =>
              {
                  player.BookmarkedClan.RemoveAll(t => t == im);

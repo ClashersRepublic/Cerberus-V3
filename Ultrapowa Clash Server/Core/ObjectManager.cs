@@ -80,16 +80,16 @@ namespace UCS.Core
 
         public static Level CreateAvatar(long seed, string token)
         {
-            Level pl;
+            var level = default(Level);
             if (seed == 0)
-            {
-                seed = m_vAvatarSeed;
-            }
-            pl = new Level(seed, token);
-            m_vAvatarSeed++;
-            pl.LoadFromJSON(m_vHomeDefault);
-            m_vDatabase.CreateAccount(pl);
-            return pl;
+                seed = m_vAvatarSeed++;
+
+            level = new Level(seed, token);
+            level.LoadFromJSON(m_vHomeDefault);
+
+            m_vDatabase.CreateAccount(level);
+
+            return level;
         }
 
         public static void Load100AlliancesFromDB()

@@ -106,6 +106,7 @@ namespace UCS.Core
             {
                 var acc = m_vDatabase.GetAccount(id);
                 acc.Wait();
+
                 result = acc.Result;
                 if (persistent)
                     LoadLevel(result);

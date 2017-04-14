@@ -81,7 +81,7 @@ namespace UCS.PacketProcessing.Messages.Client
                         ClientVersion = reader.ReadString();
                     }
                 }
-                catch 
+                catch
                 {
                     Client.State = ClientState.Exception;
                     throw;
@@ -99,7 +99,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     new RC4SessionKey(Client).Send();
                 }
 
-                if(ParserThread.GetMaintenanceMode() == true)
+                if (ParserThread.GetMaintenanceMode() == true)
                 {
                     var p = new LoginFailedMessage(Client);
                     p.SetErrorCode(10);
@@ -108,8 +108,8 @@ namespace UCS.PacketProcessing.Messages.Client
                     p.Send();
                     return;
                 }
-                                           
-                if(Constants.IsPremiumServer == false)
+
+                if (Constants.IsPremiumServer == false)
                 {
                     if (ResourcesManager.GetOnlinePlayers().Count >= 100)
                     {
@@ -120,7 +120,7 @@ namespace UCS.PacketProcessing.Messages.Client
                         return;
                     }
                 }
-                
+
                 int time = Convert.ToInt32(ConfigurationManager.AppSettings["maintenanceTimeleft"]);
                 if (time != 0)
                 {
@@ -131,7 +131,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     p.Send();
                     return;
                 }
-                
+
                 if (ConfigurationManager.AppSettings["CustomMaintenance"] != string.Empty)
                 {
                     var p = new LoginFailedMessage(Client);
@@ -143,7 +143,7 @@ namespace UCS.PacketProcessing.Messages.Client
 
                 var cv2 = ConfigurationManager.AppSettings["ClientVersion"].Split('.');
                 var cv = ClientVersion.Split('.');
-                if (cv[0] != cv2[0] || cv[1] != cv2[1]) 
+                if (cv[0] != cv2[0] || cv[1] != cv2[1])
                 {
                     var p = new LoginFailedMessage(Client);
                     p.SetErrorCode(8);
@@ -163,16 +163,17 @@ namespace UCS.PacketProcessing.Messages.Client
                     p.Send();
                     return;
                 }
+
                 CheckClient();
             }
         }
 
-        void LogUser()
+        private void LogUser()
         {
-
             ResourcesManager.LogPlayerIn(level, Client);
             level.Tick();
-            level.SetIPAddress(Client.CIPAddress);            
+            level.SetIPAddress(Client.CIPAddress);
+
             var loginOk = new LoginOkMessage(Client);
             var avatar = level.GetPlayerAvatar();
             loginOk.SetAccountId(avatar.GetId());
@@ -185,8 +186,9 @@ namespace UCS.PacketProcessing.Messages.Client
             loginOk.SetServerTime(Math.Round(level.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds * 1000).ToString(CultureInfo.InvariantCulture));
             loginOk.SetAccountCreatedDate(avatar.GetAccountCreationDate().ToString());
             loginOk.SetStartupCooldownSeconds(0);
-            loginOk.SetCountryCode(avatar.GetUserRegion().ToUpper());
+            loginOk.SetCountryCode(avatar.GetUserRegion() ?? "EN");
             loginOk.Send();
+
             var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
             if (ResourcesManager.IsPlayerOnline(level))
             {
@@ -212,60 +214,72 @@ namespace UCS.PacketProcessing.Messages.Client
 
             if (alliance != null)
             {
-                  new AllianceFullEntryMessage(Client, alliance).Send();
-                  new AllianceStreamMessage(Client, alliance).Send();
-                  new AllianceWarHistoryMessage(Client, alliance).Send();
+                new AllianceFullEntryMessage(Client, alliance).Send();
+                new AllianceStreamMessage(Client, alliance).Send();
+                new AllianceWarHistoryMessage(Client, alliance).Send();
                 //PacketManager.ProcessOutgoingPacket (new AllianceWarMapDataMessage(Client)); //Don't activate it (not done!)
             }
-            
+
             new BookmarkMessage(Client).Send();
         }
 
-        void CheckClient()
+        private void CheckClient()
         {
-            if (UserID == 0 || string.IsNullOrEmpty(UserToken))
+            if (UserID == 0)
             {
-                NewUser();
-                return;
-            }
-
-            level = ResourcesManager.GetPlayer(UserID);
-            if (level != null)
-            {
-                if (level.Banned())
+                if (UserToken == null)
                 {
-                    var p = new LoginFailedMessage(Client);
-                    p.SetErrorCode(11);
-                    p.Send();
+                    NewUser();
                     return;
-                }
-
-                if (string.Equals(level.GetPlayerAvatar().GetUserToken(), UserToken))
-                {
-                    LogUser();
                 }
                 else
                 {
-                    Console.WriteLine("Client Reset !");
-                    var p = new LoginFailedMessage(Client);
-                    p.SetErrorCode(6);
-                    p.SetReason("We have detected an issue with your ID. Please clear your app data to continue playing! \n\nSettings -> Application Manager -> Clear App Data\n\nFor more informations, please check our official Website.\n\nhttps://www.clashofmagic.net/");
-                    p.Send();
+                    var loginFailed = GetCleanUpLoginFailedMessage();
+                    loginFailed.Send();
                     return;
                 }
             }
             else
             {
-                Console.WriteLine("Client Reset !");
-                var p = new LoginFailedMessage(Client);
-                p.SetErrorCode(6);
-                p.SetReason("We have detected an issue with your ID. Please clear your app data to continue playing! \n\nSettings -> Application Manager -> Clear App Data\n\nFor more informations, please check our official Website.\n\nhttps://www.clashofmagic.net/");
-                p.Send();
-                return;
+                if (UserToken == null)
+                {
+                    var loginFailed = GetCleanUpLoginFailedMessage();
+                    loginFailed.Send();
+                    return;
+                }
+                else
+                {
+                    level = ResourcesManager.GetPlayer(UserID);
+
+                    var avatar = default(ClientAvatar);
+                    // If level does not exists we create a new one with the specified
+                    // UserId and UserToken.
+                    if (level == null)
+                    {
+                        level = ObjectManager.CreateAvatar(UserID, UserToken);
+                        avatar = level.GetPlayerAvatar();
+                        avatar.SetRegion(Region);
+                    }
+                    else
+                    {
+                        avatar = level.GetPlayerAvatar();
+                    }
+
+                    // Check avatar/client password if matches user id.
+                    if (avatar.GetUserToken() != UserToken)
+                    {
+                        var loginFailed = GetCleanUpLoginFailedMessage();
+                        loginFailed.Send();
+                    }
+                    else
+                    {
+                        LogUser();
+                    }
+                }
             }
         }
 
-        void NewUser()
+        private void NewUser()
         {
             level = ObjectManager.CreateAvatar(0, null);
             if (string.IsNullOrEmpty(UserToken))
@@ -283,6 +297,14 @@ namespace UCS.PacketProcessing.Messages.Client
 
             var user = DatabaseManager.Single().Save(level);
             LogUser();
+        }
+
+        private LoginFailedMessage GetCleanUpLoginFailedMessage()
+        {
+            var message = new LoginFailedMessage(Client);
+            message.SetErrorCode(6);
+            message.SetReason("We have detected an issue with your ID. Please clear your app data to continue playing! \n\nSettings -> Application Manager -> Clear App Data\n\nFor more informations, please check our official Website.\n\nhttps://www.clashofmagic.net/");
+            return message;
         }
     }
 }

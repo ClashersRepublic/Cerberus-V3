@@ -43,9 +43,14 @@ namespace UCS.PacketProcessing.Messages.Client
                     {
                         var cmd = (Command)CommandFactory.Read(br, 0);
                         if (cmd != null)
-                            cmd.Execute(level);
-                        else
-                            break;
+                        {
+                            try { cmd.Execute(level); }
+                            catch (Exception ex)
+                            {
+                                Logger.Error($"Exception while processing command {cmd.GetType()}: " + ex);
+                            }
+                        }
+                        else break;
                     }
                 }
             }
