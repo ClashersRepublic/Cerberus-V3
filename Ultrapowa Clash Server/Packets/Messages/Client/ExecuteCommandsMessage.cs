@@ -47,7 +47,7 @@ namespace UCS.PacketProcessing.Messages.Client
                             try { cmd.Execute(level); }
                             catch (Exception ex)
                             {
-                                Logger.Error($"Exception while processing command {cmd.GetType()}: " + ex);
+                                ExceptionLogger.Log(ex, $"Exception while processing command {cmd.GetType()}");
                             }
                         }
                         else break;

@@ -68,6 +68,7 @@ namespace UCS.Logic
         {
             if (this.m_vChatMessages.Count >= 30)
                 this.m_vChatMessages.RemoveAt(0);
+
             this.m_vChatMessages.Add(message);
         }
 
@@ -201,7 +202,7 @@ namespace UCS.Logic
             return this.m_vAllianceMembers.Count >= 50;
         }
 
-        public void LoadFromJSON(string jsonString)
+        public void LoadFromJson(string jsonString)
         {
             var jsonObject = JObject.Parse(jsonString);
             m_vAllianceId = jsonObject["alliance_id"].ToObject<long>();
@@ -219,18 +220,23 @@ namespace UCS.Logic
             m_vDrawWars = jsonObject["draw_wars"].ToObject<int>();
             m_vWarFrequency = jsonObject["war_frequency"].ToObject<int>();
             m_vAllianceOrigin = jsonObject["alliance_origin"].ToObject<int>();
+
             var jsonMembers = (JArray)jsonObject["members"];
-            foreach (JToken jToken in jsonMembers)
+            foreach (var jToken in jsonMembers)
             {
                 var jsonMember = (JObject)jToken;
-                long id = jsonMember["avatar_id"].ToObject<long>();
-                var pl = ResourcesManager.GetPlayer(id);
+
+                var id = jsonMember["avatar_id"].ToObject<long>();
+                var player = ResourcesManager.GetPlayer(id);
                 var member = new AllianceMemberEntry(id);
-                m_vScore = m_vScore + pl.GetPlayerAvatar().GetScore();
+
+                m_vScore = m_vScore + player.GetPlayerAvatar().GetScore();
+
                 member.Load(jsonMember);
                 m_vAllianceMembers.Add(id, member);
             }
             m_vScore = m_vScore / 2;
+
             var jsonMessages = (JArray)jsonObject["chatMessages"];
             if (jsonMessages != null)
             {
@@ -256,7 +262,7 @@ namespace UCS.Logic
 
         public void RemoveMember(long avatarId) => m_vAllianceMembers.Remove(avatarId);
 
-        public string SaveToJSON()
+        public string SaveToJson()
         {
             var jsonData = new JObject();
             jsonData.Add("alliance_id", m_vAllianceId);
@@ -275,6 +281,7 @@ namespace UCS.Logic
             jsonData.Add("draw_wars", m_vDrawWars);
             jsonData.Add("war_frequency", m_vWarFrequency);
             jsonData.Add("alliance_origin", m_vAllianceOrigin);
+
             var jsonMembersArray = new JArray();
             foreach (AllianceMemberEntry member in m_vAllianceMembers.Values)
             {
@@ -283,6 +290,7 @@ namespace UCS.Logic
                 jsonMembersArray.Add(jsonObject);
             }
             jsonData.Add("members", jsonMembersArray);
+
             var jsonMessageArray = new JArray();
             foreach (StreamEntry.StreamEntry message in m_vChatMessages)
             {

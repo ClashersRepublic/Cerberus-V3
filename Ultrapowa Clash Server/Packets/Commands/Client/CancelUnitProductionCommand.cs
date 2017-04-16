@@ -27,17 +27,20 @@ namespace UCS.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            GameObject gameObjectById = level.GameObjectManager.GetGameObjectByID(BuildingId);
-            if (Count <= 0)
-              return;
-            UnitProductionComponent productionComponent = ((ConstructionItem)gameObjectById).GetUnitProductionComponent(false);
-            CombatItemData dataById = (CombatItemData)CSVManager.DataTables.GetDataById(UnitType);
-            do
-            {
-                productionComponent.RemoveUnit(dataById);
-                Count = Count - 1;
-            }
-            while (Count > 0);
+            // No need for cancelling of unit production.
+
+            //GameObject gameObjectById = level.GameObjectManager.GetGameObjectByID(BuildingId);
+            //if (Count <= 0)
+            //  return;
+
+            //UnitProductionComponent productionComponent = ((ConstructionItem)gameObjectById).GetUnitProductionComponent(false);
+            //CombatItemData dataById = (CombatItemData)CSVManager.DataTables.GetDataById(UnitType);
+            //do
+            //{
+            //    productionComponent.RemoveUnit(dataById);
+            //    Count = Count - 1;
+            //}
+            //while (Count > 0);
         }
     }
 }

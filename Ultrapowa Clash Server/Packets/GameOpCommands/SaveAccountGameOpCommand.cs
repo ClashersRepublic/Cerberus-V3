@@ -9,7 +9,6 @@ namespace UCS.PacketProcessing.GameOpCommands
     {
         public SaveAccountGameOpCommand(string[] args)
         {
-            m_vArgs = args;
             SetRequiredAccountPrivileges(5);
         }
 
@@ -17,13 +16,13 @@ namespace UCS.PacketProcessing.GameOpCommands
         {
             if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
             {
-                var user = DatabaseManager.Instance.Save(level);
-                user.Wait();
+                DatabaseManager.Instance.Save(level);
+
                 var p = new GlobalChatLineMessage(level.GetClient());
-                p.SetChatMessage("Game Successfuly Saved!");
+                p.SetChatMessage("Game Successful Saved!");
                 p.SetPlayerId(0);
                 p.SetLeagueId(22);
-                p.SetPlayerName("UCS Bot");
+                p.SetPlayerName("CoM Bot");
                 p.Send();
             }
             else
@@ -32,10 +31,9 @@ namespace UCS.PacketProcessing.GameOpCommands
                 p.SetChatMessage("GameOp command failed. Access to Admin GameOP is prohibited.");
                 p.SetPlayerId(0);
                 p.SetLeagueId(22);
-                p.SetPlayerName("UCS Bot");
+                p.SetPlayerName("CoM Bot");
                 p.Send();
             }
         }
-        readonly string[] m_vArgs;
     }
 }

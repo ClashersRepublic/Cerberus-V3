@@ -11,20 +11,20 @@ namespace UCS.Core.Checker
     {
         public static void CheckDirectories()
         {
-            if(!Directory.Exists("Logs"))
+            if(!Directory.Exists("logs"))
                 Directory.CreateDirectory("Logs");
 
-            if (!Directory.Exists("Patch"))
-                Directory.CreateDirectory("Patch");
+            if (!Directory.Exists("patch"))
+                Directory.CreateDirectory("patch");
 
-            if (!Directory.Exists("Tools"))
-                Directory.CreateDirectory("Tools");
+            if (!Directory.Exists("tools"))
+                Directory.CreateDirectory("tools");
 
-            if (!Directory.Exists("Library"))
-                Directory.CreateDirectory("Library");
+            if (!Directory.Exists("libs"))
+                Directory.CreateDirectory("libs");
 
-            if (!Directory.Exists("Gamefiles"))
-                Directory.CreateDirectory("Gamefiles");
+            if (!Directory.Exists("contents"))
+                Directory.CreateDirectory("contents");
         }
 
         public static void CheckFiles()

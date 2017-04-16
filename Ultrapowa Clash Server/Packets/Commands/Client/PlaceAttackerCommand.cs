@@ -25,6 +25,7 @@ namespace UCS.PacketProcessing.Commands.Client
         public override void Execute(Level level)
         {
             level.GetPlayerAvatar().AddUsedTroop(Unit, 1);
+
             var avatar = level.GetPlayerAvatar();
             var units = avatar.GetUnits();
             for (int i = 0; i < units.Count; i++)
@@ -34,20 +35,20 @@ namespace UCS.PacketProcessing.Commands.Client
                     unit.Value -= 1;
             }
 
-            var components = level.GetComponentManager().GetComponents(0);
-            for (var i = 0; i < components.Count; i++)
-            {
-                var c = (UnitStorageComponent)components[i];
-                if (c.GetUnitTypeIndex(Unit) != -1)
-                {
-                    var storageCount = c.GetUnitCountByData(Unit);
-                    if (storageCount >= 0)
-                    {
-                        c.RemoveUnits(Unit, 1);
-                        break;
-                    }
-                }
-            }
+            //var components = level.GetComponentManager().GetComponents(0);
+            //for (var i = 0; i < components.Count; i++)
+            //{
+            //    var c = (UnitStorageComponent)components[i];
+            //    if (c.GetUnitTypeIndex(Unit) != -1)
+            //    {
+            //        var storageCount = c.GetUnitCountByData(Unit);
+            //        if (storageCount >= 0)
+            //        {
+            //            c.RemoveUnits(Unit, 1);
+            //            break;
+            //        }
+            //    }
+            //}
         }
     }
 }

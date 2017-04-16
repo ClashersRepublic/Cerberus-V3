@@ -21,51 +21,60 @@ namespace UCS.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            SearchOpponentCommand searchOpponentCommand = this;
             try
             {
-                var l = ObjectManager.GetRandomOnlinePlayer();
-                if (l != null)
+                while (true)
                 {
-                    //l.Tick();
-                    level.GetPlayerAvatar().State = ClientAvatar.UserState.Searching;
-
-                    var trophyDiff = Math.Abs(level.GetPlayerAvatar().GetScore() - l.GetPlayerAvatar().GetScore());
-                    var reward = (int)Math.Round(Math.Pow((5 * trophyDiff), 0.25) + 5d);
-                    var lost = (int)Math.Round(Math.Pow((2 * trophyDiff), 0.35) + 5d);
-
-                    var info = new ClientAvatar.AttackInfo
+                    var defender = ObjectManager.GetRandomOnlinePlayer();
+                    if (defender != null)
                     {
-                        Attacker = level,
-                        Defender = l,
+                        var allianceId = defender.GetPlayerAvatar().GetAllianceId();
+                        if (allianceId > 0)
+                        {
+                            var defenderAlliance = ObjectManager.GetAlliance(allianceId);
+                            if (defenderAlliance == null)
+                                continue;
+                        }
 
-                        Lost = lost,
-                        Reward = reward,
-                        UsedTroop = new List<DataSlot>()
+                        level.GetPlayerAvatar().State = ClientAvatar.UserState.Searching;
 
-                    };
+                        var trophyDiff = Math.Abs(level.GetPlayerAvatar().GetScore() - defender.GetPlayerAvatar().GetScore());
+                        var reward = (int)Math.Round(Math.Pow((5 * trophyDiff), 0.25) + 5d);
+                        var lost = (int)Math.Round(Math.Pow((2 * trophyDiff), 0.35) + 5d);
 
-                    // Just fucking clear it since its per user and a user can attack only once at a time.
-                    level.GetPlayerAvatar().AttackingInfo.Clear();
+                        var info = new ClientAvatar.AttackInfo
+                        {
+                            Attacker = level,
+                            Defender = defender,
 
-                    level.GetPlayerAvatar().AttackingInfo.Add(l.GetPlayerAvatar().GetId(), info); //Use UserID For a while..Working on AttackID soon
+                            Lost = lost,
+                            Reward = reward,
+                            UsedTroop = new List<DataSlot>()
 
-                    l.Tick();
-                    new EnemyHomeDataMessage(level.GetClient(), l, level).Send();
-                }
-                else
-                {
-                    //new EnemyHomeDataMessage(level.GetClient(), l, level).Send();
-                    Logger.Error("Could not find opponent in memory, returning home.");
-                    new OwnHomeDataMessage(level.GetClient(), level);
+                        };
+
+                        // Just fucking clear it since its per user and a user can attack only once at a time.
+                        level.GetPlayerAvatar().AttackingInfo.Clear();
+                        level.GetPlayerAvatar().AttackingInfo.Add(level.GetPlayerAvatar().GetId(), info); //Use UserID For a while..Working on AttackID soon
+
+                        defender.Tick();
+                        new EnemyHomeDataMessage(level.GetClient(), defender, level).Send();
+                    }
+                    else
+                    {
+                        Logger.Error("Could not find opponent in memory, returning home.");
+                        new OwnHomeDataMessage(level.GetClient(), level).Send();
+                    }
+
+                    break;
                 }
             }
             catch (Exception ex)
             {
-                // Ultimate fail safe incase unexpected shit happens.
+                // Ultimate fail safe in case unexpected shit happens.
 
-                Logger.Error("Could not find opponent in memory, returning home. " + ex);
-                new OwnHomeDataMessage(level.GetClient(), level);
+                ExceptionLogger.Log(ex, "Could not find opponent in memory, returning home.");
+                new OwnHomeDataMessage(level.GetClient(), level).Send();
             }
         }
     }

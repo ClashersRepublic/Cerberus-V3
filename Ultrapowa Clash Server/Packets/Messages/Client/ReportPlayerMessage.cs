@@ -16,6 +16,7 @@ namespace UCS.PacketProcessing.Messages.Client
 
         public ReportPlayerMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+
         }
 
         public override void Decode()
@@ -30,21 +31,15 @@ namespace UCS.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            ReportPlayerMessage reportPlayerMessage = this;
-            try
-            {
-                Level player = ResourcesManager.GetPlayer(ReportedPlayerID, false);
-                ++player.GetPlayerAvatar().ReportedTimes;
-                if (player.GetPlayerAvatar().ReportedTimes < 3)
-                    return;
-                AvatarChatBanMessage c = new AvatarChatBanMessage(Client);
-                int code = 1800;
-                c.SetBanPeriod(code);
-                c.Send();
-            }
-            catch (Exception ex)
-            {
-            }
+            var player = ResourcesManager.GetPlayer(ReportedPlayerID, false);
+            ++player.GetPlayerAvatar().ReportedTimes;
+            if (player.GetPlayerAvatar().ReportedTimes < 3)
+                return;
+
+            AvatarChatBanMessage c = new AvatarChatBanMessage(Client);
+            int code = 1800;
+            c.SetBanPeriod(code);
+            c.Send();
         }
     }
 }

@@ -11,12 +11,6 @@ using System.Windows;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None, 
-                                     
-    ResourceDictionaryLocation.SourceAssembly 
-                                             
-    )]
 
 [assembly: AssemblyVersion("0.7.2.1")]
 [assembly: AssemblyFileVersion("0.7.2.1")]

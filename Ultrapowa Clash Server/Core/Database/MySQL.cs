@@ -1,23 +1,29 @@
-﻿namespace UCS.Core.Database
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Text;
+using UCS.Helpers;
+using UCS.Logic;
+
+namespace UCS.Core.Database
 {
-    #region Usings
-
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Text;
-
-    using UCS.Logic;
-
-    using MySql.Data.MySqlClient;
-    using System.Configuration;
-    using Helpers;
-
-    #endregion Usings
-
     internal class MySQL
     {
-        internal const string Credentials = "server=localhost;user id={0};pwd={1};CharSet=utf8mb4;persistsecurityinfo=True;database=ucsdb";
+        //internal const string Credentials = "server=localhost;user id={0};pwd={1};CharSet=utf8mb4;persistsecurityinfo=True;database=ucsdb";
+        internal static readonly string Credentials = "server=localhost;user id={0}{1};CharSet=utf8mb4;persistsecurityinfo=True;database=ucsdb";
+
+        static MySQL()
+        {
+            var id = Utils.ParseConfigString("id");
+            var pwd = Utils.ParseConfigString("pwd");
+
+            if (pwd != string.Empty)
+                pwd = ";pwd=" + pwd;
+
+            Credentials = string.Format(Credentials, id, pwd);
+        }
 
         /// <summary> //done
         /// Gets the seed.
@@ -28,9 +34,7 @@
             const string SQL = "SELECT coalesce(MAX(PlayerId), 0) FROM player";
             long Seed = -1;
 
-            var id = Utils.ParseConfigString("id");
-            var pwd = Utils.ParseConfigString("pwd");
-            using (MySqlConnection Conn = new MySqlConnection(string.Format(Credentials, id, pwd)))
+            using (MySqlConnection Conn = new MySqlConnection(Credentials))
             {
                 Conn.Open();
 
@@ -52,10 +56,8 @@
         {
             const string SQL = "SELECT coalesce(MAX(ClanId), 0) FROM clan";
             long Seed = -1;
-
-            var id = Utils.ParseConfigString("id");
-            var pwd = Utils.ParseConfigString("pwd");
-            using (MySqlConnection Conn = new MySqlConnection(string.Format(Credentials, id, pwd)))
+               
+            using (MySqlConnection Conn = new MySqlConnection(Credentials))
             {
                 Conn.Open();
 

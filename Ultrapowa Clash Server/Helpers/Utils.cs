@@ -124,18 +124,18 @@ namespace UCS.Helpers
 
         public static string ParseConfigString(string str) => ConfigurationManager.AppSettings[str];
 
-            public static byte[] ReadAllBytes(this BinaryReader br)
+        public static byte[] ReadAllBytes(this BinaryReader br)
+        {
+            const int bufferSize = 4096;
+            using (var ms = new MemoryStream())
             {
-                const int bufferSize = 4096;
-                using (var ms = new MemoryStream())
-                {
-                    var buffer = new byte[bufferSize];
-                    int count;
-                    while ((count = br.Read(buffer, 0, buffer.Length)) != 0)
-                        ms.Write(buffer, 0, count);
-                    return ms.ToArray();
-                }
+                var buffer = new byte[bufferSize];
+                int count;
+                while ((count = br.Read(buffer, 0, buffer.Length)) != 0)
+                    ms.Write(buffer, 0, count);
+                return ms.ToArray();
             }
+        }
 
         public static Data ReadDataReference(this BinaryReader br) => CSVManager.DataTables.GetDataById(br.ReadInt32WithEndian());
 
@@ -202,15 +202,12 @@ namespace UCS.Helpers
         {
             return Enumerable.Range(0, hex.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(hex.Substring(x, 2), 16)).ToArray();
         }
-        public static bool Contains(this String str, String substring,
-                              StringComparison comp)
+        public static bool Contains(this string str, string substring, StringComparison comp)
         {
             if (substring == null)
-                throw new ArgumentNullException("substring",
-                                                "substring cannot be null.");
+                throw new ArgumentNullException("substring", "substring cannot be null.");
             else if (!Enum.IsDefined(typeof(StringComparison), comp))
-                throw new ArgumentException("comp is not a member of StringComparison",
-                                            "comp");
+                throw new ArgumentException("comp is not a member of StringComparison", "comp");
 
             return str.IndexOf(substring, comp) >= 0;
         }

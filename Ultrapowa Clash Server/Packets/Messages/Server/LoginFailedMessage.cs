@@ -1,4 +1,3 @@
-using Ionic.Zlib;
 using System.Collections.Generic;
 using System.Configuration;
 using UCS.Helpers;

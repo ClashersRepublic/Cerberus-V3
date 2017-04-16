@@ -1,6 +1,6 @@
-using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using UCS.Logic.Manager;
 using UCS.PacketProcessing;
 
@@ -10,12 +10,13 @@ namespace UCS.Logic
     {
         public GameObjectManager GameObjectManager;
         public WorkerManager WorkerManager;
-        DateTime m_vTime;
-        Client m_vClient;
-        byte m_vAccountPrivileges;
-        byte m_vAccountStatus;
-        string m_vIPAddress;
-        readonly ClientAvatar m_vClientAvatar;
+
+        private DateTime m_vTime;
+        private Client m_vClient;
+        private byte m_vAccountPrivileges;
+        private byte m_vAccountStatus;
+        private string m_vIPAddress;
+        private readonly ClientAvatar m_vClientAvatar;
 
         public Level()
         {
@@ -48,6 +49,7 @@ namespace UCS.Logic
 
         public ComponentManager GetComponentManager() => GameObjectManager.GetComponentManager();
 
+        [Obsolete]
         public ClientAvatar GetHomeOwnerAvatar() => m_vClientAvatar;
 
         public string GetIPAddress() => m_vIPAddress;
@@ -58,13 +60,13 @@ namespace UCS.Logic
 
         public bool HasFreeWorkers() => WorkerManager.GetFreeWorkers() > 0;
 
-        public void LoadFromJSON(string jsonString)
+        public void LoadFromJson(string jsonString)
         {
             JObject jsonObject = JObject.Parse(jsonString);
             GameObjectManager.Load(jsonObject);
         }
 
-        public string SaveToJSON() => JsonConvert.SerializeObject(GameObjectManager.Save(), Formatting.Indented);
+        public string SaveToJson() => JsonConvert.SerializeObject(GameObjectManager.Save());
 
         public void SetAccountPrivileges(byte privileges) => m_vAccountPrivileges = privileges;
 
@@ -72,7 +74,14 @@ namespace UCS.Logic
 
         public void SetClient(Client client) => m_vClient = client;
 
-        public void SetHome(string jsonHome) => GameObjectManager.Load(JObject.Parse(jsonHome));
+        public void SetHome(string jsonHome)
+        {
+            var gameObjects = GameObjectManager.GetAllGameObjects();
+            for (int i = 0; i < gameObjects.Count; i++)
+                gameObjects[i].Clear();
+
+            GameObjectManager.Load(JObject.Parse(jsonHome));
+        }
 
         public void SetIPAddress(string IP) => m_vIPAddress = IP;
 

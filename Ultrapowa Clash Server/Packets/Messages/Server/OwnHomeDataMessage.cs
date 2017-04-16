@@ -17,17 +17,17 @@ namespace UCS.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            ClientAvatar avatar = Player.GetPlayerAvatar();
+            var avatar = Player.GetPlayerAvatar();
             var data = new List<byte>();
-            ClientHome clientHome = new ClientHome(avatar.GetId());
+            var home = new ClientHome(avatar.GetId());
 
-            clientHome.SetShieldTime(avatar.RemainingShieldTime);
-            clientHome.SetHomeJSON(Player.SaveToJSON());
+            home.SetShieldTime(avatar.RemainingShieldTime);
+            home.SetHomeJson(Player.SaveToJson());
 
             data.AddInt32(0);
             data.AddInt32(-1);
             data.AddInt32((int)Player.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-            data.AddRange((IEnumerable<byte>)clientHome.Encode());
+            data.AddRange((IEnumerable<byte>)home.Encode());
             data.AddRange((IEnumerable<byte>)avatar.Encode());
             if (avatar.State == ClientAvatar.UserState.Editmode)
             {

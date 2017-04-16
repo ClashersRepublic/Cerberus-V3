@@ -8,17 +8,15 @@ namespace UCS.PacketProcessing.Messages.Client
 {
     internal class ReplayRequestMessage : Message
     {
-        public ReplayRequestMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public ReplayRequestMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
-        }
-
-        public override void Decode()
-        {
+            // Space
         }
 
         public override void Process(Level level)
         {
-            new ReplayData(Client).Send();
+            //new ReplayData(Client).Send();
+            new OwnHomeDataMessage(Client, Client.GetLevel()).Send();
         }
     }
 }

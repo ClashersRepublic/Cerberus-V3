@@ -9,9 +9,9 @@ namespace UCS.PacketProcessing.Messages.Client
 {
     internal class KeepAliveMessage : Message
     {
-        public KeepAliveMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public KeepAliveMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
-
+            // Space
         }
 
         public override void Process(Level level)
@@ -19,7 +19,7 @@ namespace UCS.PacketProcessing.Messages.Client
             Client.LastKeepAlive = DateTime.Now;
             Client.NextKeepAlive = Client.LastKeepAlive.AddSeconds(30);
 
-            Client.m_vKeepAliveOk.Send();
+            Client._keepAliveOk.Send();
         }
     }
 }

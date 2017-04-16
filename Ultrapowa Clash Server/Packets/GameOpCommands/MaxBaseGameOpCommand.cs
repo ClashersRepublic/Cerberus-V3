@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UCS.Core;
 using UCS.Core.Network;
+using UCS.Files.Logic;
 using UCS.Logic;
 using UCS.PacketProcessing;
 using UCS.PacketProcessing.Messages.Server;
@@ -10,6 +11,8 @@ namespace UCS.Packets.GameOpCommands
 {
     internal class MaxBaseGameOpCommand : GameOpCommand
     {
+        public static readonly string s_maxBase = File.ReadAllText("contents/max_home.json");
+
         public MaxBaseGameOpCommand(string[] Args)
         {
             SetRequiredAccountPrivileges(0);
@@ -17,18 +20,26 @@ namespace UCS.Packets.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
-            {
-                var p = level.GetPlayerAvatar();
-                using (StreamReader streamReader = new StreamReader("Gamefiles/level/PVP/Base55.json"))
-                {
-                    string end = streamReader.ReadToEnd();
-                    ResourcesManager.SetGameObject(level, end);
-                    new OutOfSyncMessage(level.GetClient()).Send();
-                }
-            }
-            else
-                SendCommandFailedMessage(level.GetClient());
+            //var buildings = level.GameObjectManager.GetGameObjects(0);
+            //for (int i = 0; i < buildings.Count; i++)
+            //{
+            //    var building = (Building)buildings[i];
+            //    var data = (ConstructionItemData)building.GetData();
+
+            //    building.SetUpgradeLevel(data.GetUpgradeLevelCount() - 1);
+            //}
+
+            //var traps = level.GameObjectManager.GetGameObjects(4);
+            //for (int i = 0; i < traps.Count; i++)
+            //{
+            //    var trap = (Trap)traps[i];
+            //    var data = (ConstructionItemData)trap.GetData();
+
+            //    trap.SetUpgradeLevel(data.GetUpgradeLevelCount() - 1);
+            //}
+
+            level.SetHome(s_maxBase);
+            new OwnHomeDataMessage(level.GetClient(), level).Send();
         }
     }
 }

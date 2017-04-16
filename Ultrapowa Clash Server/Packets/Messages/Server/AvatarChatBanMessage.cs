@@ -15,8 +15,10 @@ namespace UCS.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            var pack = new List<byte>();
-            pack.AddInt32(m_vCode);
+            var data = new List<byte>();
+            data.AddInt32(m_vCode);
+
+            Encrypt(data.ToArray());
         }
 
         public void SetBanPeriod(int code)

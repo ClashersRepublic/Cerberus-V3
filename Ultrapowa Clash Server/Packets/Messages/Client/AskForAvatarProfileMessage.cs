@@ -13,39 +13,29 @@ namespace UCS.PacketProcessing.Messages.Client
         private long m_vAvatarId;
         private long m_vCurrentHomeId;
 
-        public AskForAvatarProfileMessage(PacketProcessing.Client client, PacketReader br)
-            : base(client, br)
+        public AskForAvatarProfileMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
+            // Space
         }
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
-            {
-                m_vAvatarId = br.ReadInt64();
-                if (!br.ReadBoolean())
-                  return;
-                m_vCurrentHomeId = br.ReadInt64();
-            }
+            m_vAvatarId = Reader.ReadInt64();
+            if (Reader.ReadBoolean())
+                m_vCurrentHomeId = Reader.ReadInt64();
         }
 
         public override void Process(Level level)
         {
-            AskForAvatarProfileMessage avatarProfileMessage = this;
-            try
+            var player = ResourcesManager.GetPlayer(m_vAvatarId, false);
+            if (player == null)
+                return;
+
+            player.Tick();
+            new AvatarProfileMessage(Client)
             {
-                Level player = ResourcesManager.GetPlayer(avatarProfileMessage.m_vAvatarId, false);
-                if (player == null)
-                    return;
-                player.Tick();
-                new AvatarProfileMessage(avatarProfileMessage.Client)
-                {
-                    m_vLevel = player
-                }.Send();
-            }
-            catch (Exception ex)
-            {
-            }
+                Level = player
+            }.Send();
         }
     }
 }

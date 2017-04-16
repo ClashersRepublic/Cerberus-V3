@@ -18,8 +18,9 @@ namespace UCS.Core
         static string path = "Logs/log_" + timestamp + "_.txt";
         static SemaphoreSlim _fileLock = new SemaphoreSlim(1);
 
-        private static readonly string _errPath = "Logs/err_" + DateTime.Now.ToFileTime() + "_.log";
-        private static readonly StreamWriter _errWriter = new StreamWriter(_errPath);
+        private static readonly object s_lock = new object();
+        private static readonly string s_errPath = "Logs/err_" + DateTime.Now.ToFileTime() + "_.log";
+        private static readonly StreamWriter s_errWriter = new StreamWriter(s_errPath);
 
         public static void Initialize()
         {
@@ -35,9 +36,9 @@ namespace UCS.Core
 
             if (logLevel != 0 || ValidLogLevel == true)
             {
-                if (!File.Exists("Logs/log_" + timestamp + "_.txt"))
+                if (!File.Exists("logs/log_" + timestamp + "_.txt"))
                 {
-                    using (var sw = new StreamWriter("Logs/log_" + timestamp + "_.txt"))
+                    using (var sw = new StreamWriter("logs/log_" + timestamp + "_.txt"))
                     {
                         sw.WriteLine("Log file created at " + DateTime.Now);
                         sw.WriteLine();
@@ -92,7 +93,10 @@ namespace UCS.Core
             Console.WriteLine(text);
             Console.ResetColor();
 
-            _errWriter.WriteLine(text);
+            lock (s_lock)
+            {
+                s_errWriter.WriteLine(text);
+            }
         }
 
         private static void LogLevelError()

@@ -57,14 +57,17 @@ namespace UCS.PacketProcessing.Messages.Server
 
         public void SetAlliance(Alliance alliance)
         {
-            // Quality code.
             if (alliance == null || alliance.GetAllianceId() <= 0L)
+            {
+                // Just in case.
+                m_vHasAlliance = false;
                 return;
+            }
 
-                m_vHasAlliance = true;
-                m_vAllianceId = alliance.GetAllianceId();
-                m_vAllianceName = alliance.GetAllianceName();
-                m_vAllianceIcon = alliance.GetAllianceBadgeData();
+            m_vHasAlliance = true;
+            m_vAllianceId = alliance.GetAllianceId();
+            m_vAllianceName = alliance.GetAllianceName();
+            m_vAllianceIcon = alliance.GetAllianceBadgeData();
         }
 
         public void SetChatMessage(string message)

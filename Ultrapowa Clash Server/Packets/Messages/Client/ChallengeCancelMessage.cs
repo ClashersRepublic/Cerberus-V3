@@ -13,14 +13,16 @@ using UCS.PacketProcessing.Messages.Server;
 
 namespace UCS.Packets.Messages.Client
 {
-    internal class ChallangeCancelMessage : Message
+    internal class ChallengeCancelMessage : Message
     {
-        public ChallangeCancelMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public ChallengeCancelMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+            // Space
         }
 
         public override void Decode()
         {
+            // Space
         }
 
         public override void Process(Level level)
@@ -41,6 +43,5 @@ namespace UCS.Packets.Messages.Client
                 }
             }
         }
-
     }
 }

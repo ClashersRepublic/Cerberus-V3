@@ -10,12 +10,13 @@ namespace UCS.Logic
     {
         private readonly int[] m_vRoleTable = new int[5]
         {
-      1,
-      1,
-      4,
-      2,
-      3
+            1,
+            1,
+            4,
+            2,
+            3
         };
+
         private readonly int m_vDonatedTroops;
         private readonly byte m_vIsNewMember;
         private readonly int m_vReceivedTroops;
@@ -37,13 +38,6 @@ namespace UCS.Logic
             this.m_vReceivedTroops = 100;
             this.m_vWarCooldown = 0;
             this.m_vWarOptInStatus = 1;
-        }
-
-        public static void Decode(byte[] avatarData)
-        {
-            using (var br = new PacketReader(new MemoryStream(avatarData)))
-            {
-            }
         }
 
         public static int GetDonations() => 150;
@@ -71,11 +65,8 @@ namespace UCS.Logic
         }
 
         public long GetAvatarId() => m_vAvatarId;
-
         public int GetOrder() => m_vOrder;
-
         public int GetPreviousOrder() => m_vPreviousOrder;
-
         public int GetRole() => m_vRole;
 
         public bool HasLowerRoleThan(int role)

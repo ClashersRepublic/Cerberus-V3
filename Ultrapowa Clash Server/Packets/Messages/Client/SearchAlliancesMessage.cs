@@ -12,8 +12,9 @@ namespace UCS.PacketProcessing.Messages.Client
 {
     internal class SearchAlliancesMessage : Message
     {
-        public SearchAlliancesMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public SearchAlliancesMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
+            // Space
         }
 
         private const int m_vAllianceLimit = 40;
@@ -25,19 +26,24 @@ namespace UCS.PacketProcessing.Messages.Client
         private string m_vSearchString;
         private byte m_vShowOnlyJoinableAlliances;
         private int m_vWarFrequency;
+        private int m_vTrophyLimit;
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
+            using (var reader = new PacketReader(new MemoryStream(GetData())))
             {
-                m_vWarFrequency = br.ReadInt32();
-                m_vAllianceOrigin = br.ReadInt32();
-                m_vMinimumAllianceMembers = br.ReadInt32();
-                m_vMaximumAllianceMembers = br.ReadInt32();
-                m_vAllianceScore = br.ReadInt32();
-                m_vShowOnlyJoinableAlliances = br.ReadByte();
-                br.ReadInt32();
-                m_vMinimumAllianceLevel = br.ReadInt32();
+                m_vSearchString = reader.ReadString();
+                m_vWarFrequency = reader.ReadInt32();
+                m_vAllianceOrigin = reader.ReadInt32();
+                m_vMinimumAllianceMembers = reader.ReadInt32();
+                m_vMaximumAllianceMembers = reader.ReadInt32();
+                m_vAllianceScore = reader.ReadInt32();
+                m_vTrophyLimit = reader.ReadInt32();
+                m_vShowOnlyJoinableAlliances = reader.ReadByte();
+
+                reader.ReadInt32();
+
+                m_vMinimumAllianceLevel = reader.ReadInt32();
             }
         }
 
@@ -46,29 +52,34 @@ namespace UCS.PacketProcessing.Messages.Client
             var alliances = ObjectManager.GetInMemoryAlliances();
 
             if (ResourcesManager.GetInMemoryAlliances().Count == 0)
-                 alliances = DatabaseManager.Instance.GetAllAlliances();
+                alliances = DatabaseManager.Instance.GetAllAlliances();
 
             var joinableAlliances = new List<Alliance>();
-            var i = 0;
-            var j = 0;
-            while (j < m_vAllianceLimit && i < alliances.Count)
+            for (int i = 0; i < alliances.Count; i++)
             {
-                if (alliances[i].GetAllianceMembers().Count != 0)
+                if (joinableAlliances.Count >= m_vAllianceLimit)
+                    break;
+
+                var alliance = alliances[i];
+                if (m_vSearchString == null)
                 {
-                    if (alliances[i].GetAllianceName().Contains(m_vSearchString, StringComparison.OrdinalIgnoreCase))
+                    joinableAlliances.Add(alliance);
+                }
+                else
+                {
+                    if (alliance.GetAllianceName().Contains(m_vSearchString, StringComparison.OrdinalIgnoreCase))
                     {
-                        joinableAlliances.Add(alliances[i]);
-                        j++;
+                        joinableAlliances.Add(alliance);
                     }
-                    i++;
                 }
             }
+
             joinableAlliances = joinableAlliances.ToList();
 
-            var p = new AllianceListMessage(Client);
-            p.SetAlliances(joinableAlliances);
-            p.SetSearchString(m_vSearchString);
-            p.Send();
+            var message = new AllianceListMessage(Client);
+            message.SetAlliances(joinableAlliances);
+            message.SetSearchString(m_vSearchString);
+            message.Send();
         }
     }
 }

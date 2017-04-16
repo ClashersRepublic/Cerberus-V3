@@ -15,16 +15,19 @@ namespace UCS.Core
 {
     internal static class ResourcesManager
     {
+        // Socket Handle -> Client instance.
         private static ConcurrentDictionary<long, Client> m_vClients;
+
+        // User Id -> Level instance.
         private static ConcurrentDictionary<long, Level> m_vInMemoryLevels;
+        // Alliance Id -> Alliance instance.
         private static ConcurrentDictionary<long, Alliance> m_vInMemoryAlliances;
+
+        // Not sure why they are using this as well as InMemLevels.
         private static List<Level> m_vOnlinePlayers;
-        //private static DatabaseManager m_vDatabase;
 
         public static void Initialize()
         {
-            //m_vDatabase = new DatabaseManager(); // Nice 1 DB manager
-
             m_vOnlinePlayers = new List<Level>();
             m_vClients = new ConcurrentDictionary<long, Client>();
 
@@ -51,9 +54,12 @@ namespace UCS.Core
                 {
                     var socket = client.Socket;
                     try { socket.Shutdown(SocketShutdown.Both); }
-                    catch { }
+                    catch { /* Swallow */ }
                     try { socket.Dispose(); }
-                    catch { }
+                    catch { /* Swallow */ }
+
+                    // Mark the client as dropped.
+                    Interlocked.CompareExchange(ref client._dropped, 1, 0);
 
                     // Clean level from memory if its Level has been loaded.
                     var level = client.GetLevel();
@@ -66,33 +72,19 @@ namespace UCS.Core
             }
             catch (Exception ex)
             {
-                Logger.Error("Unable to drop client: " + ex);
+                ExceptionLogger.Log(ex, "Exception while dropping client.");
             }
         }
 
-        public static List<long> GetAllPlayerIds() => DatabaseManager.Instance.GetAllPlayerIds();
-
-        public static List<long> GetAllClanIds() => DatabaseManager.Instance.GetAllClanIds();
-
-        public static Client GetClient(long socketHandle) => m_vClients.ContainsKey(socketHandle) ? m_vClients[socketHandle] : null;
-
         public static List<Client> GetConnectedClients() => m_vClients.Values.ToList();
-
-        public static void GetAllPlayersFromDB()
-        {
-            var players = DatabaseManager.Instance.GetAllPlayers();
-			Parallel.ForEach((players),t =>
-			{
-				if (!m_vInMemoryLevels.ContainsKey(t.Key))
-					m_vInMemoryLevels.TryAdd(t.Key, t.Value);
-			});
-        }
 
         public static List<Level> GetInMemoryLevels()
         {
             var levels = new List<Level>();
-            lock (m_vInMemoryLevels)
+
+            lock (m_vInMemoryLevels) // ??
                 levels.AddRange(m_vInMemoryLevels.Values);
+
             return levels;
         }
 
@@ -100,11 +92,13 @@ namespace UCS.Core
 
         public static Level GetPlayer(long id, bool persistent = false)
         {
+            // Try to get player from the memory, if not found
+            // we look into the database.
             var result = GetInMemoryLevel(id);
             if (result == null)
             {
-                result = DatabaseManager.Instance.GetAccount(id);
-                if (persistent)
+                result = DatabaseManager.Instance.GetLevel(id);
+                if (result != null && persistent)
                     LoadLevel(result);
             }
             return result;
@@ -117,20 +111,23 @@ namespace UCS.Core
             m_vInMemoryLevels.TryAdd(level.GetPlayerAvatar().GetId(), level);
         }
 
-        public static void LogPlayerIn(Level l, Client c)
+        public static void LogPlayerIn(Level level, Client client)
         {
-            l.SetClient(c);
-            c.SetLevel(l);
+            // Set the back refs.
+            level.SetClient(client);
+            client.SetLevel(level);
 
-            if (!m_vOnlinePlayers.Contains(l))
+            if (!m_vOnlinePlayers.Contains(level))
             {
-                m_vOnlinePlayers.Add(l);
-                LoadLevel(l);
+                m_vOnlinePlayers.Add(level);
+                LoadLevel(level);
             }
+            // Should kill old client maybe?
             else
             {
-                int i = m_vOnlinePlayers.IndexOf(l);
-                m_vOnlinePlayers[i] = l;
+                Logger.Error("A client who is already logged in is trying to log in.");
+                int i = m_vOnlinePlayers.IndexOf(level);
+                m_vOnlinePlayers[i] = level;
             }
         }
 
@@ -140,9 +137,7 @@ namespace UCS.Core
             // we're not morons right.
             level.Tick();
 
-            var user = DatabaseManager.Instance.Save(level);
-            // Waiting for asynchronous work because we're smart.
-            user.Wait();
+            DatabaseManager.Instance.Save(level);
 
             m_vOnlinePlayers.Remove(level);
             m_vInMemoryLevels.TryRemove(level.GetPlayerAvatar().GetId());
@@ -152,9 +147,9 @@ namespace UCS.Core
 
         public static List<Alliance> GetInMemoryAlliances() => m_vInMemoryAlliances.Values.ToList();
 
-        public static void AddAllianceInMemory(Alliance all)
+        public static void AddAllianceInMemory(Alliance alliance)
         {
-            m_vInMemoryAlliances.TryAdd(all.GetAllianceId(), all);
+            m_vInMemoryAlliances.TryAdd(alliance.GetAllianceId(), alliance);
         }
 
         public static void AddAllianceInMemory(List<Alliance> all)
@@ -168,8 +163,6 @@ namespace UCS.Core
 
         public static bool InMemoryAlliancesContain(long key) => m_vInMemoryAlliances.Keys.Contains(key);
 
-        public static bool InMemoryAlliancesContain(Alliance all) => m_vInMemoryAlliances.Values.Contains(all);
-
         public static Alliance GetInMemoryAlliance(long key)
         {
             Alliance a;
@@ -182,10 +175,6 @@ namespace UCS.Core
             m_vInMemoryAlliances.TryRemove(key);
         }
 
-        public static void RemovePlayerFromMemory(Level l)
-        {
-            m_vInMemoryLevels.TryRemove(l.GetPlayerAvatar().GetId());
-        }
         public static void DisconnectClient(Client c)
         {
             new OutOfSyncMessage(c).Send();
@@ -194,7 +183,7 @@ namespace UCS.Core
 
         public static void SetGameObject(Level level, string json)
         {
-            level.GetHomeOwnerAvatar().LoadFromJSON(json);
+            level.GetHomeOwnerAvatar().LoadFromJson(json);
             DisconnectClient(level.GetClient());
         }
     }

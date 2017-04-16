@@ -7,6 +7,7 @@ namespace UCS.Database
     {
         public ucsdbEntities(string connectionString) : base("name=" + connectionString)
         {
+            // Space
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

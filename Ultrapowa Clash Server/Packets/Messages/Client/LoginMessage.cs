@@ -110,17 +110,17 @@ namespace UCS.PacketProcessing.Messages.Client
                 //    return;
                 //}
 
-                if (Constants.IsPremiumServer == false)
-                {
-                    if (ResourcesManager.GetOnlinePlayers().Count >= 100)
-                    {
-                        var p = new LoginFailedMessage(Client);
-                        p.SetErrorCode(11);
-                        p.SetReason("Clash of Magic");
-                        p.Send();
-                        return;
-                    }
-                }
+                //if (Constants.IsPremiumServer == false)
+                //{
+                //    if (ResourcesManager.GetOnlinePlayers().Count >= 100)
+                //    {
+                //        var p = new LoginFailedMessage(Client);
+                //        p.SetErrorCode(11);
+                //        p.SetReason("Clash of Magic");
+                //        p.Send();
+                //        return;
+                //    }
+                //}
 
                 int time = Convert.ToInt32(ConfigurationManager.AppSettings["maintenanceTimeleft"]);
                 if (time != 0)
@@ -173,7 +173,6 @@ namespace UCS.PacketProcessing.Messages.Client
         {
             ResourcesManager.LogPlayerIn(level, Client);
             level.Tick();
-            level.SetIPAddress(Client.CIPAddress);
 
             var loginOk = new LoginOkMessage(Client);
             var avatar = level.GetPlayerAvatar();
@@ -250,6 +249,7 @@ namespace UCS.PacketProcessing.Messages.Client
                 }
                 else
                 {
+                    // Try to get player from memory then DB.
                     level = ResourcesManager.GetPlayer(UserID, true);
 
                     var avatar = default(ClientAvatar);
@@ -257,7 +257,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     // UserId and UserToken.
                     if (level == null)
                     {
-                        level = ObjectManager.CreateAvatar(UserID, UserToken);
+                        level = ObjectManager.CreateLevel(UserID, UserToken);
                         avatar = level.GetPlayerAvatar();
                         avatar.SetRegion(Region);
                     }
@@ -282,7 +282,7 @@ namespace UCS.PacketProcessing.Messages.Client
 
         private void NewUser()
         {
-            level = ObjectManager.CreateAvatar(0, null);
+            level = ObjectManager.CreateLevel(0, null);
             if (string.IsNullOrEmpty(UserToken))
             {
                 byte[] tokenSeed = new byte[20];
@@ -296,7 +296,7 @@ namespace UCS.PacketProcessing.Messages.Client
             level.GetPlayerAvatar().InitializeAccountCreationDate();
             level.GetPlayerAvatar().SetAndroid(Android);
 
-            var user = DatabaseManager.Instance.Save(level);
+            DatabaseManager.Instance.Save(level);
             LogUser();
         }
 

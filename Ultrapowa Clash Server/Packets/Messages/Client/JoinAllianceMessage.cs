@@ -15,53 +15,45 @@ namespace UCS.PacketProcessing.Messages.Client
 
         public JoinAllianceMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+            // Space
         }
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
-            {
-                m_vAllianceId = br.ReadInt64();
-            }
+            m_vAllianceId = Reader.ReadInt64();
         }
 
         public override void Process(Level level)
         {
-            JoinAllianceMessage joinAllianceMessage = this;
-            try
-            {
-                Alliance alliance = ObjectManager.GetAlliance(m_vAllianceId);
-                if (alliance == null || alliance.IsAllianceFull())
-                  return;
-                    level.GetPlayerAvatar().SetAllianceId(alliance.GetAllianceId());
-                    AllianceMemberEntry entry = new AllianceMemberEntry(level.GetPlayerAvatar().GetId());
-                    entry.SetRole(1);
-                    alliance.AddAllianceMember(entry);
+            var alliance = ObjectManager.GetAlliance(m_vAllianceId);
+            if (alliance == null || alliance.IsAllianceFull())
+                return;
 
-                    JoinedAllianceCommand Command1 = new JoinedAllianceCommand();
-                    Command1.SetAlliance(alliance);
+            level.GetPlayerAvatar().SetAllianceId(alliance.GetAllianceId());
+            var entry = new AllianceMemberEntry(level.GetPlayerAvatar().GetId());
+            entry.SetRole(1);
+            alliance.AddAllianceMember(entry);
 
-                    AllianceRoleUpdateCommand Command2 = new AllianceRoleUpdateCommand();
-                    Command2.SetAlliance(alliance);
-                    Command2.SetRole(1);
-                    Command2.Tick(level);
+            var jaCommand = new JoinedAllianceCommand();
+            jaCommand.SetAlliance(alliance);
 
-                    var a = new AvailableServerCommandMessage(Client);
-                    a.SetCommandId(1);
-                    a.SetCommand(Command1);
+            var aruCommand = new AllianceRoleUpdateCommand();
+            aruCommand.SetAlliance(alliance);
+            aruCommand.SetRole(1);
+            aruCommand.Tick(level);
 
-                    var d = new AvailableServerCommandMessage(Client);
-                    d.SetCommandId(8);
-                    d.SetCommand(Command2);
+            var asCommand1 = new AvailableServerCommandMessage(Client);
+            asCommand1.SetCommandId(1);
+            asCommand1.SetCommand(jaCommand);
 
-                    a.Send();
-                    d.Send();
-                    
-                     new AllianceStreamMessage(Client, alliance).Send();
-            }
-              catch (Exception ex)
-              {
-              }
-}
+            var asCommand2 = new AvailableServerCommandMessage(Client);
+            asCommand2.SetCommandId(8);
+            asCommand2.SetCommand(aruCommand);
+
+            asCommand1.Send();
+            asCommand2.Send();
+
+            new AllianceStreamMessage(Client, alliance).Send();
+        }
     }
 }

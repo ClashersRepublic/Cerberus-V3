@@ -10,8 +10,7 @@ namespace UCS.PacketProcessing
 {
     internal static class MessageFactory
     {
-
-        static readonly Dictionary<int, Type> m_vMessages;
+        private static readonly Dictionary<int, Type> m_vMessages;
 
         static MessageFactory()
         {
@@ -21,21 +20,21 @@ namespace UCS.PacketProcessing
             m_vMessages.Add(10105, typeof(AskForFriendListMessage));
             m_vMessages.Add(10108, typeof(KeepAliveMessage));
             m_vMessages.Add(10117, typeof(ReportPlayerMessage));
-           // m_vMessages.Add(10118, typeof(AccountSwitchMessage));
+            // m_vMessages.Add(10118, typeof(AccountSwitchMessage));
             m_vMessages.Add(10113, typeof(GetDeviceTokenMessage));
-            m_vMessages.Add(10212, typeof(ChangeAvatarNameMessage)); 
+            m_vMessages.Add(10212, typeof(ChangeAvatarNameMessage));
             m_vMessages.Add(10502, typeof(AddClashFriendMessage));
             m_vMessages.Add(10905, typeof(NewsSeenMessage));
             m_vMessages.Add(14100, typeof(AttackResultMessage));
             m_vMessages.Add(14101, typeof(GoHomeMessage));
             m_vMessages.Add(14102, typeof(ExecuteCommandsMessage));
-            //m_vMessages.Add(14106, typeof(RetributionAttackerMessage));
-            m_vMessages.Add(14110, typeof(ChallangeWatchLiveMessage));
-            m_vMessages.Add(14111, typeof(ChallangeVisitMessage));
+            m_vMessages.Add(14106, typeof(RevengeAttackerMessage));
+            m_vMessages.Add(14110, typeof(ChallengeWatchLiveMessage));
+            m_vMessages.Add(14111, typeof(ChallengeVisitMessage));
             m_vMessages.Add(14113, typeof(VisitHomeMessage));
             m_vMessages.Add(14114, typeof(ReplayRequestMessage));
-            m_vMessages.Add(14120, typeof(ChallangeAttackMessage));
-            m_vMessages.Add(14125, typeof(ChallangeCancelMessage));
+            m_vMessages.Add(14120, typeof(ChallengeAttackMessage));
+            m_vMessages.Add(14125, typeof(ChallengeCancelMessage));
             m_vMessages.Add(14134, typeof(AttackNpcMessage));
             m_vMessages.Add(14201, typeof(FacebookLinkMessage));
             m_vMessages.Add(14316, typeof(EditClanSettingsMessage));
@@ -65,23 +64,16 @@ namespace UCS.PacketProcessing
             m_vMessages.Add(14406, typeof(TopPreviousGlobalPlayersMessage));
             m_vMessages.Add(14503, typeof(TopLeaguePlayersMessage));
             m_vMessages.Add(14600, typeof(RequestAvatarNameChange));
-           // m_vMessages.Add(15001, typeof(AllianceWarVisitMessage));
+            // m_vMessages.Add(15001, typeof(AllianceWarVisitMessage));
             m_vMessages.Add(15001, typeof(AllianceWarAttackAvatarMessage));
         }
 
-        public static object Read(Client c, PacketReader br, int packetType)
+        public static object Read(Client client, PacketReader reader, int messageId)
         {
-            if (m_vMessages.ContainsKey(packetType))
-            {
-                Logger.Write("Message " + m_vMessages[packetType].Name + " is handled");
-                return Activator.CreateInstance(m_vMessages[packetType], c, br);
-            }
-            else
-            {
-                Logger.Write("Message " + packetType + " is unhandled");
-                return null;
-            }
-        }
+            if (m_vMessages.ContainsKey(messageId))
+                return Activator.CreateInstance(m_vMessages[messageId], client, reader);
 
+            return null;
+        }
     }
 }

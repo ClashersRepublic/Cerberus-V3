@@ -26,10 +26,10 @@ namespace UCS.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            BookmarkSlot al = level.GetPlayerAvatar().BookmarkedClan.Find((Predicate<BookmarkSlot>) (a => a.Value == id));
+            BookmarkSlot al = level.GetPlayerAvatar().BookmarkedClan.Find((Predicate<BookmarkSlot>)(a => a.Value == id));
             if (al != null)
-            level.GetPlayerAvatar().BookmarkedClan.Remove(al);
+                level.GetPlayerAvatar().BookmarkedClan.Remove(al);
             new BookmarkRemoveAllianceMessage(Client).Send();
-        } 
+        }
     }
 }

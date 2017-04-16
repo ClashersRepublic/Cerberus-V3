@@ -18,44 +18,46 @@ namespace UCS.PacketProcessing
 {
     internal class Message
     {
+        // NOTE: Maybe make disposable.
 
-        byte[] m_vData;
-        int m_vLength;
-        ushort m_vMessageVersion;
-        ushort m_vType;
+        private PacketReader _reader;
+        private byte[] m_vData;
+        private int m_vLength;
+        private ushort m_vMessageVersion;
+        private ushort m_vType;
 
         public Message()
         {
+            // Space
         }
 
-        public Message(Client c)
+        public Message(Client client)
         {
-            Client = c;
+            Client = client;
             m_vType = 0;
             m_vLength = -1;
             m_vMessageVersion = 0;
             m_vData = null;
         }
 
-        public Message(Client c, PacketReader br)
+        public Message(Client client, PacketReader reader)
         {
-            Client = c;
-            //m_vType = br.ReadUInt16WithEndian();
-            //byte[] tempLength = br.ReadBytes(3);
-            //m_vLength = (0x00 << 24) | (tempLength[0] << 16) | (tempLength[1] << 8) | tempLength[2];
-            //m_vMessageVersion = br.ReadUInt16WithEndian();
-            //m_vData = br.ReadBytes(m_vLength);
+            Client = client;
+            _reader = reader;
         }
-
-        private static readonly object s_sync = new object();
-
-        public int Broadcasting { get; set; }
 
         public Client Client { get; set; }
 
+        public PacketReader Reader => _reader;
+
         public virtual void Decode()
         {
+            // Space
+        }
 
+        public virtual void Encode()
+        {
+            // Space
         }
 
         public void Decrypt()
@@ -64,57 +66,57 @@ namespace UCS.PacketProcessing
             {
                 if (Constants.IsRc4)
                 {
-                    lock (s_sync)
-                    {
-                        Client.Decrypt(m_vData);
-                        if (m_vType == 10101)
-                            Client.State = ClientState.Login;
+                    Client.Decrypt(m_vData);
+                    if (m_vType == 10101)
+                        Client.State = ClientState.Login;
 
-                        // No need since the decryption occurs on same buffer.
-                        //SetData(m_vData);
-                    }
+                    // No need since the decryption occurs on same buffer.
+                    //SetData(m_vData);
                 }
                 else
                 {
                     if (m_vType == 10101)
                     {
-                        byte[] cipherText = m_vData;
+                        var cipherText = m_vData;
                         Client.CPublicKey = cipherText.Take(32).ToArray();
-                        Hasher b = Blake2B.Create(new Blake2BConfig
+
+                        var blake = Blake2B.Create(new Blake2BConfig
                         {
                             OutputSizeInBytes = 24
                         });
-                        b.Init();
-                        b.Update(Client.CPublicKey);
-                        b.Update(Key.Crypto.PublicKey);
-                        Client.CRNonce = b.Finish();
+                        blake.Init();
+                        blake.Update(Client.CPublicKey);
+                        blake.Update(Key.Crypto.PublicKey);
+
+                        Client.CRNonce = blake.Finish();
+
                         cipherText = CustomNaCl.OpenPublicBox(cipherText.Skip(32).ToArray(), Client.CRNonce, Key.Crypto.PrivateKey, Client.CPublicKey);
+
                         Client.CSharedKey = Client.CPublicKey;
                         Client.CSessionKey = cipherText.Take(24).ToArray();
                         Client.CSNonce = cipherText.Skip(24).Take(24).ToArray();
                         Client.State = ClientState.Login;
+
                         SetData(cipherText.Skip(48).ToArray());
                     }
                     else
                     {
                         if (m_vType != 10100)
+                        {
                             if (Client.State == ClientState.LoginSuccess)
                             {
                                 Client.CSNonce.Increment();
                                 SetData(CustomNaCl.OpenSecretBox(new byte[16].Concat(m_vData).ToArray(), Client.CSNonce, Client.CSharedKey));
                             }
+                        }
                     }
                 }
             }
             catch
             {
                 Client.State = ClientState.Exception;
+                throw;
             }
-        }
-
-        public virtual void Encode()
-        {
-
         }
 
         public void Encrypt(byte[] plainText)
@@ -172,13 +174,18 @@ namespace UCS.PacketProcessing
             encodedMessage.AddUInt16(m_vType);
             encodedMessage.AddInt32WithSkip(m_vLength, 1);
             encodedMessage.AddUInt16(m_vMessageVersion);
+
+            if (m_vData == null)
+                Logger.Error("m_vData was null when getting raw data of message.");
+
             encodedMessage.AddRange(m_vData);
+
             return encodedMessage.ToArray();
         }
 
         public virtual void Process(Level level)
         {
-
+            // Space
         }
 
         public void SetData(byte[] data)

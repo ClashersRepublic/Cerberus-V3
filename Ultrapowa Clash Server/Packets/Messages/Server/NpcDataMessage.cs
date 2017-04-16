@@ -21,9 +21,9 @@ namespace UCS.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            ClientHome ownerHome = new ClientHome(Player.GetPlayerAvatar().GetId());
+            var ownerHome = new ClientHome(Player.GetPlayerAvatar().GetId());
             ownerHome.SetShieldTime(Player.GetPlayerAvatar().RemainingShieldTime);
-            ownerHome.SetHomeJSON(JsonBase);
+            ownerHome.SetHomeJson(JsonBase);
 
             Player.GetPlayerAvatar().State = ClientAvatar.UserState.PVE;
             var data = new List<byte>();

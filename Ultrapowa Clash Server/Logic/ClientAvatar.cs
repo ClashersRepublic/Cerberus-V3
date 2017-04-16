@@ -192,6 +192,7 @@ namespace UCS.Logic
                 ((ExperienceLevelData)CSVManager.DataTables.GetTable(10).GetDataByName(m_vAvatarLevel.ToString()))
                     .ExpPoints;
             if (m_vExperience >= experienceCap)
+            {
                 if (CSVManager.DataTables.GetTable(10).GetItemCount() > m_vAvatarLevel + 1)
                 {
                     m_vAvatarLevel += 1;
@@ -199,11 +200,13 @@ namespace UCS.Logic
                 }
                 else
                     m_vExperience = 0;
+            }
         }
+
+        private static readonly Random s_rnd = new Random();
 
         public byte[] Encode()
         {
-            var rnd = new Random();
             var data = new List<byte>();
             data.AddInt64(m_vId);
             data.AddInt64(m_vCurrentHomeId);
@@ -226,7 +229,7 @@ namespace UCS.Logic
                 var month = DateTime.Now.Month;
                 data.AddInt32(month);
                 data.AddInt32(DateTime.Now.Year);
-                data.AddInt32(rnd.Next(1, 10));
+                data.AddInt32(s_rnd.Next(1, 10));
                 data.AddInt32(m_vScore);
                 data.AddInt32(1);
                 if (month == 1)
@@ -240,7 +243,7 @@ namespace UCS.Logic
                     data.AddInt32(pmonth);
                     data.AddInt32(DateTime.Now.Year);
                 }
-                data.AddInt32(rnd.Next(1, 10));
+                data.AddInt32(s_rnd.Next(1, 10));
                 data.AddInt32(m_vScore / 2);
             }
             else
@@ -333,7 +336,7 @@ namespace UCS.Logic
             for (var i = 17000000; i < 17000050; i++)
             {
                 data.AddRange(BitConverter.GetBytes(i).Reverse());
-                data.AddRange(BitConverter.GetBytes(rnd.Next(3, 3)).Reverse());
+                data.AddRange(BitConverter.GetBytes(s_rnd.Next(3, 3)).Reverse());
             }
 
             data.AddDataSlots(NpcLootedGold);
@@ -433,7 +436,7 @@ namespace UCS.Logic
 
         public bool HasEnoughResources(ResourceData rd, int buildCost) => GetResourceCount(rd) >= buildCost;
 
-        public void LoadFromJSON(string jsonString)
+        public void LoadFromJson(string jsonString)
         {
             var jsonObject = JObject.Parse(jsonString);
             m_vId = jsonObject["avatar_id"].ToObject<long>();
@@ -595,7 +598,7 @@ namespace UCS.Logic
             m_vPremium = jsonObject["Premium"].ToObject<bool>();
         }
 
-        public string SaveToJSON()
+        public string SaveToJson()
         {
             var jsonData = new JObject();
             jsonData.Add("avatar_id", m_vId);
@@ -717,6 +720,7 @@ namespace UCS.Logic
         {
             m_vAccountCreationDate = DateTime.Now;
         }
+
         public void AddUsedTroop(CombatItemData cid, int value)
         {
             if (State == UserState.PVP)
@@ -724,21 +728,24 @@ namespace UCS.Logic
                 var info = default(AttackInfo);
                 if (!AttackingInfo.TryGetValue(GetId(), out info))
                 {
-                    Logger.Write("Unable to obtain attack info.");
-                }
-
-                DataSlot e = info.UsedTroop.Find(t => t.Data.GetGlobalID() == cid.GetGlobalID());
-                if (e != null)
-                {
-                    // Troops already exist.
-                    int i = info.UsedTroop.IndexOf(e);
-                    e.Value = e.Value + value;
-                    info.UsedTroop[i] = e;
+                    Logger.Error("Unable to obtain attack info.");
                 }
                 else
                 {
-                    DataSlot ds = new DataSlot(cid, value);
-                    info.UsedTroop.Add(ds);
+                    var dataSlot = info.UsedTroop.Find(t => t.Data.GetGlobalID() == cid.GetGlobalID());
+
+                    if (dataSlot != null)
+                    {
+                        // Troops already exist.
+                        int i = info.UsedTroop.IndexOf(dataSlot);
+                        dataSlot.Value = dataSlot.Value + value;
+                        info.UsedTroop[i] = dataSlot;
+                    }
+                    else
+                    {
+                        DataSlot ds = new DataSlot(cid, value);
+                        info.UsedTroop.Add(ds);
+                    }
                 }
             }
             //else

@@ -66,12 +66,12 @@ namespace UCS.PacketProcessing.Messages.Server
                 }
             }
 
-                    data.AddInt32(i);
+            data.AddInt32(i);
             data.AddRange(packet1);
             data.AddInt32(i);
             data.AddRange(packet1);
 
-            data.AddInt32((int) TimeSpan.FromDays(7).TotalSeconds);
+            data.AddInt32((int)TimeSpan.FromDays(7).TotalSeconds);
             data.AddInt32(DateTime.Now.Year);
             data.AddInt32(DateTime.Now.Month);
             data.AddInt32(DateTime.Now.Year);

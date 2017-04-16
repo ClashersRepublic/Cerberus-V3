@@ -14,15 +14,14 @@ namespace UCS.Files
             files = new List<GameFile>();
             string fpstring = null;
 
-            if (File.Exists(@"Gamefiles/fingerprint.json"))
+            if (File.Exists(@"contents/fingerprint.json"))
             {
-                using (StreamReader sr = new StreamReader(@"Gamefiles/fingerprint.json"))
+                using (StreamReader sr = new StreamReader(@"contents/fingerprint.json"))
                     fpstring = sr.ReadToEnd();
                 LoadFromJson(fpstring);
             }
             else
-                Console.WriteLine(
-                    "[UCS]    LoadFingerPrint: error! tried to load FingerPrint without file, run gen_patch first");
+                Console.WriteLine("[UCS]    LoadFingerPrint: error! tried to load FingerPrint without file, run gen_patch first");
         }
 
         public List<GameFile> files { get; set; }

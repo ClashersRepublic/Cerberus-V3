@@ -16,14 +16,9 @@ namespace UCS.PacketProcessing.Messages.Client
     {
         public static bool done;
 
-        public LeaveAllianceMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public LeaveAllianceMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
-
-        }
-
-        public override void Decode()
-        {
-
+            // Space
         }
 
         public override void Process(Level level)
@@ -53,6 +48,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     done = true;
                     break;
                 }
+
                 if (!done)
                 {
                     var count = alliance.GetAllianceMembers().Count;
@@ -84,6 +80,7 @@ namespace UCS.PacketProcessing.Messages.Client
                     }
                 }
             }
+
             var a = new LeavedAllianceCommand();
             a.SetAlliance(alliance);
             a.SetReason(1);

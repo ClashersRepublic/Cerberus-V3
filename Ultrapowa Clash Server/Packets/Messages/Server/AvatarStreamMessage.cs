@@ -9,6 +9,8 @@ namespace UCS.PacketProcessing.Messages.Server
     // Packet 24411
     internal class AvatarStreamMessage : Message
     {
+        private static readonly string s_json = File.ReadAllText("contents/avatar_stream.json");
+
         public AvatarStreamMessage(PacketProcessing.Client client) : base(client)
         {
             SetMessageType(24411);
@@ -16,7 +18,7 @@ namespace UCS.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            string StreamTest = "{\"loot\":[[3000002,999999999],[3000001,999999999]],\"availableLoot\":[[3000000,0],[3000001,145430],[3000002,142872],[3000003,517]],\"units\":[[4000001,58]],\"spells\":[],\"levels\":[[4000001,4]],\"stats\":{\"townhallDestroyed\":false,\"battleEnded\":true,\"allianceUsed\":false,\"destructionPercentage\":6,\"battleTime\":90,\"originalAttackerScore\":6022,\"attackerScore\":-10,\"originalDefenderScore\":1056,\"defenderScore\":18,\"allianceName\":\"UCS 0.7.4.X\",\"attackerStars\":0,\"homeID\":[0,5],\"allianceBadge\":1526735450,\"allianceBadge2\":1660949336,\"allianceID\":[88,884629],\"deployedHousingSpace\":168,\"armyDeploymentPercentage\":5}}";
+            //string StreamTest = "{\"loot\":[[3000002,999999999],[3000001,999999999]],\"availableLoot\":[[3000000,0],[3000001,145430],[3000002,142872],[3000003,517]],\"units\":[[4000001,58]],\"spells\":[],\"levels\":[[4000001,4]],\"stats\":{\"townhallDestroyed\":false,\"battleEnded\":true,\"allianceUsed\":false,\"destructionPercentage\":6,\"battleTime\":90,\"originalAttackerScore\":6022,\"attackerScore\":-10,\"originalDefenderScore\":1056,\"defenderScore\":18,\"allianceName\":\"Clash of Magic?\",\"attackerStars\":0,\"homeID\":[0,5],\"allianceBadge\":1526735450,\"allianceBadge2\":1660949336,\"allianceID\":[88,884629],\"deployedHousingSpace\":168,\"armyDeploymentPercentage\":5}}";
 
             var pl = Client.GetLevel().GetPlayerAvatar();
             var pack = new List<byte>();
@@ -31,7 +33,7 @@ namespace UCS.PacketProcessing.Messages.Server
             pack.AddInt32(0);
             pack.AddInt32(0);
             pack.Add(0);
-            pack.AddString(StreamTest);
+            pack.AddString(s_json);
             pack.AddInt32(0);
             pack.Add(1);
             pack.AddInt32(8);

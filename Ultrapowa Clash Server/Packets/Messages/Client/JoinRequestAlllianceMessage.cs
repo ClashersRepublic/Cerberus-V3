@@ -13,60 +13,46 @@ namespace UCS.PacketProcessing.Messages.Client
     internal class JoinRequestAllianceMessage : Message
     {
         public string Message;
-        public long ID;
+        public long Id;
 
-        public JoinRequestAllianceMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public JoinRequestAllianceMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
+            // Space
         }
 
         public override void Decode()
         {
-            using (PacketReader br = new PacketReader(new MemoryStream(GetData())))
-            {
-                ID = br.ReadInt64();
-                Message = br.ReadString();
-            }
+            Id = Reader.ReadInt64();
+            Message = Reader.ReadString();
         }
 
 
         public override void Process(Level level)
         {
-            JoinRequestAllianceMessage requestAllianceMessage = this;
-            try
-            {
-                ClientAvatar player = level.GetPlayerAvatar();
-                Alliance all = ObjectManager.GetAlliance(ID);
-                InvitationStreamEntry cm = new InvitationStreamEntry();
-                cm.SetId(all.GetChatMessages().Count + 1);
-                cm.SetSenderId(player.GetId());
-                cm.SetHomeId(player.GetId());
-                cm.SetSenderLeagueId(player.GetLeagueId());
-                cm.SetSenderName(player.GetAvatarName());
-                InvitationStreamEntry invitationStreamEntry = cm;
-                int aRole = player.GetAllianceRole();
-                invitationStreamEntry.SetSenderRole(aRole);
-                invitationStreamEntry = (InvitationStreamEntry)null;
-                cm.SetMessage(Message);
-                cm.SetState(1);
-                all.AddChatMessage(cm);
+            var avatar = level.GetPlayerAvatar();
+            var alliance = ObjectManager.GetAlliance(Id);
+            var streamEntry = new InvitationStreamEntry();
+            streamEntry.SetId(alliance.GetChatMessages().Count + 1);
+            streamEntry.SetSenderId(avatar.GetId());
+            streamEntry.SetHomeId(avatar.GetId());
+            streamEntry.SetSenderLeagueId(avatar.GetLeagueId());
+            streamEntry.SetSenderName(avatar.GetAvatarName());
+            streamEntry.SetSenderRole(avatar.GetAllianceRole());
+            streamEntry.SetMessage(Message);
+            streamEntry.SetState(1);
+            alliance.AddChatMessage(streamEntry);
 
-                foreach (AllianceMemberEntry op in all.GetAllianceMembers())
-                {
-                    Level playera = ResourcesManager.GetPlayer(op.GetAvatarId(), false);
-                    if (playera.GetClient() != null)
-                    {
-                        var p = new AllianceStreamEntryMessage(playera.GetClient());
-                        p.SetStreamEntry(cm);
-                        p.Send();
-                    }
-                }
-                List<AllianceMemberEntry>.Enumerator enumerator = new List<AllianceMemberEntry>.Enumerator();
-                player = (ClientAvatar)null;
-                all = (Alliance)null;
-                cm = (InvitationStreamEntry)null;
-            }
-            catch (Exception ex)
+            var members = alliance.GetAllianceMembers();
+            foreach (var member in members)
             {
+                var memberLevel = ResourcesManager.GetPlayer(member.GetAvatarId(), false);
+                var memberClient = memberLevel.GetClient();
+                if (memberClient != null)
+                {
+                    var message = new AllianceStreamEntryMessage(memberClient);
+                    message.SetStreamEntry(streamEntry);
+                    message.Send();
+                }
             }
         }
     }

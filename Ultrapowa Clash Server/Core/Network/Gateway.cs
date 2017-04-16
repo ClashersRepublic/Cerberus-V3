@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UCS.Core.Settings;
 using UCS.PacketProcessing;
@@ -57,14 +58,14 @@ namespace UCS.Core.Network
             try { message.Encode(); }
             catch (Exception ex)
             {
-                Logger.Error($"Exception while encoding message {message.GetType()}: " + ex);
+                ExceptionLogger.Log(ex, $"Exception while encoding message {message.GetType()}");
             }
 
             try { buffer = message.GetRawData(); }
             catch (Exception ex)
             {
                 // Exit early since buffer will be null, we can't send a null buffer to the client.
-                Logger.Error($"Exception while constructing message {message.GetType()}: " + ex);
+                ExceptionLogger.Log(ex, $"Exception while constructing message {message.GetType()}");
                 return;
             }
 
@@ -77,8 +78,9 @@ namespace UCS.Core.Network
             try { message.Process(client.GetLevel()); }
             catch (Exception ex)
             {
-                Logger.Error($"Exception while processing outgoing message {message.GetType()}: " + ex);
+                ExceptionLogger.Log(ex, $"Exception while processing outgoing message {message.GetType()}");
             }
+
             StartSend(args);
         }
 
@@ -86,18 +88,30 @@ namespace UCS.Core.Network
         {
             var client = (Client)e.UserToken;
             var socket = client.Socket;
-            try
+
+            if (Thread.VolatileRead(ref client._dropped) == 1)
             {
-                while (true)
-                {
-                    if (!socket.SendAsync(e))
-                        ProcessSend(e);
-                    else break;
-                }
+                Recycle(e);
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error("Exception while starting receive: " + ex);
+                try
+                {
+                    while (true)
+                    {
+                        if (!socket.SendAsync(e))
+                            ProcessSend(e);
+                        else break;
+                    }
+                }
+                catch (ObjectDisposedException)
+                {
+                    Recycle(e);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionLogger.Log(ex, "Exception while starting receive");
+                }
             }
         }
 
@@ -128,7 +142,7 @@ namespace UCS.Core.Network
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Exception while processing send: " + ex);
+                    ExceptionLogger.Log(ex, "Exception while processing send");
                 }
             }
         }
@@ -147,7 +161,8 @@ namespace UCS.Core.Network
             }
             catch (Exception ex)
             {
-                Logger.Error("Exception while starting to accept(critical): " + ex);
+                // If this is reached, we won't start listening again, therefore no more clients.
+                ExceptionLogger.Log(ex, "Exception while starting to accept(critical)");
                 // Could try to resurrect listeners or something here.
             }
         }
@@ -177,9 +192,13 @@ namespace UCS.Core.Network
 
                     StartReceive(args);
                 }
+                catch (ObjectDisposedException)
+                {
+                    Recycle(e);
+                }
                 catch (Exception ex)
                 {
-                    Logger.Error("Exception while processing accept: " + ex);
+                    ExceptionLogger.Log(ex, "Exception while processing accept");
                 }
             }
 
@@ -194,18 +213,29 @@ namespace UCS.Core.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            try
+            if (Thread.VolatileRead(ref client._dropped) == 1)
             {
-                while (true)
-                {
-                    if (!socket.ReceiveAsync(e))
-                        ProcessReceive(e, false);
-                    else break;
-                }
+                Recycle(e);
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error("Exception while start receive: " + ex);
+                try
+                {
+                    while (true)
+                    {
+                        if (!socket.ReceiveAsync(e))
+                            ProcessReceive(e, false);
+                        else break;
+                    }
+                }
+                catch (ObjectDisposedException)
+                {
+                    Recycle(e);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionLogger.Log(ex, "Exception while start receive: ");
+                }
             }
         }
 
@@ -234,13 +264,13 @@ namespace UCS.Core.Network
                         try { message.Process(level); }
                         catch (Exception ex)
                         {
-                            Logger.Error($"Exception while processing incoming message {message.GetType()}: " + ex);
+                            ExceptionLogger.Log(ex, $"Exception while processing incoming message {message.GetType()}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Exception while process receive: " + ex);
+                    ExceptionLogger.Log(ex, "Exception while processing receive");
                 }
 
                 if (startNew)
@@ -272,7 +302,7 @@ namespace UCS.Core.Network
             }
             catch (Exception ex)
             {
-                Logger.Error("We done fucked up: " + ex);
+                ExceptionLogger.Log(ex, "Exception occurred while processing async operation(potentially critical)");
             }
         }
 
@@ -306,9 +336,9 @@ namespace UCS.Core.Network
                 return;
 
             try { socket.Shutdown(SocketShutdown.Both); }
-            catch { }
+            catch { /* Swallow */ }
             try { socket.Dispose(); }
-            catch { }
+            catch { /* SWallow */ }
         }
 
         private static SocketAsyncEventArgs GetArgs()

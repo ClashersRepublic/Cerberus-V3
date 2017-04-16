@@ -12,28 +12,26 @@ namespace UCS.PacketProcessing.Messages.Client
     // Packet 14321
     internal class TakeDecisionJoinRequestMessage : Message
     {
-        public TakeDecisionJoinRequestMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public TakeDecisionJoinRequestMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
+            // Space
         }
 
-        public long MessageID { get; set; }
+        public long MessageId { get; set; }
 
         public int Choice { get; set; }
 
         public override void Decode()
         {
-            using (PacketReader br = new PacketReader(new MemoryStream(GetData())))
-            {
-                MessageID = br.ReadInt64();
-                Choice = br.ReadByte();
-            }
+            MessageId = Reader.ReadInt64();
+            Choice = Reader.ReadByte();
         }
 
         public override void Process(Level level)
         {
 
             Alliance a = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            StreamEntry message = a.GetChatMessages().Find(c => c.GetId() == MessageID);
+            StreamEntry message = a.GetChatMessages().Find(c => c.GetId() == MessageId);
             Level requester = ResourcesManager.GetPlayer(message.GetSenderId());
             if (Choice == 1)
             {
@@ -43,9 +41,11 @@ namespace UCS.PacketProcessing.Messages.Client
 
                     AllianceMemberEntry member = new AllianceMemberEntry(requester.GetPlayerAvatar().GetId());
                     member.SetRole(1);
+
+                    // For some reason this thing adds the same member twice.
                     a.AddAllianceMember(member);
 
-                    StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageID);
+                    StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageId);
                     e.SetJudgeName(level.GetPlayerAvatar().GetAvatarName());
                     e.SetState(2);
 
@@ -99,7 +99,7 @@ namespace UCS.PacketProcessing.Messages.Client
             }
             else
             {
-                StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageID);
+                StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageId);
                 e.SetJudgeName(level.GetPlayerAvatar().GetAvatarName());
                 e.SetState(3);
 

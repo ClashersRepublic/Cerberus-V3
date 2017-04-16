@@ -15,6 +15,7 @@ namespace UCS.PacketProcessing.Messages.Client
     {
         public PromoteAllianceMemberMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
         {
+            // Space
         }
 
         public long m_vId;
@@ -22,11 +23,8 @@ namespace UCS.PacketProcessing.Messages.Client
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
-            {
-                m_vId = br.ReadInt64WithEndian();
-                m_vRole = br.ReadInt32WithEndian();
-            }
+            m_vId = Reader.ReadInt64WithEndian();
+            m_vRole = Reader.ReadInt32WithEndian();
         }
 
         public override void Process(Level level)
@@ -35,6 +33,7 @@ namespace UCS.PacketProcessing.Messages.Client
             var player = level.GetPlayerAvatar();
             var alliance = ObjectManager.GetAlliance(player.GetAllianceId());
             if (player.GetAllianceRole() == 2 || player.GetAllianceRole() == 4)
+            {
                 if (player.GetAllianceId() == target.GetPlayerAvatar().GetAllianceId())
                 {
                     int oldrole = target.GetPlayerAvatar().GetAllianceRole();
@@ -128,7 +127,7 @@ namespace UCS.PacketProcessing.Messages.Client
                             stream.SetEventType(5);
                         else
                             stream.SetEventType(6);
-                        
+
                         t.SetAlliance(alliance);
                         t.SetRole(m_vRole);
                         t.Tick(target);
@@ -160,6 +159,7 @@ namespace UCS.PacketProcessing.Messages.Client
                         }
                     }
                 }
+            }
         }
     }
 }

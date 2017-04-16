@@ -6,8 +6,14 @@ namespace UCS.Helpers
 {
     public class PacketReader : BinaryReader
     {
+        public PacketReader(byte[] buffer) : base(new MemoryStream(buffer))
+        {
+            // Space
+        }
+
         public PacketReader(Stream stream) : base(stream)
         {
+            // Space
         }
 
         byte[] ReadBytesWithEndian(int count, bool switchEndian = true)

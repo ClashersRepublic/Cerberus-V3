@@ -1,5 +1,4 @@
-﻿using Sodium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,20 +16,21 @@ namespace UCS.PacketProcessing
 {
     internal class Client
     {
-        internal readonly KeepAliveOkMessage m_vKeepAliveOk;
-        private readonly long m_vSocketHandle;
-        private Level m_vLevel;
+        internal readonly KeepAliveOkMessage _keepAliveOk;
 
-        [Obsolete]
-        internal State PlayerState;
+        private readonly long _socketHandle;
+        private Level _level;
+
+        // Figure out if client has been dropped or not.
+        internal volatile int _dropped;
 
         public Client(Socket so)
         {
             Socket = so;
-            m_vSocketHandle = so.Handle.ToInt64();
-            m_vKeepAliveOk = new KeepAliveOkMessage(this);
+            _socketHandle = so.Handle.ToInt64();
+            _keepAliveOk = new KeepAliveOkMessage(this);
 
-            DataStream = new List<byte>();
+            DataStream = new List<byte>(Constants.BufferSize);
             State = ClientState.Exception;
 
             IncomingPacketsKey = new byte[Key._RC4_EndecryptKey.Length];
@@ -43,9 +43,6 @@ namespace UCS.PacketProcessing
             NextKeepAlive = LastKeepAlive.AddSeconds(30);
         }
 
-        // Not even used, but ok xD.
-        public string CIPAddress { get; set; }
-
         public byte[] CPublicKey { get; set; }
         public byte[] CRNonce { get; set; }
         public byte[] CSessionKey { get; set; }
@@ -56,9 +53,9 @@ namespace UCS.PacketProcessing
         public List<byte> DataStream { get; set; }
         public Socket Socket { get; set; }
 
-        public Level GetLevel() => m_vLevel;
+        public Level GetLevel() => _level;
 
-        public long GetSocketHandle() => m_vSocketHandle;
+        public long GetSocketHandle() => _socketHandle;
         public uint ClientSeed { get; set; }
 
         public byte[] IncomingPacketsKey { get; set; }
@@ -211,7 +208,7 @@ namespace UCS.PacketProcessing
             Array.Copy(newKey, OutgoingPacketsKey, newKey.Length);
         }
 
-        private void EnDecrypt(Byte[] key, Byte[] data)
+        private void EnDecrypt(byte[] key, byte[] data)
         {
             int dataLen;
 
@@ -249,12 +246,12 @@ namespace UCS.PacketProcessing
             EnDecrypt(this.OutgoingPacketsKey, data);
         }
 
-        public void SetLevel(Level l) => m_vLevel = l;
+        public void SetLevel(Level l) => _level = l;
 
-        public bool TryGetPacket(out Message p)
+        public bool TryGetPacket(out Message message)
         {
             const int HEADER_LEN = 7;
-            p = default(Message);
+            message = default(Message);
 
             var result = false;
             if (DataStream.Count >= 5)
@@ -270,26 +267,29 @@ namespace UCS.PacketProcessing
                     for (int i = 0; i < packet.Length; i++)
                         packet[i] = DataStream[i + HEADER_LEN];
 
-                    // We don't use BinaryReaders.
-                    p = (Message)MessageFactory.Read(this, null, type);
-
-                    if (p != null)
+                    message = (Message)MessageFactory.Read(this, new PacketReader(packet), type);
+                    if (message != null)
                     {
-                        result = true;
+                        message.SetData(packet);
+                        message.SetMessageType(type); // Just in case they don't do it in the constructor.
 
-                        p.SetData(packet);
-                        p.SetMessageType(type); // Just in case they don't do it in the constructor.
-
-                        p.Decrypt();
-
-                        try { p.Decode(); }
+                        try { message.Decrypt(); }
                         catch (Exception ex)
                         {
-                            Logger.Error($"Unable to decode message with ID: {type}");
+                            ExceptionLogger.Log(ex, $"Unable to decrypt message with ID: {type}");
                         }
+
+                        try { message.Decode(); }
+                        catch (Exception ex)
+                        {
+                            ExceptionLogger.Log(ex, $"Unable to decode message with ID: {type}");
+                        }
+                        result = true;
                     }
                     else
                     {
+                        Logger.Say("Unhandled message " + type);
+
                         // Make sure we don't break the RC4 stream.
                         if (Constants.IsRc4)
                             Decrypt(packet);
@@ -297,7 +297,7 @@ namespace UCS.PacketProcessing
                             CSNonce.Increment();
                     }
 
-                    // Clean up 
+                    // Clean up. 
                     DataStream.RemoveRange(0, HEADER_LEN + length);
                 }
             }

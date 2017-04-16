@@ -7,9 +7,9 @@ namespace UCS.Logic.Manager
 {
     internal class GameObjectManager
     {
-        public GameObjectManager(Level l)
+        public GameObjectManager(Level level)
         {
-            m_vLevel = l;
+            m_vLevel = level;
             m_vGameObjects = new List<List<GameObject>>();
             m_vGameObjectRemoveList = new List<GameObject>();
             m_vGameObjectsIndex = new List<int>();
@@ -48,15 +48,15 @@ namespace UCS.Logic.Manager
 
 		public ObstacleManager GetObstacleManager() => m_vObstacleManager;
 
-		public GameObject GetGameObjectByID(int id)
+		public GameObject GetGameObjectByID(int globalId)
         {
-            var classId = GlobalID.GetClassID(id) - 500;
+            var classId = GlobalID.GetClassID(globalId) - 500;
             if (m_vGameObjects.Capacity < classId)
             return null;
-            return m_vGameObjects[classId].Find(g => g.GlobalId == id);
+            return m_vGameObjects[classId].Find(g => g.GlobalId == globalId);
         }
 
-        public List<GameObject> GetGameObjects(int id) => m_vGameObjects[id];
+        public List<GameObject> GetGameObjects(int classId) => m_vGameObjects[classId];
 
         public void Load(JObject jsonObject)
         {

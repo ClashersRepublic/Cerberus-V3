@@ -14,18 +14,27 @@ namespace UCS.PacketProcessing.Messages.Client
     // Packet 14715
     internal class SendGlobalChatLineMessage : Message
     {
-        public SendGlobalChatLineMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        static SendGlobalChatLineMessage()
         {
+            s_bannedWords = File.ReadAllLines("./filter.ucs");
+            
+            // Avoid case sensitivity.
+            for (int i = 0; i < s_bannedWords.Length; i++)
+                s_bannedWords[i] = s_bannedWords[i].ToLower();
+        }
+
+        private static readonly string[] s_bannedWords;
+
+        public SendGlobalChatLineMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
+        {
+            // Space
         }
 
         public string Message { get; set; }
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
-            {
-                Message = br.ReadString();
-            }
+                Message = Reader.ReadString();
         }
 
         public override void Process(Level level)
@@ -34,62 +43,55 @@ namespace UCS.PacketProcessing.Messages.Client
             {
                 if (Message[0] == '/')
                 {
-                    var obj = GameOpCommandFactory.Parse(Message);
-                    if (obj != null)
-                    {
-                        var player = "";
-                        if (level != null)
-                            player += " (" + level.GetPlayerAvatar().GetId() + ", " +
-                                      level.GetPlayerAvatar().GetAvatarName() + ")";
-                        ((GameOpCommand) obj).Execute(level);
-                    }
+                    var cmd = (GameOpCommand)GameOpCommandFactory.Parse(Message);
+                    cmd?.Execute(level);
                 }
                 else
                 {
+                    var senderId = level.GetPlayerAvatar().GetId();
+                    var senderName = level.GetPlayerAvatar().GetAvatarName();
+
                     if (File.Exists(@"filter.ucs"))
                     {
-                        var senderId = level.GetPlayerAvatar().GetId();
-                        var senderName = level.GetPlayerAvatar().GetAvatarName();
-
-                        var badwords = new List<string>();
-                        var r = new StreamReader(@"filter.ucs");
-                        var line = "";
-                        while ((line = r.ReadLine()) != null)
+                        var messageLower = Message.ToLower();
+                        var flagged = false;
+                        for (int i = 0; i < s_bannedWords.Length; i++)
                         {
-                            badwords.Add(line);
+                            if (messageLower.Contains(s_bannedWords[i]))
+                            {
+                                flagged = true;
+                                break;
+                            }
                         }
-                        var badword = badwords.Any(s => Message.Contains(s));
 
-                        if (badword)
+                        if (flagged)
                         {
-                            var p = new GlobalChatLineMessage(level.GetClient());
-                            p.SetPlayerId(0);
-                            p.SetPlayerName("Chat Filter System");
-                            p.SetLeagueId(22);
-                            p.SetChatMessage("DETECTED BAD WORD! PLEASE AVOID USING BAD WORDS!");
-                            p.Send();
+                            var message = new GlobalChatLineMessage(level.GetClient());
+                            message.SetPlayerId(0);
+                            message.SetPlayerName("Chat Filter System");
+                            message.SetLeagueId(22);
+                            message.SetChatMessage("We've detected banned words in your chat message.");
+                            message.Send();
                             return;
                         }
+                    }
 
-                        Parallel.ForEach((ResourcesManager.GetOnlinePlayers()), (onlinePlayer, l) =>
-                        {
-                            var p = new GlobalChatLineMessage(onlinePlayer.GetClient());
-                            var p2 = onlinePlayer.GetPlayerAvatar().GetPremium();
-                            if (onlinePlayer.GetAccountPrivileges() > 0)
-                            {
-                                p.SetPlayerName(senderName + " #" + senderId);
-                            }
-                            else
-                            {
-                                p.SetPlayerName(senderName);
-                            }
-                            p.SetChatMessage(Message);
-                            p.SetPlayerId(senderId);
-                            p.SetLeagueId(level.GetPlayerAvatar().GetLeagueId());
-                            p.SetAlliance(ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId()));
-                            p.Send();
-                            Logger.Write("Chat Message: '" + Message + "' from '" + senderName + "':'" + senderId + "'");
-                        });
+                    var onlinePlayers = ResourcesManager.GetOnlinePlayers();
+                    for (int i = 0; i < onlinePlayers.Count; i++)
+                    {
+                        var player = onlinePlayers[i];
+                        var message = new GlobalChatLineMessage(player.GetClient());
+
+                        if (player.GetAccountPrivileges() > 0)
+                            message.SetPlayerName(senderName + " #" + senderId);
+                        else
+                            message.SetPlayerName(senderName);
+
+                        message.SetChatMessage(Message);
+                        message.SetPlayerId(senderId);
+                        message.SetLeagueId(level.GetPlayerAvatar().GetLeagueId());
+                        message.SetAlliance(ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId()));
+                        message.Send();
                     }
                 }
             }

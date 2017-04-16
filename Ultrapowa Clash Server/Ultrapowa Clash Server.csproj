@@ -167,8 +167,8 @@
       <HintPath>..\packages\MySql.Data.Entity.7.0.2-DMR\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -188,13 +188,16 @@
     </Reference>
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net46\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net451\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.SQLite.EF6, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.104.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.104.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.104.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.104.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
@@ -203,7 +206,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -214,13 +216,13 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Checker\DirectoryChecker.cs" />
+    <Compile Include="Core\Crypto\Key.cs" />
     <Compile Include="Core\CSVManager.cs" />
     <Compile Include="Core\Database\MySQL.cs" />
+    <Compile Include="Core\ExceptionLogger.cs" />
     <Compile Include="Core\Network\Gateway.cs" />
     <Compile Include="Core\Network\Pool.cs" />
     <Compile Include="Core\Settings\Constants.cs" />
@@ -254,10 +256,11 @@
     <Compile Include="Packets\GameOpCommands\ServerStatusGameOpCommand.cs" />
     <Compile Include="Packets\Messages\Client\AddClashFriendMessage.cs" />
     <Compile Include="Packets\Messages\Client\Api\Bind_Google_Message.cs" />
-    <Compile Include="Packets\Messages\Client\ChallangeAttackMessage.cs" />
-    <Compile Include="Packets\Messages\Client\ChallangeCancelMessage.cs" />
-    <Compile Include="Packets\Messages\Client\ChallangeVisitMessage.cs" />
-    <Compile Include="Packets\Messages\Client\ChallangeWatchLiveMessage.cs" />
+    <Compile Include="Packets\Messages\Client\ChallengeAttackMessage.cs" />
+    <Compile Include="Packets\Messages\Client\ChallengeCancelMessage.cs" />
+    <Compile Include="Packets\Messages\Client\ChallengeVisitMessage.cs" />
+    <Compile Include="Packets\Messages\Client\ChallengeWatchLiveMessage.cs" />
+    <Compile Include="Packets\Messages\Client\RevengeAttackerMessage.cs" />
     <Compile Include="Packets\Messages\Server\AllianceWarMapDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\AvatarChatBanMessage.cs" />
     <Compile Include="Packets\Messages\Server\ChallangeAttackDataMessage.cs" />
@@ -359,588 +362,595 @@
     <Compile Include="Utilities\ZLib\ZlibCodec.cs" />
     <Compile Include="Utilities\ZLib\ZlibConstants.cs" />
     <Compile Include="Utilities\ZLib\ZlibStream.cs" />
+    <Compile Include="WebApi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Gamefiles\csv\animations.csv">
+    <None Include="contents\avatar_stream.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\billing_packages.csv">
+    <None Include="contents\max_home.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\client_globals.csv">
+    <None Include="contents\csv\animations.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\credits.csv">
+    <None Include="contents\csv\billing_packages.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\faq.csv">
+    <None Include="contents\csv\client_globals.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\helpshift.csv">
+    <None Include="contents\csv\credits.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\hints.csv">
+    <None Include="contents\csv\faq.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\news.csv">
+    <None Include="contents\csv\helpshift.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\particle_emitters.csv">
+    <None Include="contents\csv\hints.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\resource_packs.csv">
+    <None Include="contents\csv\news.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\texts.csv">
+    <None Include="contents\csv\particle_emitters.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\csv\texts_patch.csv">
+    <None Include="contents\csv\resource_packs.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\fingerprint.json">
+    <None Include="contents\csv\texts.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level1.json">
+    <None Include="contents\csv\texts_patch.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level10.json">
+    <None Include="contents\fingerprint.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level11.json">
+    <None Include="contents\level\NPC\level1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level12.json">
+    <None Include="contents\level\NPC\level10.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level13.json">
+    <None Include="contents\level\NPC\level11.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level14.json">
+    <None Include="contents\level\NPC\level12.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level15.json">
+    <None Include="contents\level\NPC\level13.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level16.json">
+    <None Include="contents\level\NPC\level14.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level17.json">
+    <None Include="contents\level\NPC\level15.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level18.json">
+    <None Include="contents\level\NPC\level16.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level19.json">
+    <None Include="contents\level\NPC\level17.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level2.json">
+    <None Include="contents\level\NPC\level18.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level20.json">
+    <None Include="contents\level\NPC\level19.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level21.json">
+    <None Include="contents\level\NPC\level2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level22.json">
+    <None Include="contents\level\NPC\level20.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level23.json">
+    <None Include="contents\level\NPC\level21.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level24.json">
+    <None Include="contents\level\NPC\level22.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level25.json">
+    <None Include="contents\level\NPC\level23.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level26.json">
+    <None Include="contents\level\NPC\level24.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level27.json">
+    <None Include="contents\level\NPC\level25.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level28.json">
+    <None Include="contents\level\NPC\level26.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level29.json">
+    <None Include="contents\level\NPC\level27.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level3.json">
+    <None Include="contents\level\NPC\level28.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level30.json">
+    <None Include="contents\level\NPC\level29.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level31.json">
+    <None Include="contents\level\NPC\level3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level32.json">
+    <None Include="contents\level\NPC\level30.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level33.json">
+    <None Include="contents\level\NPC\level31.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level34.json">
+    <None Include="contents\level\NPC\level32.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level35.json">
+    <None Include="contents\level\NPC\level33.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level36.json">
+    <None Include="contents\level\NPC\level34.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level37.json">
+    <None Include="contents\level\NPC\level35.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level38.json">
+    <None Include="contents\level\NPC\level36.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level39.json">
+    <None Include="contents\level\NPC\level37.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level4.json">
+    <None Include="contents\level\NPC\level38.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level40.json">
+    <None Include="contents\level\NPC\level39.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level41.json">
+    <None Include="contents\level\NPC\level4.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level42.json">
+    <None Include="contents\level\NPC\level40.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level43.json">
+    <None Include="contents\level\NPC\level41.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level44.json">
+    <None Include="contents\level\NPC\level42.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level45.json">
+    <None Include="contents\level\NPC\level43.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level46.json">
+    <None Include="contents\level\NPC\level44.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level47.json">
+    <None Include="contents\level\NPC\level45.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level48.json">
+    <None Include="contents\level\NPC\level46.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level49.json">
+    <None Include="contents\level\NPC\level47.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level5.json">
+    <None Include="contents\level\NPC\level48.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level50.json">
+    <None Include="contents\level\NPC\level49.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level6.json">
+    <None Include="contents\level\NPC\level5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level7.json">
+    <None Include="contents\level\NPC\level50.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level8.json">
+    <None Include="contents\level\NPC\level6.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\level9.json">
+    <None Include="contents\level\NPC\level7.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut0.json">
+    <None Include="contents\level\NPC\level8.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut1.json">
+    <None Include="contents\level\NPC\level9.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut2.json">
+    <None Include="contents\level\NPC\test\donut0.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut3.json">
+    <None Include="contents\level\NPC\test\donut1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut4.json">
+    <None Include="contents\level\NPC\test\donut2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut5.json">
+    <None Include="contents\level\NPC\test\donut3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut6.json">
+    <None Include="contents\level\NPC\test\donut4.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\donut7.json">
+    <None Include="contents\level\NPC\test\donut5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel1.json">
+    <None Include="contents\level\NPC\test\donut6.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel10.json">
+    <None Include="contents\level\NPC\test\donut7.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel11.json">
+    <None Include="contents\level\NPC\test\highlevel1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel2.json">
+    <None Include="contents\level\NPC\test\highlevel10.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel3.json">
+    <None Include="contents\level\NPC\test\highlevel11.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel4.json">
+    <None Include="contents\level\NPC\test\highlevel2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel5.json">
+    <None Include="contents\level\NPC\test\highlevel3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel6.json">
+    <None Include="contents\level\NPC\test\highlevel4.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel7.json">
+    <None Include="contents\level\NPC\test\highlevel5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel8.json">
+    <None Include="contents\level\NPC\test\highlevel6.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\test\highlevel9.json">
+    <None Include="contents\level\NPC\test\highlevel7.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall1.json">
+    <None Include="contents\level\NPC\test\highlevel8.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall10.json">
+    <None Include="contents\level\NPC\test\highlevel9.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall11.json">
+    <None Include="contents\level\NPC\townhall1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall2.json">
+    <None Include="contents\level\NPC\townhall10.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall3.json">
+    <None Include="contents\level\NPC\townhall11.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall4.json">
+    <None Include="contents\level\NPC\townhall2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall5.json">
+    <None Include="contents\level\NPC\townhall3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall6.json">
+    <None Include="contents\level\NPC\townhall4.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall7.json">
+    <None Include="contents\level\NPC\townhall5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall8.json">
+    <None Include="contents\level\NPC\townhall6.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\townhall9.json">
+    <None Include="contents\level\NPC\townhall7.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\tutorial_npc.json">
+    <None Include="contents\level\NPC\townhall8.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\NPC\tutorial_npc2.json">
+    <None Include="contents\level\NPC\townhall9.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base1.json">
+    <None Include="contents\level\NPC\tutorial_npc.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base10.json">
+    <None Include="contents\level\NPC\tutorial_npc2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base11.json">
+    <None Include="contents\level\PVP\Base1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base12.json">
+    <None Include="contents\level\PVP\Base10.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base13.json">
+    <None Include="contents\level\PVP\Base11.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base14.json">
+    <None Include="contents\level\PVP\Base12.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base15.json">
+    <None Include="contents\level\PVP\Base13.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base16.json">
+    <None Include="contents\level\PVP\Base14.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base17.json">
+    <None Include="contents\level\PVP\Base15.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base18.json">
+    <None Include="contents\level\PVP\Base16.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base19.json">
+    <None Include="contents\level\PVP\Base17.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base2.json">
+    <None Include="contents\level\PVP\Base18.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base20.json">
+    <None Include="contents\level\PVP\Base19.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base21.json">
+    <None Include="contents\level\PVP\Base2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base22.json">
+    <None Include="contents\level\PVP\Base20.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base23.json">
+    <None Include="contents\level\PVP\Base21.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base24.json">
+    <None Include="contents\level\PVP\Base22.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base25.json">
+    <None Include="contents\level\PVP\Base23.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base26.json">
+    <None Include="contents\level\PVP\Base24.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base27.json">
+    <None Include="contents\level\PVP\Base25.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base28.json">
+    <None Include="contents\level\PVP\Base26.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base29.json">
+    <None Include="contents\level\PVP\Base27.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base3.json">
+    <None Include="contents\level\PVP\Base28.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base30.json">
+    <None Include="contents\level\PVP\Base29.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base31.json">
+    <None Include="contents\level\PVP\Base3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base32.json">
+    <None Include="contents\level\PVP\Base30.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base33.json">
+    <None Include="contents\level\PVP\Base31.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base34.json">
+    <None Include="contents\level\PVP\Base32.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base35.json">
+    <None Include="contents\level\PVP\Base33.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base36.json">
+    <None Include="contents\level\PVP\Base34.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base37.json">
+    <None Include="contents\level\PVP\Base35.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base38.json">
+    <None Include="contents\level\PVP\Base36.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base39.json">
+    <None Include="contents\level\PVP\Base37.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base4.json">
+    <None Include="contents\level\PVP\Base38.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base40.json">
+    <None Include="contents\level\PVP\Base39.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base41.json">
+    <None Include="contents\level\PVP\Base4.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base42.json">
+    <None Include="contents\level\PVP\Base40.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base43.json">
+    <None Include="contents\level\PVP\Base41.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base44.json">
+    <None Include="contents\level\PVP\Base42.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base45.json">
+    <None Include="contents\level\PVP\Base43.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base46.json">
+    <None Include="contents\level\PVP\Base44.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base47.json">
+    <None Include="contents\level\PVP\Base45.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base48.json">
+    <None Include="contents\level\PVP\Base46.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base49.json">
+    <None Include="contents\level\PVP\Base47.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base5.json">
+    <None Include="contents\level\PVP\Base48.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base50.json">
+    <None Include="contents\level\PVP\Base49.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base51.json">
+    <None Include="contents\level\PVP\Base5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base52.json">
+    <None Include="contents\level\PVP\Base50.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base53.json">
+    <None Include="contents\level\PVP\Base51.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base54.json">
+    <None Include="contents\level\PVP\Base52.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base55.json">
+    <None Include="contents\level\PVP\Base53.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base56.json">
+    <None Include="contents\level\PVP\Base54.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base57.json">
+    <None Include="contents\level\PVP\Base55.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base58.json">
+    <None Include="contents\level\PVP\Base56.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base59.json">
+    <None Include="contents\level\PVP\Base57.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base6.json">
+    <None Include="contents\level\PVP\Base58.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base60.json">
+    <None Include="contents\level\PVP\Base59.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base61.json">
+    <None Include="contents\level\PVP\Base6.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base62.json">
+    <None Include="contents\level\PVP\Base60.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base63.json">
+    <None Include="contents\level\PVP\Base61.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base64.json">
+    <None Include="contents\level\PVP\Base62.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base65.json">
+    <None Include="contents\level\PVP\Base63.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base66.json">
+    <None Include="contents\level\PVP\Base64.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base67.json">
+    <None Include="contents\level\PVP\Base65.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base68.json">
+    <None Include="contents\level\PVP\Base66.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base69.json">
+    <None Include="contents\level\PVP\Base67.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base7.json">
+    <None Include="contents\level\PVP\Base68.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base8.json">
+    <None Include="contents\level\PVP\Base69.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\level\PVP\Base9.json">
+    <None Include="contents\level\PVP\Base7.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\achievements.csv">
+    <None Include="contents\level\PVP\Base8.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\alliance_badges.csv">
+    <None Include="contents\level\PVP\Base9.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\alliance_badge_layers.csv">
+    <None Include="contents\logic\achievements.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\alliance_levels.csv">
+    <None Include="contents\logic\alliance_badges.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\alliance_portal.csv">
+    <None Include="contents\logic\alliance_badge_layers.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\buildings.csv">
+    <None Include="contents\logic\alliance_levels.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\building_classes.csv">
+    <None Include="contents\logic\alliance_portal.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\characters.csv">
+    <None Include="contents\logic\buildings.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\decos.csv">
+    <None Include="contents\logic\building_classes.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\effects.csv">
+    <None Include="contents\logic\characters.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\experience_levels.csv">
+    <None Include="contents\logic\decos.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\globals.csv">
+    <None Include="contents\logic\effects.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\heroes.csv">
+    <None Include="contents\logic\experience_levels.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\leagues.csv">
+    <None Include="contents\logic\globals.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\locales.csv">
+    <None Include="contents\logic\heroes.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\missions.csv">
+    <None Include="contents\logic\leagues.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\npcs.csv">
+    <None Include="contents\logic\locales.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\obstacles.csv">
+    <None Include="contents\logic\missions.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\projectiles.csv">
+    <None Include="contents\logic\npcs.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\regions.csv">
+    <None Include="contents\logic\obstacles.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\resources.csv">
+    <None Include="contents\logic\projectiles.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\shields.csv">
+    <None Include="contents\logic\regions.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\spells.csv">
+    <None Include="contents\logic\resources.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\townhall_levels.csv">
+    <None Include="contents\logic\shields.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\traps.csv">
+    <None Include="contents\logic\spells.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\variables.csv">
+    <None Include="contents\logic\townhall_levels.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\logic\war.csv">
+    <None Include="contents\logic\traps.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\starting_home.json">
+    <None Include="contents\logic\variables.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Gamefiles\starting_home_with_obstacles.json">
+    <None Include="contents\logic\war.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="contents\starting_home.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="contents\starting_home_with_obstacles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config">
@@ -983,13 +993,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icone-ucs.ico" />
-    <Content Include="Tools\database.sql">
+    <Content Include="tools\database.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tools\ucsbuildsha.exe">
+    <Content Include="tools\ucsbuildsha.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tools\ucsgflzma.exe">
+    <Content Include="tools\ucsgflzma.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -1278,7 +1288,7 @@
       <DependentUpon>ucsdb.edmx</DependentUpon>
       <LastGenOutput>ucsdb.cs</LastGenOutput>
     </None>
-    <None Include="Tools\patch_generator.bat">
+    <None Include="tools\patch_generator.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="config.ucs">
@@ -1300,23 +1310,28 @@
     <PropertyGroup>
       <ErrorText>This project refers to one or more NuGet packages that are not on this computer. Use the reset tool of NuGet packages to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.2.0-xbuild02\build\net40\Baseclass.Contrib.Nuget.Output.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Baseclass.Contrib.Nuget.Output.2.2.0-xbuild02\build\net40\Baseclass.Contrib.Nuget.Output.targets'))" />
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(TargetDir)Logs" mkdir "$(TargetDir)Logs"
-if not exist "$(TargetDir)Patch" mkdir "$(TargetDir)Patch"
-if not exist "$(TargetDir)Library" mkdir "$(TargetDir)Library"</PreBuildEvent>
+    <PreBuildEvent>if not exist "$(TargetDir)logs" mkdir "$(TargetDir)logs";
+
+if not exist "$(TargetDir)patch" mkdir "$(TargetDir)patch";
+
+if not exist "$(TargetDir)libs" mkdir "$(TargetDir)libs";</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>cd $(OutDir)
-move *.dll Library\
-move x64 Library\
-move x86 Library\
-del *.xml</PostBuildEvent>
+    <PostBuildEvent>cd $(OutDir);
+
+move *.dll libs/;
+
+move  x64 libs/;
+
+
+move  x86 libs/;
+
+del *.xml;</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.2.2.0-xbuild02\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.2.0-xbuild02\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

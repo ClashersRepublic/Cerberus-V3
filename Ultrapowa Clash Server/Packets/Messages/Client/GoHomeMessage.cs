@@ -1,12 +1,12 @@
 using System;
 using System.IO;
+using System.Text;
 using UCS.Core;
 using UCS.Core.Network;
 using UCS.Helpers;
 using UCS.Logic;
-using UCS.PacketProcessing.Messages.Server;
 using UCS.PacketProcessing.Commands.Client;
-using System.Text;
+using UCS.PacketProcessing.Messages.Server;
 using static UCS.Logic.ClientAvatar;
 
 namespace UCS.PacketProcessing.Messages.Client
@@ -15,23 +15,21 @@ namespace UCS.PacketProcessing.Messages.Client
     {
         public int State;
 
-        public GoHomeMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public GoHomeMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
+            // Space
         }
 
         public override void Decode()
         {
-            using (var br = new PacketReader(new MemoryStream(GetData())))
-            {
-                State = br.ReadInt32();              
-            }
+            State = Reader.ReadInt32();
         }
 
         public override void Process(Level level)
         {
             if (level.GetPlayerAvatar().State == UserState.PVP)
             {
-                var info = default(ClientAvatar.AttackInfo);
+                var info = default(AttackInfo);
                 if (!level.GetPlayerAvatar().AttackingInfo.TryGetValue(level.GetPlayerAvatar().GetId(), out info))
                 {
                     Logger.Write("Unable to obtain attack info.");
@@ -52,23 +50,21 @@ namespace UCS.PacketProcessing.Messages.Client
                     if (defender.GetPlayerAvatar().GetScore() > 0)
                         defender.GetPlayerAvatar().SetScore(defenderscore -= lost);
 
-                    Logger.Write("Used troop type: " + usedtroop.Count);
-                    foreach(var a in usedtroop)
-                    {
-                        Logger.Write("Troop Name: " + a.Data.GetName());
-                        Logger.Write("Troop Used Value: " + a.Value);
-                    }
+                    //Logger.Write("Used troop type: " + usedtroop.Count);
+                    //foreach(var a in usedtroop)
+                    //{
+                    //    Logger.Write("Troop Name: " + a.Data.GetName());
+                    //    Logger.Write("Troop Used Value: " + a.Value);
+                    //}
                     attacker.GetPlayerAvatar().SetScore(attackerscore += reward);
                     attacker.GetPlayerAvatar().AttackingInfo.Clear(); //Since we use userid for now,We need to clear to prevent overlapping
                     Resources(attacker);
 
-                    var attackerdb = DatabaseManager.Instance.Save(attacker);
-                    attackerdb.Wait();
-                    var defenderdb = DatabaseManager.Instance.Save(defender);
-                    defenderdb.Wait();
-
+                    DatabaseManager.Instance.Save(attacker);
+                    DatabaseManager.Instance.Save(defender);
                 }
             }
+
             if (level.GetPlayerAvatar().State == UserState.CHA)
             {
                 //Attack 
@@ -86,11 +82,12 @@ namespace UCS.PacketProcessing.Messages.Client
             }
 
             level.Tick();
+
             var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
             new OwnHomeDataMessage(Client, level).Send();
             if (alliance != null)
             {
-                new AllianceStreamMessage(Client, alliance).Send(); 
+                new AllianceStreamMessage(Client, alliance).Send();
             }
         }
 
@@ -112,6 +109,6 @@ namespace UCS.PacketProcessing.Messages.Client
                 avatar.SetResourceCount(goldLocation, currentGold + 1000);
                 avatar.SetResourceCount(elixirLocation, currentElixir + 1000);
             }
-        } 
+        }
     }
 }

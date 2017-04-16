@@ -1,4 +1,4 @@
-ucsgflzma.exe ../gamefiles/csv ../patch/gamefiles/csv *.*
+ucsgflzma.exe ../contents/csv ../patch/contents/csv *.*
 rem ucsgflzma.exe ../gamefiles/sc ../patch/gamefiles/sc *.*
-ucsgflzma.exe ../gamefiles/logic ../patch/gamefiles/logic *.*
-ucsbuildsha.exe ../patch/gamefiles ../patch ../gamefiles *.*
+ucsgflzma.exe ../contents/logic ../patch/contents/logic *.*
+ucsbuildsha.exe ../patch/contents ../patch ../contents *.*

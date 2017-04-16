@@ -78,22 +78,22 @@ namespace UCS.Logic
 
             if (TownHallLevel() >= 4)
             {
-                L1X = jsonObject["l1x"].ToObject<int>();
-                L1Y = jsonObject["l1y"].ToObject<int>();
+                L1X = jsonObject["l1x"]?.ToObject<int>() ?? 0;
+                L1Y = jsonObject["l1y"]?.ToObject<int>() ?? 0;
 
-                L2X = jsonObject["l2x"].ToObject<int>();
-                L2Y = jsonObject["l2y"].ToObject<int>();
+                L2X = jsonObject["l2x"]?.ToObject<int>() ?? 0;
+                L2Y = jsonObject["l2y"]?.ToObject<int>() ?? 0;
 
                 if (TownHallLevel() >= 6)
                 {
-                    L3X = jsonObject["l3x"].ToObject<int>();
-                    L3Y = jsonObject["l3y"].ToObject<int>();
+                    L3X = jsonObject["l3x"]?.ToObject<int>() ?? 0;
+                    L3Y = jsonObject["l3y"]?.ToObject<int>() ?? 0;
                 }
             }
 
             foreach (Component c in m_vComponents)
                 c.Load(jsonObject);
-        }    
+        }
 
         public JObject Save(JObject jsonObject)
         {
