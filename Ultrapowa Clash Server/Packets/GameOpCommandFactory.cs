@@ -25,6 +25,7 @@ namespace UCS.PacketProcessing
             m_vCommands.Add("/id", typeof(GetIdGameopCommand));
             m_vCommands.Add("/max", typeof(MaxRessourcesCommand));
             m_vCommands.Add("/maxbase", typeof(MaxBaseGameOpCommand));
+            m_vCommands.Add("/maxlvl", typeof(MaxLevelGameOpCommand));
             m_vCommands.Add("/saveacc", typeof(SaveAccountGameOpCommand));
             m_vCommands.Add("/saveall", typeof(SaveAllGameOpCommand));
             m_vCommands.Add("/becomeleader", typeof(BecomeLeaderGameOpCommand));

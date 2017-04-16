@@ -253,6 +253,7 @@
     <Compile Include="Packets\GameOpCommands\AccountInformationGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\HelpGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\MaxBaseGameOpCommand.cs" />
+    <Compile Include="Packets\GameOpCommands\MaxLevelGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\ServerStatusGameOpCommand.cs" />
     <Compile Include="Packets\Messages\Client\AddClashFriendMessage.cs" />
     <Compile Include="Packets\Messages\Client\Api\Bind_Google_Message.cs" />
