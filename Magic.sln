@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.ClashOfClans", "src\Magic.ClashOfClans\Magic.ClashOfClans.csproj", "{0E72C402-09B2-4545-AAEB-6AB58971D2FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Core", "src\Magic.Core\Magic.Core.csproj", "{7B5B7951-6901-4410-B3A9-CD242FD43C4D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Debug|x64.ActiveCfg = Debug|x64
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Debug|x64.Build.0 = Debug|x64
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.ActiveCfg = Release|x64
+		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.Build.0 = Release|x64
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Debug|x64.Build.0 = Debug|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Release|x64.ActiveCfg = Release|Any CPU
+		{7B5B7951-6901-4410-B3A9-CD242FD43C4D}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

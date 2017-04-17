@@ -1,0 +1,165 @@
+﻿using System;
+using System.IO;
+using Magic.Core;
+using Magic.Core.Network;
+using Magic.Helpers;
+using Magic.Logic;
+using Magic.Logic.StreamEntry;
+using Magic.PacketProcessing.Commands.Server;
+using Magic.PacketProcessing.Messages.Server;
+
+namespace Magic.PacketProcessing.Messages.Client
+{
+    // Packet 14306
+    internal class PromoteAllianceMemberMessage : Message
+    {
+        public PromoteAllianceMemberMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        {
+            // Space
+        }
+
+        public long m_vId;
+        public int m_vRole;
+
+        public override void Decode()
+        {
+            m_vId = Reader.ReadInt64WithEndian();
+            m_vRole = Reader.ReadInt32WithEndian();
+        }
+
+        public override void Process(Level level)
+        {
+            var target = ResourcesManager.GetPlayer(m_vId);
+            var player = level.GetPlayerAvatar();
+            var alliance = ObjectManager.GetAlliance(player.GetAllianceId());
+            if (player.GetAllianceRole() == 2 || player.GetAllianceRole() == 4)
+            {
+                if (player.GetAllianceId() == target.GetPlayerAvatar().GetAllianceId())
+                {
+                    int oldrole = target.GetPlayerAvatar().GetAllianceRole();
+                    target.GetPlayerAvatar().SetAllianceRole(m_vRole);
+                    if (m_vRole == 2)
+                    {
+                        player.SetAllianceRole(4);
+
+                        AllianceEventStreamEntry demote = new AllianceEventStreamEntry();
+                        demote.SetId(alliance.GetChatMessages().Count + 1);
+                        demote.SetSender(player);
+                        demote.SetEventType(6);
+                        demote.SetAvatarId(player.GetId());
+                        demote.SetAvatarName(player.GetAvatarName());
+
+                        alliance.AddChatMessage(demote);
+
+                        AllianceEventStreamEntry promote = new AllianceEventStreamEntry();
+                        promote.SetId(alliance.GetChatMessages().Count + 1);
+                        promote.SetSender(target.GetPlayerAvatar());
+                        promote.SetEventType(5);
+                        promote.SetAvatarId(player.GetId());
+                        promote.SetAvatarName(player.GetAvatarName());
+
+                        alliance.AddChatMessage(promote);
+
+                        PromoteAllianceMemberOkMessage rup = new PromoteAllianceMemberOkMessage(Client);
+                        PromoteAllianceMemberOkMessage rub = new PromoteAllianceMemberOkMessage(target.GetClient());
+
+                        AllianceRoleUpdateCommand p = new AllianceRoleUpdateCommand();
+                        AvailableServerCommandMessage pa = new AvailableServerCommandMessage(Client);
+
+                        AllianceRoleUpdateCommand t = new AllianceRoleUpdateCommand();
+                        AvailableServerCommandMessage ta = new AvailableServerCommandMessage(target.GetClient());
+
+                        rup.SetID(level.GetPlayerAvatar().GetId());
+                        rup.SetRole(4);
+                        rub.SetID(target.GetPlayerAvatar().GetId());
+                        rub.SetRole(2);
+
+                        t.SetAlliance(alliance);
+                        p.SetAlliance(alliance);
+                        t.SetRole(2);
+                        p.SetRole(4);
+                        t.Tick(target);
+                        p.Tick(level);
+
+                        ta.SetCommandId(8);
+                        pa.SetCommandId(8);
+                        ta.SetCommand(t);
+                        pa.SetCommand(p);
+                        if (ResourcesManager.IsPlayerOnline(target))
+                        {
+                            ta.Send();
+                            rub.Send();
+                        }
+                        rup.Send();
+                        pa.Send();
+
+
+                        // New function for send a message
+                        foreach (AllianceMemberEntry op in alliance.GetAllianceMembers())
+                        {
+                            Level aplayer = ResourcesManager.GetPlayer(op.GetAvatarId());
+                            if (aplayer.GetClient() != null)
+                            {
+                                AllianceStreamEntryMessage a = new AllianceStreamEntryMessage(aplayer.GetClient());
+                                AllianceStreamEntryMessage b = new AllianceStreamEntryMessage(aplayer.GetClient());
+
+                                a.SetStreamEntry(demote);
+                                b.SetStreamEntry(promote);
+
+                                a.Send();
+                                b.Send();
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        AllianceRoleUpdateCommand t = new AllianceRoleUpdateCommand();
+                        AvailableServerCommandMessage ta = new AvailableServerCommandMessage(target.GetClient());
+                        PromoteAllianceMemberOkMessage ru = new PromoteAllianceMemberOkMessage(target.GetClient());
+                        AllianceEventStreamEntry stream = new AllianceEventStreamEntry();
+
+                        stream.SetId(alliance.GetChatMessages().Count + 1);
+                        stream.SetSender(target.GetPlayerAvatar());
+                        stream.SetAvatarId(player.GetId());
+                        stream.SetAvatarName(player.GetAvatarName());
+                        if (m_vRole > oldrole)
+                            stream.SetEventType(5);
+                        else
+                            stream.SetEventType(6);
+
+                        t.SetAlliance(alliance);
+                        t.SetRole(m_vRole);
+                        t.Tick(target);
+
+                        ta.SetCommandId(8);
+                        ta.SetCommand(t);
+
+                        ru.SetID(target.GetPlayerAvatar().GetId());
+                        ru.SetRole(m_vRole);
+
+                        alliance.AddChatMessage(stream);
+
+                        if (ResourcesManager.IsPlayerOnline(target))
+                        {
+                            ta.Send();
+                            ru.Send();
+                        }
+                        // New function for send a message
+                        foreach (AllianceMemberEntry op in alliance.GetAllianceMembers())
+                        {
+                            Level aplayer = ResourcesManager.GetPlayer(op.GetAvatarId());
+                            if (aplayer.GetClient() != null)
+                            {
+                                AllianceStreamEntryMessage b = new AllianceStreamEntryMessage(aplayer.GetClient());
+                                b.SetStreamEntry(stream);
+                                //PacketManager.Send(b);
+                                b.Send();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
