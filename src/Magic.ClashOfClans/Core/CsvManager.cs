@@ -29,30 +29,16 @@ namespace Magic.Core
             _gameFiles.Add(new Tuple<string, string, int>("Achievements", @"contents/logic/achievements.csv", 22));
             _gameFiles.Add(new Tuple<string, string, int>("Spells", @"contents/logic/spells.csv", 25));
             _gameFiles.Add(new Tuple<string, string, int>("Heroes", @"contents/logic/heroes.csv", 27));
-            /*
-            gameFiles.Add(new Tuple<string, string, int>("Alliance Badge Layers", @"Gamefiles/logic/alliance_badge_layers.csv", 30));
-            gameFiles.Add(new Tuple<string, string, int>("Alliance Badges", @"Gamefiles/logic/alliance_badges.csv", 31));
-            gameFiles.Add(new Tuple<string, string, int>("Alliance Levels", @"Gamefiles/logic/alliance_levels.csv", 32));
-            gameFiles.Add(new Tuple<string, string, int>("Alliance Portal", @"Gamefiles/logic/alliance_portal.csv", 33));
-            gameFiles.Add(new Tuple<string, string, int>("Buildings Classes", @"Gamefiles/logic/building_classes.csv", 34));
-            gameFiles.Add(new Tuple<string, string, int>("Effects", @"Gamefiles/logic/effects.csv", 35));
-            gameFiles.Add(new Tuple<string, string, int>("Locales", @"Gamefiles/logic/locales.csv", 36));
-            gameFiles.Add(new Tuple<string, string, int>("Missions", @"Gamefiles/logic/missions.csv", 37));
-            gameFiles.Add(new Tuple<string, string, int>("Projectiles", @"Gamefiles/logic/projectiles.csv", 38));
-            gameFiles.Add(new Tuple<string, string, int>("Regions", @"Gamefiles/logic/regions.csv", 39));
-            gameFiles.Add(new Tuple<string, string, int>("Variables", @"Gamefiles/logic/variables.csv", 40)); 
-            gameFiles.Add(new Tuple<string, string, int>("War", @"Gamefiles/logic/war.csv", 28));
-            */
+            int count = 0;
             try
             {
                 Parallel.ForEach(_gameFiles, file =>
                 {
-                    // Just to figure out where CSV fails at.
-                    Say($"Loading CSV table {file.Item1} at {file.Item2}...");
 
                     _dataTables.InitDataTable(new CsvTable(file.Item2), file.Item3);
+                    ++count;
                 });
-                Say("CSV Tables  have been successfully loaded.");
+                Say("Successfully loaded " + count + "  CSV file(s).");
             }
             catch (Exception Ex)
             {

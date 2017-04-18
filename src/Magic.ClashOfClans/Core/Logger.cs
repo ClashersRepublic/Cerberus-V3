@@ -71,9 +71,31 @@ namespace Magic.Core
             }
         }
 
+        public static void SayInfo(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+            Console.WriteLine(message);
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+            Console.ResetColor();
+        }
+
+        public static void SayAscii(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+            Console.WriteLine(message);
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+            Console.ResetColor();
+        }
+
         public static void Say(string message)
         {
-            Console.WriteLine("[UCS]    " + message);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+            Console.WriteLine(message);
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+            Console.ResetColor();
         }
 
         public static void Say()

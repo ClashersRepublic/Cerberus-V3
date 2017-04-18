@@ -50,7 +50,6 @@ namespace Magic.Core
             // Every 30 minutes.
             const int TIMER_PERIOD = 1000 * 60 * 30;
             m_vSaveTimer = new Timer(SaveCycle, null, 0, TIMER_PERIOD);
-            Say("UCS Database has been successfully loaded.");
         }
 
         private static void SaveCycle(object state)
@@ -133,6 +132,7 @@ namespace Magic.Core
 
         public static void LoadNpcLevels()
         {
+            int count = 0;
             NpcLevels.Add(17000000, new StreamReader(@"contents/level/NPC/tutorial_npc.json").ReadToEnd());
             NpcLevels.Add(17000001, new StreamReader(@"contents/level/NPC/tutorial_npc2.json").ReadToEnd());
 
@@ -140,9 +140,11 @@ namespace Magic.Core
             {
                 var json = File.ReadAllText(@"contents/level/NPC/level" + (i + 1) + ".json");
                 NpcLevels.Add(i + 17000000, json);
+                ++count;
             }
 
-            Say("NPC Levels  have been successfully loaded.");
+            Say("Successfully loaded " + count + " NPC level(s).");
+            Say();
         }
 
         public static void RemoveInMemoryAlliance(long id)
