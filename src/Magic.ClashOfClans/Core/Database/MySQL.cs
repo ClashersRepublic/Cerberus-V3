@@ -11,7 +11,6 @@ namespace Magic.Core.Database
 {
     internal class MySQL
     {
-        //internal const string Credentials = "server=localhost;user id={0};pwd={1};CharSet=utf8mb4;persistsecurityinfo=True;database=ucsdb";
         internal static readonly string Credentials = "server=localhost;user id={0}{1};CharSet=utf8mb4;persistsecurityinfo=True;database=ucsdb";
 
         static MySQL()
@@ -25,10 +24,6 @@ namespace Magic.Core.Database
             Credentials = string.Format(Credentials, id, pwd);
         }
 
-        /// <summary> //done
-        /// Gets the seed.
-        /// </summary>
-        /// <returns>System.Int64.</returns>
         internal static long GetPlayerSeed()
         {
             const string SQL = "SELECT coalesce(MAX(PlayerId), 0) FROM player";
@@ -42,16 +37,13 @@ namespace Magic.Core.Database
                 {
                     CMD.Prepare();
                     Seed = (long)CMD.ExecuteScalar();
+                    Logger.Say("Successfully loaded " + Seed + "   player(s).");
                 }
             }
 
             return Seed;
         }
 
-        /// <summary> //done
-        /// Gets the seed.
-        /// </summary>
-        /// <returns>System.Int64.</returns>
         internal static long GetAllianceSeed()
         {
             const string SQL = "SELECT coalesce(MAX(ClanId), 0) FROM clan";
@@ -65,6 +57,7 @@ namespace Magic.Core.Database
                 {
                     CMD.Prepare();
                     Seed = (long)CMD.ExecuteScalar();
+                    Logger.Say("Successfully loaded " + Seed + "  alliance(s).");
                 }
             }
 
