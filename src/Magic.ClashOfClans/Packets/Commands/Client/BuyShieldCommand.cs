@@ -20,10 +20,10 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
-            int time = avatar.GetShieldTime + Convert.ToInt32(TimeSpan.FromHours((double)((ShieldData)CSVManager.DataTables.GetDataById(ShieldId)).TimeH).TotalSeconds);
+            ClientAvatar avatar = level.Avatar;
+            int time = avatar.GetShieldTime + Convert.ToInt32(TimeSpan.FromHours((double)((ShieldData)CsvManager.DataTables.GetDataById(ShieldId)).TimeH).TotalSeconds);
             avatar.SetShieldTime(time);
-            int diamonds = ((ShieldData) CSVManager.DataTables.GetDataById(ShieldId)).Diamonds;
+            int diamonds = ((ShieldData) CsvManager.DataTables.GetDataById(ShieldId)).Diamonds;
             avatar.UseDiamonds(diamonds);
         }
     }

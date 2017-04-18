@@ -18,7 +18,7 @@ namespace Magic.PacketProcessing.Messages.Server
         {
             var data = new List<byte>();
 
-            data.AddRange(Level.GetPlayerAvatar().Encode());
+            data.AddRange(Level.Avatar.Encode());
             data.AddCompressedString(Level.SaveToJson());
 
             data.AddInt32(0); //Donated

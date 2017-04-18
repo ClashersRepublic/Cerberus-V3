@@ -17,7 +17,7 @@ namespace Magic.Logic
     {
         // Long
         private long _allianceId;
-        private long _currentHomeId;
+        private long _homeId;
         private long _id;
 
         // Int
@@ -93,13 +93,17 @@ namespace Magic.Logic
         {
             LastUpdate = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             EndShieldTime = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
             _id = id;
-            _highId = (int)(id >> 32);
-            _lowId = (int)(id & 0xffffffffL);
+            _homeId = id;
             _token = token;
-            _currentHomeId = id;
-            _nameChoosenByUser = 0x00;
-            _nameChangeLeft = 0x02;
+
+            _highId = (int)(id >> 32);
+            _lowId = (int)(id & 0xFFFFFFFFL);
+
+            _nameChoosenByUser = 0;
+            _nameChangeLeft = 2;
+
             _expLvl = ToInt32(AppSettings["startingLevel"]);
             _allianceId = 0;
             _expPoint = 0;
@@ -110,10 +114,10 @@ namespace Magic.Logic
             TutorialStepsCount = 0x0A;
             _name = "NoNameYet";
 
-            SetResourceCount(CSVManager.DataTables.GetResourceByName("Gold"), ToInt32(AppSettings["startingGold"]));
-            SetResourceCount(CSVManager.DataTables.GetResourceByName("Elixir"), ToInt32(AppSettings["startingElixir"]));
-            SetResourceCount(CSVManager.DataTables.GetResourceByName("DarkElixir"), ToInt32(AppSettings["startingDarkElixir"]));
-            SetResourceCount(CSVManager.DataTables.GetResourceByName("Diamonds"), ToInt32(AppSettings["startingGems"]));
+            SetResourceCount(CsvManager.DataTables.GetResourceByName("Gold"), ToInt32(AppSettings["startingGold"]));
+            SetResourceCount(CsvManager.DataTables.GetResourceByName("Elixir"), ToInt32(AppSettings["startingElixir"]));
+            SetResourceCount(CsvManager.DataTables.GetResourceByName("DarkElixir"), ToInt32(AppSettings["startingDarkElixir"]));
+            SetResourceCount(CsvManager.DataTables.GetResourceByName("Diamonds"), ToInt32(AppSettings["startingGems"]));
         }
 
         public List<DataSlot> Achievements { get; set; }
@@ -147,7 +151,7 @@ namespace Magic.Logic
 
         private void UpdateLeague()
         {
-            var table = CSVManager.DataTables.GetTable(12);
+            var table = CsvManager.DataTables.GetTable(12);
             var i = 0;
             bool found = false;
             while (!found)
@@ -172,11 +176,11 @@ namespace Magic.Logic
         {
             _expPoint += exp;
             var experienceCap =
-                ((ExperienceLevelData)CSVManager.DataTables.GetTable(10).GetDataByName(_expLvl.ToString()))
+                ((ExperienceLevelData)CsvManager.DataTables.GetTable(10).GetDataByName(_expLvl.ToString()))
                     .ExpPoints;
             if (_expPoint >= experienceCap)
             {
-                if (CSVManager.DataTables.GetTable(10).GetItemCount() > _expLvl + 1)
+                if (CsvManager.DataTables.GetTable(10).GetItemCount() > _expLvl + 1)
                 {
                     _expLvl += 1;
                     _expPoint = _expPoint - experienceCap;
@@ -192,16 +196,16 @@ namespace Magic.Logic
         {
             var data = new List<byte>();
             data.AddInt64(_id);
-            data.AddInt64(_currentHomeId);
+            data.AddInt64(_homeId);
             if (_allianceId != 0)
             {
                 data.Add(1);
                 data.AddInt64(_allianceId);
                 var alliance = ObjectManager.GetAlliance(_allianceId);
-                data.AddString(alliance.GetAllianceName());
-                data.AddInt32(alliance.GetAllianceBadgeData());
+                data.AddString(alliance.AllianceName);
+                data.AddInt32(alliance.AllianceBadgeData);
                 data.AddInt32(alliance.GetAllianceMember(_id).GetRole());
-                data.AddInt32(alliance.GetAllianceLevel());
+                data.AddInt32(alliance.AllianceLevel);
             }
             data.Add(0);
 
@@ -387,14 +391,28 @@ namespace Magic.Logic
         public int GetAvatarLevel() => _expLvl;
         public int GetActiveLayout() => _activeLayout;
         public string GetAvatarName() => _name;
-        public long GetCurrentHomeId() => _currentHomeId;
+        public long GetCurrentHomeId() => _homeId;
         public int GetDiamonds() => _gems;
-        public bool GetAndroid() => _isAndroid;
-        public long GetId() => _id;
+
+        public bool Android
+        {
+            get
+            {
+                return _isAndroid;
+            }
+
+            set
+            {
+                _isAndroid = value;
+            }
+        }
+
         public int GetLeagueId() => _league;
         public int GetSecondsFromLastUpdate() => (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds - LastUpdate;
-        public string GetUserToken() => _token;
         public string GetUserRegion() => _region;
+
+        public string Token => _token;
+        public long Id => _id;
 
         public int GetScore()
         {
@@ -417,7 +435,7 @@ namespace Magic.Logic
             _accCreateDate = jsonObject["avatar_creation_date"].ToObject<DateTime>();
             _activeLayout = jsonObject["active_layout"].ToObject<int>();
             _isAndroid = jsonObject["android"].ToObject<bool>();
-            _currentHomeId = jsonObject["current_home_id"].ToObject<long>();
+            _homeId = jsonObject["current_home_id"].ToObject<long>();
             _allianceId = jsonObject["alliance_id"].ToObject<long>();
             SetAllianceCastleLevel(jsonObject["alliance_castle_level"].ToObject<int>());
             SetAllianceCastleTotalCapacity(jsonObject["alliance_castle_total_capacity"].ToObject<int>());
@@ -578,7 +596,7 @@ namespace Magic.Logic
             jsonData.Add("avatar_creation_date", _accCreateDate);
             jsonData.Add("active_layout", _activeLayout);
             jsonData.Add("android", _isAndroid);
-            jsonData.Add("current_home_id", _currentHomeId);
+            jsonData.Add("current_home_id", _homeId);
             jsonData.Add("alliance_id", _allianceId);
             jsonData.Add("alliance_castle_level", GetAllianceCastleLevel());
             jsonData.Add("alliance_castle_total_capacity", GetAllianceCastleTotalCapacity());
@@ -693,7 +711,7 @@ namespace Magic.Logic
             if (State == UserState.PVP)
             {
                 var info = default(AttackInfo);
-                if (!AttackingInfo.TryGetValue(GetId(), out info))
+                if (!AttackingInfo.TryGetValue(Id, out info))
                 {
                     Logger.Error("Unable to obtain attack info.");
                 }
@@ -745,11 +763,6 @@ namespace Magic.Logic
         public void SetActiveLayout(int layout)
         {
             _activeLayout = layout;
-        }
-
-        public void SetAndroid(bool android)
-        {
-            _isAndroid = android;
         }
 
         public void SetAllianceRole(int a)

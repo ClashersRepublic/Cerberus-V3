@@ -17,18 +17,18 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
-                foreach (var onlinePlayer in ResourcesManager.GetOnlinePlayers())
+                foreach (var onlinePlayer in ResourcesManager.OnlinePlayers)
                 {
-                    var p = new ShutdownStartedMessage(onlinePlayer.GetClient());
+                    var p = new ShutdownStartedMessage(onlinePlayer.Client);
                     p.SetCode(5);
                     p.Send();
                 }
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace Magic.Logic
             m_vMaxResources = new List<int>();
             m_vStolenResources = new List<int>();
 
-            var table = CSVManager.DataTables.GetTable(2);
+            var table = CsvManager.DataTables.GetTable(2);
             var resourceCount = table.GetItemCount();
             for (var i = 0; i < resourceCount; i++)
             {

@@ -25,7 +25,7 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
+            ClientAvatar avatar = level.Avatar;
             foreach (var buildingId in BuildingIds)
             {
                 ConstructionItem gameObjectById = (ConstructionItem) level.GameObjectManager.GetGameObjectByID(buildingId);

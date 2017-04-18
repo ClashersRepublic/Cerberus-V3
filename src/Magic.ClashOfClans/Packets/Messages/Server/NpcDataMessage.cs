@@ -21,17 +21,17 @@ namespace Magic.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            var ownerHome = new ClientHome(Player.GetPlayerAvatar().GetId());
-            ownerHome.SetShieldTime(Player.GetPlayerAvatar().RemainingShieldTime);
+            var ownerHome = new ClientHome(Player.Avatar.Id);
+            ownerHome.SetShieldTime(Player.Avatar.RemainingShieldTime);
             ownerHome.SetHomeJson(JsonBase);
 
-            Player.GetPlayerAvatar().State = ClientAvatar.UserState.PVE;
+            Player.Avatar.State = ClientAvatar.UserState.PVE;
             var data = new List<byte>();
 
             data.AddInt32(0);
-            data.AddInt32((int)Player.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+            data.AddInt32((int)Player.Time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             data.AddRange(ownerHome.Encode());
-            data.AddRange(Player.GetPlayerAvatar().Encode());
+            data.AddRange(Player.Avatar.Encode());
             data.AddInt32(LevelId);
 
             Encrypt(data.ToArray());

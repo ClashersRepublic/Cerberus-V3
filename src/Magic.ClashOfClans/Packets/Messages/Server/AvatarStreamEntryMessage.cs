@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Magic.Logic.AvatarStreamEntry;
+using Magic.Logic.AvatarStreamEntries;
 
 namespace Magic.PacketProcessing.Messages.Server
 {

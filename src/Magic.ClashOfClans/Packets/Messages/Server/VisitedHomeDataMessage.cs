@@ -20,25 +20,19 @@ namespace Magic.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            VisitedHomeDataMessage visitedHomeDataMessage = this;
-            try
-            {
-                List<byte> data = new List<byte>();
-                ClientHome clientHome = new ClientHome(m_vOwnerLevel.GetPlayerAvatar().GetId());
-                clientHome.SetShieldTime(m_vOwnerLevel.GetPlayerAvatar().RemainingShieldTime);
-                clientHome.SetHomeJson(m_vOwnerLevel.SaveToJson());
-                data.AddInt32(-1);
-                data.AddInt32((int)TimeSpan.FromSeconds(100).TotalSeconds);
-                data.AddRange((IEnumerable<byte>)clientHome.Encode());
-                data.AddRange((IEnumerable<byte>)m_vOwnerLevel.GetPlayerAvatar().Encode());
-                data.AddInt32(0);
-                data.Add((byte)1);
-                data.AddRange(m_vVisitorLevel.GetPlayerAvatar().Encode());
-                Encrypt(data.ToArray());
-            }
-            catch (Exception ex)
-            {
-            }
+            var data = new List<byte>();
+            var home = new ClientHome(m_vOwnerLevel.Avatar.Id);
+            home.SetShieldTime(m_vOwnerLevel.Avatar.RemainingShieldTime);
+            home.SetHomeJson(m_vOwnerLevel.SaveToJson());
+
+            data.AddInt32(-1);
+            data.AddInt32((int)TimeSpan.FromSeconds(100).TotalSeconds);
+            data.AddRange(home.Encode());
+            data.AddRange(m_vOwnerLevel.Avatar.Encode());
+            data.AddInt32(0);
+            data.Add(1);
+            data.AddRange(m_vVisitorLevel.Avatar.Encode());
+            Encrypt(data.ToArray());
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Magic.Core
 
         private static long m_vAllianceSeed;
         private static long m_vAvatarSeed;
-        private static string m_vHomeDefault;
+        public static string m_vHomeDefault;
         private static Timer m_vSaveTimer;
 
         public static int DonationSeed;
@@ -79,16 +79,17 @@ namespace Magic.Core
 
         public static Level CreateLevel(long seed, string token)
         {
+            // Increment & manage AvatarSeed thread safely.
             lock (s_sync)
             {
                 if (seed == 0 || m_vAvatarSeed == seed)
                 {
-                    seed = m_vAvatarSeed;
+                    seed = m_vAvatarSeed++;
                 }
                 else
                 {
                     if (seed > m_vAvatarSeed)
-                        m_vAvatarSeed = seed;
+                        m_vAvatarSeed = seed + 1;
                 }
             }
 

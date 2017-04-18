@@ -12,7 +12,7 @@ namespace Magic.PacketProcessing
 
         public static void SendCommandFailedMessage(Client c)
         {
-            Console.WriteLine("GameOp command failed. Insufficient privileges. Requster ID -> " + c.Level.GetPlayerAvatar().GetId());
+            Console.WriteLine("GameOp command failed. Insufficient privileges. Requster ID -> " + c.Level.Avatar.Id);
             var p = new GlobalChatLineMessage(c);
             p.SetChatMessage("GameOp command failed. Insufficient privileges.");
             p.SetPlayerId(0);

@@ -62,7 +62,7 @@ namespace Magic.Logic
             var result = 0;
             if (m_vTimer != null)
             {
-                result = m_vTimer.GetRemainingSeconds(Parent.Level.GetTime());
+                result = m_vTimer.GetRemainingSeconds(Parent.Level.Time);
             }
             return result;
         }
@@ -86,10 +86,10 @@ namespace Magic.Logic
             {
                 m_vTimer = new Timer();
                 var remainingTime = unitUpgradeObject["t"].ToObject<int>();
-                m_vTimer.StartTimer(remainingTime, Parent.Level.GetTime());
+                m_vTimer.StartTimer(remainingTime, Parent.Level.Time);
 
                 var id = unitUpgradeObject["id"].ToObject<int>();
-                m_vCurrentlyUpgradedUnit = (CombatItemData)CSVManager.DataTables.GetDataById(id);
+                m_vCurrentlyUpgradedUnit = (CombatItemData)CsvManager.DataTables.GetDataById(id);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Magic.Logic
                 var unitUpgradeObject = new JObject();
 
                 unitUpgradeObject.Add("unit_type", m_vCurrentlyUpgradedUnit.GetCombatItemType());
-                unitUpgradeObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()));
+                unitUpgradeObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.Time));
                 unitUpgradeObject.Add("id", m_vCurrentlyUpgradedUnit.GetGlobalID());
                 jsonObject.Add("unit_upg", unitUpgradeObject);
             }
@@ -114,10 +114,10 @@ namespace Magic.Logic
                 var remainingSeconds = 0;
                 if (m_vTimer != null)
                 {
-                    remainingSeconds = m_vTimer.GetRemainingSeconds(Parent.Level.GetTime());
+                    remainingSeconds = m_vTimer.GetRemainingSeconds(Parent.Level.Time);
                 }
                 var cost = GamePlayUtil.GetSpeedUpCost(remainingSeconds);
-                var ca = Parent.Level.GetPlayerAvatar();
+                var ca = Parent.Level.Avatar;
                 if (ca.HasEnoughDiamonds(cost))
                 {
                     ca.UseDiamonds(cost);
@@ -132,7 +132,7 @@ namespace Magic.Logic
             {
                 m_vCurrentlyUpgradedUnit = cid;
                 m_vTimer = new Timer();
-                m_vTimer.StartTimer(GetTotalSeconds(), Parent.Level.GetTime());
+                m_vTimer.StartTimer(GetTotalSeconds(), Parent.Level.Time);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Magic.Logic
         {
             if (m_vTimer != null)
             {
-                if (m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()) <= 0)
+                if (m_vTimer.GetRemainingSeconds(Parent.Level.Time) <= 0)
                 {
                     FinishUpgrading();
                 }

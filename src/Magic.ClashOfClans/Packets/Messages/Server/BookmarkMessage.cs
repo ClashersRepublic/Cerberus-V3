@@ -16,7 +16,7 @@ namespace Magic.PacketProcessing.Messages.Server
         public BookmarkMessage(PacketProcessing.Client client) : base(client)
         {
             MessageType = 24340;
-            player = client.Level.GetPlayerAvatar();
+            player = client.Level.Avatar;
         }
 
         public override void Encode()

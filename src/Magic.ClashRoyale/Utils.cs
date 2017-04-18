@@ -32,14 +32,24 @@ namespace Magic
             var data = File.ReadAllBytes(path);
             using (var reader = new MessageReader(new MemoryStream(data)))
             {
-                try { message.ReadMessage(reader); }
-                catch { }
+                message.ReadMessage(reader);
 
                 if (reader.BaseStream.Position != reader.BaseStream.Length)
                     Debug.WriteLine("Did not fully read message dump.");
             }
 
             return message;
+        }
+
+        public static void WriteMessage(Message message, string path)
+        {
+            using (var writer = new MessageWriter(new MemoryStream()))
+            {
+                message.WriteMessage(writer);
+
+                var data = ((MemoryStream)writer.BaseStream).ToArray();
+                File.WriteAllBytes(path, data);
+            }
         }
     }
 }

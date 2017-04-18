@@ -27,7 +27,7 @@ namespace Magic.ClashOfClans
             DirectoryChecker.CheckFiles();
 
             // Initialize our stuff.
-            CSVManager.Initialize();
+            CsvManager.Initialize();
             ResourcesManager.Initialize();
             ObjectManager.Initialize();
 

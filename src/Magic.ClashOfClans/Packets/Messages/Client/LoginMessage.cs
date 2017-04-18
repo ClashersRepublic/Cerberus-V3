@@ -9,7 +9,7 @@ using Magic.Core.Settings;
 using Magic.Files.Logic;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.AvatarStreamEntry;
+using Magic.Logic.AvatarStreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 using Magic.Packets.Messages.Server;
 using static Magic.PacketProcessing.Client;
@@ -19,9 +19,9 @@ namespace Magic.PacketProcessing.Messages.Client
     // Packet 10101
     internal class LoginMessage : Message
     {
-        public LoginMessage(PacketProcessing.Client client, PacketReader br) : base(client, br)
+        public LoginMessage(PacketProcessing.Client client, PacketReader reader) : base(client, reader)
         {
-
+            // Space
         }
 
         public string AdvertisingGUID;
@@ -45,7 +45,7 @@ namespace Magic.PacketProcessing.Messages.Client
         public bool Android;
         public long UserID;
 
-        public Level level;
+        public Level Level;
 
         public override void Decode()
         {
@@ -153,8 +153,7 @@ namespace Magic.PacketProcessing.Messages.Client
                     return;
                 }
 
-                if (Convert.ToBoolean(ConfigurationManager.AppSettings["useCustomPatch"]) &&
-                    MasterHash != ObjectManager.FingerPrint.sha)
+                if (Convert.ToBoolean(ConfigurationManager.AppSettings["useCustomPatch"]) && MasterHash != ObjectManager.FingerPrint.sha)
                 {
                     var p = new LoginFailedMessage(Client);
                     p.SetErrorCode(7);
@@ -165,32 +164,35 @@ namespace Magic.PacketProcessing.Messages.Client
                     return;
                 }
 
+                // Check if client has proper values etc.
                 CheckClient();
             }
         }
 
         private void LogUser()
         {
-            ResourcesManager.LogPlayerIn(level, Client);
-            level.Tick();
+            ResourcesManager.LogPlayerIn(Level, Client);
+            Level.Tick();
 
             var loginOk = new LoginOkMessage(Client);
-            var avatar = level.GetPlayerAvatar();
-            loginOk.SetAccountId(avatar.GetId());
-            loginOk.SetPassToken(avatar.GetUserToken());
+            var avatar = Level.Avatar;
+
+            loginOk.UserId = avatar.Id;
+            loginOk.UserToken = avatar.Token;
+
             loginOk.SetServerMajorVersion(MajorVersion);
             loginOk.SetServerBuild(MinorVersion);
             loginOk.SetContentVersion(ContentVersion);
             loginOk.SetServerEnvironment("prod");
             loginOk.SetDaysSinceStartedPlaying(0);
-            loginOk.SetServerTime(Math.Round(level.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds * 1000).ToString(CultureInfo.InvariantCulture));
+            loginOk.SetServerTime(Math.Round(Level.Time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds * 1000).ToString(CultureInfo.InvariantCulture));
             loginOk.SetAccountCreatedDate(avatar.GetAccountCreationDate().ToString());
             loginOk.SetStartupCooldownSeconds(0);
             loginOk.SetCountryCode(avatar.GetUserRegion() ?? "EN");
             loginOk.Send();
 
-            var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            if (ResourcesManager.IsPlayerOnline(level))
+            var alliance = ObjectManager.GetAlliance(Level.Avatar.GetAllianceId());
+            if (ResourcesManager.IsPlayerOnline(Level))
             {
                 var mail = new AllianceMailStreamEntry();
                 mail.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
@@ -204,12 +206,12 @@ namespace Magic.PacketProcessing.Messages.Client
                 mail.SetAllianceName("Clash of Magic Admin");
                 mail.SetMessage(ConfigurationManager.AppSettings["AdminMessage"]);
                 mail.SetSenderLevel(500);
-                var p = new AvatarStreamEntryMessage(level.GetClient());
+                var p = new AvatarStreamEntryMessage(Level.Client);
                 p.SetAvatarStreamEntry(mail);
                 p.Send();
             }
 
-            new OwnHomeDataMessage(Client, level).Send(); // THIS MESSAGE MUST BE SENT FIRST !!!
+            new OwnHomeDataMessage(Client, Level).Send(); // THIS MESSAGE MUST BE SENT FIRST !!!
             new AvatarStreamMessage(Client).Send();
 
             if (alliance != null)
@@ -250,24 +252,24 @@ namespace Magic.PacketProcessing.Messages.Client
                 else
                 {
                     // Try to get player from memory then DB.
-                    level = ResourcesManager.GetPlayer(UserID, true);
+                    Level = ResourcesManager.GetPlayer(UserID, true);
 
                     var avatar = default(ClientAvatar);
                     // If level does not exists we create a new one with the specified
                     // UserId and UserToken.
-                    if (level == null)
+                    if (Level == null)
                     {
-                        level = ObjectManager.CreateLevel(UserID, UserToken);
-                        avatar = level.GetPlayerAvatar();
+                        Level = ObjectManager.CreateLevel(UserID, UserToken);
+                        avatar = Level.Avatar;
                         avatar.SetRegion(Region);
                     }
                     else
                     {
-                        avatar = level.GetPlayerAvatar();
+                        avatar = Level.Avatar;
                     }
 
                     // Check avatar/client password if matches user id.
-                    if (avatar.GetUserToken() != UserToken)
+                    if (avatar.Token != UserToken)
                     {
                         var loginFailed = GetLoginFailedMessage(3);
                         loginFailed.Send();
@@ -282,21 +284,20 @@ namespace Magic.PacketProcessing.Messages.Client
 
         private void NewUser()
         {
-            level = ObjectManager.CreateLevel(0, null);
-            if (string.IsNullOrEmpty(UserToken))
-            {
-                byte[] tokenSeed = new byte[20];
-                new Random().NextBytes(tokenSeed);
-                using (SHA1 sha = new SHA1CryptoServiceProvider())
-                    UserToken = BitConverter.ToString(sha.ComputeHash(tokenSeed)).Replace("-", string.Empty);
-            }
+            var userToken = default(string);
+            var tokenSeed = new byte[20];
+            Utils.Random.NextBytes(tokenSeed);
+            using (SHA1 sha = new SHA1CryptoServiceProvider())
+                UserToken = BitConverter.ToString(sha.ComputeHash(tokenSeed)).Replace("-", string.Empty);
 
-            level.GetPlayerAvatar().SetRegion(Region.ToUpper());
-            level.GetPlayerAvatar().SetToken(UserToken);
-            level.GetPlayerAvatar().InitializeAccountCreationDate();
-            level.GetPlayerAvatar().SetAndroid(Android);
+            Level = ObjectManager.CreateLevel(0, userToken);
 
-            DatabaseManager.Instance.Save(level);
+            Level.Avatar.InitializeAccountCreationDate();
+            Level.Avatar.SetRegion(Region.ToUpper());
+            Level.Avatar.SetToken(UserToken);
+            Level.Avatar.Android = Android;
+
+            DatabaseManager.Instance.Save(Level);
             LogUser();
         }
 

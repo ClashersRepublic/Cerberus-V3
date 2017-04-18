@@ -18,7 +18,7 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 2)
                 {
@@ -29,7 +29,7 @@ namespace Magic.PacketProcessing.GameOpCommands
                         if (l != null)
                         {
                             l.Tick();
-                            new VisitedHomeDataMessage(level.GetClient(), l, level).Send();
+                            new VisitedHomeDataMessage(level.Client, l, level).Send();
                             
                         }
                         else
@@ -43,7 +43,7 @@ namespace Magic.PacketProcessing.GameOpCommands
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
     }

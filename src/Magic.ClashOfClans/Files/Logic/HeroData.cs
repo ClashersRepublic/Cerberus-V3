@@ -215,7 +215,7 @@ namespace Magic.Files.Logic
 
         public override int GetUpgradeLevelCount() => UpgradeCost.Count;
 
-        public override ResourceData GetUpgradeResource(int level) => CSVManager.DataTables.GetResourceByName(UpgradeResource[level]);
+        public override ResourceData GetUpgradeResource(int level) => CsvManager.DataTables.GetResourceByName(UpgradeResource[level]);
 
         public override int GetUpgradeTime(int level) => UpgradeTimeH[level] * 3600;
     }

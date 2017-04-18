@@ -24,17 +24,17 @@ namespace Magic.PacketProcessing.Messages.Server
             var packet1 = new List<byte>();
             var i = 1;
 
-            foreach (var player in ResourcesManager.GetOnlinePlayers().OrderByDescending(t => t.GetPlayerAvatar().GetScore()))
+            foreach (var player in ResourcesManager.OnlinePlayers.OrderByDescending(t => t.Avatar.GetScore()))
             {
                 if (i < 51)
                 {
-                    ClientAvatar avatar = player.GetPlayerAvatar();
-                    if (player.GetPlayerAvatar().GetAvatarName() != null)
+                    ClientAvatar avatar = player.Avatar;
+                    if (player.Avatar.GetAvatarName() != null)
                     {
                         try
                         {
-                            var pl = player.GetPlayerAvatar();
-                            packet1.AddInt64(pl.GetId());
+                            var pl = player.Avatar;
+                            packet1.AddInt64(pl.Id);
                             packet1.AddString(pl.GetAvatarName());
                             packet1.AddInt32(i);
                             packet1.AddInt32(pl.GetScore());
@@ -51,8 +51,8 @@ namespace Magic.PacketProcessing.Messages.Server
                             {
                                 packet1.Add(1); // 1 = Have an alliance | 0 = No alliance
                                 packet1.AddInt64(pl.GetAllianceId());
-                                packet1.AddString(ObjectManager.GetAlliance(pl.GetAllianceId()).GetAllianceName());
-                                packet1.AddInt32(ObjectManager.GetAlliance(pl.GetAllianceId()).GetAllianceBadgeData());
+                                packet1.AddString(ObjectManager.GetAlliance(pl.GetAllianceId()).AllianceName);
+                                packet1.AddInt32(ObjectManager.GetAlliance(pl.GetAllianceId()).AllianceBadgeData);
                                 packet1.AddInt64(i);
                             }
                             else

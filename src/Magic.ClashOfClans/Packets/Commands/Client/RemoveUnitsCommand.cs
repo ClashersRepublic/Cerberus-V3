@@ -38,20 +38,20 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            List<DataSlot> units = level.GetPlayerAvatar().GetUnits();
-            List<DataSlot> spells = level.GetPlayerAvatar().GetSpells();
+            List<DataSlot> units = level.Avatar.GetUnits();
+            List<DataSlot> spells = level.Avatar.GetSpells();
             foreach (UnitToRemove unitToRemove in UnitsToRemove)
             {
                 if (unitToRemove.Data.ToString().StartsWith("400"))
                 {
-                    CombatItemData _Troop = (CombatItemData) CSVManager.DataTables.GetDataById(unitToRemove.Data);
+                    CombatItemData _Troop = (CombatItemData) CsvManager.DataTables.GetDataById(unitToRemove.Data);
                     DataSlot dataSlot = units.Find((Predicate<DataSlot>)(t => t.Data.GetGlobalID() == _Troop.GetGlobalID()));
                     if (dataSlot != null)
                         dataSlot.Value = dataSlot.Value - 1;
                 }
                 else if (unitToRemove.Data.ToString().StartsWith("260"))
                 {
-                    SpellData _Spell = (SpellData)CSVManager.DataTables.GetDataById(unitToRemove.Data);
+                    SpellData _Spell = (SpellData)CsvManager.DataTables.GetDataById(unitToRemove.Data);
                     DataSlot dataSlot = spells.Find((Predicate<DataSlot>)(t => t.Data.GetGlobalID() == _Spell.GetGlobalID()));
                     if (dataSlot != null)
                         dataSlot.Value = dataSlot.Value - 1;

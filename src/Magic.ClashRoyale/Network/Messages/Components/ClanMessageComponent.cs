@@ -21,7 +21,7 @@
         {
             ThrowIfWriterNull(writer);
 
-            //writer.Write(Id, true);
+            writer.Write(Id, true);
             writer.Write(Name);
 
             writer.Write(Unknown1, true);

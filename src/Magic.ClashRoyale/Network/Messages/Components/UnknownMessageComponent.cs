@@ -37,7 +37,18 @@ namespace Magic.Network.Messages.Components
         {
             ThrowIfWriterNull(writer);
 
-            throw new NotImplementedException();
+            writer.Write(Unknown1, true);
+            writer.Write(Unknown2, true);
+
+            writer.Write(Unknown3, true);
+            writer.Write(Unknown4, true);
+            writer.Write(Unknown5, true);
+            writer.Write(Unknown6, true);
+            writer.Write(Unknown7, true);
+            writer.Write(Unknown8, true);
+            writer.Write(Unknown9, true);
+
+            writer.Write(Unknown10, true);
         }
     }
 }

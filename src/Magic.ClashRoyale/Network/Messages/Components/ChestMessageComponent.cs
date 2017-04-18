@@ -61,17 +61,17 @@ namespace Magic.Network.Messages.Components
             writer.Write(Id, true);
             writer.Write(UnlockState, true);
 
-            if (UnlockState > 0)
+            if (UnlockState == 8)
             {
-                writer.Write(RemainingTimeSeconds, true);
-                writer.Write(TotalTimeSeconds, true);
+                writer.Write(RemainingTimeSeconds * 20, true);
+                writer.Write(TotalTimeSeconds * 20, true);
                 writer.Write(EndTimestamp, true);
             }
 
             writer.Write(Unknown1, true);
             writer.Write(Unknown2, true);
 
-            writer.Write(Index);
+            writer.Write(Index, true);
 
             writer.Write(Unknown4, true);
             writer.Write(Unknown5, true);

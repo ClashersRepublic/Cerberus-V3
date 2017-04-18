@@ -211,7 +211,7 @@ namespace Magic.Files.Logic
 
         public override int GetTrainingCost(int level) => TrainingCost[level];
 
-        public override ResourceData GetTrainingResource() => CSVManager.DataTables.GetResourceByName(TrainingResource);
+        public override ResourceData GetTrainingResource() => CsvManager.DataTables.GetResourceByName(TrainingResource);
 
         public override int GetTrainingTime(int level) => TrainingTime[level];
 
@@ -219,7 +219,7 @@ namespace Magic.Files.Logic
 
         public override int GetUpgradeLevelCount() => UpgradeCost.Count;
 
-        public override ResourceData GetUpgradeResource(int level) => CSVManager.DataTables.GetResourceByName(UpgradeResource[level]);
+        public override ResourceData GetUpgradeResource(int level) => CsvManager.DataTables.GetResourceByName(UpgradeResource[level]);
 
         public override int GetUpgradeTime(int level) => UpgradeTimeH[level] * 3600;
     }

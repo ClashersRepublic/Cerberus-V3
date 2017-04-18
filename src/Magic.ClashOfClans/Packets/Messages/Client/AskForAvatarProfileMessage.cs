@@ -31,11 +31,18 @@ namespace Magic.PacketProcessing.Messages.Client
             if (player == null)
                 return;
 
-            player.Tick();
-            new AvatarProfileMessage(Client)
+            if (m_vAvatarId == player.Avatar.Id)
             {
-                Level = player
-            }.Send();
+                player.Tick();
+                new AvatarProfileMessage(Client)
+                {
+                    Level = player
+                }.Send();
+            }
+            else
+            {
+                Logger.Error("ResourcesManager.GetPlayer returned a player with the wrong ID.");
+            }
         }
     }
 }

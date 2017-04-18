@@ -29,8 +29,8 @@ namespace Magic.PacketProcessing.Messages.Client
         }
         public override void Process(Level level)
         {
-            Alliance a = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            var stream = a.GetChatMessages().Find(c => c.GetId() == MessageID);
+            Alliance a = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+            var stream = a.ChatMessages.Find(c => c.GetId() == MessageID);
 
             var sender = ResourcesManager.GetPlayer(stream.GetSenderId());
             int upcomingspace = stream.m_vDonatedTroop + Troop.GetHousingSpace();

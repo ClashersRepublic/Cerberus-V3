@@ -3,7 +3,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Commands.Server;
 using Magic.PacketProcessing.Messages.Server;
 
@@ -30,42 +30,42 @@ namespace Magic.PacketProcessing.Messages.Client
         public override void Process(Level level)
         {
 
-            Alliance a = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            StreamEntry message = a.GetChatMessages().Find(c => c.GetId() == MessageId);
+            Alliance a = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+            StreamEntry message = a.ChatMessages.Find(c => c.GetId() == MessageId);
             Level requester = ResourcesManager.GetPlayer(message.GetSenderId());
             if (Choice == 1)
             {
-                if (!a.IsAllianceFull())
+                if (!a.IsAllianceFull)
                 {
-                    requester.GetPlayerAvatar().SetAllianceId(a.GetAllianceId());
+                    requester.Avatar.SetAllianceId(a.AllianceId);
 
-                    AllianceMemberEntry member = new AllianceMemberEntry(requester.GetPlayerAvatar().GetId());
+                    AllianceMemberEntry member = new AllianceMemberEntry(requester.Avatar.Id);
                     member.SetRole(1);
 
                     // For some reason this thing adds the same member twice.
                     a.AddAllianceMember(member);
 
-                    StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageId);
-                    e.SetJudgeName(level.GetPlayerAvatar().GetAvatarName());
+                    StreamEntry e = a.ChatMessages.Find(c => c.GetId() == MessageId);
+                    e.SetJudgeName(level.Avatar.GetAvatarName());
                     e.SetState(2);
 
                     AllianceEventStreamEntry eventStreamEntry = new AllianceEventStreamEntry();
-                    eventStreamEntry.SetId(a.GetChatMessages().Count + 1);
-                    eventStreamEntry.SetSender(requester.GetPlayerAvatar());
-                    eventStreamEntry.SetAvatarName(level.GetPlayerAvatar().GetAvatarName());
-                    eventStreamEntry.SetAvatarId(level.GetPlayerAvatar().GetId());
+                    eventStreamEntry.SetId(a.ChatMessages.Count + 1);
+                    eventStreamEntry.SetSender(requester.Avatar);
+                    eventStreamEntry.SetAvatarName(level.Avatar.GetAvatarName());
+                    eventStreamEntry.SetAvatarId(level.Avatar.Id);
                     eventStreamEntry.SetEventType(2);
 
                     a.AddChatMessage(eventStreamEntry);
 
                     // New function for send a message
-                    foreach (AllianceMemberEntry op in a.GetAllianceMembers())
+                    foreach (AllianceMemberEntry op in a.AllianceMembers)
                     {
                         Level player = ResourcesManager.GetPlayer(op.GetAvatarId());
-                        if (player.GetClient() != null)
+                        if (player.Client!= null)
                         {
-                            AllianceStreamEntryMessage c = new AllianceStreamEntryMessage(player.GetClient());
-                            AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(player.GetClient());
+                            AllianceStreamEntryMessage c = new AllianceStreamEntryMessage(player.Client);
+                            AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(player.Client);
                             p.SetStreamEntry(eventStreamEntry);
                             c.SetStreamEntry(e);
                             p.Send();
@@ -77,7 +77,7 @@ namespace Magic.PacketProcessing.Messages.Client
                         JoinedAllianceCommand joinAllianceCommand = new JoinedAllianceCommand();
                         joinAllianceCommand.SetAlliance(a);
 
-                        AvailableServerCommandMessage availableServerCommandMessage = new AvailableServerCommandMessage(requester.GetClient());
+                        AvailableServerCommandMessage availableServerCommandMessage = new AvailableServerCommandMessage(requester.Client);
                         availableServerCommandMessage.SetCommandId(1);
                         availableServerCommandMessage.SetCommand(joinAllianceCommand);
 
@@ -93,23 +93,23 @@ namespace Magic.PacketProcessing.Messages.Client
                         new AnswerJoinRequestAllianceMessage(Client).Send();
                         availableServerCommandMessage.Send();
                         c.Send();
-                        new AllianceStreamMessage(requester.GetClient(), a).Send();
+                        new AllianceStreamMessage(requester.Client, a).Send();
                     }
                 }
             }
             else
             {
-                StreamEntry e = a.GetChatMessages().Find(c => c.GetId() == MessageId);
-                e.SetJudgeName(level.GetPlayerAvatar().GetAvatarName());
+                StreamEntry e = a.ChatMessages.Find(c => c.GetId() == MessageId);
+                e.SetJudgeName(level.Avatar.GetAvatarName());
                 e.SetState(3);
 
                 // New function for send a message
-                foreach (AllianceMemberEntry op in a.GetAllianceMembers())
+                foreach (AllianceMemberEntry op in a.AllianceMembers)
                 {
                     Level player = ResourcesManager.GetPlayer(op.GetAvatarId());
-                    if (player.GetClient() != null)
+                    if (player.Client!= null)
                     {
-                        AllianceStreamEntryMessage c = new AllianceStreamEntryMessage(player.GetClient());
+                        AllianceStreamEntryMessage c = new AllianceStreamEntryMessage(player.Client);
                         c.SetStreamEntry(e);
                         //PacketManager.Send(c);
                         c.Send();

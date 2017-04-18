@@ -23,8 +23,8 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
-            BuildingData dataById = (BuildingData) CSVManager.DataTables.GetDataById(BuildingId);
+            ClientAvatar avatar = level.Avatar;
+            BuildingData dataById = (BuildingData) CsvManager.DataTables.GetDataById(BuildingId);
             Building building = new Building((Data) dataById, level);
 
             if (!avatar.HasEnoughResources(dataById.GetBuildResource(0), dataById.GetBuildCost(0)) || !dataById.IsWorkerBuilding() && !level.HasFreeWorkers())

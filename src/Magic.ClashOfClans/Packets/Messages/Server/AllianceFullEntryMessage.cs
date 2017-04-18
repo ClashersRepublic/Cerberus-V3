@@ -19,8 +19,8 @@ namespace Magic.PacketProcessing.Messages.Server
         public override void Encode()
         {
             var pack = new List<byte>();
-            var allianceMembers = m_vAlliance.GetAllianceMembers();
-            pack.AddString(m_vAlliance.GetAllianceDescription());
+            var allianceMembers = m_vAlliance.AllianceMembers;
+            pack.AddString(m_vAlliance.AllianceDescription);
             pack.AddInt32(0);
             pack.AddInt32(0);
             pack.Add((byte) 0);

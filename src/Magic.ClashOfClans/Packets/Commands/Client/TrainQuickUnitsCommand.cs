@@ -22,7 +22,7 @@ namespace Magic.Packets.Commands.Client
 
 		public override void Execute(Level level)
 		{
-			ClientAvatar avatar = level.GetPlayerAvatar();
+			ClientAvatar avatar = level.Avatar;
             if (DataSlotID == 1)
 			{
 				foreach (DataSlot dataSlot1 in avatar.QuickTrain1)

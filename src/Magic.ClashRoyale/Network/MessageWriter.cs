@@ -73,6 +73,14 @@ namespace Magic.Network
             Write((ulong)value);
         }
 
+        public void Write(long value, bool rrint)
+        {
+            var hi = (int)(value >> 32);
+            var lo = (int)(value & 0xFFFFFFF) >> 32;
+            Write(hi, true);
+            Write(lo, true);
+        }
+
         /// <summary>
         /// Writes an 8-byte unsigned integer to the current stream and advances the stream position by eight bytes.
         /// </summary>
@@ -116,30 +124,37 @@ namespace Magic.Network
             if (rrint)
             {
                 // TODO: Implement own.
-                if (value > 63)
+                if (value == 63)
                 {
-                    Write((byte)(value & 63 | 128));
-                    if (value > 8191)
+                    Write((byte)127);
+                }
+                else
+                {
+                    if (value > 63)
                     {
-                        Write((byte)(value >> 6 | 128));
-                        if (value > 1048575)
+                        Write((byte)(value & 63 | 128));
+                        if (value > 8191)
                         {
-                            Write((byte)(value >> 13 | 128));
-                            if (value > 134217727)
+                            Write((byte)(value >> 6 | 128));
+                            if (value > 1048575)
                             {
-                                Write((byte)(value >> 20 | 128));
-                                value >>= 27;
+                                Write((byte)(value >> 13 | 128));
+                                if (value > 134217727)
+                                {
+                                    Write((byte)(value >> 20 | 128));
+                                    value >>= 27;
+                                }
+                                else
+                                    value >>= 20;
                             }
                             else
-                                value >>= 20;
+                                value >>= 13;
                         }
                         else
-                            value >>= 13;
+                            value >>= 6;
                     }
-                    else
-                        value >>= 6;
+                    Write((byte)value);
                 }
-                Write((byte)value);
             }
             else
             {

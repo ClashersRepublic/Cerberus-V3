@@ -4,7 +4,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.AvatarStreamEntry;
+using Magic.Logic.AvatarStreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 
 namespace Magic.PacketProcessing.Commands.Client
@@ -24,7 +24,7 @@ namespace Magic.PacketProcessing.Commands.Client
             SendAllianceMailCommand allianceMailCommand = this;
             try
             {
-                ClientAvatar avatar = level.GetPlayerAvatar();
+                ClientAvatar avatar = level.Avatar;
                 long allianceId = avatar.GetAllianceId();
                 if (allianceId > 0L)
                 {
@@ -35,18 +35,18 @@ namespace Magic.PacketProcessing.Commands.Client
                         allianceMailStreamEntry1.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                         allianceMailStreamEntry1.SetAvatar(avatar);
                         allianceMailStreamEntry1.SetIsNew((byte)2);
-                        allianceMailStreamEntry1.SetSenderId(avatar.GetId());
+                        allianceMailStreamEntry1.SetSenderId(avatar.Id);
                         allianceMailStreamEntry1.SetAllianceId(allianceId);
-                        allianceMailStreamEntry1.SetAllianceBadgeData(alliance.GetAllianceBadgeData());
-                        allianceMailStreamEntry1.SetAllianceName(alliance.GetAllianceName());
+                        allianceMailStreamEntry1.SetAllianceBadgeData(alliance.AllianceBadgeData);
+                        allianceMailStreamEntry1.SetAllianceName(alliance.AllianceName);
                         allianceMailStreamEntry1.SetMessage(m_vMailContent);
-                        foreach (Level onlinePlayer in ResourcesManager.GetOnlinePlayers())
+                        foreach (Level onlinePlayer in ResourcesManager.OnlinePlayers)
                         {
-                            if (onlinePlayer.GetPlayerAvatar().GetAllianceId() == allianceId)
+                            if (onlinePlayer.Avatar.GetAllianceId() == allianceId)
                             {
-                                AvatarStreamEntryMessage Message = new AvatarStreamEntryMessage(onlinePlayer.GetClient());
+                                AvatarStreamEntryMessage Message = new AvatarStreamEntryMessage(onlinePlayer.Client);
                                 AllianceMailStreamEntry allianceMailStreamEntry2 = allianceMailStreamEntry1;
-                                Message.SetAvatarStreamEntry((Magic.Logic.AvatarStreamEntry.AvatarStreamEntry)allianceMailStreamEntry2);
+                                Message.SetAvatarStreamEntry((Magic.Logic.AvatarStreamEntries.AvatarStreamEntry)allianceMailStreamEntry2);
                                 Message.Send();
                             }
                         }

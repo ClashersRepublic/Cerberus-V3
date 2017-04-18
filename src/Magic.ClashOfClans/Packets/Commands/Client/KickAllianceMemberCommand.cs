@@ -4,8 +4,8 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.AvatarStreamEntry;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.AvatarStreamEntries;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 using Magic.PacketProcessing.Commands.Server;
 using System.Threading.Tasks;
@@ -27,14 +27,14 @@ namespace Magic.PacketProcessing.Commands.Client
             var targetAccount = ResourcesManager.GetPlayer(m_vAvatarId);
             if (targetAccount != null)
             {
-                var targetAvatar = targetAccount.GetPlayerAvatar();
+                var targetAvatar = targetAccount.Avatar;
                 var targetAllianceId = targetAvatar.GetAllianceId();
-                var requesterAvatar = level.GetPlayerAvatar();
+                var requesterAvatar = level.Avatar;
                 var requesterAllianceId = requesterAvatar.GetAllianceId();
                 if (requesterAllianceId > 0 && targetAllianceId == requesterAllianceId)
                 {
                     var alliance = ObjectManager.GetAlliance(requesterAllianceId);
-                    var requesterMember = alliance.GetAllianceMember(requesterAvatar.GetId());
+                    var requesterMember = alliance.GetAllianceMember(requesterAvatar.Id);
                     var targetMember = alliance.GetAllianceMember(m_vAvatarId);
                     if (targetMember.HasLowerRoleThan(requesterMember.GetRole()))
                     {
@@ -45,7 +45,7 @@ namespace Magic.PacketProcessing.Commands.Client
                             var leaveAllianceCommand = new LeavedAllianceCommand();
                             leaveAllianceCommand.SetAlliance(alliance);
                             leaveAllianceCommand.SetReason(2); //Kick
-                            var availableServerCommandMessage = new AvailableServerCommandMessage(targetAccount.GetClient());
+                            var availableServerCommandMessage = new AvailableServerCommandMessage(targetAccount.Client);
                             availableServerCommandMessage.SetCommandId(2);
                             availableServerCommandMessage.SetCommand(leaveAllianceCommand);
                             availableServerCommandMessage.Send();
@@ -54,12 +54,12 @@ namespace Magic.PacketProcessing.Commands.Client
                             kickOutStreamEntry.SetId((int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                             kickOutStreamEntry.SetAvatar(requesterAvatar);
                             kickOutStreamEntry.SetIsNew(0);
-                            kickOutStreamEntry.SetAllianceId(alliance.GetAllianceId());
-                            kickOutStreamEntry.SetAllianceBadgeData(alliance.GetAllianceBadgeData());
-                            kickOutStreamEntry.SetAllianceName(alliance.GetAllianceName());
+                            kickOutStreamEntry.SetAllianceId(alliance.AllianceId);
+                            kickOutStreamEntry.SetAllianceBadgeData(alliance.AllianceBadgeData);
+                            kickOutStreamEntry.SetAllianceName(alliance.AllianceName);
                             kickOutStreamEntry.SetMessage(m_vMessage);
 
-                            var p = new AvatarStreamEntryMessage(targetAccount.GetClient());
+                            var p = new AvatarStreamEntryMessage(targetAccount.Client);
                             p.SetAvatarStreamEntry(kickOutStreamEntry);
                             p.Send();
                         }
@@ -68,16 +68,16 @@ namespace Magic.PacketProcessing.Commands.Client
                         eventStreamEntry.SetId((int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                         eventStreamEntry.SetSender(targetAvatar);
                         eventStreamEntry.SetEventType(1);
-                        eventStreamEntry.SetAvatarId(requesterAvatar.GetId());
+                        eventStreamEntry.SetAvatarId(requesterAvatar.Id);
                         eventStreamEntry.SetAvatarName(requesterAvatar.GetAvatarName());
                         alliance.AddChatMessage(eventStreamEntry);
 
-                        Parallel.ForEach((alliance.GetAllianceMembers()), op =>
+                        Parallel.ForEach((alliance.AllianceMembers), op =>
                         {
                             var alliancemembers = ResourcesManager.GetPlayer(op.GetAvatarId());
-                            if (alliancemembers.GetClient() != null)
+                            if (alliancemembers.Client!= null)
                             {
-                                var p = new AllianceStreamEntryMessage(alliancemembers.GetClient());
+                                var p = new AllianceStreamEntryMessage(alliancemembers.Client);
                                 p.SetStreamEntry(eventStreamEntry);
                                 p.Send();
                             }

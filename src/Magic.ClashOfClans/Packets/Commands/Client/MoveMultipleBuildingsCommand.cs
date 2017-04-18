@@ -39,7 +39,7 @@ namespace Magic.PacketProcessing.Commands.Client
                     return;
                 }
 
-                var activeLayout = level.GetPlayerAvatar().GetActiveLayout();
+                var activeLayout = level.Avatar.GetActiveLayout();
                 gameObject.SetPosition(buildingToMove.X, buildingToMove.Y, activeLayout);
             }
         }

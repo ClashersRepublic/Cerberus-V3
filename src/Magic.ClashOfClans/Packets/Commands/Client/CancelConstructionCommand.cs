@@ -27,7 +27,7 @@ namespace Magic.PacketProcessing.Commands.Client
                     ConstructionItem constructionItem = (ConstructionItem) gameObjectById;
                     if (!constructionItem.IsConstructing())
                       return;
-                    ClientAvatar avatar = level.GetPlayerAvatar();
+                    ClientAvatar avatar = level.Avatar;
                     string name = level.GameObjectManager.GetGameObjectByID(BuildingId).Data.Name;
                         Logger.Write("Canceling Building Upgrade: " + name + " (" + BuildingId + ')');
                         if (string.Equals(name, "Alliance Castle"))

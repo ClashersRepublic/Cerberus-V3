@@ -5,7 +5,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Commands.Server;
 using Magic.PacketProcessing.Messages.Server;
 
@@ -23,12 +23,12 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            var avatar = level.GetPlayerAvatar();
-            var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
+            var avatar = level.Avatar;
+            var alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
 
-            if (avatar.GetAllianceRole() == 2 && alliance.GetAllianceMembers().Count > 1)
+            if (avatar.GetAllianceRole() == 2 && alliance.AllianceMembers.Count > 1)
             {
-                var members = alliance.GetAllianceMembers();
+                var members = alliance.AllianceMembers;
                 foreach (AllianceMemberEntry player in members.Where(player => player.GetRole() >= 3))
                 {
                     player.SetRole(2);
@@ -40,7 +40,7 @@ namespace Magic.PacketProcessing.Messages.Client
                         c.SetRole(2);
                         c.Tick(level);
 
-                        var d = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).GetClient());
+                        var d = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
                         d.SetCommandId(8);
                         d.SetCommand(c);
                         d.Send();
@@ -51,10 +51,10 @@ namespace Magic.PacketProcessing.Messages.Client
 
                 if (!done)
                 {
-                    var count = alliance.GetAllianceMembers().Count;
+                    var count = alliance.AllianceMembers.Count;
                     var rnd = new Random();
                     var id = rnd.Next(1, count);
-                    while (id != level.GetPlayerAvatar().GetId())
+                    while (id != level.Avatar.Id)
                         id = rnd.Next(1, count);
                     var loop = 0;
                     foreach (AllianceMemberEntry player in members)
@@ -70,7 +70,7 @@ namespace Magic.PacketProcessing.Messages.Client
                                 e.SetRole(2);
                                 e.Tick(level);
 
-                                var f = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).GetClient());
+                                var f = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
                                 f.SetCommandId(8);
                                 f.SetCommand(e);
                                 f.Send();
@@ -90,25 +90,27 @@ namespace Magic.PacketProcessing.Messages.Client
             b.SetCommand(a);
             b.Send();
 
-            alliance.RemoveMember(avatar.GetId());
+            alliance.RemoveMember(avatar.Id);
             avatar.SetAllianceId(0);
 
-            if (alliance.GetAllianceMembers().Count > 0)
+            if (alliance.AllianceMembers.Count > 0)
             {
                 var eventStreamEntry = new AllianceEventStreamEntry();
                 eventStreamEntry.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                 eventStreamEntry.SetSender(avatar);
                 eventStreamEntry.SetEventType(4);
-                eventStreamEntry.SetAvatarId(avatar.GetId());
+                eventStreamEntry.SetAvatarId(avatar.Id);
                 eventStreamEntry.SetAvatarName(avatar.GetAvatarName());
                 alliance.AddChatMessage(eventStreamEntry);
-                foreach (Level onlinePlayer in ResourcesManager.GetOnlinePlayers())
-                    if (onlinePlayer.GetPlayerAvatar().GetAllianceId() == alliance.GetAllianceId())
+                foreach (Level onlinePlayer in ResourcesManager.OnlinePlayers)
+                {
+                    if (onlinePlayer.Avatar.GetAllianceId() == alliance.AllianceId)
                     {
-                        AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(onlinePlayer.GetClient());
+                        AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(onlinePlayer.Client);
                         p.SetStreamEntry(eventStreamEntry);
                         p.Send();
                     }
+                }
             }
             else
             {

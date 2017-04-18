@@ -20,7 +20,7 @@ namespace Magic.PacketProcessing.Messages.Server
         {
             var pack = new List<byte>();
             pack.AddInt32(m_vServerCommandType);
-            pack.AddInt64(m_vAlliance.GetAllianceId());
+            pack.AddInt64(m_vAlliance.AllianceId);
             pack.AddInt32(1); // 1 = leave, 2 = kick
             pack.AddInt32(-1);
             Encrypt(pack.ToArray());

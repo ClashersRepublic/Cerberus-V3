@@ -27,10 +27,10 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            if (level.GetPlayerAvatar().State == UserState.PVP)
+            if (level.Avatar.State == UserState.PVP)
             {
                 var info = default(AttackInfo);
-                if (!level.GetPlayerAvatar().AttackingInfo.TryGetValue(level.GetPlayerAvatar().GetId(), out info))
+                if (!level.Avatar.AttackingInfo.TryGetValue(level.Avatar.Id, out info))
                 {
                     Logger.Write("Unable to obtain attack info.");
                 }
@@ -44,11 +44,11 @@ namespace Magic.PacketProcessing.Messages.Client
 
                     var usedtroop = info.UsedTroop;
 
-                    int attackerscore = attacker.GetPlayerAvatar().GetScore();
-                    int defenderscore = defender.GetPlayerAvatar().GetScore();
+                    int attackerscore = attacker.Avatar.GetScore();
+                    int defenderscore = defender.Avatar.GetScore();
 
-                    if (defender.GetPlayerAvatar().GetScore() > 0)
-                        defender.GetPlayerAvatar().SetScore(defenderscore -= lost);
+                    if (defender.Avatar.GetScore() > 0)
+                        defender.Avatar.SetScore(defenderscore -= lost);
 
                     //Logger.Write("Used troop type: " + usedtroop.Count);
                     //foreach(var a in usedtroop)
@@ -56,8 +56,8 @@ namespace Magic.PacketProcessing.Messages.Client
                     //    Logger.Write("Troop Name: " + a.Data.GetName());
                     //    Logger.Write("Troop Used Value: " + a.Value);
                     //}
-                    attacker.GetPlayerAvatar().SetScore(attackerscore += reward);
-                    attacker.GetPlayerAvatar().AttackingInfo.Clear(); //Since we use userid for now,We need to clear to prevent overlapping
+                    attacker.Avatar.SetScore(attackerscore += reward);
+                    attacker.Avatar.AttackingInfo.Clear(); //Since we use userid for now,We need to clear to prevent overlapping
                     Resources(attacker);
 
                     DatabaseManager.Instance.Save(attacker);
@@ -65,25 +65,25 @@ namespace Magic.PacketProcessing.Messages.Client
                 }
             }
 
-            if (level.GetPlayerAvatar().State == UserState.CHA)
+            if (level.Avatar.State == UserState.CHA)
             {
                 //Attack 
             }
 
             if (State == 1)
             {
-                var player = level.GetPlayerAvatar();
+                var player = level.Avatar;
                 player.State = UserState.Editmode;
             }
             else
             {
-                var player = level.GetPlayerAvatar();
+                var player = level.Avatar;
                 player.State = UserState.Home;
             }
 
             level.Tick();
 
-            var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
+            var alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
             new OwnHomeDataMessage(Client, level).Send();
             if (alliance != null)
             {
@@ -93,11 +93,11 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public void Resources(Level level)
         {
-            var avatar = level.GetPlayerAvatar();
-            var currentGold = avatar.GetResourceCount(CSVManager.DataTables.GetResourceByName("Gold"));
-            var currentElixir = avatar.GetResourceCount(CSVManager.DataTables.GetResourceByName("Elixir"));
-            var goldLocation = CSVManager.DataTables.GetResourceByName("Gold");
-            var elixirLocation = CSVManager.DataTables.GetResourceByName("Elixir");
+            var avatar = level.Avatar;
+            var currentGold = avatar.GetResourceCount(CsvManager.DataTables.GetResourceByName("Gold"));
+            var currentElixir = avatar.GetResourceCount(CsvManager.DataTables.GetResourceByName("Elixir"));
+            var goldLocation = CsvManager.DataTables.GetResourceByName("Gold");
+            var elixirLocation = CsvManager.DataTables.GetResourceByName("Elixir");
 
             if (currentGold >= 1000000000 | currentElixir >= 1000000000)
             {

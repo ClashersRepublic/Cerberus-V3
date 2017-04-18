@@ -47,12 +47,10 @@ namespace Magic.Core
             try
             {
                 var client = default(Client);
-                if (!_clients.TryRemove(socketHandle, out client))
+                if (_clients.TryRemove(socketHandle, out client))
                 {
-                    Logger.Error("Tried to drop a client who is not registered in the client dictionary.");
-                }
-                else
-                {
+                    Program.TitleDe();
+                    
                     var socket = client.Socket;
                     try { socket.Shutdown(SocketShutdown.Both); }
                     catch { /* Swallow */ }
@@ -68,7 +66,6 @@ namespace Magic.Core
                         LogPlayerOut(level);
 
                     Logger.Write($"Client with socket handle {socketHandle} has been dropped.");
-                    Program.TitleDe();
                 }
             }
             catch (Exception ex)
@@ -89,7 +86,7 @@ namespace Magic.Core
             return levels;
         }
 
-        public static List<Level> GetOnlinePlayers() => _onlinePlayers;
+        public static List<Level> OnlinePlayers => _onlinePlayers;
 
         public static Level GetPlayer(long id, bool persistent = false)
         {
@@ -109,26 +106,34 @@ namespace Magic.Core
 
         public static void LoadLevel(Level level)
         {
-            _inMemoryLevels.TryAdd(level.GetPlayerAvatar().GetId(), level);
+            _inMemoryLevels.TryAdd(level.Avatar.Id, level);
         }
 
         public static void LogPlayerIn(Level level, Client client)
         {
             // Set the back refs.
-            level.SetClient(client);
+            level.Client = client;
             client.Level = level;
 
-            if (!_onlinePlayers.Contains(level))
+            lock (_onlinePlayers)
             {
-                _onlinePlayers.Add(level);
-                LoadLevel(level);
-            }
-            // Should kill old client maybe?
-            else
-            {
-                Logger.Error("A client who is already logged in is trying to log in.");
-                int i = _onlinePlayers.IndexOf(level);
-                _onlinePlayers[i] = level;
+                var index = _onlinePlayers.IndexOf(level);
+                if (index == -1)
+                {
+                    _onlinePlayers.Add(level);
+
+                    // Register level in dictionary.
+                    LoadLevel(level);
+                }
+                else
+                {
+                    Logger.Error("A client who is already logged in is trying to log in.");
+
+                    var oldLevel = _onlinePlayers[index];
+                    DropClient(oldLevel.Client.GetSocketHandle());
+
+                    _onlinePlayers.Add(level);
+                }
             }
         }
 
@@ -148,25 +153,21 @@ namespace Magic.Core
             }
 
             _onlinePlayers.Remove(level);
-            _inMemoryLevels.TryRemove(level.GetPlayerAvatar().GetId());
+            _inMemoryLevels.TryRemove(level.Avatar.Id);
         }
 
-        private static Level GetInMemoryLevel(long id) => _inMemoryLevels.ContainsKey(id) ? _inMemoryLevels[id] : null;
+        private static Level GetInMemoryLevel(long userId)
+        {
+            var level = default(Level);
+            _inMemoryLevels.TryGetValue(userId, out level);
+            return level;
+        }
 
         public static List<Alliance> GetInMemoryAlliances() => _inMemoryAlliances.Values.ToList();
 
         public static void AddAllianceInMemory(Alliance alliance)
         {
-            _inMemoryAlliances.TryAdd(alliance.GetAllianceId(), alliance);
-        }
-
-        public static void AddAllianceInMemory(List<Alliance> all)
-        {
-            for (int i = 0, allCount = all.Count; i < allCount; i++)
-            {
-                Alliance a = all[i];
-                _inMemoryAlliances.TryAdd(a.GetAllianceId(), a);
-            }
+            _inMemoryAlliances.TryAdd(alliance.AllianceId, alliance);
         }
 
         public static bool InMemoryAlliancesContain(long key) => _inMemoryAlliances.Keys.Contains(key);
@@ -192,7 +193,7 @@ namespace Magic.Core
         public static void SetGameObject(Level level, string json)
         {
             level.GetHomeOwnerAvatar().LoadFromJson(json);
-            DisconnectClient(level.GetClient());
+            DisconnectClient(level.Client);
         }
     }
 }

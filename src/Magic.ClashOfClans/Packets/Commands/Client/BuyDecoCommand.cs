@@ -23,9 +23,9 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
+            ClientAvatar avatar = level.Avatar;
 
-            DecoData dataById = (DecoData) CSVManager.DataTables.GetDataById(DecoId);
+            DecoData dataById = (DecoData) CsvManager.DataTables.GetDataById(DecoId);
 
             if (!avatar.HasEnoughResources(dataById.GetBuildResource(), dataById.GetBuildCost()))
               return;
@@ -33,7 +33,7 @@ namespace Magic.PacketProcessing.Commands.Client
             avatar.CommodityCountChangeHelper(0, (Data) buildResource, -dataById.GetBuildCost());
 
             Deco deco = new Deco((Data) dataById, level);
-            deco.SetPosition(X, Y, level.GetPlayerAvatar().GetActiveLayout());
+            deco.SetPosition(X, Y, level.Avatar.GetActiveLayout());
             level.GameObjectManager.AddGameObject((GameObject) deco);
         }
     }

@@ -19,9 +19,9 @@ namespace Magic.PacketProcessing.Commands.Server
         {
             m_vPlayer.Tick();
             List<byte> data = new List<byte>();
-            data.AddInt64(m_vAlliance.GetAllianceId());
-            data.AddInt32(m_vAlliance.GetAllianceBadgeData());
-            data.AddInt32(m_vAlliance.GetAllianceLevel());
+            data.AddInt64(m_vAlliance.AllianceId);
+            data.AddInt32(m_vAlliance.AllianceBadgeData);
+            data.AddInt32(m_vAlliance.AllianceLevel);
             data.AddInt32(0);
             return data.ToArray();
         }

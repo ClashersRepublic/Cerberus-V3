@@ -27,19 +27,27 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            Level player = ResourcesManager.GetPlayer(AvatarId, false);
-            player.Tick();
+            var player = ResourcesManager.GetPlayer(AvatarId, false);
 
-            new VisitedHomeDataMessage(Client, player, level).Send();
+            if (AvatarId == player.Avatar.Id)
+            {
+                player.Tick();
 
-            if (level.GetPlayerAvatar().GetAllianceId() <= 0L)
-                return;
+                new VisitedHomeDataMessage(Client, player, level).Send();
 
-            Alliance alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            if (alliance == null)
-                return;
+                if (level.Avatar.GetAllianceId() <= 0L)
+                    return;
 
-            new AllianceStreamMessage(Client, alliance).Send();
+                Alliance alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+                if (alliance == null)
+                    return;
+
+                new AllianceStreamMessage(Client, alliance).Send();
+            }
+            else
+            {
+                Logger.Error("ResourcesManager.GetPlayer returned a player with the wrong ID.");
+            }
         }
     }
 }

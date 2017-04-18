@@ -4,7 +4,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 using System.Threading.Tasks;
 
@@ -37,14 +37,14 @@ namespace Magic.PacketProcessing.Messages.Client
                     {
                         var player = "";
                         if (level != null)
-                            player += " (" + level.GetPlayerAvatar().GetId() + ", " +
-                                      level.GetPlayerAvatar().GetAvatarName() + ")";
+                            player += " (" + level.Avatar.Id+ ", " +
+                                      level.Avatar.GetAvatarName() + ")";
                         ((GameOpCommand)obj).Execute(level);
                     }
                 }
                 else
                 {
-                    var avatar = level.GetPlayerAvatar();
+                    var avatar = level.Avatar;
                     var allianceId = avatar.GetAllianceId();
                     if (allianceId > 0)
                     {
@@ -58,12 +58,12 @@ namespace Magic.PacketProcessing.Messages.Client
                         {
                             alliance.AddChatMessage(cm);
 
-                            Parallel.ForEach ((alliance.GetAllianceMembers()), op =>
+                            Parallel.ForEach ((alliance.AllianceMembers), op =>
                             {
                                 Level player = ResourcesManager.GetPlayer(op.GetAvatarId());
-                                if (player.GetClient() != null)
+                                if (player.Client!= null)
                                 {
-                                    var p = new AllianceStreamEntryMessage(player.GetClient());
+                                    var p = new AllianceStreamEntryMessage(player.Client);
                                     p.SetStreamEntry(cm);
                                     p.Send();
                                 }

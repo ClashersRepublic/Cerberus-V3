@@ -18,6 +18,10 @@ namespace Magic.ClashRoyale
             var msg3 = Utils.ReadMessage<OwnHomeDataMessage>("bin6.bin");
             var msg4 = Utils.ReadMessage<OwnHomeDataMessage>("bin7.bin");
 
+            Utils.WriteMessage(msg2, "test.bin");
+
+            var kak = Utils.ReadMessage<OwnHomeDataMessage>("test.bin");
+
             //var msg5 = Utils.ReadMessage<AvatarProfileResponseMessage>("bin8-profile.bin");
             //var msg6 = Utils.ReadMessage<AvatarProfileResponseMessage>("bin9-profile.bin");
 

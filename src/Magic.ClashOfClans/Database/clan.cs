@@ -11,13 +11,19 @@
 
 namespace Magic.ClashOfClans.Database
 {
-    using System;
-    using System.Collections.Generic;
 
-    public partial class clan
-    {
-        public long ClanId { get; set; }
-        public DateTime LastUpdateTime { get; set; }
-        public string Data { get; set; }
-    }
+using System;
+    using System.Collections.Generic;
+    
+public partial class clan
+{
+
+    public long ClanId { get; set; }
+
+    public System.DateTime LastUpdateTime { get; set; }
+
+    public string Data { get; set; }
+
+}
+
 }

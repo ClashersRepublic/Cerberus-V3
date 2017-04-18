@@ -18,20 +18,20 @@ namespace Magic.Packets.Messages.Server
 
         public override void Encode()
         {
-            var pl = Client.Level.GetPlayerAvatar();
+            var pl = Client.Level.Avatar;
             var an = ObjectManager.GetAlliance(pl.GetAllianceId());
             var data = new List<byte>();
             data.AddInt32(4); // 4 = Preperation Day; 5 = Battle Day; 6 = End of War
             data.AddInt32(1000); // Time left
-            data.AddInt64(an.GetAllianceId()); // Alliance ID
-            data.AddString(an.GetAllianceName()); // Alliance Name
-            data.AddInt32(an.GetAllianceBadgeData()); // Alliance Badge Data
-            data.AddInt32(an.GetAllianceLevel()); // Alliance Level
+            data.AddInt64(an.AllianceId); // Alliance ID
+            data.AddString(an.AllianceName); // Alliance Name
+            data.AddInt32(an.AllianceBadgeData); // Alliance Badge Data
+            data.AddInt32(an.AllianceLevel); // Alliance Level
             data.AddInt32(5); // War Members
 
             #region Player 1 Own Clan
             data.AddInt64(pl.GetAllianceId()); // Alliance ID
-            data.AddInt64(pl.GetId()); // Player ID
+            data.AddInt64(pl.Id); // Player ID
             data.AddInt64(pl.GetCurrentHomeId()); // Current Home ID
             data.AddString(pl.GetAvatarName()); // Player 1 Name // or pl.GetAvatarName()
             data.AddInt32(0); //StarGivenUp

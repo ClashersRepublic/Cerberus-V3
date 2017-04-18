@@ -18,7 +18,7 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 3)
                 {
@@ -28,10 +28,10 @@ namespace Magic.PacketProcessing.GameOpCommands
                         var l = ResourcesManager.GetPlayer(id);
                         if (l != null)
                         {
-                            l.GetPlayerAvatar().SetName(m_vArgs[2]);
+                            l.Avatar.SetName(m_vArgs[2]);
                             if (ResourcesManager.IsPlayerOnline(l))
                             {
-                                var p = new AvatarNameChangeOkMessage(l.GetClient());
+                                var p = new AvatarNameChangeOkMessage(l.Client);
                                 //p.SetAvatarName(m_vArgs[2]);
                                 p.Send();
                             }
@@ -47,7 +47,7 @@ namespace Magic.PacketProcessing.GameOpCommands
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
     }

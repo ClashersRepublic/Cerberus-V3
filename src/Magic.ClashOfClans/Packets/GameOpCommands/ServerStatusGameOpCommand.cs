@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Magic.Core;
 using Magic.Core.Network;
 using Magic.Logic;
-using Magic.Logic.AvatarStreamEntry;
+using Magic.Logic.AvatarStreamEntries;
 using Magic.PacketProcessing;
 using Magic.PacketProcessing.Messages.Server;
 
@@ -28,22 +28,22 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 1)
                 {
                     _cpuCounter.NextValue(); //Always 0
-                    var avatar = level.GetPlayerAvatar();
+                    var avatar = level.Avatar;
                     var mail = new AllianceMailStreamEntry();
                     mail.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-                    mail.SetSenderId(avatar.GetId());
-                    mail.SetSenderAvatarId(avatar.GetId());
+                    mail.SetSenderId(avatar.Id);
+                    mail.SetSenderAvatarId(avatar.Id);
                     mail.SetSenderName(avatar.GetAvatarName());
                     mail.SetIsNew(2);
                     mail.SetAllianceId(0);
                     mail.SetAllianceBadgeData(1526735450);
                     mail.SetAllianceName("UCS Server Information");
-					mail.SetMessage(@"Online Players: " + ResourcesManager.GetOnlinePlayers().Count +
+					mail.SetMessage(@"Online Players: " + ResourcesManager.OnlinePlayers.Count +
 						"\nIn Memory Players: " + ResourcesManager.GetInMemoryLevels().Count +
 						"\nConnected Players: " + ResourcesManager.GetConnectedClients().Count +
 						//"\nUCS Ram: " + (Process.GetCurrentProcess().WorkingSet64 / 1048576) + "MB/" + //Unknown yet how to get properly
@@ -54,14 +54,14 @@ namespace Magic.PacketProcessing.GameOpCommands
                     mail.SetSenderLevel(avatar.GetAvatarLevel());
                     mail.SetSenderLeagueId(avatar.GetLeagueId());
 
-                    var p = new AvatarStreamEntryMessage(level.GetClient());
+                    var p = new AvatarStreamEntryMessage(level.Client);
                     p.SetAvatarStreamEntry(mail);
                     p.Send();
                 }
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
     }

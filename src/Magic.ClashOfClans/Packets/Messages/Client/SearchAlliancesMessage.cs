@@ -67,7 +67,7 @@ namespace Magic.PacketProcessing.Messages.Client
                 }
                 else
                 {
-                    if (alliance.GetAllianceName().Contains(m_vSearchString, StringComparison.OrdinalIgnoreCase))
+                    if (alliance.AllianceName.Contains(m_vSearchString, StringComparison.OrdinalIgnoreCase))
                     {
                         joinableAlliances.Add(alliance);
                     }

@@ -37,7 +37,7 @@ namespace Magic.PacketProcessing.Commands.Client
             if (Depth >= 10)
             {
                 //TODO: Block Exploitor's IP.
-                ResourcesManager.DropClient(level.GetClient().GetSocketHandle());
+                ResourcesManager.DropClient(level.Client.GetSocketHandle());
             }
             if (level.WorkerManager.GetFreeWorkers() != 0)
                 return;

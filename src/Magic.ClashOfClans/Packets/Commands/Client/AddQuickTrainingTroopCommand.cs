@@ -37,19 +37,19 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            var defaultDatabase = level.GetPlayerAvatar().QuickTrain1;
+            var defaultDatabase = level.Avatar.QuickTrain1;
             if (Database == 1)
             {
                 defaultDatabase.Clear();
             }
             else if (Database == 2)
             {
-                defaultDatabase = level.GetPlayerAvatar().QuickTrain2;
+                defaultDatabase = level.Avatar.QuickTrain2;
                 defaultDatabase.Clear();
             }
             else if (Database == 3)
             {
-                defaultDatabase = level.GetPlayerAvatar().QuickTrain3;
+                defaultDatabase = level.Avatar.QuickTrain3;
                 defaultDatabase.Clear();
             }
             else throw new InvalidDataException("Unknown database in AddQuickTrainingTroopCommand.");

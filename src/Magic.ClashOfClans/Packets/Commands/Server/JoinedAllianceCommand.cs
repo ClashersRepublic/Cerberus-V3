@@ -24,6 +24,5 @@ namespace  Magic.PacketProcessing.Commands.Server
         {
             m_vAlliance = alliance;
         }
-
     }
 }

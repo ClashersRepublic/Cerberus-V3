@@ -19,7 +19,7 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
+            ClientAvatar avatar = level.Avatar;
             ConstructionItem gameObjectById = (ConstructionItem) level.GameObjectManager.GetGameObjectByID(BuildingId);
             BuildingData constructionItemData = (BuildingData) gameObjectById.GetConstructionItemData();
 

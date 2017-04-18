@@ -23,19 +23,19 @@ namespace Magic.PacketProcessing.Messages.Server
             var packet1 = new List<byte>();
             var i = 0;
 
-            foreach (var alliance in ObjectManager.GetInMemoryAlliances().OrderByDescending(t => t.GetScore()))
+            foreach (var alliance in ObjectManager.GetInMemoryAlliances().OrderByDescending(t => t.Score))
             {
                 if (i < 100)
                 {
-                    packet1.AddInt64(alliance.GetAllianceId());
-                    packet1.AddString(alliance.GetAllianceName());
+                    packet1.AddInt64(alliance.AllianceId);
+                    packet1.AddString(alliance.AllianceName);
                     packet1.AddInt32(i + 1);
-                    packet1.AddInt32(alliance.GetScore());
+                    packet1.AddInt32(alliance.Score);
                     packet1.AddInt32(i + 1);
-                    packet1.AddInt32(alliance.GetAllianceBadgeData());
-                    packet1.AddInt32(alliance.GetAllianceMembers().Count);
+                    packet1.AddInt32(alliance.AllianceBadgeData);
+                    packet1.AddInt32(alliance.AllianceMembers.Count);
                     packet1.AddInt32(0);
-                    packet1.AddInt32(alliance.GetAllianceLevel());
+                    packet1.AddInt32(alliance.AllianceLevel);
                     i++;
                 }
                 else

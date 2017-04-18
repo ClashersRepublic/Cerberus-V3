@@ -19,7 +19,7 @@ namespace  Magic.PacketProcessing.Commands.Server
         public override byte[] Encode()
         {
             List<byte> data = new List<byte>();
-            data.AddInt64(m_vAlliance.GetAllianceId());
+            data.AddInt64(m_vAlliance.AllianceId);
             data.AddInt32(Role);
             data.AddInt32(Role);
             data.AddInt32(0);
@@ -36,6 +36,7 @@ namespace  Magic.PacketProcessing.Commands.Server
             Role = role;
         }
 
+        [Obsolete]
         public void Tick(Level level)
         {
             level.Tick();

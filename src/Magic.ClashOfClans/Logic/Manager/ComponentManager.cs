@@ -104,7 +104,7 @@ namespace Magic.Logic.Manager
 
         public void RefreshResourcesCaps()
         {
-            var table = CSVManager.DataTables.GetTable(2);
+            var table = CsvManager.DataTables.GetTable(2);
             var resourceCount = table.GetItemCount();
             var resourceStorageComponentCount = GetComponents(6).Count;
             for (var i = 0; i < resourceCount; i++)
@@ -117,7 +117,7 @@ namespace Magic.Logic.Manager
                         resourceCap += res.GetMax(i);
                     var resource = (ResourceData) table.GetItemAt(i);
                     if (!resource.PremiumCurrency)
-                        m_vLevel.GetPlayerAvatar().SetResourceCap(resource, resourceCap);
+                        m_vLevel.Avatar.SetResourceCap(resource, resourceCap);
                 }
             }
         }

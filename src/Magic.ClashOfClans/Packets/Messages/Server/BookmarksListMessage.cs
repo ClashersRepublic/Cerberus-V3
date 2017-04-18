@@ -17,7 +17,7 @@ namespace Magic.PacketProcessing.Messages.Server
         public BookmarkListMessage(PacketProcessing.Client client) : base(client)
         {
             MessageType = 24341;
-            player = client.Level.GetPlayerAvatar();
+            player = client.Level.Avatar;
             i = 0;
         }
 

@@ -18,7 +18,7 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 2)
                 {
@@ -28,7 +28,7 @@ namespace Magic.PacketProcessing.GameOpCommands
                         var l = ResourcesManager.GetPlayer(id);
                         if (ResourcesManager.IsPlayerOnline(l))
                         {
-                            new OutOfSyncMessage(l.GetClient()).Send();
+                            new OutOfSyncMessage(l.Client).Send();
                         }
                         else
                         {
@@ -43,7 +43,7 @@ namespace Magic.PacketProcessing.GameOpCommands
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
     }

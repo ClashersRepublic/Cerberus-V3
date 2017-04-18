@@ -18,7 +18,7 @@ namespace Magic.PacketProcessing.Commands.Server
         public override byte[] Encode()
         {
             List<byte> data = new List<byte>();
-            data.AddInt64(m_vAlliance.GetAllianceId());
+            data.AddInt64(m_vAlliance.AllianceId);
             data.AddInt32(m_vReason);
             data.AddInt32(-1);
             return data.ToArray();

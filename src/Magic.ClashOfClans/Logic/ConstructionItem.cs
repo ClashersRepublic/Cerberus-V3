@@ -12,7 +12,7 @@ namespace Magic.Logic
         {
             m_vLevel = level;
             IsBoosted = false;
-            m_vBoostEndTime = level.GetTime();
+            m_vBoostEndTime = level.Time;
             m_vIsConstructing = false;
             UpgradeLevel = -1;
         }
@@ -30,7 +30,7 @@ namespace Magic.Logic
         public void BoostBuilding()
         {
             IsBoosted = true;
-            m_vBoostEndTime = Level.GetTime().AddMinutes(GetBoostDuration());
+            m_vBoostEndTime = Level.Time.AddMinutes(GetBoostDuration());
         }
 
         public void CancelConstruction()
@@ -46,10 +46,10 @@ namespace Magic.Logic
                 var bd = GetConstructionItemData();
                 var rd = bd.GetBuildResource(UpgradeLevel + 1);
                 var cost = bd.GetBuildCost(UpgradeLevel + 1);
-                var multiplier = CSVManager.DataTables.GetGlobals().GetGlobalData("BUILD_CANCEL_MULTIPLIER").NumberValue;
+                var multiplier = CsvManager.DataTables.GetGlobals().GetGlobalData("BUILD_CANCEL_MULTIPLIER").NumberValue;
                 var resourceCount = (int)((cost * multiplier * (long)1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
-                Level.GetPlayerAvatar().CommodityCountChangeHelper(0, rd, resourceCount);
+                Level.Avatar.CommodityCountChangeHelper(0, rd, resourceCount);
                 m_vLevel.WorkerManager.DeallocateWorker(this);
                 if (UpgradeLevel == -1)
                     m_vLevel.GameObjectManager.RemoveGameObject(this);
@@ -66,7 +66,7 @@ namespace Magic.Logic
                     result = true;
                     if (ClassId == 0 || ClassId == 4)
                     {
-                        var currentTownHallLevel = Level.GetPlayerAvatar().GetTownHallLevel();
+                        var currentTownHallLevel = Level.Avatar.GetTownHallLevel();
                         var requiredTownHallLevel = GetRequiredTownHallLevelForUpgrade();
                         if (currentTownHallLevel < requiredTownHallLevel)
                         {
@@ -91,15 +91,15 @@ namespace Magic.Logic
 
             var constructionTime = GetConstructionItemData().GetConstructionTime(GetUpgradeLevel());
             var exp = (int)Math.Sqrt(constructionTime);
-            Level.GetPlayerAvatar().AddExperience(exp);
+            Level.Avatar.AddExperience(exp);
 
             if (GetHeroBaseComponent(true) != null)
             {
                 var data = (BuildingData)Data;
-                var hd = CSVManager.DataTables.GetHeroByName(data.HeroType);
-                Level.GetPlayerAvatar().SetUnitUpgradeLevel(hd, 0);
-                Level.GetPlayerAvatar().SetHeroHealth(hd, 0);
-                Level.GetPlayerAvatar().SetHeroState(hd, 3);
+                var hd = CsvManager.DataTables.GetHeroByName(data.HeroType);
+                Level.Avatar.SetUnitUpgradeLevel(hd, 0);
+                Level.Avatar.SetHeroHealth(hd, 0);
+                Level.Avatar.SetHeroState(hd, 3);
             }
         }
 
@@ -107,19 +107,19 @@ namespace Magic.Logic
         {
             if (GetResourceProductionComponent() != null)
             {
-                return CSVManager.DataTables.GetGlobals().GetGlobalData("RESOURCE_PRODUCTION_BOOST_MINS").NumberValue;
+                return CsvManager.DataTables.GetGlobals().GetGlobalData("RESOURCE_PRODUCTION_BOOST_MINS").NumberValue;
             }
             if (GetUnitProductionComponent() != null)
             {
                 if (GetUnitProductionComponent().IsSpellForge())
                 {
-                    return CSVManager.DataTables.GetGlobals().GetGlobalData("SPELL_FACTORY_BOOST_MINS").NumberValue;
+                    return CsvManager.DataTables.GetGlobals().GetGlobalData("SPELL_FACTORY_BOOST_MINS").NumberValue;
                 }
-                return CSVManager.DataTables.GetGlobals().GetGlobalData("BARRACKS_BOOST_MINS").NumberValue;
+                return CsvManager.DataTables.GetGlobals().GetGlobalData("BARRACKS_BOOST_MINS").NumberValue;
             }
             if (GetHeroBaseComponent() != null)
             {
-                return CSVManager.DataTables.GetGlobals().GetGlobalData("HERO_REST_BOOST_MINS").NumberValue;
+                return CsvManager.DataTables.GetGlobals().GetGlobalData("HERO_REST_BOOST_MINS").NumberValue;
             }
 
             return 0;
@@ -132,7 +132,7 @@ namespace Magic.Logic
             if (GetResourceProductionComponent() != null)
             {
                 return
-                   CSVManager.DataTables.GetGlobals()
+                   CsvManager.DataTables.GetGlobals()
                                  .GetGlobalData("RESOURCE_PRODUCTION_BOOST_MULTIPLIER")
                                  .NumberValue;
             }
@@ -141,15 +141,15 @@ namespace Magic.Logic
                 if (GetUnitProductionComponent().IsSpellForge())
                 {
                     return
-                       CSVManager.DataTables.GetGlobals()
+                       CsvManager.DataTables.GetGlobals()
                                      .GetGlobalData("SPELL_FACTORY_BOOST_MULTIPLIER")
                                      .NumberValue;
                 }
-                return CSVManager.DataTables.GetGlobals().GetGlobalData("BARRACKS_BOOST_MULTIPLIER").NumberValue;
+                return CsvManager.DataTables.GetGlobals().GetGlobalData("BARRACKS_BOOST_MULTIPLIER").NumberValue;
             }
             if (GetHeroBaseComponent() != null)
             {
-                return CSVManager.DataTables.GetGlobals().GetGlobalData("HERO_REST_BOOST_MULTIPLIER").NumberValue;
+                return CsvManager.DataTables.GetGlobals().GetGlobalData("HERO_REST_BOOST_MULTIPLIER").NumberValue;
             }
 
             return 0;
@@ -167,7 +167,7 @@ namespace Magic.Logic
             return null;
         }
 
-        public int GetRemainingConstructionTime() => m_vTimer.GetRemainingSeconds(m_vLevel.GetTime());
+        public int GetRemainingConstructionTime() => m_vTimer.GetRemainingSeconds(m_vLevel.Time);
 
         public int GetRequiredTownHallLevelForUpgrade()
         {
@@ -247,7 +247,7 @@ namespace Magic.Logic
                 m_vIsConstructing = true;
 
                 var remainingConstructionTime = constTimeToken.ToObject<int>();
-                m_vTimer.StartTimer(remainingConstructionTime, m_vLevel.GetTime());
+                m_vTimer.StartTimer(remainingConstructionTime, m_vLevel.Time);
                 m_vLevel.WorkerManager.AllocateWorker(this);
             }
 
@@ -274,16 +274,16 @@ namespace Magic.Logic
             jsonObject.Add("lvl", UpgradeLevel);
 
             if (IsConstructing())
-                jsonObject.Add("const_t", m_vTimer.GetRemainingSeconds(m_vLevel.GetTime()));
+                jsonObject.Add("const_t", m_vTimer.GetRemainingSeconds(m_vLevel.Time));
 
             if (Locked)
                 jsonObject.Add("locked", true);
 
             if (IsBoosted)
             {
-                if ((int)(m_vBoostEndTime - Level.GetTime()).TotalSeconds >= 0)
+                if ((int)(m_vBoostEndTime - Level.Time).TotalSeconds >= 0)
                 {
-                    jsonObject.Add("boost_t", (int)(m_vBoostEndTime - Level.GetTime()).TotalSeconds);
+                    jsonObject.Add("boost_t", (int)(m_vBoostEndTime - Level.Time).TotalSeconds);
                 }
                 jsonObject.Add("boost_endTime", m_vBoostEndTime);
             }
@@ -299,7 +299,7 @@ namespace Magic.Logic
 
             if (GetConstructionItemData().IsTownHall())
             {
-                Level.GetPlayerAvatar().SetTownHallLevel(level);
+                Level.Avatar.SetTownHallLevel(level);
             }
 
             if (UpgradeLevel > -1 || IsUpgrading() || !IsConstructing())
@@ -329,8 +329,8 @@ namespace Magic.Logic
         {
             if (IsConstructing())
             {
-                var ca = Level.GetPlayerAvatar();
-                var remainingSeconds = m_vTimer.GetRemainingSeconds(m_vLevel.GetTime());
+                var ca = Level.Avatar;
+                var remainingSeconds = m_vTimer.GetRemainingSeconds(m_vLevel.Time);
                 var cost = GamePlayUtil.GetSpeedUpCost(remainingSeconds);
                 if (ca.HasEnoughDiamonds(cost))
                 {
@@ -353,7 +353,7 @@ namespace Magic.Logic
             {
                 m_vIsConstructing = true;
                 m_vTimer = new Timer();
-                m_vTimer.StartTimer(constructionTime, m_vLevel.GetTime());
+                m_vTimer.StartTimer(constructionTime, m_vLevel.Time);
                 m_vLevel.WorkerManager.AllocateWorker(this);
             }
         }
@@ -369,7 +369,7 @@ namespace Magic.Logic
             {
                 m_vIsConstructing = true;
                 m_vTimer = new Timer();
-                m_vTimer.StartTimer(constructionTime, m_vLevel.GetTime());
+                m_vTimer.StartTimer(constructionTime, m_vLevel.Time);
                 m_vLevel.WorkerManager.AllocateWorker(this);
             }
         }
@@ -380,7 +380,7 @@ namespace Magic.Logic
 
             if (IsConstructing())
             {
-                if (m_vTimer.GetRemainingSeconds(m_vLevel.GetTime()) <= 0)
+                if (m_vTimer.GetRemainingSeconds(m_vLevel.Time) <= 0)
                     FinishConstruction();
             }
         }

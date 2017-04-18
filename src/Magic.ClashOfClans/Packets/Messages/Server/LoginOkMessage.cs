@@ -59,30 +59,35 @@ namespace Magic.PacketProcessing.Messages.Server
             pack.AddString(m_vCountryCode);
             pack.AddString("someid2");
 
-            /* // DEBUG INFO
-            Console.WriteLine("Account ID : " + m_vAccountId);
-            Console.WriteLine("User Token : " + m_vPassToken);
-            Console.WriteLine("FacebookID : " + m_vFacebookId);
-            Console.WriteLine("GameCenter : " + m_vGamecenterId);
-            Console.WriteLine("MajorVers  : " + m_vServerMajorVersion);
-            Console.WriteLine("MinorVers  : " + m_vServerBuild);
-            Console.WriteLine("RevisionV  : " + m_vContentVersion);
-            Console.WriteLine("LoginCount : " + m_vSessionCount);
-            Console.WriteLine("PlayTime S : " + m_vPlayTimeSeconds);
-            Console.WriteLine("FB APP ID  : " + m_vFacebookAppID.ToString());
-            Console.WriteLine("Cooldown S : " + m_vStartupCooldownSeconds.ToString());
-            Console.WriteLine("CreateDate : " + m_vAccountCreatedDate);
-            Console.WriteLine("Google ID  : " + m_vGoogleID);
-            Console.WriteLine("CountryCod : " + m_vCountryCode);
-            Console.WriteLine("Environne  : " + m_vServerEnvironment);
-            // END DEBUG */
-
             Encrypt(pack.ToArray());
         }
 
         public void SetAccountCreatedDate(string date) => m_vAccountCreatedDate = date;
 
-        public void SetAccountId(long id) => m_vAccountId = id;
+        public long UserId
+        {
+            get
+            {
+                return m_vAccountId;
+            }
+
+            set
+            {
+                m_vAccountId = value;
+            }
+        }
+
+        public string UserToken
+        {
+            get
+            {
+                return m_vPassToken;
+            }
+            set
+            {
+                m_vPassToken = value;
+            }
+        }
 
         public void SetContentVersion(int version) => m_vContentVersion = version;
 
@@ -93,8 +98,6 @@ namespace Magic.PacketProcessing.Messages.Server
         public void SetFacebookId(string id) => m_vFacebookId = id;
 
         public void SetGamecenterId(string id) => m_vGamecenterId = id;
-
-        public void SetPassToken(string token) => m_vPassToken = token;
 
         public void SetPlayTimeSeconds(int seconds) => m_vPlayTimeSeconds = seconds;
 

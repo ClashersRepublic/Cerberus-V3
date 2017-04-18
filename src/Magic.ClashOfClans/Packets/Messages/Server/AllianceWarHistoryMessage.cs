@@ -21,10 +21,10 @@ namespace Magic.PacketProcessing.Messages.Server
 
             data.AddInt32(1);
 
-            data.AddInt64(m_vHomeAlliance.GetAllianceId()); // 1 Alliance ID
-            data.AddString(m_vHomeAlliance.GetAllianceName()); // 1 Alliance Name
-            data.AddInt32(m_vHomeAlliance.GetAllianceBadgeData()); // 1 Alliance Badge
-            data.AddInt32(m_vHomeAlliance.GetAllianceLevel()); // 1 Alliance Level
+            data.AddInt64(m_vHomeAlliance.AllianceId); // 1 Alliance ID
+            data.AddString(m_vHomeAlliance.AllianceName); // 1 Alliance Name
+            data.AddInt32(m_vHomeAlliance.AllianceBadgeData); // 1 Alliance Badge
+            data.AddInt32(m_vHomeAlliance.AllianceLevel); // 1 Alliance Level
 
             data.AddInt64(9999); // 2 Alliance ID
             data.AddString("Goblinland"); // 2 Alliance Name

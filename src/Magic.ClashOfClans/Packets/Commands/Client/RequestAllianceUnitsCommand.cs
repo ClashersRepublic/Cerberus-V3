@@ -4,7 +4,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 
 namespace Magic.PacketProcessing.Commands.Client

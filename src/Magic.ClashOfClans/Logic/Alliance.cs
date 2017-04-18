@@ -5,16 +5,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Magic.Core;
 using Magic.Helpers;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 
 namespace Magic.Logic
 {
     internal class Alliance
     {
+        private readonly object _sync = new object();
+
         private const int m_vMaxAllianceMembers = 50;
         private const int m_vMaxChatMessagesNumber = 30;
         private readonly Dictionary<long, AllianceMemberEntry> m_vAllianceMembers;
-        private readonly System.Collections.Generic.List<Magic.Logic.StreamEntry.StreamEntry> m_vChatMessages;
+        private readonly System.Collections.Generic.List<Magic.Logic.StreamEntries.StreamEntry> m_vChatMessages;
         private int m_vAllianceBadgeData;
         private string m_vAllianceDescription;
         private int m_vAllianceExperience;
@@ -34,42 +36,46 @@ namespace Magic.Logic
 
         public Alliance()
         {
-            this.m_vChatMessages = new System.Collections.Generic.List<Magic.Logic.StreamEntry.StreamEntry>();
-            this.m_vAllianceMembers = new Dictionary<long, AllianceMemberEntry>();
+            m_vChatMessages = new List<StreamEntry>();
+            m_vAllianceMembers = new Dictionary<long, AllianceMemberEntry>();
         }
 
         public Alliance(long id)
         {
             Random random = new Random();
-            this.m_vAllianceId = id;
-            this.m_vAllianceName = "Default";
-            this.m_vAllianceDescription = "Default";
-            this.m_vAllianceBadgeData = 0;
-            this.m_vAllianceType = 0;
-            this.m_vRequiredScore = 0;
-            this.m_vWarFrequency = 0;
-            this.m_vAllianceOrigin = 32000001;
-            this.m_vScore = 0;
-            this.m_vAllianceExperience = random.Next(100, 5000);
-            this.m_vAllianceLevel = random.Next(6, 10);
-            this.m_vWonWars = random.Next(200, 500);
-            this.m_vLostWars = random.Next(100, 300);
-            this.m_vDrawWars = random.Next(100, 800);
-            this.m_vChatMessages = new System.Collections.Generic.List<Magic.Logic.StreamEntry.StreamEntry>();
-            this.m_vAllianceMembers = new Dictionary<long, AllianceMemberEntry>();
+
+            m_vAllianceId = id;
+            m_vAllianceName = "Default";
+            m_vAllianceDescription = "Default";
+            m_vAllianceBadgeData = 0;
+            m_vAllianceType = 0;
+            m_vRequiredScore = 0;
+            m_vWarFrequency = 0;
+            m_vAllianceOrigin = 32000001;
+            m_vScore = 0;
+            m_vAllianceExperience = random.Next(100, 5000);
+            m_vAllianceLevel = random.Next(6, 10);
+            m_vWonWars = random.Next(200, 500);
+            m_vLostWars = random.Next(100, 300);
+            m_vDrawWars = random.Next(100, 800);
+            m_vChatMessages = new List<StreamEntry>();
+            m_vAllianceMembers = new Dictionary<long, AllianceMemberEntry>();
         }
 
         public void AddAllianceMember(AllianceMemberEntry entry)
         {
-            this.m_vAllianceMembers.Add(entry.GetAvatarId(), entry);
+            lock (_sync)
+            {
+                m_vAllianceMembers.Add(entry.GetAvatarId(), entry);
+            }
         }
 
-        public void AddChatMessage(Magic.Logic.StreamEntry.StreamEntry message)
+        public void AddChatMessage(Magic.Logic.StreamEntries.StreamEntry message)
         {
-            if (this.m_vChatMessages.Count >= 30)
-                this.m_vChatMessages.RemoveAt(0);
+            if (m_vChatMessages.Count >= 30)
+                m_vChatMessages.RemoveAt(0);
 
-            this.m_vChatMessages.Add(message);
+            m_vChatMessages.Add(message);
         }
 
         public byte[] EncodeFullEntry()
@@ -111,95 +117,192 @@ namespace Magic.Logic
             return data.ToArray();
         }
 
-        public int GetAllianceBadgeData()
+
+        public int AllianceBadgeData
         {
-            return this.m_vAllianceBadgeData;
+            get
+            {
+                return m_vAllianceBadgeData;
+            }
+
+            set
+            {
+                m_vAllianceBadgeData = value;
+            }
         }
 
 
-        public string GetAllianceDescription()
+        public string AllianceDescription
         {
-            return this.m_vAllianceDescription;
+            get
+            {
+                return m_vAllianceDescription;
+            }
+
+            set
+            {
+                m_vAllianceDescription = value;
+            }
         }
 
-        public int GetAllianceExperience()
+        public int AllianceExperience
         {
-            return this.m_vAllianceExperience;
+            get
+            {
+                return m_vAllianceExperience;
+            }
         }
 
-        public long GetAllianceId()
+        public long AllianceId
         {
-            return this.m_vAllianceId;
+            get
+            {
+                return m_vAllianceId;
+            }
         }
 
-        public int GetAllianceLevel()
+
+        public int AllianceLevel
         {
-            return this.m_vAllianceLevel;
+            get
+            {
+                return m_vAllianceLevel;
+            }
+            set
+            {
+                m_vAllianceLevel = value;
+            }
+        }
+
+        public List<AllianceMemberEntry> AllianceMembers
+        {
+            get
+            {
+                return m_vAllianceMembers.Values.ToList<AllianceMemberEntry>();
+            }
+        }
+
+
+        public string AllianceName
+        {
+            get
+            {
+                return m_vAllianceName;
+            }
+            set
+            {
+                m_vAllianceName = value;
+            }
+        }
+
+
+        public int AllianceOrigin
+        {
+            get
+            {
+                return m_vAllianceOrigin;
+            }
+            set
+            {
+                m_vAllianceOrigin = value;
+            }
+        }
+
+
+        public int AllianceType
+        {
+            get
+            {
+                return m_vAllianceType;
+            }
+            set
+            {
+                m_vAllianceType = value;
+            }
+        }
+
+        public List<StreamEntry> ChatMessages
+        {
+            get
+            {
+                return m_vChatMessages;
+            }
+        }
+
+
+        public int RequiredScore
+        {
+            get
+            {
+                return m_vRequiredScore;
+            }
+            set
+            {
+                m_vRequiredScore = value;
+            }
+        }
+
+        public int Score
+        {
+            get
+            {
+                return m_vScore;
+            }
+        }
+
+
+        public int WarFrequency
+        {
+            get
+            {
+                return m_vWarFrequency;
+            }
+            set
+            {
+                m_vWarFrequency = value;
+            }
+        }
+
+        public int WarScore
+        {
+            get
+            {
+                return m_vWonWars;
+            }
+        }
+
+        public byte WarLogPublic
+        {
+            get
+            {
+                return m_vWarLogPublic;
+            }
+        }
+
+
+        public byte FriendlyWar
+        {
+            get
+            {
+                return m_vFriendlyWar;
+            }
+            set
+            {
+                m_vFriendlyWar = value;
+            }
+        }
+
+        public bool IsAllianceFull
+        {
+            get
+            {
+                return m_vAllianceMembers.Count >= 50;
+            }
         }
 
         public AllianceMemberEntry GetAllianceMember(long avatarId)
         {
-            return this.m_vAllianceMembers[avatarId];
-        }
-
-        public System.Collections.Generic.List<AllianceMemberEntry> GetAllianceMembers()
-        {
-            return this.m_vAllianceMembers.Values.ToList<AllianceMemberEntry>();
-        }
-
-        public string GetAllianceName()
-        {
-            return this.m_vAllianceName;
-        }
-
-        public int GetAllianceOrigin()
-        {
-            return this.m_vAllianceOrigin;
-        }
-
-        public int GetAllianceType()
-        {
-            return this.m_vAllianceType;
-        }
-
-        public System.Collections.Generic.List<Magic.Logic.StreamEntry.StreamEntry> GetChatMessages()
-        {
-            return this.m_vChatMessages;
-        }
-
-        public int GetRequiredScore()
-        {
-            return this.m_vRequiredScore;
-        }
-
-        public int GetScore()
-        {
-            return this.m_vScore;
-        }
-
-        public int GetWarFrequency()
-        {
-            return this.m_vWarFrequency;
-        }
-
-        public int GetWarScore()
-        {
-            return this.m_vWonWars;
-        }
-
-        public byte GetWarLogPublic()
-        {
-            return this.m_vWarLogPublic;
-        }
-
-        public byte GetFriendlyWar()
-        {
-            return this.m_vFriendlyWar;
-        }
-
-        public bool IsAllianceFull()
-        {
-            return this.m_vAllianceMembers.Count >= 50;
+            return m_vAllianceMembers[avatarId];
         }
 
         public void LoadFromJson(string jsonString)
@@ -230,7 +333,7 @@ namespace Magic.Logic
                 var player = ResourcesManager.GetPlayer(id);
                 var member = new AllianceMemberEntry(id);
 
-                m_vScore = m_vScore + player.GetPlayerAvatar().GetScore();
+                m_vScore = m_vScore + player.Avatar.GetScore();
 
                 member.Load(jsonMember);
                 m_vAllianceMembers.Add(id, member);
@@ -243,7 +346,7 @@ namespace Magic.Logic
                 foreach (JToken jToken in jsonMessages)
                 {
                     JObject jsonMessage = (JObject)jToken;
-                    StreamEntry.StreamEntry se = new StreamEntry.StreamEntry();
+                    StreamEntries.StreamEntry se = new StreamEntries.StreamEntry();
                     if (jsonMessage["type"].ToObject<int>() == 1)
                         se = new TroopRequestStreamEntry();
                     else if (jsonMessage["type"].ToObject<int>() == 2)
@@ -260,7 +363,13 @@ namespace Magic.Logic
             }
         }
 
-        public void RemoveMember(long avatarId) => m_vAllianceMembers.Remove(avatarId);
+        public void RemoveMember(long avatarId)
+        {
+            lock (_sync)
+            {
+                m_vAllianceMembers.Remove(avatarId);
+            }
+        }
 
         public string SaveToJson()
         {
@@ -292,7 +401,7 @@ namespace Magic.Logic
             jsonData.Add("members", jsonMembersArray);
 
             var jsonMessageArray = new JArray();
-            foreach (StreamEntry.StreamEntry message in m_vChatMessages)
+            foreach (StreamEntries.StreamEntry message in m_vChatMessages)
             {
                 var jsonObject = new JObject();
                 message.Save(jsonObject);
@@ -302,73 +411,28 @@ namespace Magic.Logic
             return JsonConvert.SerializeObject(jsonData);
         }
 
-        public void SetAllianceBadgeData(int data)
-        {
-            this.m_vAllianceBadgeData = data;
-        }
-
-        public void SetAllianceDescription(string description)
-        {
-            this.m_vAllianceDescription = description;
-        }
-
-        public void SetAllianceLevel(int level)
-        {
-            this.m_vAllianceLevel = level;
-        }
-
-        public void SetAllianceName(string name)
-        {
-            this.m_vAllianceName = name;
-        }
-
-        public void SetAllianceOrigin(int origin)
-        {
-            this.m_vAllianceOrigin = origin;
-        }
-
-        public void SetAllianceType(int status)
-        {
-            this.m_vAllianceType = status;
-        }
-
-        public void SetRequiredScore(int score)
-        {
-            this.m_vRequiredScore = score;
-        }
-
-        public void SetWarFrequency(int frequency)
-        {
-            this.m_vWarFrequency = frequency;
-        }
-
         public void SetWarPublicStatus(byte log)
         {
-            this.m_vWarLogPublic = log;
-        }
-
-        public void SetFriendlyWar(byte log)
-        {
-            this.m_vFriendlyWar = log;
+            m_vWarLogPublic = log;
         }
 
         public void SetWarAndFriendlytStatus(byte status)
         {
             if ((int)status == 1)
-                this.SetWarPublicStatus((byte)1);
+                SetWarPublicStatus((byte)1);
             else if ((int)status == 2)
-                this.SetFriendlyWar((byte)1);
+                FriendlyWar = (byte)1;
             else if ((int)status == 3)
             {
-                this.SetWarPublicStatus((byte)1);
-                this.SetFriendlyWar((byte)1);
+                SetWarPublicStatus((byte)1);
+                FriendlyWar = (byte)1;
             }
             else
             {
                 if ((int)status != 0)
                     return;
-                this.SetWarPublicStatus((byte)0);
-                this.SetFriendlyWar((byte)0);
+                SetWarPublicStatus((byte)0);
+                FriendlyWar = (byte)0;
             }
         }
     }

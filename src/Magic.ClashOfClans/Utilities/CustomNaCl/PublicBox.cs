@@ -1,5 +1,5 @@
 ﻿using System;
-using Magic.Core.Crypto.TweetNaCl;
+using Magic.Core.Crypto.Sodium;
 
 namespace Magic.Core.Crypto.CustomNaCl
 {

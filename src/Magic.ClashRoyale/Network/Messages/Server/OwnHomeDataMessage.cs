@@ -119,6 +119,7 @@ namespace Magic.Network.Messages.Server
         public int Unknown35;
         public ShopItemMessageComponent[] ShopItems;
 
+        public int Unknown36;
         //public int Unknown36;
         //public int Unknown37;
         //public int Unknown38;
@@ -170,6 +171,8 @@ namespace Magic.Network.Messages.Server
         private int Unknown73;
         private int Unknown74;
         private int Unknown75;
+
+        private int Unknown76;
 
         /// <summary>
         /// Gets the ID of the <see cref="OwnHomeDataMessage"/>.
@@ -274,12 +277,12 @@ namespace Magic.Network.Messages.Server
             Unknown18 = reader.ReadInt32();
             if (Unknown18 == 0)
             {
-                var unknown1_ = reader.ReadRRInt32();
+                Unknown76 = reader.ReadRRInt32();
             }
             else if (Unknown18 == 2)
             {
                 // Could be 2 shorts.
-                var unknown2_ = reader.ReadInt32();
+                Unknown76 = reader.ReadInt32();
             }
 
             UnknownJsonData = reader.ReadString(); // JSON: {"ID":"CARD_RELEASE","Params":{"Assassin":"20170324"}}
@@ -384,7 +387,7 @@ namespace Magic.Network.Messages.Server
                 ShopItems[i] = item;
             }
 
-            Unknown35 = reader.ReadRRInt32(); // 0
+            Unknown36 = reader.ReadRRInt32(); // 0
 
             // 3x(00 00 7F)
             // Could be time values.
@@ -534,14 +537,14 @@ namespace Magic.Network.Messages.Server
 
             writer.Write(Unknown17, true);
 
-            writer.Write(Unknown18, true);
+            writer.Write(Unknown18);
             if (Unknown18 == 0)
             {
-                // Hmm.
+                writer.Write(Unknown76, true);
             }
             else if (Unknown18 == 2)
             {
-                // Hmmm.
+                writer.Write(Unknown76);
             }
 
             writer.Write(UnknownJsonData);
@@ -555,6 +558,9 @@ namespace Magic.Network.Messages.Server
                 {
                     var chest = Chests[i];
                     chest.WriteMessageComponent(writer);
+
+                    if (chest.Unknown6 == 0)
+                        break;
                 }
             }
             else
@@ -589,6 +595,88 @@ namespace Magic.Network.Messages.Server
             UnknownTimer3.WriteMessageComponent(writer);
 
             writer.Write(Unknown53, true);
+            writer.Write(Unknown54);
+            writer.Write(Unknown55);
+
+            writer.Write(ExpLevel, true);
+            writer.Write(ArenaType, true);
+            writer.Write(ArenaId, true);
+
+            writer.Write(Unknown34, true);
+
+            writer.Write(DayOfWeek, true);
+            writer.Write(DayOfWeek2, true);
+
+            ShopTimer.WriteMessageComponent(writer);
+
+            writer.Write(Unknown35, true);
+            for (int i = 0; i < Unknown35; i++)
+            {
+                var item = ShopItems[i];
+                item.WriteMessageComponent(writer);
+            }
+
+            writer.Write(Unknown36, true);
+
+            UnknownTimer4.WriteMessageComponent(writer);
+
+            UnknownTimer5.WriteMessageComponent(writer);
+
+            UnknownTimer6.WriteMessageComponent(writer);
+
+            writer.Write(Unknown45);
+            writer.Write(Unknown46);
+
+            writer.Write(Unknown47, true);
+
+            writer.Write(Unknown48, true);
+            for (int i = 0; i < Unknown48; i++)
+            {
+                var instanceId = UnknownCharacterArray[i];
+                var id = instanceId % 1000000;
+                var type = instanceId / 1000000;
+
+                writer.Write(id, true);
+                writer.Write(type, true);
+            }
+
+            writer.Write(Unknown49, true);
+            writer.Write(Unknown50, true);
+            writer.Write(Unknown51);
+
+            writer.Write(Unknown52);
+
+            writer.Write(Unknown56, true);
+            for (int i = 0; i < Unknown56; i++)
+            {
+                var component = UnknownComponent1[i];
+                component.WriteMessageComponent(writer);
+            }
+
+            writer.Write(Unknown57, true);
+
+            writer.Write(Unknown58, true);
+            writer.Write(Unknown59, true);
+            writer.Write(Unknown60, true);
+            writer.Write(Unknown61, true);
+            writer.Write(Unknown62, true);
+            writer.Write(Unknown63, true);
+            writer.Write(Unknown64, true);
+            writer.Write(Unknown65, true);
+            writer.Write(Unknown66, true);
+            writer.Write(Unknown67, true);
+            writer.Write(Unknown68, true);
+            writer.Write(Unknown69);
+            writer.Write(Unknown70, true);
+            writer.Write(Unknown71, true);
+
+            Avatar.WriteMessageComponent(writer);
+
+            writer.Write(Unknown72);
+
+            writer.Write(Unknown73, true);
+            writer.Write(Unknown74, true);
+            writer.Write(Unknown75, true);
         }
     }
 }

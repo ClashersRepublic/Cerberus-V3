@@ -34,7 +34,7 @@ namespace Magic.Logic
 
         public void Load(JObject jsonObject)
         {
-            Data = CSVManager.DataTables.GetDataById(jsonObject["global_id"].ToObject<int>());
+            Data = CsvManager.DataTables.GetDataById(jsonObject["global_id"].ToObject<int>());
             Value = jsonObject["value"].ToObject<int>();
         }
 

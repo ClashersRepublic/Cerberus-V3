@@ -23,9 +23,9 @@ namespace Magic.Logic
 
         public void FillAmmo()
         {
-            var ca = Parent.Level.GetPlayerAvatar();
+            var ca = Parent.Level.Avatar;
             var bd = (BuildingData) Parent.Data;
-            var rd = CSVManager.DataTables.GetResourceByName(bd.AmmoResource);
+            var rd = CsvManager.DataTables.GetResourceByName(bd.AmmoResource);
 
             if (ca.HasEnoughResources(rd, bd.AmmoCost))
             {

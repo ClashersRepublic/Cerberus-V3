@@ -59,6 +59,7 @@ namespace Magic.Core.Network
             catch (Exception ex)
             {
                 ExceptionLogger.Log(ex, $"Exception while encoding message {message.GetType()}");
+                return;
             }
 
             try { buffer = message.GetRawData(); }
@@ -182,7 +183,8 @@ namespace Magic.Core.Network
                     Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Client(acceptSocket);
-                    // Let UCS know we've got a client.
+
+                    // Register the client in the ResourceManager.
                     ResourcesManager.AddClient(client);
 
                     var args = GetArgs();
@@ -191,10 +193,6 @@ namespace Magic.Core.Network
                     args.SetBuffer(buffer, 0, buffer.Length);
 
                     StartReceive(args);
-                }
-                catch (ObjectDisposedException)
-                {
-                    Recycle(e);
                 }
                 catch (Exception ex)
                 {
@@ -245,6 +243,7 @@ namespace Magic.Core.Network
             var transferred = e.BytesTransferred;
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
+                // Drop the client, which disposes connected socket.
                 ResourcesManager.DropClient(client.GetSocketHandle());
                 Recycle(e);
             }

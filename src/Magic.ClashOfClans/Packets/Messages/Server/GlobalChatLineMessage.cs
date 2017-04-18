@@ -31,33 +31,33 @@ namespace Magic.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            var pack = new List<byte>();
+            var data = new List<byte>();
 
-            pack.AddString(m_vMessage);
-            pack.AddString(m_vPlayerName);
-            pack.AddInt32(m_vPlayerLevel);
-            pack.AddInt32(m_vLeagueId);
-            pack.AddInt64(m_vHomeId);
-            pack.AddInt64(m_vCurrentHomeId);
+            data.AddString(m_vMessage);
+            data.AddString(m_vPlayerName);
+            data.AddInt32(m_vPlayerLevel);
+            data.AddInt32(m_vLeagueId);
+            data.AddInt64(m_vHomeId);
+            data.AddInt64(m_vCurrentHomeId);
 
             if (!m_vHasAlliance)
             {
-                pack.Add(0);
+                data.Add(0);
             }
             else
             {
-                pack.Add(1);
-                pack.AddInt64(m_vAllianceId);
-                pack.AddString(m_vAllianceName);
-                pack.AddInt32(m_vAllianceIcon);
+                data.Add(1);
+                data.AddInt64(m_vAllianceId);
+                data.AddString(m_vAllianceName);
+                data.AddInt32(m_vAllianceIcon);
             }
 
-            Encrypt(pack.ToArray());
+            Encrypt(data.ToArray());
         }
 
         public void SetAlliance(Alliance alliance)
         {
-            if (alliance == null || alliance.GetAllianceId() <= 0L)
+            if (alliance == null || alliance.AllianceId<= 0L)
             {
                 // Just in case.
                 m_vHasAlliance = false;
@@ -65,9 +65,9 @@ namespace Magic.PacketProcessing.Messages.Server
             }
 
             m_vHasAlliance = true;
-            m_vAllianceId = alliance.GetAllianceId();
-            m_vAllianceName = alliance.GetAllianceName();
-            m_vAllianceIcon = alliance.GetAllianceBadgeData();
+            m_vAllianceId = alliance.AllianceId;
+            m_vAllianceName = alliance.AllianceName;
+            m_vAllianceIcon = alliance.AllianceBadgeData;
         }
 
         public void SetChatMessage(string message)

@@ -28,7 +28,7 @@ namespace Magic.PacketProcessing.Messages.Client
             int index1 = 0;
             for (int index2 = 0; index2 < 40 && index1 < inMemoryAlliances.Count; ++index1)
             {
-                if (inMemoryAlliances[index1].GetAllianceMembers().Count != 0 && !inMemoryAlliances[index1].IsAllianceFull())
+                if (inMemoryAlliances[index1].AllianceMembers.Count != 0 && !inMemoryAlliances[index1].IsAllianceFull)
                 {
                     source.Add(inMemoryAlliances[index1]);
                     ++index2;

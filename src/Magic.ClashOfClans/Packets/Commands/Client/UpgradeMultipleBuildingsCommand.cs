@@ -30,7 +30,7 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            var ca = level.GetPlayerAvatar();
+            var ca = level.Avatar;
 
             foreach (var buildingId in GameObjectIds)
             {

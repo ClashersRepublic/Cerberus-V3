@@ -33,7 +33,7 @@ namespace Magic.Packets.GameOpCommands
                 trap.SetUpgradeLevel(data.GetUpgradeLevelCount() - 1);
             }
 
-            new OwnHomeDataMessage(level.GetClient(), level).Send();
+            new OwnHomeDataMessage(level.Client, level).Send();
         }
     }
 }

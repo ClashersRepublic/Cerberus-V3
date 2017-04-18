@@ -42,7 +42,7 @@ namespace Magic.Files.Logic
 
         public int GetBuildCost() => BuildCost;
 
-        public ResourceData GetBuildResource() => CSVManager.DataTables.GetResourceByName(BuildResource);
+        public ResourceData GetBuildResource() => CsvManager.DataTables.GetResourceByName(BuildResource);
 
         public int GetSellPrice()
         {

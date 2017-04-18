@@ -14,7 +14,7 @@ namespace Magic.PacketProcessing.Commands.Client
         }
         public override void Execute(Level level)
         {
-            level.GetPlayerAvatar().SetActiveLayout(Layout);
+            level.Avatar.SetActiveLayout(Layout);
         }
     }
 }

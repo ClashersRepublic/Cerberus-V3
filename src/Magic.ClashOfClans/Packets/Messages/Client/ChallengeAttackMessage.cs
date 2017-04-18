@@ -30,8 +30,8 @@ namespace Magic.Packets.Messages.Client
 
         public override void Process(Level level)
         {
-            var a = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            var defender = ResourcesManager.GetPlayer(a.GetChatMessages().Find(c => c.GetId() == ID).GetSenderId());
+            var a = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+            var defender = ResourcesManager.GetPlayer(a.ChatMessages.Find(c => c.GetId() == ID).GetSenderId());
             if (defender != null)
             {
                 defender.Tick();
@@ -42,18 +42,18 @@ namespace Magic.Packets.Messages.Client
                 new OwnHomeDataMessage(Client, level);
             }
 
-            var alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            var s = alliance.GetChatMessages().Find(c => c.GetStreamEntryType() == 12);
+            var alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+            var s = alliance.ChatMessages.Find(c => c.GetStreamEntryType() == 12);
             if (s != null)
             {
-                alliance.GetChatMessages().RemoveAll(t => t == s);
+                alliance.ChatMessages.RemoveAll(t => t == s);
 
-                foreach (AllianceMemberEntry op in alliance.GetAllianceMembers())
+                foreach (AllianceMemberEntry op in alliance.AllianceMembers)
                 {
                     Level playera = ResourcesManager.GetPlayer(op.GetAvatarId());
-                    if (playera.GetClient() != null)
+                    if (playera.Client!= null)
                     {
-                        var p = new AllianceStreamEntryMessage(playera.GetClient());
+                        var p = new AllianceStreamEntryMessage(playera.Client);
                         p.SetStreamEntry(s);
                         p.Send();
                     }

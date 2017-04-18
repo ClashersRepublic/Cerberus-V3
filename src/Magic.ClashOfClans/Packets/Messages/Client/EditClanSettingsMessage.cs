@@ -5,7 +5,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 using  Magic.PacketProcessing.Commands.Server;
 using System.Threading.Tasks;
@@ -47,7 +47,7 @@ namespace Magic.PacketProcessing.Messages.Client
             EditClanSettingsMessage clanSettingsMessage = this;
             try
             {
-                Alliance alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
+                Alliance alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
                 if (alliance != null)
                 {
                     if (clanSettingsMessage.m_vAllianceDescription.Length < 259 || clanSettingsMessage.m_vAllianceDescription.Length < 0)
@@ -64,37 +64,37 @@ namespace Magic.PacketProcessing.Messages.Client
                                         {
                                             if ((int)clanSettingsMessage.m_vWarAndFriendlyStatus < 0 || (int)clanSettingsMessage.m_vWarAndFriendlyStatus < 5)
                                             {
-                                                alliance.SetAllianceDescription(m_vAllianceDescription);
-                                                alliance.SetAllianceBadgeData(m_vAllianceBadgeData);
-                                                alliance.SetAllianceType(m_vAllianceType);
-                                                alliance.SetRequiredScore(m_vRequiredScore);
-                                                alliance.SetWarFrequency(m_vWarFrequency);
-                                                alliance.SetAllianceOrigin(m_vAllianceOrigin);
+                                                alliance.AllianceDescription = m_vAllianceDescription;
+                                                alliance.AllianceBadgeData = m_vAllianceBadgeData;
+                                                alliance.AllianceType = m_vAllianceType;
+                                                alliance.RequiredScore = m_vRequiredScore;
+                                                alliance.WarFrequency = m_vWarFrequency;
+                                                alliance.AllianceOrigin = m_vAllianceOrigin;
                                                 alliance.SetWarAndFriendlytStatus(m_vWarAndFriendlyStatus);
-                                                ClientAvatar avatar = level.GetPlayerAvatar();
+                                                ClientAvatar avatar = level.Avatar;
                                                 avatar.GetAllianceId();
                                                 AllianceEventStreamEntry eventStreamEntry = new AllianceEventStreamEntry();
                                                 eventStreamEntry.SetId((int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                                                 eventStreamEntry.SetSender(avatar);
                                                 eventStreamEntry.SetEventType(10);
-                                                eventStreamEntry.SetAvatarId(avatar.GetId());
+                                                eventStreamEntry.SetAvatarId(avatar.Id);
                                                 eventStreamEntry.SetAvatarName(avatar.GetAvatarName());
-                                                eventStreamEntry.SetSenderId(avatar.GetId());
+                                                eventStreamEntry.SetSenderId(avatar.Id);
                                                 eventStreamEntry.SetSenderName(avatar.GetAvatarName());
                                                 alliance.AddChatMessage(eventStreamEntry);
                                                 AllianceSettingChangedCommand Command = new AllianceSettingChangedCommand();
                                                 Command.SetAlliance(alliance);
                                                 Command.SetPlayer(level);
-                                                var availableServerCommandMessage = new AvailableServerCommandMessage(level.GetClient());
+                                                var availableServerCommandMessage = new AvailableServerCommandMessage(level.Client);
                                                 availableServerCommandMessage.SetCommandId(6);
                                                 availableServerCommandMessage.SetCommand(Command);
                                                 availableServerCommandMessage.Send();
-                                                foreach (AllianceMemberEntry allianceMember in alliance.GetAllianceMembers())
+                                                foreach (AllianceMemberEntry allianceMember in alliance.AllianceMembers)
                                                 {
                                                     Level player = ResourcesManager.GetPlayer(allianceMember.GetAvatarId(), false);
                                                     if (ResourcesManager.IsPlayerOnline(player))
                                                     {
-                                                        var p = new AllianceStreamEntryMessage(player.GetClient());
+                                                        var p = new AllianceStreamEntryMessage(player.Client);
                                                         AllianceEventStreamEntry eventStreamEntry1 = eventStreamEntry;
                                                         p.SetStreamEntry(eventStreamEntry1);
                                                         p.Send();

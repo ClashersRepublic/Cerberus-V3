@@ -15,10 +15,10 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 /* Starting saving of players */
-                var pm = new GlobalChatLineMessage(level.GetClient());
+                var pm = new GlobalChatLineMessage(level.Client);
                 pm.SetChatMessage("Starting saving process of every player!");
                 pm.SetPlayerId(0);
                 pm.SetLeagueId(22);
@@ -26,7 +26,7 @@ namespace Magic.PacketProcessing.GameOpCommands
                 pm.Send();
                 var levels = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryLevels());
                 levels.Wait();
-                var p = new GlobalChatLineMessage(level.GetClient());
+                var p = new GlobalChatLineMessage(level.Client);
                 /* Confirmation */
                 p.SetChatMessage("All Players are saved!");
                 p.SetPlayerId(0);
@@ -34,7 +34,7 @@ namespace Magic.PacketProcessing.GameOpCommands
                 p.SetPlayerName("UCS Bot");
                 p.Send();
                 /* Starting saving of Clans */
-                var pmm = new GlobalChatLineMessage(level.GetClient());
+                var pmm = new GlobalChatLineMessage(level.Client);
                 pmm.SetPlayerId(0);
                 pmm.SetLeagueId(22);
                 pmm.SetPlayerName("UCS Bot");
@@ -43,7 +43,7 @@ namespace Magic.PacketProcessing.GameOpCommands
                 /* Confirmation */
                 var clans = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryAlliances());
                 clans.Wait();
-                var pmp = new GlobalChatLineMessage(level.GetClient());
+                var pmp = new GlobalChatLineMessage(level.Client);
                 pmp.SetPlayerId(0);
                 pmp.SetLeagueId(22);
                 pmp.SetPlayerName("UCS Bot");
@@ -52,7 +52,7 @@ namespace Magic.PacketProcessing.GameOpCommands
             }
             else
             {
-                var p = new GlobalChatLineMessage(level.GetClient());
+                var p = new GlobalChatLineMessage(level.Client);
                 p.SetChatMessage("GameOp command failed. Access to Admin GameOP is prohibited.");
                 p.SetPlayerId(0);
                 p.SetLeagueId(22);

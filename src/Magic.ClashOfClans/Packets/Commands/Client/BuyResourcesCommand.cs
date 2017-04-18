@@ -42,15 +42,15 @@ namespace Magic.PacketProcessing.Commands.Client
             if (Depth >= 10)
             {
                 //TODO: Block Exploitor's IP.
-                ResourcesManager.DropClient(level.GetClient().GetSocketHandle());
+                ResourcesManager.DropClient(level.Client.GetSocketHandle());
             }
             else
             {
-                ResourceData dataById = (ResourceData)CSVManager.DataTables.GetDataById(m_vResourceId);
+                ResourceData dataById = (ResourceData)CsvManager.DataTables.GetDataById(m_vResourceId);
                 if (dataById == null || m_vResourceCount < 1 || dataById.PremiumCurrency)
                     return;
 
-                ClientAvatar avatar = level.GetPlayerAvatar();
+                ClientAvatar avatar = level.Avatar;
                 int resourceDiamondCost = GamePlayUtil.GetResourceDiamondCost(m_vResourceCount, dataById);
                 if (m_vResourceCount > avatar.GetUnusedResourceCap(dataById) || !avatar.HasEnoughDiamonds(resourceDiamondCost))
                     return;

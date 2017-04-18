@@ -32,8 +32,8 @@ namespace Magic.PacketProcessing.Messages.Client
         public override void Process(Level level)
         {
             var player = ResourcesManager.GetPlayer(ReportedPlayerID, false);
-            ++player.GetPlayerAvatar().ReportedTimes;
-            if (player.GetPlayerAvatar().ReportedTimes < 3)
+            ++player.Avatar.ReportedTimes;
+            if (player.Avatar.ReportedTimes < 3)
                 return;
 
             AvatarChatBanMessage c = new AvatarChatBanMessage(Client);

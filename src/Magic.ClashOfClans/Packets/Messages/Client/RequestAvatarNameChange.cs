@@ -25,7 +25,7 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            Level player = ResourcesManager.GetPlayer(level.GetPlayerAvatar().GetId(), false);
+            Level player = ResourcesManager.GetPlayer(level.Avatar.Id, false);
             if (player == null)
                 return;
 
@@ -35,7 +35,7 @@ namespace Magic.PacketProcessing.Messages.Client
             }
             else
             {
-                player.GetPlayerAvatar().SetName(PlayerName);
+                player.Avatar.SetName(PlayerName);
 
                 new AvatarNameChangeOkMessage(Client)
                 {

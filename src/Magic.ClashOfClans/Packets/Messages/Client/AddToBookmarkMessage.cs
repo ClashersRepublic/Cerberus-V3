@@ -26,8 +26,8 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Process(Level level)
         {
-            level.GetPlayerAvatar().BookmarkedClan.Add(new BookmarkSlot(id));
-            new BookmarkAddAllianceMessage(level.GetClient()).Send();
+            level.Avatar.BookmarkedClan.Add(new BookmarkSlot(id));
+            new BookmarkAddAllianceMessage(level.Client).Send();
         }
     }
 }

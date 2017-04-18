@@ -23,8 +23,8 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
-            TrapData dataById = (TrapData) CSVManager.DataTables.GetDataById(TrapId);
+            ClientAvatar avatar = level.Avatar;
+            TrapData dataById = (TrapData) CsvManager.DataTables.GetDataById(TrapId);
             Trap trap = new Trap((Data) dataById, level);
 
             if (!avatar.HasEnoughResources(dataById.GetBuildResource(0), dataById.GetBuildCost(0)) || level.HasFreeWorkers())

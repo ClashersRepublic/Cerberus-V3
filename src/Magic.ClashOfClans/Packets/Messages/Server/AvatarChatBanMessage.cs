@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Magic.Helpers;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 
 namespace Magic.PacketProcessing.Messages.Server
 {

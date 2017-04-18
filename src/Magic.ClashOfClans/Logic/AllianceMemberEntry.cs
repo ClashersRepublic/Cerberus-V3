@@ -29,15 +29,15 @@ namespace Magic.Logic
 
         public AllianceMemberEntry(long avatarId)
         {
-            this.m_vAvatarId = avatarId;
-            this.m_vIsNewMember = (byte)0;
-            this.m_vOrder = 1;
-            this.m_vPreviousOrder = 1;
-            this.m_vRole = 1;
-            this.m_vDonatedTroops = 200;
-            this.m_vReceivedTroops = 100;
-            this.m_vWarCooldown = 0;
-            this.m_vWarOptInStatus = 1;
+            m_vAvatarId = avatarId;
+            m_vIsNewMember = (byte)0;
+            m_vOrder = 1;
+            m_vPreviousOrder = 1;
+            m_vRole = 1;
+            m_vDonatedTroops = 200;
+            m_vReceivedTroops = 100;
+            m_vWarCooldown = 0;
+            m_vWarOptInStatus = 1;
         }
 
         public static int GetDonations() => 150;
@@ -47,11 +47,11 @@ namespace Magic.Logic
             var data = new List<byte>();
             var avatar = ResourcesManager.GetPlayer(m_vAvatarId);
             data.AddInt64(m_vAvatarId);
-            data.AddString(avatar.GetPlayerAvatar().GetAvatarName());
+            data.AddString(avatar.Avatar.GetAvatarName());
             data.AddInt32(m_vRole);
-            data.AddInt32(avatar.GetPlayerAvatar().GetAvatarLevel());
-            data.AddInt32(avatar.GetPlayerAvatar().GetLeagueId());
-            data.AddInt32(avatar.GetPlayerAvatar().GetScore());
+            data.AddInt32(avatar.Avatar.GetAvatarLevel());
+            data.AddInt32(avatar.Avatar.GetLeagueId());
+            data.AddInt32(avatar.Avatar.GetScore());
             data.AddInt32(m_vDonatedTroops);
             data.AddInt32(m_vReceivedTroops);
             data.AddInt32(m_vOrder);

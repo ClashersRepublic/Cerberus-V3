@@ -37,11 +37,11 @@ namespace Magic.Logic
         public Level Level => _level;
 
         [Obsolete]
-        public int TownHallLevel => Level.GetPlayerAvatar().GetTownHallLevel();
+        public int TownHallLevel => Level.Avatar.GetTownHallLevel();
         [Obsolete]
         public virtual bool IsHero => false;
         [Obsolete]
-        public int LayoutId => Level.GetPlayerAvatar().GetActiveLayout();
+        public int LayoutId => Level.Avatar.GetActiveLayout();
 
         //TODO: Remove dependency on System.Windows.
         public Vector GetPosition() => new Vector(X, Y);

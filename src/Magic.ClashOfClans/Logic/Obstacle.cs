@@ -29,22 +29,22 @@ namespace Magic.Logic
 			var od = GetObstacleData();
 			var rd = od.GetClearingResource();
 			var cost = od.ClearCost;
-			Level.GetPlayerAvatar().CommodityCountChangeHelper(0, rd, cost);
+			Level.Avatar.CommodityCountChangeHelper(0, rd, cost);
 		}
 
 		public void ClearingFinished()
 		{
-			m_vLevel.GameObjectManager.GetObstacleManager().IncreaseObstacleClearCount();
+			//m_vLevel.GameObjectManager.GetObstacleManager().IncreaseObstacleClearCount();
 			m_vLevel.WorkerManager.DeallocateWorker(this);
 			m_vTimer = null;
 			var constructionTime = GetObstacleData().ClearTimeSeconds;
             var exp = (int)Math.Sqrt(constructionTime);
 
-            Level.GetPlayerAvatar().AddExperience(exp);
+            Level.Avatar.AddExperience(exp);
 
-			var rd = CSVManager.DataTables.GetResourceByName(GetObstacleData().LootResource);
+			var rd = CsvManager.DataTables.GetResourceByName(GetObstacleData().LootResource);
 
-			Level.GetPlayerAvatar().CommodityCountChangeHelper(0, rd, GetObstacleData().LootCount);
+			Level.Avatar.CommodityCountChangeHelper(0, rd, GetObstacleData().LootCount);
 
 			Level.GameObjectManager.RemoveGameObject(this);
 		}
@@ -56,7 +56,7 @@ namespace Magic.Logic
 
 		public int GetRemainingClearingTime()
 		{
-			return m_vTimer.GetRemainingSeconds(m_vLevel.GetTime());
+			return m_vTimer.GetRemainingSeconds(m_vLevel.Time);
 		}
 
 		public bool IsClearingOnGoing()
@@ -69,10 +69,10 @@ namespace Magic.Logic
 			var remainingSeconds = 0;
 			if (IsClearingOnGoing())
 			{
-				remainingSeconds = m_vTimer.GetRemainingSeconds(m_vLevel.GetTime());
+				remainingSeconds = m_vTimer.GetRemainingSeconds(m_vLevel.Time);
 			}
 			var cost = GamePlayUtil.GetSpeedUpCost(remainingSeconds);
-			var ca = Level.GetPlayerAvatar();
+			var ca = Level.Avatar;
 			if (ca.HasEnoughDiamonds(cost))
 			{
 				ca.UseDiamonds(cost);
@@ -90,7 +90,7 @@ namespace Magic.Logic
 			else
 			{
 				m_vTimer = new Timer();
-				m_vTimer.StartTimer(constructionTime, m_vLevel.GetTime());
+				m_vTimer.StartTimer(constructionTime, m_vLevel.Time);
 				m_vLevel.WorkerManager.AllocateWorker(this);
 			}
 		}
@@ -99,7 +99,7 @@ namespace Magic.Logic
 		{
 			if (IsClearingOnGoing())
 			{
-				if (m_vTimer.GetRemainingSeconds(m_vLevel.GetTime()) <= 0)
+				if (m_vTimer.GetRemainingSeconds(m_vLevel.Time) <= 0)
 					ClearingFinished();
 			}
 		}
@@ -109,7 +109,7 @@ namespace Magic.Logic
 			var jsonObject = new JObject();
 			jsonObject.Add("data", GetObstacleData().GetGlobalID());
 			if (IsClearingOnGoing())
-				jsonObject.Add("const_t", m_vTimer.GetRemainingSeconds(m_vLevel.GetTime()));
+				jsonObject.Add("const_t", m_vTimer.GetRemainingSeconds(m_vLevel.Time));
 			jsonObject.Add("x", X);
 			jsonObject.Add("y", Y);
 			return jsonObject;

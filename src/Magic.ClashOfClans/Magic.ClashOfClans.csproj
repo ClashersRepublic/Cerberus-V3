@@ -227,7 +227,7 @@
     <Compile Include="Core\Network\Gateway.cs" />
     <Compile Include="Core\Network\Pool.cs" />
     <Compile Include="Core\Settings\Constants.cs" />
-    <Compile Include="Core\Settings\UCSControl.cs" />
+    <Compile Include="Core\Settings\MagicControl.cs" />
     <Compile Include="Database\clan.cs">
       <DependentUpon>ucsdb.tt</DependentUpon>
     </Compile>
@@ -235,7 +235,7 @@
     <Compile Include="Logic\Enums\State.cs" />
     <Compile Include="Logic\Manager\ObstacleManager.cs" />
     <Compile Include="Logic\Obstacle.cs" />
-    <Compile Include="Logic\StreamEntry\ChallengeStreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\ChallengeStreamEntry.cs" />
     <Compile Include="Logic\UnitProduction.cs" />
     <Compile Include="Packets\Commands\Client\AddQuickTrainingTroopCommand.cs" />
     <Compile Include="Packets\Commands\Client\BoostBarracksCommand.cs" />
@@ -258,6 +258,7 @@
     <Compile Include="Packets\GameOpCommands\HelpGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\MaxBaseGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\MaxLevelGameOpCommand.cs" />
+    <Compile Include="Packets\GameOpCommands\ResetGameOpCommand.cs" />
     <Compile Include="Packets\GameOpCommands\ServerStatusGameOpCommand.cs" />
     <Compile Include="Packets\Messages\Client\AddClashFriendMessage.cs" />
     <Compile Include="Packets\Messages\Client\Api\Bind_Google_Message.cs" />
@@ -315,9 +316,9 @@
     <Compile Include="Utilities\TweetNaCl\xsalsa20poly1305.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\Performances.cs" />
-    <Compile Include="Logic\StreamEntry\InvitationStreamEntry.cs" />
-    <Compile Include="Logic\StreamEntry\ShareSteamEntry.cs" />
-    <Compile Include="Logic\StreamEntry\TroopRequestStreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\InvitationStreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\ShareSteamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\TroopRequestStreamEntry.cs" />
     <Compile Include="Packets\Commands\Client\ClientServerTickCommand.cs" />
     <Compile Include="Packets\Commands\Client\PlaceHeroCommand.cs" />
     <Compile Include="Packets\Messages\Server\PlayerWarStatusMessage.cs" />
@@ -962,7 +963,7 @@
       <SubType>Designer</SubType>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="filter.ucs">
+    <None Include="filter">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ucsdb">
@@ -972,6 +973,7 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1037,9 +1039,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ucsdb.sqlite.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Files\CSV\CsvColumn.cs" />
-    <Compile Include="Files\CSV\CsvRow.cs" />
-    <Compile Include="Files\CSV\CsvTable.cs" />
+    <Compile Include="Files\Csv\CsvColumn.cs" />
+    <Compile Include="Files\Csv\CsvRow.cs" />
+    <Compile Include="Files\Csv\CsvTable.cs" />
     <Compile Include="Files\Logic\GlobalID.cs" />
     <Compile Include="Files\Logic\EffectsData.cs" />
     <Compile Include="Files\Logic\Globals.cs" />
@@ -1077,15 +1079,15 @@
     <Compile Include="Files\FingerPrint.cs" />
     <Compile Include="Helpers\PacketReader.cs" />
     <Compile Include="Helpers\Utils.cs" />
-    <Compile Include="Logic\AvatarStreamEntry\AllianceKickOutStreamEntry.cs" />
+    <Compile Include="Logic\AvatarStreamEntries\AllianceKickOutStreamEntry.cs" />
     <Compile Include="Logic\AllianceMemberEntry.cs" />
     <Compile Include="Logic\Avatar.cs" />
     <Compile Include="Logic\Base.cs" />
-    <Compile Include="Logic\AvatarStreamEntry\AvatarStreamEntry.cs" />
-    <Compile Include="Logic\AvatarStreamEntry\AllianceMailStreamEntry.cs" />
-    <Compile Include="Logic\StreamEntry\AllianceEventStreamEntry.cs" />
+    <Compile Include="Logic\AvatarStreamEntries\AvatarStreamEntry.cs" />
+    <Compile Include="Logic\AvatarStreamEntries\AllianceMailStreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\AllianceEventStreamEntry.cs" />
     <Compile Include="Logic\ConstructionItem.cs" />
-    <Compile Include="Logic\StreamEntry\StreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\StreamEntry.cs" />
     <Compile Include="Logic\ClientHome.cs" />
     <Compile Include="Logic\GameObjectFilter.cs" />
     <Compile Include="Logic\ComponentFilter.cs" />
@@ -1262,7 +1264,7 @@
     <Compile Include="Packets\Messages\Server\OwnHomeDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\AllianceStreamEntryMessage.cs" />
     <Compile Include="Packets\Messages\Server\GlobalChatLineMessage.cs" />
-    <Compile Include="Logic\StreamEntry\ChatStreamEntry.cs" />
+    <Compile Include="Logic\StreamEntries\ChatStreamEntry.cs" />
     <Compile Include="Packets\Messages\Client\PromoteAllianceMemberMessage.cs" />
     <Compile Include="Logic\Alliance.cs" />
     <Compile Include="Core\ObjectManager.cs" />
@@ -1292,10 +1294,10 @@
     <None Include="tools\patch_generator.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="config.xml">
+    <None Include="server.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FileAssociation Include=".ucs">

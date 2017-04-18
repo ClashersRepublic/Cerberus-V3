@@ -14,17 +14,17 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
-                var p = level.GetPlayerAvatar();
-                p.SetResourceCount(CSVManager.DataTables.GetResourceByName("Gold"), 999999999);
-                p.SetResourceCount(CSVManager.DataTables.GetResourceByName("Elixir"), 999999999);
-                p.SetResourceCount(CSVManager.DataTables.GetResourceByName("DarkElixir"), 999999999);
+                var p = level.Avatar;
+                p.SetResourceCount(CsvManager.DataTables.GetResourceByName("Gold"), 999999999);
+                p.SetResourceCount(CsvManager.DataTables.GetResourceByName("Elixir"), 999999999);
+                p.SetResourceCount(CsvManager.DataTables.GetResourceByName("DarkElixir"), 999999999);
                 p.SetDiamonds(999999999);
-                new OwnHomeDataMessage(level.GetClient(), level).Send();
+                new OwnHomeDataMessage(level.Client, level).Send();
             }
             else
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
         }
     }
 }

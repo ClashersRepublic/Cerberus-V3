@@ -44,7 +44,7 @@ namespace Magic.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception while trying to retrieve max alliance ID; check config.ucs.");
+                ExceptionLogger.Log(ex, "Exception while trying to retrieve max alliance ID; check config.");
             }
             return -1;
         }
@@ -57,7 +57,7 @@ namespace Magic.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception while trying to retrieve max player ID; check config.ucs.");
+                ExceptionLogger.Log(ex, "Exception while trying to retrieve max player ID; check config.");
             }
             return -1;
         }
@@ -70,12 +70,13 @@ namespace Magic.Core
                 {
                     var newPlayer = new player
                     {
-                        PlayerId = level.GetPlayerAvatar().GetId(),
-                        AccountStatus = level.GetAccountStatus(),
-                        AccountPrivileges = level.GetAccountPrivileges(),
-                        LastUpdateTime = level.GetTime(),
-                        IPAddress = level.GetIPAddress(),
-                        Avatar = level.GetPlayerAvatar().SaveToJson(),
+                        PlayerId = level.Avatar.Id,
+                        AccountStatus = level.AccountStatus,
+                        AccountPrivileges = level.AccountPrivileges,
+                        LastUpdateTime = level.Time,
+                        IPAddress = level.IPAddress,
+
+                        Avatar = level.Avatar.SaveToJson(),
                         GameObjects = level.SaveToJson()
                     };
 
@@ -97,7 +98,7 @@ namespace Magic.Core
                 {
                     var newClan = new clan
                     {
-                        ClanId = alliance.GetAllianceId(),
+                        ClanId = alliance.AllianceId,
                         LastUpdateTime = DateTime.Now,
                         Data = alliance.SaveToJson()
                     };
@@ -123,10 +124,12 @@ namespace Magic.Core
                     if (player != null)
                     {
                         level = new Level();
-                        level.SetAccountStatus(player.AccountStatus);
-                        level.SetAccountPrivileges(player.AccountPrivileges);
-                        level.SetTime(player.LastUpdateTime);
-                        level.GetPlayerAvatar().LoadFromJson(player.Avatar);
+                        level.AccountStatus = player.AccountStatus;
+                        level.AccountPrivileges = player.AccountPrivileges;
+                        level.Time = player.LastUpdateTime;
+
+                        // Load JSON data.
+                        level.Avatar.LoadFromJson(player.Avatar);
                         level.LoadFromJson(player.GameObjects);
                     }
                 }
@@ -170,10 +173,10 @@ namespace Magic.Core
         // Used whenever the clients searches for an alliance however no alliances is loaded in memory.
         public List<Alliance> GetAllAlliances()
         {
-            List<Alliance> alliances = new List<Alliance>();
+            var alliances = new List<Alliance>();
             try
             {
-                using (ucsdbEntities ctx = new ucsdbEntities(_connectionString))
+                using (var ctx = new ucsdbEntities(_connectionString))
                 {
                     var clans = ctx.clan;
                     Parallel.ForEach(clans, c =>
@@ -188,19 +191,22 @@ namespace Magic.Core
             {
                 ExceptionLogger.Log(ex, "Exception while trying to get all alliances from database.");
             }
+
             return alliances;
         }
 
         public void RemoveAlliance(Alliance alliance)
         {
-            long id = alliance.GetAllianceId();
+            long allianceId = alliance.AllianceId;
             using (ucsdbEntities ctx = new ucsdbEntities(_connectionString))
             {
-                ctx.clan.Remove(ctx.clan.Find((int)id));
+                var clan = ctx.clan.Find(allianceId);
+
+                ctx.clan.Remove(clan);
                 ctx.SaveChanges();
             }
 
-            ObjectManager.RemoveInMemoryAlliance(id);
+            ObjectManager.RemoveInMemoryAlliance(allianceId);
         }
 
         public async Task Save(Alliance alliance)
@@ -209,7 +215,7 @@ namespace Magic.Core
             {
                 ctx.Configuration.AutoDetectChangesEnabled = false;
                 ctx.Configuration.ValidateOnSaveEnabled = false;
-                clan c = await ctx.clan.FindAsync((int)alliance.GetAllianceId());
+                clan c = await ctx.clan.FindAsync((int)alliance.AllianceId);
                 if (c != null)
                 {
                     c.LastUpdateTime = DateTime.Now;
@@ -238,14 +244,14 @@ namespace Magic.Core
                 {
                     ctx.Configuration.AutoDetectChangesEnabled = false;
 
-                    var player = ctx.player.Find(level.GetPlayerAvatar().GetId());
+                    var player = ctx.player.Find(level.Avatar.Id);
                     if (player != null)
                     {
-                        player.LastUpdateTime = level.GetTime();
-                        player.AccountStatus = level.GetAccountStatus();
-                        player.AccountPrivileges = level.GetAccountPrivileges();
-                        player.IPAddress = level.GetIPAddress();
-                        player.Avatar = level.GetPlayerAvatar().SaveToJson();
+                        player.LastUpdateTime = level.Time;
+                        player.AccountStatus = level.AccountStatus;
+                        player.AccountPrivileges = level.AccountPrivileges;
+                        player.IPAddress = level.IPAddress;
+                        player.Avatar = level.Avatar.SaveToJson();
                         player.GameObjects = level.SaveToJson();
 
                         ctx.Entry(player).State = EntityState.Modified;
@@ -256,7 +262,7 @@ namespace Magic.Core
             }
             catch (DbEntityValidationException ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.GetPlayerAvatar().GetId()} from the database. Check error for more information.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.Id} from the database. Check error for more information.");
                 foreach (var entry in ex.EntityValidationErrors)
                 {
                     foreach (var errs in entry.ValidationErrors)
@@ -266,7 +272,7 @@ namespace Magic.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.GetPlayerAvatar().GetId()} from the database.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.Id} from the database.");
                 throw;
             }
         }
@@ -283,14 +289,14 @@ namespace Magic.Core
                     {
                         lock (pl)
                         {
-                            player p = ctx.player.Find(pl.GetPlayerAvatar().GetId());
+                            player p = ctx.player.Find(pl.Avatar.Id);
                             if (p != null)
                             {
-                                p.LastUpdateTime = pl.GetTime();
-                                p.AccountStatus = pl.GetAccountStatus();
-                                p.AccountPrivileges = pl.GetAccountPrivileges();
-                                p.IPAddress = pl.GetIPAddress();
-                                p.Avatar = pl.GetPlayerAvatar().SaveToJson();
+                                p.LastUpdateTime = pl.Time;
+                                p.AccountStatus = pl.AccountStatus;
+                                p.AccountPrivileges = pl.AccountPrivileges;
+                                p.IPAddress = pl.IPAddress;
+                                p.Avatar = pl.Avatar.SaveToJson();
                                 p.GameObjects = pl.SaveToJson();
                                 ctx.Entry(p).State = EntityState.Modified;
                             }
@@ -329,7 +335,7 @@ namespace Magic.Core
                     {
                         lock (alliance)
                         {
-                            clan c = ctx.clan.Find((int)alliance.GetAllianceId());
+                            clan c = ctx.clan.Find((int)alliance.AllianceId);
                             if (c != null)
                             {
                                 c.LastUpdateTime = DateTime.Now;

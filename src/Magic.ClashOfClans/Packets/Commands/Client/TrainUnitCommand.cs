@@ -26,11 +26,11 @@ namespace Magic.PacketProcessing
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
+            ClientAvatar avatar = level.Avatar;
             if (UnitType.ToString().StartsWith("400"))
             {
-                CombatItemData _TroopData = (CombatItemData)CSVManager.DataTables.GetDataById(UnitType);
-                List<DataSlot> units = level.GetPlayerAvatar().GetUnits();
+                CombatItemData _TroopData = (CombatItemData)CsvManager.DataTables.GetDataById(UnitType);
+                List<DataSlot> units = level.Avatar.GetUnits();
                 ResourceData trainingResource = _TroopData.GetTrainingResource();
                 if (_TroopData == null)
                     return;
@@ -50,8 +50,8 @@ namespace Magic.PacketProcessing
             {
                 if (!this.UnitType.ToString().StartsWith("260"))
                     return;
-                SpellData _SpellData = (SpellData)CSVManager.DataTables.GetDataById(UnitType);
-                List<DataSlot> spells = level.GetPlayerAvatar().GetSpells();
+                SpellData _SpellData = (SpellData)CsvManager.DataTables.GetDataById(UnitType);
+                List<DataSlot> spells = level.Avatar.GetSpells();
                 ResourceData trainingResource = _SpellData.GetTrainingResource();
                 if (_SpellData == null)
                     return;

@@ -154,7 +154,7 @@ namespace Magic.Files.Logic
             return d;
         }
 
-        public Data GetDataByName(string name) => m_vData.Find(d => d.Name== name);
+        public Data GetDataByName(string name) => m_vData.Find(d => d.Name == name);
 
         public Data GetItemAt(int index) => m_vData[index];
 
@@ -164,7 +164,7 @@ namespace Magic.Files.Logic
             return m_vData[instanceId];
         }
 
-        public int GetItemCount()  => m_vData.Count;
+        public int GetItemCount() => m_vData.Count;
 
         public int GetTableIndex() => m_vIndex;
     }

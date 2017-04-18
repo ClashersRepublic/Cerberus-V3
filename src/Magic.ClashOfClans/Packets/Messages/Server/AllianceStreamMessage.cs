@@ -20,14 +20,14 @@ namespace Magic.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            System.Collections.Generic.List<Magic.Logic.StreamEntry.StreamEntry> list = this.m_vAlliance.GetChatMessages().ToList<Magic.Logic.StreamEntry.StreamEntry>();
+            System.Collections.Generic.List<Magic.Logic.StreamEntries.StreamEntry> list = this.m_vAlliance.ChatMessages.ToList<Magic.Logic.StreamEntries.StreamEntry>();
             var pack = new List<byte>();
-            var chatMessages = m_vAlliance.GetChatMessages().ToList();
+            var chatMessages = m_vAlliance.ChatMessages.ToList();
             pack.AddInt32(0);
             pack.AddInt32(list.Count);
             int num = 0;
 
-            foreach (Magic.Logic.StreamEntry.StreamEntry streamEntry in list)
+            foreach (Magic.Logic.StreamEntries.StreamEntry streamEntry in list)
             {
                 pack.AddRange((IEnumerable<byte>)streamEntry.Encode());
                 ++num;

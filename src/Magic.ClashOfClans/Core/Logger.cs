@@ -13,7 +13,7 @@ namespace Magic.Core
     internal static class Logger
     {
         static bool ValidLogLevel;
-        static int logLevel = ToInt32(ConfigurationManager.AppSettings["LogLevel"]);
+        static int logLevel = ToInt32(ConfigurationManager.AppSettings["log_level"]);
         static string timestamp = Convert.ToString(DateTime.Today).Remove(10).Replace(".", "-").Replace("/", "-");
         static string path = "Logs/log_" + timestamp + "_.txt";
         static SemaphoreSlim _fileLock = new SemaphoreSlim(1);

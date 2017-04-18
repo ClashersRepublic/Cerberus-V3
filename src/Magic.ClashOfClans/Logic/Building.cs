@@ -11,7 +11,7 @@ namespace Magic.Logic
             AddComponent(new HitpointComponent());
             if (GetBuildingData().IsHeroBarrack)
             {
-                var hd = CSVManager.DataTables.GetHeroByName(GetBuildingData().HeroType);
+                var hd = CsvManager.DataTables.GetHeroByName(GetBuildingData().HeroType);
                 AddComponent(new HeroBaseComponent(this, hd));
             }
             if (GetBuildingData().UpgradesUnits)

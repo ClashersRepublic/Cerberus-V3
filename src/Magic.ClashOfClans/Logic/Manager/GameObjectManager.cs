@@ -18,16 +18,19 @@ namespace Magic.Logic.Manager
                 m_vGameObjects.Add(new List<GameObject>());
                 m_vGameObjectsIndex.Add(0);
             }
+
             m_vComponentManager = new ComponentManager(m_vLevel);
-            m_vObstacleManager = new ObstacleManager(m_vLevel);
+
+            // Disable for now since its throwing Exceptions and is not being used at all.
+            //m_vObstacleManager = new ObstacleManager(m_vLevel);
         }
 
-        readonly ComponentManager m_vComponentManager;
-        readonly List<GameObject> m_vGameObjectRemoveList;
-        readonly List<List<GameObject>> m_vGameObjects;
-        readonly List<int> m_vGameObjectsIndex;
-        readonly Level m_vLevel;
-        readonly ObstacleManager m_vObstacleManager;
+        private readonly ComponentManager m_vComponentManager;
+        private readonly List<GameObject> m_vGameObjectRemoveList;
+        private readonly List<List<GameObject>> m_vGameObjects;
+        private readonly List<int> m_vGameObjectsIndex;
+        private readonly Level m_vLevel;
+        //readonly ObstacleManager m_vObstacleManager;
 
         public void AddGameObject(GameObject go)
         {
@@ -46,7 +49,7 @@ namespace Magic.Logic.Manager
 
         public ComponentManager GetComponentManager() => m_vComponentManager;
 
-        public ObstacleManager GetObstacleManager() => m_vObstacleManager;
+        //public ObstacleManager GetObstacleManager() => m_vObstacleManager;
 
         public GameObject GetGameObjectByID(int globalId)
         {
@@ -64,7 +67,7 @@ namespace Magic.Logic.Manager
             var jsonBuildings = (JArray)jsonObject["buildings"];
             foreach (JObject jsonBuilding in jsonBuildings)
             {
-                var bd = (BuildingData)CSVManager.DataTables.GetDataById(jsonBuilding["data"].ToObject<int>());
+                var bd = (BuildingData)CsvManager.DataTables.GetDataById(jsonBuilding["data"].ToObject<int>());
                 var b = new Building(bd, m_vLevel);
                 AddGameObject(b);
                 b.Load(jsonBuilding);
@@ -73,7 +76,7 @@ namespace Magic.Logic.Manager
             var jsonTraps = (JArray)jsonObject["traps"];
             foreach (JObject jsonTrap in jsonTraps)
             {
-                var td = (TrapData)CSVManager.DataTables.GetDataById(jsonTrap["data"].ToObject<int>());
+                var td = (TrapData)CsvManager.DataTables.GetDataById(jsonTrap["data"].ToObject<int>());
                 var t = new Trap(td, m_vLevel);
                 AddGameObject(t);
                 t.Load(jsonTrap);
@@ -83,7 +86,7 @@ namespace Magic.Logic.Manager
 
             foreach (JObject jsonDeco in jsonDecos)
             {
-                var dd = (DecoData)CSVManager.DataTables.GetDataById(jsonDeco["data"].ToObject<int>());
+                var dd = (DecoData)CsvManager.DataTables.GetDataById(jsonDeco["data"].ToObject<int>());
                 var d = new Deco(dd, m_vLevel);
                 AddGameObject(d);
                 d.Load(jsonDeco);
@@ -92,13 +95,13 @@ namespace Magic.Logic.Manager
             var jsonObstacles = (JArray)jsonObject["obstacles"];
             foreach (JObject jsonObstacle in jsonObstacles)
             {
-                var dd = (ObstacleData)CSVManager.DataTables.GetDataById(jsonObstacle["data"].ToObject<int>());
+                var dd = (ObstacleData)CsvManager.DataTables.GetDataById(jsonObstacle["data"].ToObject<int>());
                 var d = new Obstacle(dd, m_vLevel);
                 AddGameObject(d);
                 d.Load(jsonObstacle);
             }
 
-            m_vObstacleManager.Load(jsonObject);
+            //m_vObstacleManager.Load(jsonObject);
         }
 
         public void RemoveGameObject(GameObject go)
@@ -123,10 +126,10 @@ namespace Magic.Logic.Manager
 
         public JObject Save()
         {
-            ClientAvatar pl = m_vLevel.GetPlayerAvatar();
+            ClientAvatar pl = m_vLevel.Avatar;
             var jsonData = new JObject();
             jsonData.Add("exp_ver", 1);
-            jsonData.Add("android_client", pl.GetAndroid());
+            jsonData.Add("android_client", pl.Android);
             jsonData.Add("active_layout", pl.GetActiveLayout());
             jsonData.Add("war_layout", pl.GetActiveLayout());
             jsonData.Add("layout_state", new JArray { 0, 0, 0, 0, 0, 0 });
@@ -187,7 +190,7 @@ namespace Magic.Logic.Manager
             }
             jsonData.Add("obstacles", JObstacles);
 
-            m_vObstacleManager.Save(jsonData);
+            //m_vObstacleManager.Save(jsonData);
 
             var cooldowns = new JArray();
             jsonData.Add("cooldowns", cooldowns);
@@ -271,7 +274,7 @@ namespace Magic.Logic.Manager
             };
             jsonData.Add("newShopDecos", newShopDecos);
             jsonData.Add("troop_req_msg", "UCS Developement Team");
-            jsonData.Add("last_league_rank", m_vLevel.GetPlayerAvatar().GetLeagueId());
+            jsonData.Add("last_league_rank", m_vLevel.Avatar.GetLeagueId());
             jsonData.Add("last_league_shuffle", 1);
             jsonData.Add("last_season_seen", 1);
             jsonData.Add("last_news_seen", 999);

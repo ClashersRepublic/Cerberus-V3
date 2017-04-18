@@ -7,7 +7,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing;
 using Magic.PacketProcessing.Messages.Server;
 
@@ -27,41 +27,41 @@ namespace Magic.PacketProcessing.Commands
           ChallangeCommand challangeCommand = this;
           try
           {
-            ClientAvatar player = level.GetPlayerAvatar();
+            ClientAvatar player = level.Avatar;
             Alliance alliance = ObjectManager.GetAlliance(player.GetAllianceId());
             ChallengeStreamEntry cm = new ChallengeStreamEntry();
             cm.SetMessage(challangeCommand.Message);
-            cm.SetSenderId(player.GetId());
+            cm.SetSenderId(player.Id);
             cm.SetSenderName(player.GetAvatarName());
             cm.SetSenderLevel(player.GetAvatarLevel());
             ChallengeStreamEntry challengeStreamEntry = cm;
             int allianceRole = player.GetAllianceRole();
             challengeStreamEntry.SetSenderRole(allianceRole);
             challengeStreamEntry = (ChallengeStreamEntry) null;
-            cm.SetId(alliance.GetChatMessages().Count + 1);
+            cm.SetId(alliance.ChatMessages.Count + 1);
             cm.SetSenderLeagueId(player.GetLeagueId());
-            alliance.AddChatMessage((Magic.Logic.StreamEntry.StreamEntry) cm);
-            Magic.Logic.StreamEntry.StreamEntry s = alliance.GetChatMessages().Find((Predicate<Magic.Logic.StreamEntry.StreamEntry>)(c => c.GetStreamEntryType() == 12));
+            alliance.AddChatMessage((Magic.Logic.StreamEntries.StreamEntry) cm);
+            Magic.Logic.StreamEntries.StreamEntry s = alliance.ChatMessages.Find((Predicate<Magic.Logic.StreamEntries.StreamEntry>)(c => c.GetStreamEntryType() == 12));
             List<AllianceMemberEntry>.Enumerator enumerator;
             if (s != null)
             {
-              alliance.GetChatMessages().RemoveAll((Predicate<Magic.Logic.StreamEntry.StreamEntry>)(t => t == s));
-              foreach (AllianceMemberEntry allianceMember in alliance.GetAllianceMembers())
+              alliance.ChatMessages.RemoveAll((Predicate<Magic.Logic.StreamEntries.StreamEntry>)(t => t == s));
+              foreach (AllianceMemberEntry allianceMember in alliance.AllianceMembers)
               {
                 Level player1 = ResourcesManager.GetPlayer(allianceMember.GetAvatarId(), false);
-                if (player1.GetClient() != null)
-                  new AllianceStreamEntryRemovedMessage(player1.GetClient(), s.GetId()).Send();
+                if (player1.Client!= null)
+                  new AllianceStreamEntryRemovedMessage(player1.Client, s.GetId()).Send();
               }
               enumerator = new List<AllianceMemberEntry>.Enumerator();
             }
-            foreach (AllianceMemberEntry allianceMember in alliance.GetAllianceMembers())
+            foreach (AllianceMemberEntry allianceMember in alliance.AllianceMembers)
             {
                     Level player1 = ResourcesManager.GetPlayer(allianceMember.GetAvatarId(), false);
-                    if (player1.GetClient() != null)
+                    if (player1.Client!= null)
                     {
-                        AllianceStreamEntryMessage Message = new AllianceStreamEntryMessage(player1.GetClient());
+                        AllianceStreamEntryMessage Message = new AllianceStreamEntryMessage(player1.Client);
                         ChallengeStreamEntry challengeStreamEntry1 = cm;
-                        Message.SetStreamEntry((Magic.Logic.StreamEntry.StreamEntry)challengeStreamEntry1);
+                        Message.SetStreamEntry((Magic.Logic.StreamEntries.StreamEntry)challengeStreamEntry1);
                         Message.Send();
                     }
                 }

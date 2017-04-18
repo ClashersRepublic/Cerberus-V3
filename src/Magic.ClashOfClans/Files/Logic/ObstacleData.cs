@@ -10,7 +10,7 @@ namespace Magic.Files.Logic
             LoadData(this, GetType(), row);
         }
 
-        public ResourceData GetClearingResource() => CSVManager.DataTables.GetResourceByName(ClearResource);
+        public ResourceData GetClearingResource() => CsvManager.DataTables.GetResourceByName(ClearResource);
 
         public int AppearancePeriodHours { get; set; }
 

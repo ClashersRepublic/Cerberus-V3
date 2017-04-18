@@ -23,7 +23,7 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            DataSlot dataSlot = level.GetPlayerAvatar().GetSpells().Find((Predicate<DataSlot>)(t => t.Data.GetGlobalID() == this.Spell.GetGlobalID()));
+            DataSlot dataSlot = level.Avatar.GetSpells().Find((Predicate<DataSlot>)(t => t.Data.GetGlobalID() == this.Spell.GetGlobalID()));
             if (dataSlot == null)
               return;
             dataSlot.Value = dataSlot.Value - 1;

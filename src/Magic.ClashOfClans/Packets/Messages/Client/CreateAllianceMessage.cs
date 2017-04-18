@@ -46,6 +46,7 @@ namespace Magic.PacketProcessing.Messages.Client
             if (m_vAllianceName == null)
                 m_vAllianceName = "Clan";
 
+            // Check for invalid data.
             if (m_vAllianceName.Length < 16 || m_vAllianceName.Length < 1)
             {
                 if (m_vAllianceDescription.Length < 259 || m_vAllianceDescription.Length < 0)
@@ -64,32 +65,38 @@ namespace Magic.PacketProcessing.Messages.Client
                                         {
 
                                             Alliance alliance = ObjectManager.CreateAlliance();
-                                            alliance.SetAllianceName(m_vAllianceName);
-                                            alliance.SetAllianceDescription(m_vAllianceDescription);
-                                            alliance.SetAllianceType(m_vAllianceType);
-                                            alliance.SetRequiredScore(m_vRequiredScore);
-                                            alliance.SetAllianceBadgeData(m_vAllianceBadgeData);
-                                            alliance.SetAllianceOrigin(m_vAllianceOrigin);
-                                            alliance.SetWarFrequency(m_vWarFrequency);
+                                            alliance.AllianceName = m_vAllianceName;
+                                            alliance.AllianceDescription = m_vAllianceDescription;
+                                            alliance.AllianceType = m_vAllianceType;
+                                            alliance.RequiredScore = m_vRequiredScore;
+                                            alliance.AllianceBadgeData = m_vAllianceBadgeData;
+                                            alliance.AllianceOrigin = m_vAllianceOrigin;
+                                            alliance.WarFrequency = m_vWarFrequency;
                                             alliance.SetWarAndFriendlytStatus(m_vWarAndFriendlyStatus);
-                                            level.GetPlayerAvatar().SetAllianceId(alliance.GetAllianceId());
-                                            AllianceMemberEntry entry = new AllianceMemberEntry(level.GetPlayerAvatar().GetId());
+                                            level.Avatar.SetAllianceId(alliance.AllianceId);
+
+                                            AllianceMemberEntry entry = new AllianceMemberEntry(level.Avatar.Id);
                                             entry.SetRole(2);
                                             alliance.AddAllianceMember(entry);
+
                                             JoinedAllianceCommand Command1 = new JoinedAllianceCommand();
                                             Command1.SetAlliance(alliance);
+
                                             AllianceRoleUpdateCommand Command2 = new AllianceRoleUpdateCommand();
                                             Command2.SetAlliance(alliance);
                                             Command2.SetRole(2);
                                             Command2.Tick(level);
-                                            var a = new AvailableServerCommandMessage(Client);
-                                            a.SetCommandId(1);
-                                            a.SetCommand(Command1);
-                                            var c = new AvailableServerCommandMessage(Client);
-                                            c.SetCommandId(8);
-                                            c.SetCommand(Command2);
-                                            a.Send();
-                                            c.Send();
+
+                                            var joined = new AvailableServerCommandMessage(Client);
+                                            joined.SetCommandId(1);
+                                            joined.SetCommand(Command1);
+
+                                            var roleUpdate = new AvailableServerCommandMessage(Client);
+                                            roleUpdate.SetCommandId(8);
+                                            roleUpdate.SetCommand(Command2);
+
+                                            joined.Send();
+                                            roleUpdate.Send();
                                         }
                                         else
                                             ResourcesManager.DisconnectClient(Client);

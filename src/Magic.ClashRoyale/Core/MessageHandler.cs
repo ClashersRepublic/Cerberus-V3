@@ -118,11 +118,12 @@ namespace Magic.Core
                 DateLastSave = DateTime.UtcNow,
             };
 
-            var ohd = new UnknownMessage
-            {
-                Id = 24101,
-                DecryptedBytes = File.ReadAllBytes("bin7.bin")
-            };
+            //var ohd = new UnknownMessage
+            //{
+            //    Id = 24101,
+            //    DecryptedBytes = File.ReadAllBytes("bin7.bin")
+            //};
+            var ohd = Utils.ReadMessage<OwnHomeDataMessage>("bin5.bin");
 
             client.SendMessage(ls);
             client.SendMessage(ohd);

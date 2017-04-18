@@ -20,7 +20,7 @@ namespace Magic.Packets.Messages.Server
 
             m_vOwnerLevel = level;
             m_vVisitorLevel = client.Level;
-            level.GetPlayerAvatar().State = ClientAvatar.UserState.CHA;
+            level.Avatar.State = ClientAvatar.UserState.CHA;
         }
 
         public override void Encode()
@@ -42,12 +42,12 @@ namespace Magic.Packets.Messages.Server
                 74
             });
 
-            var home = new ClientHome(m_vOwnerLevel.GetPlayerAvatar().GetId());
+            var home = new ClientHome(m_vOwnerLevel.Avatar.Id);
             home.SetHomeJson(m_vOwnerLevel.SaveToJson());
 
             data.AddRange(home.Encode());
-            data.AddRange(m_vOwnerLevel.GetPlayerAvatar().Encode());
-            data.AddRange(m_vVisitorLevel.GetPlayerAvatar().Encode());
+            data.AddRange(m_vOwnerLevel.Avatar.Encode());
+            data.AddRange(m_vVisitorLevel.Avatar.Encode());
 
             data.AddRange(new byte[5]
             {

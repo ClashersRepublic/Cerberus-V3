@@ -137,7 +137,7 @@ namespace Magic.Helpers
             }
         }
 
-        public static Data ReadDataReference(this BinaryReader br) => CSVManager.DataTables.GetDataById(br.ReadInt32WithEndian());
+        public static Data ReadDataReference(this BinaryReader br) => CsvManager.DataTables.GetDataById(br.ReadInt32WithEndian());
 
         public static int ReadInt32WithEndian(this BinaryReader br)
         {

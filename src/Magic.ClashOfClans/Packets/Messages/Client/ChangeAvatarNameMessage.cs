@@ -31,10 +31,10 @@ namespace Magic.PacketProcessing.Messages.Client
             }
             else
             {
-                level.GetPlayerAvatar().SetName(PlayerName);
+                level.Avatar.SetName(PlayerName);
                 new AvatarNameChangeOkMessage(Client)
                 {
-                    AvatarName = level.GetPlayerAvatar().GetAvatarName()
+                    AvatarName = level.Avatar.GetAvatarName()
             }.Send();
             }
         }

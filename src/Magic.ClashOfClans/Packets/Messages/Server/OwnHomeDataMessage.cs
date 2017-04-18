@@ -17,16 +17,16 @@ namespace Magic.PacketProcessing.Messages.Server
 
         public override void Encode()
         {
-            var avatar = Player.GetPlayerAvatar();
+            var avatar = Player.Avatar;
             var data = new List<byte>();
-            var home = new ClientHome(avatar.GetId());
+            var home = new ClientHome(avatar.Id);
 
             home.SetShieldTime(avatar.RemainingShieldTime);
             home.SetHomeJson(Player.SaveToJson());
 
             data.AddInt32(0);
             data.AddInt32(-1);
-            data.AddInt32((int)Player.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+            data.AddInt32((int)Player.Time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             data.AddRange(home.Encode());
             data.AddRange(avatar.Encode());
 

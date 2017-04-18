@@ -32,7 +32,7 @@ namespace Magic.PacketProcessing.Messages.Client
             AskForAllianceWarHistoryMessage warHistoryMessage = this;
             try
             {
-                Alliance alliance = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
+                Alliance alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
                 new AllianceWarHistoryMessage(Client, alliance).Send();
             }
             catch (Exception ex)

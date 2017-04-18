@@ -20,13 +20,13 @@ namespace Magic.PacketProcessing.Messages.Server
             var data = new List<byte>();
             var i = 0;
 
-            foreach(var player in ResourcesManager.GetInMemoryLevels().OrderByDescending(t => t.GetPlayerAvatar().GetScore()))
+            foreach(var player in ResourcesManager.GetInMemoryLevels().OrderByDescending(t => t.Avatar.GetScore()))
             {
-                var pl = player.GetPlayerAvatar();
+                var pl = player.Avatar;
                 var id = pl.GetAllianceId();
                 if (i >= 100)
                     break;
-                data.AddInt64(pl.GetId());
+                data.AddInt64(pl.Id);
                 data.AddString(pl.GetAvatarName());
                 data.AddInt32(i + 1);
                 data.AddInt32(pl.GetScore());
@@ -45,8 +45,8 @@ namespace Magic.PacketProcessing.Messages.Server
                 {
                     data.Add(1); // 1 = Have an alliance | 0 = No alliance
                     data.AddInt64(pl.GetAllianceId());
-                    data.AddString(ObjectManager.GetAlliance(id).GetAllianceName());
-                    data.AddInt32(ObjectManager.GetAlliance(id).GetAllianceBadgeData());
+                    data.AddString(ObjectManager.GetAlliance(id).AllianceName);
+                    data.AddInt32(ObjectManager.GetAlliance(id).AllianceBadgeData);
                 }
                 else
                     data.Add(0);

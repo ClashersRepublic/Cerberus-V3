@@ -16,13 +16,13 @@ namespace Magic.Logic
         private byte m_vAccountPrivileges;
         private byte m_vAccountStatus;
         private string m_vIPAddress;
-        private readonly ClientAvatar m_vClientAvatar;
+        private readonly ClientAvatar m_vAvatar;
 
         public Level()
         {
             WorkerManager = new WorkerManager();
             GameObjectManager = new GameObjectManager(this);
-            m_vClientAvatar = new ClientAvatar();
+            m_vAvatar = new ClientAvatar();
             m_vAccountPrivileges = 0;
             m_vAccountStatus = 0;
             m_vIPAddress = "0.0.0.0";
@@ -32,31 +32,92 @@ namespace Magic.Logic
         {
             WorkerManager = new WorkerManager();
             GameObjectManager = new GameObjectManager(this);
-            m_vClientAvatar = new ClientAvatar(id, token);
+
+            m_vAvatar = new ClientAvatar(id, token);
             m_vTime = DateTime.UtcNow;
             m_vAccountPrivileges = 0;
             m_vAccountStatus = 0;
             m_vIPAddress = "0.0.0.0";
         }
 
-        public byte GetAccountPrivileges() => m_vAccountPrivileges;
 
-        public bool Banned() => m_vAccountStatus > 99;
+        public byte AccountPrivileges
+        {
+            get
+            {
+                return m_vAccountPrivileges;
+            }
 
-        public byte GetAccountStatus() => m_vAccountStatus;
+            set
+            {
+                m_vAccountPrivileges = value;
+            }
+        }
 
-        public Client GetClient() => m_vClient;
+        public bool Banned => m_vAccountStatus > 99;
+
+
+        public byte AccountStatus
+        {
+            get
+            {
+                return m_vAccountStatus;
+            }
+
+            set
+            {
+                m_vAccountStatus = value;
+            }
+        }
+
+
+        public Client Client
+        {
+            get
+            {
+                return m_vClient;
+            }
+
+            set
+            {
+                m_vClient = value;
+            }
+        }
 
         public ComponentManager GetComponentManager() => GameObjectManager.GetComponentManager();
 
         [Obsolete]
-        public ClientAvatar GetHomeOwnerAvatar() => m_vClientAvatar;
+        public ClientAvatar GetHomeOwnerAvatar() => m_vAvatar;
 
-        public string GetIPAddress() => m_vIPAddress;
 
-        public ClientAvatar GetPlayerAvatar() => m_vClientAvatar;
+        public string IPAddress
+        {
+            get
+            {
+                return m_vIPAddress;
+            }
 
-        public DateTime GetTime() => m_vTime;
+            set
+            {
+                m_vIPAddress = value;
+            }
+        }
+
+        public ClientAvatar Avatar => m_vAvatar;
+
+
+        public DateTime Time
+        {
+            get
+            {
+                return m_vTime;
+            }
+
+            set
+            {
+                m_vTime = value;
+            }
+        }
 
         public bool HasFreeWorkers() => WorkerManager.GetFreeWorkers() > 0;
 
@@ -66,13 +127,10 @@ namespace Magic.Logic
             GameObjectManager.Load(jsonObject);
         }
 
-        public string SaveToJson() => JsonConvert.SerializeObject(GameObjectManager.Save());
-
-        public void SetAccountPrivileges(byte privileges) => m_vAccountPrivileges = privileges;
-
-        public void SetAccountStatus(byte status) => m_vAccountStatus = status;
-
-        public void SetClient(Client client) => m_vClient = client;
+        public string SaveToJson()
+        {
+            return JsonConvert.SerializeObject(GameObjectManager.Save());
+        }
 
         public void SetHome(string jsonHome)
         {
@@ -83,13 +141,9 @@ namespace Magic.Logic
             GameObjectManager.Load(JObject.Parse(jsonHome));
         }
 
-        public void SetIPAddress(string IP) => m_vIPAddress = IP;
-
-        public void SetTime(DateTime t) => m_vTime = t;
-
         public void Tick()
         {
-            SetTime(DateTime.UtcNow);
+            Time = DateTime.UtcNow;
             GameObjectManager.Tick();
         }
     }

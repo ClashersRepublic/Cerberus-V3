@@ -20,9 +20,9 @@ namespace Magic.PacketProcessing.Messages.Server
         public override void Encode()
         {
             var data = new List<byte>();
-            var allianceMembers = m_vAlliance.GetAllianceMembers();
+            var allianceMembers = m_vAlliance.AllianceMembers;
             data.AddRange(m_vAlliance.EncodeFullEntry());
-            data.AddString(m_vAlliance.GetAllianceDescription());
+            data.AddString(m_vAlliance.AllianceDescription);
             data.AddInt32(0);
             data.Add((byte)0);
             data.AddInt32(0);

@@ -24,9 +24,9 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            level.GetPlayerAvatar().AddUsedTroop(Unit, 1);
+            level.Avatar.AddUsedTroop(Unit, 1);
 
-            var avatar = level.GetPlayerAvatar();
+            var avatar = level.Avatar;
             var units = avatar.GetUnits();
             for (int i = 0; i < units.Count; i++)
             {

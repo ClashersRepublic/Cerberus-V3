@@ -19,8 +19,8 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            ClientAvatar avatar = level.GetPlayerAvatar();
-            AchievementData dataById = (AchievementData) CSVManager.DataTables.GetDataById(AchievementId);
+            ClientAvatar avatar = level.Avatar;
+            AchievementData dataById = (AchievementData) CsvManager.DataTables.GetDataById(AchievementId);
             int diamondReward = (dataById.DiamondReward);
             avatar.AddDiamonds(diamondReward);
             int expReward = dataById.ExpReward;

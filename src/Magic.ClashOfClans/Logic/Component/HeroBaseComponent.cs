@@ -23,12 +23,12 @@ namespace Magic.Logic
         {
             if (m_vTimer != null)
             {
-                var ca = Parent.Level.GetPlayerAvatar();
+                var ca = Parent.Level.Avatar;
                 var currentLevel = ca.GetUnitUpgradeLevel(m_vHeroData);
                 var rd = m_vHeroData.GetUpgradeResource(currentLevel);
                 var cost = m_vHeroData.GetUpgradeCost(currentLevel);
                 var multiplier =
-                   CSVManager.DataTables.GetGlobals().GetGlobalData("HERO_UPGRADE_CANCEL_MULTIPLIER").NumberValue;
+                   CsvManager.DataTables.GetGlobals().GetGlobalData("HERO_UPGRADE_CANCEL_MULTIPLIER").NumberValue;
                 var resourceCount = (int) ((cost * multiplier * (long) 1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
                 ca.CommodityCountChangeHelper(0, rd, resourceCount);
@@ -42,11 +42,11 @@ namespace Magic.Logic
             var result = false;
             if (m_vTimer == null)
             {
-                var currentLevel = Parent.Level.GetPlayerAvatar().GetUnitUpgradeLevel(m_vHeroData);
+                var currentLevel = Parent.Level.Avatar.GetUnitUpgradeLevel(m_vHeroData);
                 if (!IsMaxLevel())
                 {
                     var requiredThLevel = m_vHeroData.GetRequiredTownHallLevel(currentLevel + 1);
-                    result = Parent.Level.GetPlayerAvatar().GetTownHallLevel() >= requiredThLevel;
+                    result = Parent.Level.Avatar.GetTownHallLevel() >= requiredThLevel;
                 }
             }
             return result;
@@ -54,20 +54,20 @@ namespace Magic.Logic
 
         public void FinishUpgrading()
         {
-            var ca = Parent.Level.GetPlayerAvatar();
+            var ca = Parent.Level.Avatar;
             var currentLevel = ca.GetUnitUpgradeLevel(m_vHeroData);
             ca.SetUnitUpgradeLevel(m_vHeroData, currentLevel + 1);
             Parent.Level.WorkerManager.DeallocateWorker(Parent);
             m_vTimer = null;
         }
 
-        public int GetRemainingUpgradeSeconds() => m_vTimer.GetRemainingSeconds(Parent.Level.GetTime());
+        public int GetRemainingUpgradeSeconds() => m_vTimer.GetRemainingSeconds(Parent.Level.Time);
 
-        public int GetTotalSeconds() => m_vHeroData.GetUpgradeTime(Parent.Level.GetPlayerAvatar().GetUnitUpgradeLevel(m_vHeroData));
+        public int GetTotalSeconds() => m_vHeroData.GetUpgradeTime(Parent.Level.Avatar.GetUnitUpgradeLevel(m_vHeroData));
 
         public bool IsMaxLevel()
         {
-            var ca = Parent.Level.GetPlayerAvatar();
+            var ca = Parent.Level.Avatar;
             var currentLevel = ca.GetUnitUpgradeLevel(m_vHeroData);
             var maxLevel = m_vHeroData.GetUpgradeLevelCount() - 1;
             return currentLevel >= maxLevel;
@@ -82,7 +82,7 @@ namespace Magic.Logic
             {
                 m_vTimer = new Timer();
                 var remainingTime = unitUpgradeObject["t"].ToObject<int>();
-                m_vTimer.StartTimer(remainingTime, Parent.Level.GetTime());
+                m_vTimer.StartTimer(remainingTime, Parent.Level.Time);
                 m_vUpgradeLevelInProgress = unitUpgradeObject["level"].ToObject<int>();
             }
         }
@@ -93,7 +93,7 @@ namespace Magic.Logic
             {
                 var unitUpgradeObject = new JObject();
                 unitUpgradeObject.Add("level", m_vUpgradeLevelInProgress);
-                unitUpgradeObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()));
+                unitUpgradeObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.Time));
                 jsonObject.Add("hero_upg", unitUpgradeObject);
             }
             return jsonObject;
@@ -104,10 +104,10 @@ namespace Magic.Logic
             var remainingSeconds = 0;
             if (IsUpgrading())
             {
-                remainingSeconds = m_vTimer.GetRemainingSeconds(Parent.Level.GetTime());
+                remainingSeconds = m_vTimer.GetRemainingSeconds(Parent.Level.Time);
             }
             var cost = GamePlayUtil.GetSpeedUpCost(remainingSeconds);
-            var ca = Parent.Level.GetPlayerAvatar();
+            var ca = Parent.Level.Avatar;
             if (ca.HasEnoughDiamonds(cost))
             {
                 ca.UseDiamonds(cost);
@@ -121,8 +121,8 @@ namespace Magic.Logic
             {
                 Parent.Level.WorkerManager.AllocateWorker(Parent);
                 m_vTimer = new Timer();
-                m_vTimer.StartTimer(GetTotalSeconds(), Parent.Level.GetTime());
-                m_vUpgradeLevelInProgress = Parent.Level.GetPlayerAvatar().GetUnitUpgradeLevel(m_vHeroData) + 1;
+                m_vTimer.StartTimer(GetTotalSeconds(), Parent.Level.Time);
+                m_vUpgradeLevelInProgress = Parent.Level.Avatar.GetUnitUpgradeLevel(m_vHeroData) + 1;
             }
         }
 
@@ -130,7 +130,7 @@ namespace Magic.Logic
         {
             if (m_vTimer != null)
             {
-                if (m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()) <= 0)
+                if (m_vTimer.GetRemainingSeconds(Parent.Level.Time) <= 0)
                 {
                     FinishUpgrading();
                 }

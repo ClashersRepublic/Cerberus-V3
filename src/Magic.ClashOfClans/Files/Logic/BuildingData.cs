@@ -301,20 +301,20 @@ namespace Magic.Files.Logic
 
         public int Width { get; set; }
 
-        public ResourceData GetAltBuildResource(int level) => CSVManager.DataTables.GetResourceByName(AltBuildResource[level]);
+        public ResourceData GetAltBuildResource(int level) => CsvManager.DataTables.GetResourceByName(AltBuildResource[level]);
 
         public override int GetBuildCost(int level) => BuildCost[level];
 
         public string GetBuildingClass() => BuildingClass;
 
-        public override ResourceData GetBuildResource(int level) => CSVManager.DataTables.GetResourceByName(BuildResource[level]);
+        public override ResourceData GetBuildResource(int level) => CsvManager.DataTables.GetResourceByName(BuildResource[level]);
 
         public override int GetConstructionTime(int level) => BuildTimeS[level] + BuildTimeM[level] * 60 + BuildTimeH[level] * 60 * 60 + BuildTimeD[level] * 60 * 60 * 24;
 
         public List<int> GetMaxStoredResourceCounts(int level)
         {
             var maxStoredResourceCounts = new List<int>();
-            var resourceDataTable = CSVManager.DataTables.GetTable(2);
+            var resourceDataTable = CsvManager.DataTables.GetTable(2);
             for (var i = 0; i < resourceDataTable.GetItemCount(); i++)
             {
                 var value = 0;

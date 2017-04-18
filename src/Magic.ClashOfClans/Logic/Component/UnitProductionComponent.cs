@@ -47,7 +47,7 @@ namespace Magic.Logic
               return;
             ClientAvatar avatar = Parent.Level.GetHomeOwnerAvatar();
             m_vTimer = new Timer();
-            m_vTimer.StartTimer(cd.GetTrainingTime(avatar.GetUnitUpgradeLevel(cd)), Parent.Level.GetTime());
+            m_vTimer.StartTimer(cd.GetTrainingTime(avatar.GetUnitUpgradeLevel(cd)), Parent.Level.Time);
         }
 
         public bool CanAddUnitToQueue(CombatItemData cd) => GetMaxTrainCount() >= GetTotalCount() + cd.GetHousingSpace();
@@ -102,7 +102,7 @@ namespace Magic.Logic
                             if (firstUnit)
                             {
                                 if (m_vTimer != null)
-                                    result += m_vTimer.GetRemainingSeconds(Parent.Level.GetTime());
+                                    result += m_vTimer.GetRemainingSeconds(Parent.Level.Time);
                                 count--;
                                 firstUnit = false;
                             }
@@ -147,7 +147,7 @@ namespace Magic.Logic
             {
                 if (m_vTimer != null)
                 {
-                    if (m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()) == 0)
+                    if (m_vTimer.GetRemainingSeconds(Parent.Level.Time) == 0)
                     {
                         result = m_vIsWaitingForSpace;
                     }
@@ -165,7 +165,7 @@ namespace Magic.Logic
             {
                 m_vTimer = new Timer();
                 var remainingTime = timeToken.ToObject<int>();
-                m_vTimer.StartTimer(remainingTime, Parent.Level.GetTime());
+                m_vTimer.StartTimer(remainingTime, Parent.Level.Time);
             }
             var unitJsonArray = (JArray) unitProdObject["slots"];
             if (unitJsonArray == null)
@@ -179,7 +179,7 @@ namespace Magic.Logic
                     int id = (int) current.GetValue(str1).ToObject<int>();
                     string str2 = "cnt";
                     int num = (int)current.GetValue(str2).ToObject<int>();
-                    m_vUnits.Add(new DataSlot(CSVManager.DataTables.GetDataById(id), num));
+                    m_vUnits.Add(new DataSlot(CsvManager.DataTables.GetDataById(id), num));
                 }
             }
         }
@@ -247,7 +247,7 @@ namespace Magic.Logic
                             var ca = Parent.Level.GetHomeOwnerAvatar();
                             m_vTimer = new Timer();
                             var trainingTime = newcd.GetTrainingTime(ca.GetUnitUpgradeLevel(newcd));
-                            m_vTimer.StartTimer(trainingTime, Parent.Level.GetTime());
+                            m_vTimer.StartTimer(trainingTime, Parent.Level.Time);
                         }
                     }
                 }
@@ -264,7 +264,7 @@ namespace Magic.Logic
 
             if (m_vTimer != null)
             {
-                unitProdObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()));
+                unitProdObject.Add("t", m_vTimer.GetRemainingSeconds(Parent.Level.Time));
             }
 
             if (GetSlotCount() >= 1)
@@ -310,7 +310,7 @@ namespace Magic.Logic
         {
             if (m_vTimer != null)
             {
-                if (m_vTimer.GetRemainingSeconds(Parent.Level.GetTime()) <= 0)
+                if (m_vTimer.GetRemainingSeconds(Parent.Level.Time) <= 0)
                 {
                     ProductionCompleted();
                 }

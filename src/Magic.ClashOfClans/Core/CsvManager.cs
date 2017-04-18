@@ -7,7 +7,7 @@ using static Magic.Core.Logger;
 
 namespace Magic.Core
 {
-    internal static class CSVManager
+    internal static class CsvManager
     {
         private static readonly List<Tuple<string, string, int>> _gameFiles = new List<Tuple<string, string, int>>();
         private static readonly DataTables _dataTables = new DataTables();

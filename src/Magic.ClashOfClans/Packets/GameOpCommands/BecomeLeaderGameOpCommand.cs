@@ -17,25 +17,25 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
-                var clanid = level.GetPlayerAvatar().GetAllianceId();
+                var clanid = level.Avatar.GetAllianceId();
                 if (clanid != 0)
                 {
                     foreach (
                         var pl in
-                            ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId()).GetAllianceMembers())
+                            ObjectManager.GetAlliance(level.Avatar.GetAllianceId()).AllianceMembers)
                         if (pl.GetRole() == 2)
                         {
                             pl.SetRole(4);
                             break;
                         }
-                    level.GetPlayerAvatar().SetAllianceRole(2);
+                    level.Avatar.SetAllianceRole(2);
                 }
             }
             else
             {
-                var p = new GlobalChatLineMessage(level.GetClient());
+                var p = new GlobalChatLineMessage(level.Client);
                 p.SetChatMessage("GameOp command failed. Access to Admin GameOP is prohibited.");
                 p.SetPlayerId(0);
                 p.SetLeagueId(22);

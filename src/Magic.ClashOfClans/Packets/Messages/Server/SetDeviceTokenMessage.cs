@@ -17,7 +17,7 @@ namespace Magic.PacketProcessing.Messages.Server
         public override void Encode()
         {
             var pack = new List<byte>();
-            pack.AddString(level.GetPlayerAvatar().GetUserToken());
+            pack.AddString(level.Avatar.Token);
             Encrypt(pack.ToArray());
         }
     }

@@ -33,7 +33,7 @@ namespace Magic.Logic
 
         private static void WriteTimeSpan(MessageWriter writer, TimeSpan value)
         {
-            writer.Write((int)value.TotalSeconds, true);
+            writer.Write((int)value.TotalSeconds * 20, true);
         }
     }
 }

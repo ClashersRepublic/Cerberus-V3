@@ -15,7 +15,7 @@ namespace Magic.PacketProcessing.Commands.Client
 
         public override void Execute(Level level)
         {
-            var ca = level.GetPlayerAvatar();
+            var ca = level.Avatar;
             var go = level.GameObjectManager.GetGameObjectByID(BuildingId);
             if (go != null)
             {
@@ -25,7 +25,7 @@ namespace Magic.PacketProcessing.Commands.Client
                 {
                     if (hbc.CanStartUpgrading())
                     {
-                        var hd = CSVManager.DataTables.GetHeroByName(b.GetBuildingData().HeroType);
+                        var hd = CsvManager.DataTables.GetHeroByName(b.GetBuildingData().HeroType);
                         var currentLevel = ca.GetUnitUpgradeLevel(hd);
                         var rd = hd.GetUpgradeResource(currentLevel);
                         var cost = hd.GetUpgradeCost(currentLevel);

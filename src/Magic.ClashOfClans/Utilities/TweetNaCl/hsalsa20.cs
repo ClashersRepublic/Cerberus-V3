@@ -1,4 +1,4 @@
-﻿namespace Magic.Core.Crypto.TweetNaCl
+﻿namespace Magic.Core.Crypto.Sodium
 {
     public class hsalsa20
     {

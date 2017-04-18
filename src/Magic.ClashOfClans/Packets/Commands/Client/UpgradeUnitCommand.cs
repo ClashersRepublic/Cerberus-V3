@@ -8,29 +8,30 @@ namespace Magic.PacketProcessing.Commands.Client
     // Packet 516
     internal class UpgradeUnitCommand : Command
     {
-        public UpgradeUnitCommand(PacketReader br)
+        public UpgradeUnitCommand(PacketReader reader)
         {
-            BuildingId = br.ReadInt32WithEndian();
-            Unknown1 = br.ReadUInt32WithEndian();
-            UnitData = (CombatItemData) br.ReadDataReference();
-            Unknown2 = br.ReadUInt32WithEndian();
+            BuildingId = reader.ReadInt32();
+            Unknown1 = reader.ReadUInt32();
+            UnitData = (CombatItemData) reader.ReadDataReference();
+            Unknown2 = reader.ReadUInt32();
         }
 
         public override void Execute(Level level)
         {
-            var ca = level.GetPlayerAvatar();
-            var go = level.GameObjectManager.GetGameObjectByID(BuildingId);
-            var b = (Building) go;
-            var uuc = b.GetUnitUpgradeComponent();
-            var unitLevel = ca.GetUnitUpgradeLevel(UnitData);
-            if (uuc.CanStartUpgrading(UnitData))
+            var avatar = level.Avatar;
+            var gameObject = level.GameObjectManager.GetGameObjectByID(BuildingId);
+            var building = (Building) gameObject;
+            var upgradeComponent = building.GetUnitUpgradeComponent();
+            var unitLevel = avatar.GetUnitUpgradeLevel(UnitData);
+
+            if (upgradeComponent.CanStartUpgrading(UnitData))
             {
                 var cost = UnitData.GetUpgradeCost(unitLevel);
-                var rd = UnitData.GetUpgradeResource(unitLevel);
-                if (ca.HasEnoughResources(rd, cost))
+                var upgradeResource = UnitData.GetUpgradeResource(unitLevel);
+                if (avatar.HasEnoughResources(upgradeResource, cost))
                 {
-                    ca.SetResourceCount(rd, ca.GetResourceCount(rd) - cost);
-                    uuc.StartUpgrading(UnitData);
+                    avatar.SetResourceCount(upgradeResource, avatar.GetResourceCount(upgradeResource) - cost);
+                    upgradeComponent.StartUpgrading(UnitData);
                 }
             }
         }

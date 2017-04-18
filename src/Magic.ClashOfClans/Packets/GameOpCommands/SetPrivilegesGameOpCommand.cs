@@ -26,7 +26,7 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 3)
                 {
@@ -35,11 +35,11 @@ namespace Magic.PacketProcessing.GameOpCommands
                         var id = Convert.ToInt64(m_vArgs[1]);
                         var accountPrivileges = Convert.ToByte(m_vArgs[2]);
                         var l = ResourcesManager.GetPlayer(id);
-                        if (accountPrivileges < level.GetAccountPrivileges())
+                        if (accountPrivileges < level.AccountPrivileges)
                         {
                             if (l != null)
                             {
-                                l.SetAccountPrivileges(accountPrivileges);
+                                l.AccountPrivileges = accountPrivileges;
                             }
                             else
                             {
@@ -59,7 +59,7 @@ namespace Magic.PacketProcessing.GameOpCommands
             }
             else
             {
-                SendCommandFailedMessage(level.GetClient());
+                SendCommandFailedMessage(level.Client);
             }
         }
 

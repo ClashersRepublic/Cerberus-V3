@@ -41,7 +41,7 @@
         public int Unknown16;
         public int Unknown17;
         public int ExpPoints;
-        public int ExpLevel;
+        public int ExpLevels;
         public int Unknown18;
 
         public int Unknown19;
@@ -147,7 +147,7 @@
             Unknown17 = reader.ReadRRInt32(); // Gems?
 
             ExpPoints = reader.ReadRRInt32();
-            ExpLevel = reader.ReadRRInt32();
+            ExpLevels = reader.ReadRRInt32();
 
             Unknown18 = reader.ReadRRInt32(); // 0
 
@@ -173,7 +173,74 @@
         {
             ThrowIfWriterNull(writer);
 
+            writer.Write(Unknown1, true);
+            writer.Write(Unknown2, true);
 
+            writer.Write(UserId, true);
+            writer.Write(HomeId, true);
+            writer.Write(UserId2, true);
+
+            writer.Write(Username);
+
+            writer.Write(Unknown3, true);
+            writer.Write(Unknown4, true);
+            writer.Write(Unknown5, true);
+            writer.Write(Unknown6, true);
+
+            writer.Write(Unknown7);
+
+            writer.Write(Unknown8, true);
+            writer.Write(Unknown9, true);
+            writer.Write(Unknown10, true);
+
+            writer.Write(Unknown11);
+
+            writer.Write(Unknown12, true);
+
+            writer.Write(Unknown13, true);
+
+            WriteSlotArray(Resources, writer);
+
+            writer.Write(Unknown14, true);
+
+            WriteSlotArray(Achievements, writer);
+            WriteSlotArray(CompletedAchievements, writer);
+            WriteSlotArray(Stats, writer);
+            WriteSlotArray(Characters, writer);
+
+            writer.Write(Unknown15, true);
+
+            writer.Write(Unknown16, true);
+            writer.Write(Unknown17, true);
+
+            writer.Write(ExpLevels, true);
+            writer.Write(ExpPoints, true);
+
+            writer.Write(Unknown18, true);
+
+            writer.Write(Unknown19, true);
+            if (Unknown19 > 0)
+            {
+                Clan.WriteMessageComponent(writer);
+            }
+
+            writer.Write(Unknown20, true);
+            writer.Write(Unknown21, true);
+            writer.Write(Unknown22, true);
+            writer.Write(Unknown23, true);
+            writer.Write(Unknown24, true);
+            writer.Write(Unknown25, true);
+            writer.Write(Unknown26, true);
+            writer.Write(Unknown27, true);
+        }
+
+        private void WriteSlotArray(Slot[] array, MessageWriter writer)
+        {
+            writer.Write(array.Length, true);
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i].WriteSlot(writer);
+            }
         }
 
         // Temp stuff.
@@ -188,6 +255,13 @@
                 Type = reader.ReadRRInt32();
                 Id = reader.ReadRRInt32();
                 Value = reader.ReadRRInt32();
+            }
+
+            public void WriteSlot(MessageWriter writer)
+            {
+                writer.Write(Type, true);
+                writer.Write(Id, true);
+                writer.Write(Value, true);
             }
         }
     }

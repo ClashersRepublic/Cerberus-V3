@@ -4,7 +4,7 @@ using System;
 using Magic.Core;
 using Magic.Core.Network;
 using Magic.Logic;
-using Magic.Logic.AvatarStreamEntry;
+using Magic.Logic.AvatarStreamEntries;
 using Magic.PacketProcessing.Messages.Server;
 
 namespace Magic.PacketProcessing.GameOpCommands
@@ -21,7 +21,7 @@ namespace Magic.PacketProcessing.GameOpCommands
 
         public override void Execute(Level level)
         {
-            if (level.GetAccountPrivileges() >= GetRequiredAccountPrivileges())
+            if (level.AccountPrivileges>= GetRequiredAccountPrivileges())
             {
                 if (m_vArgs.Length >= 2)
                 {
@@ -31,11 +31,11 @@ namespace Magic.PacketProcessing.GameOpCommands
                         Level l = ResourcesManager.GetPlayer(id);
                         if (l != null)
                         {
-                            ClientAvatar acc = l.GetPlayerAvatar();
-                            Message = "Player Info : \n\n" + "ID = " + id + "\nName = " + acc.GetAvatarName() + "\nCreation Date : " + acc.GetAccountCreationDate() + "\nRegion : " + acc.GetUserRegion() + "\nIP Address : " + l.GetIPAddress();
+                            ClientAvatar acc = l.Avatar;
+                            Message = "Player Info : \n\n" + "ID = " + id + "\nName = " + acc.GetAvatarName() + "\nCreation Date : " + acc.GetAccountCreationDate() + "\nRegion : " + acc.GetUserRegion() + "\nIP Address : " + l.IPAddress;
                             if (acc.GetAllianceId() != 0)
                             {
-                                Message = Message + "\nClan Name : " + ObjectManager.GetAlliance(acc.GetAllianceId()).GetAllianceName();
+                                Message = Message + "\nClan Name : " + ObjectManager.GetAlliance(acc.GetAllianceId()).AllianceName;
                                 switch (acc.GetAllianceRole())
                                 {
                                     case 1:
@@ -61,10 +61,10 @@ namespace Magic.PacketProcessing.GameOpCommands
                             }
                             Message = Message + "\nLevel : " + acc.GetAvatarLevel() + "\nTrophy : " + acc.GetScore() + "\nTown Hall Level : " + (acc.GetTownHallLevel() + 1)  + "\nAlliance Castle Level : " + (acc.GetAllianceCastleLevel() + 1);
 
-                            var avatar = level.GetPlayerAvatar();
+                            var avatar = level.Avatar;
                             AllianceMailStreamEntry mail = new AllianceMailStreamEntry();
-                            mail.SetSenderId(avatar.GetId());
-                            mail.SetSenderAvatarId(avatar.GetId());
+                            mail.SetSenderId(avatar.Id);
+                            mail.SetSenderAvatarId(avatar.Id);
                             mail.SetSenderName(avatar.GetAvatarName());
                             mail.SetIsNew(2);
                             mail.SetAllianceId(0);
@@ -74,16 +74,16 @@ namespace Magic.PacketProcessing.GameOpCommands
                             mail.SetSenderLevel(avatar.GetAvatarLevel());
                             mail.SetSenderLeagueId(avatar.GetLeagueId());
 
-                            AvatarStreamEntryMessage p = new AvatarStreamEntryMessage(level.GetClient());
+                            AvatarStreamEntryMessage p = new AvatarStreamEntryMessage(level.Client);
                             p.SetAvatarStreamEntry(mail);
                             p.Send();
                         }
                     }
                     catch (Exception)
                     {
-                        GlobalChatLineMessage c = new GlobalChatLineMessage(level.GetClient());
+                        GlobalChatLineMessage c = new GlobalChatLineMessage(level.Client);
                         c.SetChatMessage("Command Failed, Wrong Format Or User Doesn't Exist (/accinfo id).");
-                        c.SetPlayerId(level.GetPlayerAvatar().GetId());
+                        c.SetPlayerId(level.Avatar.Id);
                         c.SetLeagueId(22);
                         c.SetPlayerName("Clash of Magic");
                         c.Send();
@@ -92,9 +92,9 @@ namespace Magic.PacketProcessing.GameOpCommands
                 }
                 else
                 {
-                    GlobalChatLineMessage b = new GlobalChatLineMessage(level.GetClient());
+                    GlobalChatLineMessage b = new GlobalChatLineMessage(level.Client);
                     b.SetChatMessage("Command Failed, Wrong Format (/accinfo id).");
-                    b.SetPlayerId(level.GetPlayerAvatar().GetId());
+                    b.SetPlayerId(level.Avatar.Id);
                     b.SetLeagueId(22);
                     b.SetPlayerName("Clash of Magic");
                     b.Send();

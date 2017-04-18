@@ -24,19 +24,19 @@ namespace Magic.PacketProcessing.Messages.Server
         {
             try
             {
-                AttackerLevel.GetPlayerAvatar().State = ClientAvatar.UserState.PVP;
+                AttackerLevel.Avatar.State = ClientAvatar.UserState.PVP;
 
                 var data = new List<byte>();
-                var home = new ClientHome(DefenderLevel.GetPlayerAvatar().GetId());
-                home.SetShieldTime(DefenderLevel.GetPlayerAvatar().RemainingShieldTime);
+                var home = new ClientHome(DefenderLevel.Avatar.Id);
+                home.SetShieldTime(DefenderLevel.Avatar.RemainingShieldTime);
                 home.SetHomeJson(DefenderLevel.SaveToJson());
 
                 data.AddInt32((int)TimeSpan.FromSeconds(100).TotalSeconds);
                 data.AddInt32(-1);
-                data.AddInt32((int)Client.Level.GetTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+                data.AddInt32((int)Client.Level.Time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
                 data.AddRange(home.Encode());
-                data.AddRange(DefenderLevel.GetPlayerAvatar().Encode());
-                data.AddRange(AttackerLevel.GetPlayerAvatar().Encode());
+                data.AddRange(DefenderLevel.Avatar.Encode());
+                data.AddRange(AttackerLevel.Avatar.Encode());
                 data.AddInt32(3);
                 data.AddInt32(0);
                 data.Add(0);
@@ -46,7 +46,7 @@ namespace Magic.PacketProcessing.Messages.Server
             catch (Exception ex)
             {
                 ExceptionLogger.Log(ex, "Unable to encode EnemyHomeDataMessage, returning home.");
-                new OwnHomeDataMessage(AttackerLevel.GetClient(), AttackerLevel).Send();
+                new OwnHomeDataMessage(AttackerLevel.Client, AttackerLevel).Send();
             }
         }
     }

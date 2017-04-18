@@ -41,7 +41,7 @@ namespace Magic.Logic.DataSlots
 
         public void Load(JObject jsonObject)
         {
-            Data = CSVManager.DataTables.GetDataById(jsonObject["global_id"].ToObject<int>());
+            Data = CsvManager.DataTables.GetDataById(jsonObject["global_id"].ToObject<int>());
             Value = jsonObject["count"].ToObject<int>();
             Value1 = jsonObject["level"].ToObject<int>();
         }

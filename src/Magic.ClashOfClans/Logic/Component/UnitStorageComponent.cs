@@ -41,7 +41,7 @@ namespace Magic.Logic
                 {
                     m_vUnits[unitIndex].Count++;
                 }
-                var ca = Parent.Level.GetPlayerAvatar();
+                var ca = Parent.Level.Avatar;
                 var unitCount = ca.GetUnitCount(cd);
                 ca.SetUnitCount(cd, unitCount + 1);
             }
@@ -145,7 +145,7 @@ namespace Magic.Logic
                     {
                         var id = unitSlotArray[0].ToObject<int>();
                         var cnt = unitSlotArray[1].ToObject<int>();
-                        m_vUnits.Add(new UnitSlot((CombatItemData)CSVManager.DataTables.GetDataById(id), -1, cnt));
+                        m_vUnits.Add(new UnitSlot((CombatItemData)CsvManager.DataTables.GetDataById(id), -1, cnt));
                     }
                 }
             }
@@ -175,7 +175,7 @@ namespace Magic.Logic
                 {
                     us.Count -= count;
                 }
-                var ca = Parent.Level.GetPlayerAvatar();
+                var ca = Parent.Level.Avatar;
                 var unitCount = ca.GetUnitCount(cd);
                 ca.SetUnitCount(cd, unitCount - count);
             }

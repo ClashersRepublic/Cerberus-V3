@@ -26,11 +26,11 @@ namespace Magic.PacketProcessing.Messages.Client
         public override void Process(Level level)
         {
             var alliance = ObjectManager.GetAlliance(m_vAllianceId);
-            if (alliance == null || alliance.IsAllianceFull())
+            if (alliance == null || alliance.IsAllianceFull)
                 return;
 
-            level.GetPlayerAvatar().SetAllianceId(alliance.GetAllianceId());
-            var entry = new AllianceMemberEntry(level.GetPlayerAvatar().GetId());
+            level.Avatar.SetAllianceId(alliance.AllianceId);
+            var entry = new AllianceMemberEntry(level.Avatar.Id);
             entry.SetRole(1);
             alliance.AddAllianceMember(entry);
 

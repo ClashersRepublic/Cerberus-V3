@@ -17,7 +17,7 @@ namespace Magic.PacketProcessing.Messages.Client
         static SendGlobalChatLineMessage()
         {
             s_bannedWords = File.ReadAllLines("./filter.ucs");
-            
+
             // Avoid case sensitivity.
             for (int i = 0; i < s_bannedWords.Length; i++)
                 s_bannedWords[i] = s_bannedWords[i].ToLower();
@@ -34,7 +34,7 @@ namespace Magic.PacketProcessing.Messages.Client
 
         public override void Decode()
         {
-                Message = Reader.ReadString();
+            Message = Reader.ReadString();
         }
 
         public override void Process(Level level)
@@ -48,8 +48,8 @@ namespace Magic.PacketProcessing.Messages.Client
                 }
                 else
                 {
-                    var senderId = level.GetPlayerAvatar().GetId();
-                    var senderName = level.GetPlayerAvatar().GetAvatarName();
+                    var senderId = level.Avatar.Id;
+                    var senderName = level.Avatar.GetAvatarName();
 
                     if (File.Exists(@"filter.ucs"))
                     {
@@ -66,7 +66,7 @@ namespace Magic.PacketProcessing.Messages.Client
 
                         if (flagged)
                         {
-                            var message = new GlobalChatLineMessage(level.GetClient());
+                            var message = new GlobalChatLineMessage(level.Client);
                             message.SetPlayerId(0);
                             message.SetPlayerName("Chat Filter System");
                             message.SetLeagueId(22);
@@ -76,21 +76,21 @@ namespace Magic.PacketProcessing.Messages.Client
                         }
                     }
 
-                    var onlinePlayers = ResourcesManager.GetOnlinePlayers();
+                    var onlinePlayers = ResourcesManager.OnlinePlayers;
                     for (int i = 0; i < onlinePlayers.Count; i++)
                     {
                         var player = onlinePlayers[i];
-                        var message = new GlobalChatLineMessage(player.GetClient());
+                        var message = new GlobalChatLineMessage(player.Client);
 
-                        if (player.GetAccountPrivileges() > 0)
+                        if (player.AccountPrivileges > 0)
                             message.SetPlayerName(senderName + " #" + senderId);
                         else
                             message.SetPlayerName(senderName);
 
                         message.SetChatMessage(Message);
                         message.SetPlayerId(senderId);
-                        message.SetLeagueId(level.GetPlayerAvatar().GetLeagueId());
-                        message.SetAlliance(ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId()));
+                        message.SetLeagueId(level.Avatar.GetLeagueId());
+                        message.SetAlliance(ObjectManager.GetAlliance(level.Avatar.GetAllianceId()));
                         message.Send();
                     }
                 }

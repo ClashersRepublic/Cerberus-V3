@@ -7,7 +7,7 @@ using Magic.Core;
 using Magic.Core.Network;
 using Magic.Helpers;
 using Magic.Logic;
-using Magic.Logic.StreamEntry;
+using Magic.Logic.StreamEntries;
 using Magic.PacketProcessing;
 using Magic.PacketProcessing.Messages.Server;
 
@@ -27,16 +27,16 @@ namespace Magic.Packets.Messages.Client
 
         public override void Process(Level level)
         {
-            var a = ObjectManager.GetAlliance(level.GetPlayerAvatar().GetAllianceId());
-            var s = a.GetChatMessages().Find(c => c.GetSenderId() == level.GetPlayerAvatar().GetId() && c.GetStreamEntryType() == 12);
+            var a = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
+            var s = a.ChatMessages.Find(c => c.GetSenderId() == level.Avatar.Id&& c.GetStreamEntryType() == 12);
 
             if (s != null)
             {
-                a.GetChatMessages().RemoveAll(t => t == s);
-                foreach (AllianceMemberEntry op in a.GetAllianceMembers())
+                a.ChatMessages.RemoveAll(t => t == s);
+                foreach (AllianceMemberEntry op in a.AllianceMembers)
                 {
                     Level player = ResourcesManager.GetPlayer(op.GetAvatarId());
-                    if (player.GetClient() != null)
+                    if (player.Client!= null)
                     {
                         new AllianceStreamEntryRemovedMessage(Client, s.GetId()).Send();
                     }                                                   

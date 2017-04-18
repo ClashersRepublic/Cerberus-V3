@@ -17,7 +17,7 @@ namespace Magic.Files.Logic
         public CharacterData GetCharacterByName(string name)
         {
             var dt = m_vDataTables[3];
-            return (CharacterData) dt.GetDataByName(name);
+            return (CharacterData)dt.GetDataByName(name);
         }
 
         public Data GetDataById(int id)
@@ -32,13 +32,13 @@ namespace Magic.Files.Logic
         public HeroData GetHeroByName(string name)
         {
             var dt = m_vDataTables[27];
-            return (HeroData) dt.GetDataByName(name);
+            return (HeroData)dt.GetDataByName(name);
         }
 
         public ResourceData GetResourceByName(string name)
         {
             var dt = m_vDataTables[2];
-            return (ResourceData) dt.GetDataByName(name);
+            return (ResourceData)dt.GetDataByName(name);
         }
 
         public DataTable GetTable(int i) => m_vDataTables[i];

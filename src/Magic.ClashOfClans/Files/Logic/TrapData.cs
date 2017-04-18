@@ -103,7 +103,7 @@ namespace Magic.Files.Logic
 
         public override int GetBuildCost(int level) => BuildCost[level];
 
-        public override ResourceData GetBuildResource(int level) => CSVManager.DataTables.GetResourceByName(BuildResource[level]);
+        public override ResourceData GetBuildResource(int level) => CsvManager.DataTables.GetResourceByName(BuildResource[level]);
 
         public override int GetConstructionTime(int level) => BuildTimeM[level] * 60 + BuildTimeH[level] * 60 * 60 + BuildTimeD[level] * 60 * 60 * 24;
 

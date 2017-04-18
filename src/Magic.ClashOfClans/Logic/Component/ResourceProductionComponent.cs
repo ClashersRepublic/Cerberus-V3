@@ -10,9 +10,9 @@ namespace Magic.Logic
     {
         public ResourceProductionComponent(ConstructionItem ci, Level level) : base(ci)
         {
-            m_vTimeSinceLastClick = level.GetTime();
+            m_vTimeSinceLastClick = level.Time;
             m_vProductionResourceData =
-           CSVManager.DataTables.GetResourceByName(((BuildingData) ci.Data).ProducesResource);
+           CsvManager.DataTables.GetResourceByName(((BuildingData) ci.Data).ProducesResource);
             m_vResourcesPerHour = ((BuildingData) ci.Data).ResourcePerHour;
             m_vMaxResources = ((BuildingData) ci.Data).ResourceMax;
         }
@@ -27,7 +27,7 @@ namespace Magic.Logic
         public void CollectResources()
         {
             var ci = (ConstructionItem) Parent;
-            var span = ci.Level.GetTime() - m_vTimeSinceLastClick;
+            var span = ci.Level.Time- m_vTimeSinceLastClick;
             float currentResources = 0;
             if (!ci.IsBoosted)
             {
@@ -35,14 +35,14 @@ namespace Magic.Logic
             }
             else
             {
-                if (ci.GetBoostEndTime() >= ci.Level.GetTime())
+                if (ci.GetBoostEndTime() >= ci.Level.Time)
                 {
                     currentResources = m_vResourcesPerHour[ci.UpgradeLevel] / (60f * 60f) * (float) span.TotalSeconds;
                     currentResources *= ci.GetBoostMultipier();
                 }
                 else
                 {
-                    var boostedTime = (float) span.TotalSeconds - (float) (ci.Level.GetTime() - ci.GetBoostEndTime()).TotalSeconds;
+                    var boostedTime = (float) span.TotalSeconds - (float) (ci.Level.Time- ci.GetBoostEndTime()).TotalSeconds;
                     var notBoostedTime = (float) span.TotalSeconds - boostedTime;
                     currentResources = m_vResourcesPerHour[ci.UpgradeLevel] / (60f * 60f) * notBoostedTime;
                     currentResources += m_vResourcesPerHour[ci.UpgradeLevel] / (60f * 60f) * boostedTime * ci.GetBoostMultipier();
@@ -54,20 +54,19 @@ namespace Magic.Logic
 
             if (currentResources >= 1)
             {
-                var ca = ci.Level.GetPlayerAvatar();
+                var ca = ci.Level.Avatar;
                 if (ca.GetResourceCap(m_vProductionResourceData) >= ca.GetResourceCount(m_vProductionResourceData))
                 {
                     if (ca.GetResourceCap(m_vProductionResourceData) - ca.GetResourceCount(m_vProductionResourceData) <
                         currentResources)
                     {
                         var newCurrentResources = ca.GetResourceCap(m_vProductionResourceData) - ca.GetResourceCount(m_vProductionResourceData);
-                        m_vTimeSinceLastClick = ci.Level                              .GetTime()
-                              .AddSeconds(-((currentResources - newCurrentResources) / (m_vResourcesPerHour[ci.UpgradeLevel] / (60f * 60f))));
+                        m_vTimeSinceLastClick = ci.Level                              .Time                              .AddSeconds(-((currentResources - newCurrentResources) / (m_vResourcesPerHour[ci.UpgradeLevel] / (60f * 60f))));
                         currentResources = newCurrentResources;
                     }
                     else
                     {
-                        m_vTimeSinceLastClick = ci.Level.GetTime();
+                        m_vTimeSinceLastClick = ci.Level.Time;
                     }
 
                     ca.CommodityCountChangeHelper(0, m_vProductionResourceData, (int) currentResources);
@@ -86,7 +85,7 @@ namespace Magic.Logic
 
         public void Reset()
         {
-            m_vTimeSinceLastClick = Parent.Level.GetTime();
+            m_vTimeSinceLastClick = Parent.Level.Time;
         }
 
         public override JObject Save(JObject jsonObject)
@@ -97,16 +96,16 @@ namespace Magic.Logic
                 productionObject.Add("t_lastClick", m_vTimeSinceLastClick);
                 jsonObject.Add("production", productionObject);
                 var ci = (ConstructionItem) Parent;
-                var seconds = (float) (Parent.Level.GetTime() - m_vTimeSinceLastClick).TotalSeconds;
+                var seconds = (float) (Parent.Level.Time- m_vTimeSinceLastClick).TotalSeconds;
                 if (ci.IsBoosted)
                 {
-                    if (ci.GetBoostEndTime() >= ci.Level.GetTime())
+                    if (ci.GetBoostEndTime() >= ci.Level.Time)
                     {
                         seconds *= ci.GetBoostMultipier();
                     }
                     else
                     {
-                        var boostedTime = seconds - (float) (ci.Level.GetTime() - ci.GetBoostEndTime()).TotalSeconds;
+                        var boostedTime = seconds - (float) (ci.Level.Time- ci.GetBoostEndTime()).TotalSeconds;
                         var notBoostedTime = seconds - boostedTime;
                         seconds = boostedTime * ci.GetBoostMultipier() + notBoostedTime;
                     }

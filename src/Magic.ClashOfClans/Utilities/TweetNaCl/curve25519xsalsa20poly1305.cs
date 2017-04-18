@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Magic.Core.Crypto.TweetNaCl
+namespace Magic.Core.Crypto.Sodium
 {
     public class curve25519xsalsa20poly1305
     {
