@@ -24,15 +24,20 @@ namespace Magic.Core.Settings
         public static void WelcomeMessage()
         {
             UpdateTitle(true);
-            ForegroundColor = ConsoleColor.Green;
+            Say();
+            SayAscii(@"                       .__              .__ __________                   __               __          ");
+            SayAscii(@"  _____ _____     ____ |__| ____ _____  |  |\______   \_______  ____    |__| ____   _____/  |_  ______");
+            SayAscii(@" /     \\__  \   / ___\|  |/ ___\\__  \ |  | |     ___/\_  __ \/  _ \   |  |/ __ \_/ ___\   __\/  ___/");
+            SayAscii(@"|  Y Y  \/ __ \_/ /_/  >  \  \___ / __ \|  |_|    |     |  | \(  <_> )  |  \  ___/\  \___|  |  \___ \ ");
+            SayAscii(@"|__|_|  (____  /\___  /|__|\___  >____  /____/____|     |__|   \____/\__|  |\___  >\___  >__| /____  >");
+            SayAscii(@"      \/     \//_____/         \/     \/    Clash of Clans Server    \______|    \/     \/          \/ ");
+            SayAscii(@"___________________________________________________________________________________________________");
+            SayAscii(@"            ");
             if (Constants.IsRc4)
-                WriteLine("[UCS]    > Magic.ClashOfClans is running under RC4 mode. Please make sure CSV is modded to allow RC4 client to connect");
+                SayInfo("Crypto: RC4");
             else
-                WriteLine("[UCS]    > Magic.ClashOfClans is running under Pepper mode. Please make sure client key is modded to allow Pepper client to connect");
-            Console.Write("[UCS]    ");
-
-            ResetColor();
-            WriteLine("\n[UCS]    Preparing Server...\n");
+                SayInfo("Crypto: Pepper");
+            Say();
         }
     }
 }
