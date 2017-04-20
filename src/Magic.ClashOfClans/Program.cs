@@ -1,15 +1,15 @@
+using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Core.Checker;
+using Magic.ClashOfClans.Core.Database;
+using Magic.ClashOfClans.Core.Network;
+using Magic.ClashOfClans.Core.Settings;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Network.Messages.Client;
+using Magic.Utilities.ZLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using Magic.Core;
-using Magic.Core.Checker;
-using Magic.Core.Database;
-using Magic.Core.Network;
-using Magic.Core.Settings;
-using Magic.Helpers;
-using Magic.PacketProcessing.Messages.Client;
-using Magic.Utilities.ZLib;
 
 namespace Magic.ClashOfClans
 {
@@ -28,7 +28,7 @@ namespace Magic.ClashOfClans
 
             // Initialize our stuff.
             CsvManager.Initialize();
-            ResourcesManager.Initialize();
+            ResourcesManagerOld.Initialize();
             ObjectManager.Initialize();
 
             Logger.Initialize();
@@ -45,13 +45,13 @@ namespace Magic.ClashOfClans
                 const int SLEEP_TIME = 5000;
 
                 var numDisc = 0;
-                var clients = ResourcesManager.GetConnectedClients();
+                var clients = ResourcesManagerOld.GetConnectedClients();
                 for (int i = 0; i < clients.Count; i++)
                 {
                     var client = clients[i];
                     if (DateTime.Now > client.NextKeepAlive)
                     {
-                        ResourcesManager.DropClient(client.GetSocketHandle());
+                        ResourcesManagerOld.DropClient(client.GetSocketHandle());
                         numDisc++;
                     }
                 }

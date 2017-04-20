@@ -1,4 +1,4 @@
-﻿namespace Magic.Logic.Enums
+﻿namespace Magic.ClashOfClans.Logic.Enums
 {
     public enum State
     {

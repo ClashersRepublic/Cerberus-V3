@@ -1,10 +1,11 @@
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic.Manager;
+using Magic.ClashOfClans.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using Magic.Logic.Manager;
-using Magic.PacketProcessing;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class Level
     {

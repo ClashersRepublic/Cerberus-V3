@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class ResourceProductionComponent : Component
     {

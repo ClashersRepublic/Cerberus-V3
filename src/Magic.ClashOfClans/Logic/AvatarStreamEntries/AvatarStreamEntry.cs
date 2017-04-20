@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
-namespace Magic.Logic.AvatarStreamEntries
+namespace Magic.ClashOfClans.Logic.AvatarStreamEntries
 {
     internal class AvatarStreamEntry
     {

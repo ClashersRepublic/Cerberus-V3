@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magic.Helpers;
-using Magic.PacketProcessing;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Network;
 
-namespace Magic.Logic.StreamEntries
+namespace Magic.ClashOfClans.Logic.StreamEntries
 {
-    internal class ChallengeStreamEntry : Magic.Logic.StreamEntries.StreamEntry
+    internal class ChallengeStreamEntry : Magic.ClashOfClans.Logic.StreamEntries.StreamEntry
     {
         private long m_vAvatarId;
         private string m_vAvatarName;

@@ -1,10 +1,10 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class ConstructionItem : GameObject
     {

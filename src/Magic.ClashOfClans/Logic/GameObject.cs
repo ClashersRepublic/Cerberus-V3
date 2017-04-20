@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using Magic.Files.Logic;
 using System;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class GameObject
     {

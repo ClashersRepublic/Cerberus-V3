@@ -34,12 +34,12 @@ namespace Magic.Restarter
             Console.Clear();
             ConsoleUtils.Welcome();
 
-            Program.Version = UpdateChecker.GetVersionString();
-            if (Program.Version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            Version = UpdateChecker.GetVersionString();
+            if (Version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
             {
                 ConsoleUtils.WriteLineCenterGreen("Restarter is up-to-date! v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
-            else if (Program.Version == "ConnError")
+            else if (Version == "ConnError")
             {
                 ConsoleUtils.WriteLineCenterRed("An error occurred while checking for updates...");
             }

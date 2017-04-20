@@ -1,10 +1,10 @@
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Core;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json.Linq;
-using Magic.Core;
-using Magic.Helpers;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class AllianceMemberEntry
     {
@@ -45,7 +45,7 @@ namespace Magic.Logic
         public byte[] Encode()
         {
             var data = new List<byte>();
-            var avatar = ResourcesManager.GetPlayer(m_vAvatarId);
+            var avatar = ResourcesManagerOld.GetPlayer(m_vAvatarId);
             data.AddInt64(m_vAvatarId);
             data.AddString(avatar.Avatar.GetAvatarName());
             data.AddInt32(m_vRole);

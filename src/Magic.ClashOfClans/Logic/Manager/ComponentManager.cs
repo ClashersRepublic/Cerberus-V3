@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Windows;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
 
-namespace Magic.Logic.Manager
+namespace Magic.ClashOfClans.Logic.Manager
 {
     internal class ComponentManager
     {

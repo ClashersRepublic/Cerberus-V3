@@ -9,13 +9,13 @@ using System.Data.Entity.Core;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
-using Magic.Core.Database;
-using Magic.Core.Settings;
+using Magic.ClashOfClans.Core.Database;
+using Magic.ClashOfClans.Core.Settings;
 using Magic.Database;
-using Magic.Logic;
-using static Magic.Core.Logger;
+using Magic.ClashOfClans.Logic;
+using static Magic.ClashOfClans.Core.Logger;
 
-namespace Magic.Core
+namespace Magic.ClashOfClans.Core
 {
     // This thing should have been a static class since the beginning.
 

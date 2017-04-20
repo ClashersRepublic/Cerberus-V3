@@ -1,8 +1,9 @@
 using System.IO;
 using Magic.Files.Logic;
-using Magic.Helpers;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Network;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class UnitSlot
     {

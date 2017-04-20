@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
-using Magic.Helpers;
-using Magic.Logic.DataSlots;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic.DataSlots;
 using static System.Configuration.ConfigurationManager;
 using static System.Convert;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class ClientAvatar : Avatar
     {

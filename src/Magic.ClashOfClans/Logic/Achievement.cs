@@ -1,4 +1,4 @@
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class Achievement
     {
@@ -22,6 +22,7 @@ namespace Magic.Logic
 
         public Achievement()
         {
+
         }
 
         public Achievement(int index)

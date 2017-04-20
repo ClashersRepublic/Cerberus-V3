@@ -1,4 +1,4 @@
-﻿namespace Magic.Logic
+﻿namespace Magic.ClashOfClans.Logic
 {
     internal class ComponentFilter : GameObjectFilter
     {

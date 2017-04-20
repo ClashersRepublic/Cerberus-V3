@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.ClashRoyale", "src\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Csv", "src\Magic.Csv\Magic.Csv.csproj", "{7DAF8671-3E81-4613-876A-FE0D0AF14B3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Network", "Magic.Network\Magic.Network.csproj", "{549125CE-3139-48E0-B99F-E321D465E369}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Network", "src\Magic.Network\Magic.Network.csproj", "{549125CE-3139-48E0-B99F-E321D465E369}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Restarter", "src\Magic.Restarter\Magic.Restarter.csproj", "{B75A39CD-0FB4-4659-B458-BFCD8C08469D}"
 EndProject

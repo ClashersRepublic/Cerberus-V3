@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Magic.Core.Network
+namespace Magic.ClashOfClans.Core.Network
 {
     public class Pool<T>
     {

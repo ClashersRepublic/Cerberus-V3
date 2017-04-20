@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
 
-namespace Magic.Logic.Manager
+namespace Magic.ClashOfClans.Logic.Manager
 {
     internal class GameObjectManager
     {

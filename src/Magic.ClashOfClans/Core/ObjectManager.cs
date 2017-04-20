@@ -5,17 +5,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Magic.Core.Network;
+using Magic.ClashOfClans.Core.Network;
 using Magic.Database;
 using Magic.Files;
 using Magic.Files.CSV;
 using Magic.Files.Logic;
-using Magic.Logic;
-using Magic.PacketProcessing.Messages.Server;
-using static Magic.Core.Logger;
+using Magic.ClashOfClans.Logic;
+using Magic.ClashOfClans.Network.Messages.Server;
+using static Magic.ClashOfClans.Core.Logger;
 using Timer = System.Threading.Timer;
 
-namespace Magic.Core
+namespace Magic.ClashOfClans.Core
 
 {
     internal static class ObjectManager
@@ -54,8 +54,8 @@ namespace Magic.Core
 
         private static void SaveCycle(object state)
         {
-            var level = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryLevels());
-            var alliance = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryAlliances());
+            var level = DatabaseManager.Instance.Save(ResourcesManagerOld.GetInMemoryLevels());
+            var alliance = DatabaseManager.Instance.Save(ResourcesManagerOld.GetInMemoryAlliances());
 
             level.Wait();
             alliance.Wait();
@@ -72,7 +72,7 @@ namespace Magic.Core
 
             DatabaseManager.Instance.CreateAlliance(alliance);
 
-            ResourcesManager.AddAllianceInMemory(alliance);
+            ResourcesManagerOld.AddAllianceInMemory(alliance);
             return alliance;
         }
 
@@ -107,25 +107,25 @@ namespace Magic.Core
 
             // Try to get alliance from memory first then db.
             // Could be improved.
-            if (ResourcesManager.InMemoryAlliancesContain(allianceId))
-                return ResourcesManager.GetInMemoryAlliance(allianceId);
+            if (ResourcesManagerOld.InMemoryAlliancesContain(allianceId))
+                return ResourcesManagerOld.GetInMemoryAlliance(allianceId);
 
             alliance = DatabaseManager.Instance.GetAlliance(allianceId);
 
             if (alliance != null)
-                ResourcesManager.AddAllianceInMemory(alliance);
+                ResourcesManagerOld.AddAllianceInMemory(alliance);
 
             return alliance;
         }
 
         public static List<Alliance> GetInMemoryAlliances()
         {
-            return ResourcesManager.GetInMemoryAlliances();
+            return ResourcesManagerOld.GetInMemoryAlliances();
         }
 
         public static Level GetRandomOnlinePlayer()
         {
-            var levels = ResourcesManager.GetInMemoryLevels();
+            var levels = ResourcesManagerOld.GetInMemoryLevels();
             int index = s_rand.Next(0, levels.Count);
             return levels[index];
         }
@@ -149,7 +149,7 @@ namespace Magic.Core
 
         public static void RemoveInMemoryAlliance(long id)
         {
-            ResourcesManager.RemoveAllianceFromMemory(id);
+            ResourcesManagerOld.RemoveAllianceFromMemory(id);
         }
     }
 }

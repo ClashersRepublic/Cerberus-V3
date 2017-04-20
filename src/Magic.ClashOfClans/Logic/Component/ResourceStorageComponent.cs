@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class ResourceStorageComponent : Component
     {

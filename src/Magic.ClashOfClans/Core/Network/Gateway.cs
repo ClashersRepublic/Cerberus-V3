@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Magic.ClashOfClans;
+using Magic.ClashOfClans.Core.Settings;
+using Magic.ClashOfClans.Network;
+using Magic.Packets.Messages.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,11 +10,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Magic.Core.Settings;
-using Magic.PacketProcessing;
-using Magic.Packets.Messages.Server;
 
-namespace Magic.Core.Network
+namespace Magic.ClashOfClans.Core.Network
 {
     internal static class Gateway
     {
@@ -122,7 +123,7 @@ namespace Magic.Core.Network
             var transferred = e.BytesTransferred;
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
-                ResourcesManager.DropClient(client.GetSocketHandle());
+                ResourcesManagerOld.DropClient(client.GetSocketHandle());
                 Recycle(e);
             }
             else
@@ -185,7 +186,8 @@ namespace Magic.Core.Network
                     var client = new Client(acceptSocket);
 
                     // Register the client in the ResourceManager.
-                    ResourcesManager.AddClient(client);
+                    ResourcesManagerOld.AddClient(client);
+                    ResourcesManager.Instance.RegisterClient(client);
 
                     var args = GetArgs();
                     var buffer = GetBuffer();
@@ -244,7 +246,7 @@ namespace Magic.Core.Network
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
                 // Drop the client, which disposes connected socket.
-                ResourcesManager.DropClient(client.GetSocketHandle());
+                ResourcesManagerOld.DropClient(client.GetSocketHandle());
                 Recycle(e);
             }
             else

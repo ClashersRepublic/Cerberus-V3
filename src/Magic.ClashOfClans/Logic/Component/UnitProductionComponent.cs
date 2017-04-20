@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
-using Magic.Logic.Manager;
+using Magic.ClashOfClans.Logic.Manager;
 using System.Collections;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class UnitProductionComponent : Component
     {

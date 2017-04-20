@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magic.Helpers;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Network;
 
-namespace Magic.Logic.DataSlots
+namespace Magic.ClashOfClans.Logic.DataSlots
 {
     internal class DonationSlot
     {

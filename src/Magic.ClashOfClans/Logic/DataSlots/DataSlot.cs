@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
-using Magic.Helpers;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Network;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class DataSlot
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Magic.Core.Checker
+namespace Magic.ClashOfClans.Core.Checker
 {
     internal class DirectoryChecker
     {

@@ -1,12 +1,9 @@
+using Magic.ClashOfClans.Network;
+using Magic.ClashOfClans;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Magic.Helpers;
 
-namespace Magic.Logic.DataSlots
+namespace Magic.ClashOfClans.Logic.DataSlots
 {
     internal class BookmarkSlot
     {

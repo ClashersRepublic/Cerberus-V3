@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Magic.Files.CSV;
 using Magic.Files.Logic;
-using static Magic.Core.Logger;
+using static Magic.ClashOfClans.Core.Logger;
 
-namespace Magic.Core
+namespace Magic.ClashOfClans.Core
 {
     internal static class CsvManager
     {

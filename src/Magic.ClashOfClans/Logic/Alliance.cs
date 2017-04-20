@@ -1,13 +1,13 @@
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Logic.StreamEntries;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Magic.Core;
-using Magic.Helpers;
-using Magic.Logic.StreamEntries;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class Alliance
     {
@@ -16,7 +16,7 @@ namespace Magic.Logic
         private const int m_vMaxAllianceMembers = 50;
         private const int m_vMaxChatMessagesNumber = 30;
         private readonly Dictionary<long, AllianceMemberEntry> m_vAllianceMembers;
-        private readonly System.Collections.Generic.List<Magic.Logic.StreamEntries.StreamEntry> m_vChatMessages;
+        private readonly System.Collections.Generic.List<Magic.ClashOfClans.Logic.StreamEntries.StreamEntry> m_vChatMessages;
         private int m_vAllianceBadgeData;
         private string m_vAllianceDescription;
         private int m_vAllianceExperience;
@@ -70,7 +70,7 @@ namespace Magic.Logic
             }
         }
 
-        public void AddChatMessage(Magic.Logic.StreamEntries.StreamEntry message)
+        public void AddChatMessage(Magic.ClashOfClans.Logic.StreamEntries.StreamEntry message)
         {
             if (m_vChatMessages.Count >= 30)
                 m_vChatMessages.RemoveAt(0);
@@ -330,7 +330,7 @@ namespace Magic.Logic
                 var jsonMember = (JObject)jToken;
 
                 var id = jsonMember["avatar_id"].ToObject<long>();
-                var player = ResourcesManager.GetPlayer(id);
+                var player = ResourcesManagerOld.GetPlayer(id);
                 var member = new AllianceMemberEntry(id);
 
                 m_vScore = m_vScore + player.Avatar.GetScore();

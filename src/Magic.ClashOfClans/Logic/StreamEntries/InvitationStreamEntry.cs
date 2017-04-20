@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
-namespace Magic.Logic.StreamEntries
+namespace Magic.ClashOfClans.Logic.StreamEntries
 {
     internal class InvitationStreamEntry : StreamEntry
     {

@@ -1,6 +1,6 @@
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.CSV;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
 namespace Magic.Files.Logic
 {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class ClientHome : Base
     {

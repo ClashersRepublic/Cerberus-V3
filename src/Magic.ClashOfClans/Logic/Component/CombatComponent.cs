@@ -1,8 +1,8 @@
 using Newtonsoft.Json.Linq;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 using Magic.Files.Logic;
 
-namespace Magic.Logic
+namespace Magic.ClashOfClans.Logic
 {
     internal class CombatComponent : Component
     {

@@ -1,13 +1,13 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Text;
-using Magic.Helpers;
-using Magic.Logic;
 
-namespace Magic.Core.Database
+namespace Magic.ClashOfClans.Core.Database
 {
     internal class MySQL
     {
@@ -29,15 +29,15 @@ namespace Magic.Core.Database
             const string SQL = "SELECT coalesce(MAX(PlayerId), 0) FROM player";
             long Seed = -1;
 
-            using (MySqlConnection Conn = new MySqlConnection(Credentials))
+            using (var conn = new MySqlConnection(Credentials))
             {
-                Conn.Open();
+                conn.Open();
 
-                using (MySqlCommand CMD = new MySqlCommand(SQL, Conn))
+                using (var cmd = new MySqlCommand(SQL, conn))
                 {
-                    CMD.Prepare();
-                    Seed = (long)CMD.ExecuteScalar();
-                    Logger.Say("Successfully loaded " + Seed + "   player(s).");
+                    cmd.Prepare();
+                    Seed = (long)cmd.ExecuteScalar();
+                    Logger.Say("Successfully retrieved max player ID: " + Seed + " player(s).");
                 }
             }
 
@@ -49,15 +49,15 @@ namespace Magic.Core.Database
             const string SQL = "SELECT coalesce(MAX(ClanId), 0) FROM clan";
             long Seed = -1;
                
-            using (MySqlConnection Conn = new MySqlConnection(Credentials))
+            using (var conn = new MySqlConnection(Credentials))
             {
-                Conn.Open();
+                conn.Open();
 
-                using (MySqlCommand CMD = new MySqlCommand(SQL, Conn))
+                using (var cmd = new MySqlCommand(SQL, conn))
                 {
-                    CMD.Prepare();
-                    Seed = (long)CMD.ExecuteScalar();
-                    Logger.Say("Successfully loaded " + Seed + "  alliance(s).");
+                    cmd.Prepare();
+                    Seed = (long)cmd.ExecuteScalar();
+                    Logger.Say("Successfully retrieved max alliance ID: " + Seed + " alliance(s).");
                 }
             }
 

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Magic.Helpers;
-using Magic.Logic.DataSlots;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic.DataSlots;
 using Magic.Files.Logic;
-using Magic.Core;
+using Magic.ClashOfClans.Core;
 
-namespace Magic.Logic.StreamEntries
+namespace Magic.ClashOfClans.Logic.StreamEntries
 {
     internal class StreamEntry
     {

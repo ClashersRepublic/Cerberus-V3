@@ -144,10 +144,16 @@ namespace Magic.Restarter
                         // Be sure to sleep because we don't want to kill the CPU.
                         Thread.Sleep(100);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         ConsoleUtils.WriteLineCenterRed("||");
                         ConsoleUtils.WriteLineCenterRed("Exception occurred while running.");
+
+                        var exStr = ex.ToString().Split(Environment.NewLine.ToCharArray());
+                        foreach (var str in exStr)
+                        {
+                            ConsoleUtils.WriteLineCenterRed(str);
+                        }
                     }
                 }
             }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Magic.Logic.Manager
+namespace Magic.ClashOfClans.Logic.Manager
 {
     internal class WorkerManager
     {

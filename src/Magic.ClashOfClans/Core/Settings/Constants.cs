@@ -1,9 +1,9 @@
 using System;
 using System.Configuration;
 using System.Reflection;
-using Magic.Helpers;
+using Magic.ClashOfClans;
 
-namespace Magic.Core.Settings
+namespace Magic.ClashOfClans.Core.Settings
 {
     internal class Constants
     {
