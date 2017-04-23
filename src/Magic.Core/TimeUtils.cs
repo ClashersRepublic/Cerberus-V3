@@ -2,7 +2,7 @@
 
 namespace Magic.Core
 {
-    internal class TimeUtils
+    public class TimeUtils
     {
         public const double TickDuration = (1d / 60d) * 1000d;
 

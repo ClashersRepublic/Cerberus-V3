@@ -123,37 +123,69 @@ namespace Magic.Network
         {
             if (rrint)
             {
+                //var nvalue = (uint)value;
+                //var count = 0;
+                //while ((nvalue & 0xFFFFFF80) != 0L)
+                //{
+                //    var bite = (int)(nvalue & 0x7F);
+
+                //    //if (count == 0)
+                //    //{
+                //    //    //var eighth = bite & 128;
+                //    //    var lsb = bite & 1;
+
+                //    //    bite = bite >> 1;
+                //    //    bite = bite | (lsb << 6);
+                //    //    //bite = bite & ~64;
+                //    //    //bite = bite | eighth | (lsb << 6);
+                //    //}
+
+                //    Write((byte)(bite | 0x80));
+                //    nvalue >>= 7;
+
+                //    count++;
+                //}
+                //Write((byte)(nvalue & 0x7F));
+
+                var nvalue = (uint)value;
                 // TODO: Implement own.
-                if (value == 63)
+                if (nvalue == 63)
                 {
                     Write((byte)127);
                 }
                 else
                 {
-                    if (value > 63)
+                    if (nvalue > 63)
                     {
-                        Write((byte)(value & 63 | 128));
-                        if (value > 8191)
+                        Write((byte)(nvalue & 63 | 128));
+                        if (nvalue > 8191)
                         {
-                            Write((byte)(value >> 6 | 128));
-                            if (value > 1048575)
+                            Write((byte)(nvalue >> 6 | 128));
+                            if (nvalue > 1048575)
                             {
-                                Write((byte)(value >> 13 | 128));
-                                if (value > 134217727)
+                                Write((byte)(nvalue >> 13 | 128));
+                                if (nvalue > 134217727)
                                 {
-                                    Write((byte)(value >> 20 | 128));
-                                    value >>= 27;
+                                    Write((byte)(nvalue >> 20 | 128));
+                                    nvalue >>= 27;
                                 }
                                 else
-                                    value >>= 20;
+                                {
+                                    nvalue >>= 20;
+                                }
                             }
                             else
-                                value >>= 13;
+                            {
+                                nvalue >>= 13;
+                            }
                         }
                         else
-                            value >>= 6;
+                        {
+                            nvalue >>= 6;
+                        }
                     }
-                    Write((byte)value);
+
+                    Write((byte)nvalue);
                 }
             }
             else

@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IServer.cs" />
+    <Compile Include="Pool.cs" />
     <Compile Include="TimeUtils.cs" />
     <Compile Include="TokenUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -102,7 +102,7 @@ namespace Magic.Network.Messages.Server
         public int Unknown54;
         public int Unknown55;
 
-        public int ExpLevel;
+        public int ExpLevels;
         public int ArenaType;
         public int ArenaId;
 
@@ -154,25 +154,24 @@ namespace Magic.Network.Messages.Server
         public int Unknown58;
 
         public AvatarMessageComponent Avatar;
-        private int Unknown59;
-        private int Unknown60;
-        private int Unknown61;
-        private int Unknown62;
-        private int Unknown63;
-        private int Unknown64;
-        private int Unknown65;
-        private int Unknown66;
-        private int Unknown67;
-        private int Unknown68;
-        private int Unknown69;
-        private int Unknown70;
-        private int Unknown71;
-        private int Unknown72;
-        private int Unknown73;
-        private int Unknown74;
-        private int Unknown75;
-
-        private int Unknown76;
+        public int Unknown59;
+        public int Unknown60;
+        public int Unknown61;
+        public long Unknown62;
+        public int Unknown63;
+        public int Unknown64;
+        public long Unknown65;
+        public int Unknown66;
+        public int Unknown67;
+        public int Unknown68;
+        public int Unknown69;
+        public int Unknown70;
+        public int Unknown71;
+        public int Unknown72;
+        public int Unknown73;
+        public int Unknown74;
+        public int Unknown75;
+        public int Unknown76;
 
         /// <summary>
         /// Gets the ID of the <see cref="OwnHomeDataMessage"/>.
@@ -191,7 +190,7 @@ namespace Magic.Network.Messages.Server
 
             UserId = reader.ReadInt64();
 
-            Unknown1 = reader.ReadRRInt32(); // 32
+            Unknown1 = reader.ReadRRInt32(); // 32, LoginCount?
             Unknown2 = reader.ReadRRInt32(); // 4
 
             //Unknown3 = reader.ReadRRInt32(); // 1516340
@@ -209,12 +208,12 @@ namespace Magic.Network.Messages.Server
                 BattleDeck[i] = reader.ReadRRInt32();
 
             var count2 = reader.ReadRRInt32();
-            Deck = new int[count1]; // Not too sure about functionality.
+            Deck = new int[count2]; // Not too sure about functionality.
             for (int i = 0; i < count2; i++)
                 Deck[i] = reader.ReadRRInt32();
 
             var count3 = reader.ReadRRInt32();
-            Deck2 = new int[count1]; // Not too sure about functionality.
+            Deck2 = new int[count3]; // Not too sure about functionality.
             for (int i = 0; i < count3; i++)
                 Deck2[i] = reader.ReadRRInt32();
 
@@ -277,7 +276,7 @@ namespace Magic.Network.Messages.Server
             Unknown18 = reader.ReadInt32();
             if (Unknown18 == 0)
             {
-                Unknown76 = reader.ReadRRInt32();
+                Unknown76 = reader.ReadRRInt32(); // 2
             }
             else if (Unknown18 == 2)
             {
@@ -360,7 +359,7 @@ namespace Magic.Network.Messages.Server
             Unknown54 = reader.ReadInt32(); // 0
             Unknown55 = reader.ReadInt32(); // 2
 
-            ExpLevel = reader.ReadRRInt32(); // Level?
+            ExpLevels = reader.ReadRRInt32(); // Level?
             ArenaType = reader.ReadRRInt32(); // 54 Arena Type?
             ArenaId = reader.ReadRRInt32(); // 01 Arena Id?
 
@@ -447,12 +446,15 @@ namespace Magic.Network.Messages.Server
             Unknown58 = reader.ReadRRInt32(); // 2
             Unknown59 = reader.ReadRRInt32(); // 0
             Unknown60 = reader.ReadRRInt32(); // 342737
+
             Unknown61 = reader.ReadRRInt32(); // 4
-            Unknown62 = reader.ReadRRInt32(); // 24
-            Unknown63 = reader.ReadRRInt32(); // -3481
+            Unknown62 = reader.ReadRRInt64(); // 24, 107374178919
+            //Unknown63 = reader.ReadRRInt32(); // -3481
+
             Unknown64 = reader.ReadRRInt32(); // 8
-            Unknown65 = reader.ReadRRInt32(); // 24
-            Unknown66 = reader.ReadRRInt32(); // -4245
+            Unknown65 = reader.ReadRRInt64(); // 24, 107374178155
+            //Unknown66 = reader.ReadRRInt32(); // -4245
+
             Unknown67 = reader.ReadRRInt32(); // 352579400
             Unknown68 = reader.ReadRRInt32(); // 1
             Unknown69 = reader.ReadInt32(); // 0
@@ -551,6 +553,7 @@ namespace Magic.Network.Messages.Server
             writer.Write(Unknown20, true);
             writer.Write(Unknown21, true);
 
+            // NOTE: WE'RE ARENT DEPENDING ON UNKNOWN22 HERE.
             if (Chests != null)
             {
                 writer.Write(1, true);
@@ -598,7 +601,7 @@ namespace Magic.Network.Messages.Server
             writer.Write(Unknown54);
             writer.Write(Unknown55);
 
-            writer.Write(ExpLevel, true);
+            writer.Write(ExpLevels, true);
             writer.Write(ArenaType, true);
             writer.Write(ArenaId, true);
 
@@ -655,16 +658,18 @@ namespace Magic.Network.Messages.Server
 
             writer.Write(Unknown57, true);
 
-            writer.Write(Unknown58, true);
-            writer.Write(Unknown59, true);
-            writer.Write(Unknown60, true);
-            writer.Write(Unknown61, true);
-            writer.Write(Unknown62, true);
-            writer.Write(Unknown63, true);
-            writer.Write(Unknown64, true);
-            writer.Write(Unknown65, true);
-            writer.Write(Unknown66, true);
-            writer.Write(Unknown67, true);
+            writer.Write(new byte[] { 0x02, 0x00, 0x91, 0xEB, 0x29, 0x04, 0x58, 0xE7, 0x49, 0x08, 0x58, 0xEB, 0x3D, 0x88, 0xBD, 0x9F, 0xD0, 0x02 });
+            //writer.Write(Unknown58, true);
+            //writer.Write(Unknown59, true);
+            //writer.Write(Unknown60, true);
+            //writer.Write(Unknown61, true);
+            //writer.Write(Unknown62, true);
+            ////writer.Write(Unknown63, true);
+            //writer.Write(Unknown64, true);
+
+            //writer.Write(Unknown65, true);
+            ////writer.Write(Unknown66, true);
+            //writer.Write(Unknown67, true);
             writer.Write(Unknown68, true);
             writer.Write(Unknown69);
             writer.Write(Unknown70, true);

@@ -97,59 +97,78 @@ namespace Magic.Network
 
         public int ReadRRInt32()
         {
-            byte num1 = ReadByte();
-            int num2 = (int)num1 & 128;
-            int num3 = (int)num1 & 63;
-            if (((int)num1 & 64) != 0)
+            //return ReadRVarInt();
+            byte byte1 = ReadByte();
+
+            // 0-6 bits.
+            int result = byte1 & 63;
+
+            // Check if 7th bit has been set on the first byte.
+            if ((byte1 & 64) != 0)
             {
-                if (num2 != 0)
+                // Check if 8th/MS bit has been set on the first byte.
+                if ((byte1 & 128) != 0)
                 {
-                    byte num4 = ReadByte();
-                    int num5 = (int)num4 << 6 & 8128 | num3;
-                    if (((int)num4 & 128) != 0)
+                    byte byte2 = ReadByte();
+
+                    int num5 = byte2 << 6 & 8128 | result;
+                    if ((byte2 & 128) != 0)
                     {
-                        byte num6 = ReadByte();
-                        int num7 = num5 | (int)num6 << 13 & 1040384;
-                        if (((int)num6 & 128) != 0)
+                        byte byte3 = ReadByte();
+
+                        int num7 = num5 | byte3 << 13 & 0xFE000;
+                        if ((byte3 & 128) != 0)
                         {
-                            byte num8 = ReadByte();
-                            int num9 = num7 | (int)num8 << 20 & 133169152;
-                            if (((int)num8 & 128) != 0)
+                            byte byte4 = ReadByte();
+
+                            int num9 = num7 | byte4 << 20 & 0x7FF0000;
+                            if ((byte4 & 128) != 0)
                             {
-                                byte num10 = ReadByte();
-                                num3 = (int)((long)(num9 | (int)num10 << 27) | 2147483648L);
+                                byte byte5 = ReadByte();
+
+                                result = (int)(num9 | byte5 << 27 | 0x80000000);
                             }
                             else
-                                num3 = (int)((long)num9 | 4160749568L);
+                            {
+                                result = (int)(num9 | 0xF8000000);
+                            }
                         }
                         else
-                            num3 = (int)((long)num7 | 4293918720L);
+                        {
+                            result = (int)(num7 | 0xFFF00000);
+                        }
                     }
                     else
-                        num3 = (int)((long)num5 | 4294959104L);
+                    {
+                        result = (int)(num5 | 0xFFFFE000);
+                    }
                 }
             }
-            else if (num2 != 0)
+            else if ((byte1 & 128) != 0)
             {
-                byte num4 = ReadByte();
-                num3 |= (int)num4 << 6 & 8128;
-                if (((int)num4 & 128) != 0)
+                byte byte2 = ReadByte();
+
+                result |= byte2 << 6 & 8128;
+                if ((byte2 & 128) != 0)
                 {
-                    byte num5 = ReadByte();
-                    num3 |= (int)num5 << 13 & 1040384;
-                    if (((int)num5 & 128) != 0)
+                    byte byte3 = ReadByte();
+
+                    result |= byte3 << 13 & 1040384;
+                    if ((byte3 & 128) != 0)
                     {
-                        byte num6 = ReadByte();
-                        num3 |= (int)num6 << 20 & 133169152;
-                        if (((int)num6 & 128) != 0)
+                        byte byte4 = ReadByte();
+
+                        result |= byte4 << 20 & 133169152;
+                        if ((byte4 & 128) != 0)
                         {
-                            byte num7 = ReadByte();
-                            num3 |= (int)num7 << 27;
+                            byte byte5 = ReadByte();
+
+                            result |= byte5 << 27;
                         }
                     }
                 }
             }
-            return num3;
+            return result;
         }
 
         private int ReadRVarInt()
@@ -161,23 +180,32 @@ namespace Magic.Network
             while (true)
             {
                 b = ReadByte();
+
+                // Do some fancy tricks with the first byte.
                 if (i == 0)
                 {
-                    var seventh = (b & 0x40) >> 6;
-                    var msb = (b & 0x80) >> 7;
+                    var seventh = (b & 64) >> 6;
+                    var eighth = (b & 128);
 
                     b = b << 1;
-                    b = b & ~(0x181);
-                    b = b | (msb << 7) | (seventh);
+                    b = b & ~385;
+                    b = b | eighth | seventh;
+
+                    //var eighth = b & 128;
+                    //var lsb = b & 1;
+
+                    //b = b >> 1;
+                    //b = b & ~64;
+                    //b = b | eighth | (lsb << 6);
                 }
 
-                value |= (b & 0x7F) << i;
+                value |= (b & 127) << i;
                 i += 7;
 
                 if (i > 35)
                     throw new InvalidMessageException("Variable length quantity is too long");
 
-                if ((b & 0x80) == 0)
+                if ((b & 128) == 0)
                     break;
             }
 

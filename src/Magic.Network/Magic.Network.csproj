@@ -36,6 +36,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Cryptography\MessageCrypto.cs" />
     <Compile Include="Cryptography\MessageCryptoNaCl.Client.cs" />
@@ -63,9 +64,15 @@
     <Compile Include="MessageException.cs" />
     <Compile Include="MessageFactory.cs" />
     <Compile Include="MessageFactorySuppressAttribute.cs" />
+    <Compile Include="MessageHandler.cs" />
     <Compile Include="MessageReader.cs" />
     <Compile Include="MessageWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="Server.Listening.cs" />
+    <Compile Include="Server.Receiving.cs" />
+    <Compile Include="Server.Sending.cs" />
+    <Compile Include="ServerContext.cs" />
     <Compile Include="UnknownMessage.cs" />
   </ItemGroup>
   <ItemGroup>

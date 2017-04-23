@@ -143,8 +143,8 @@
             // Could be another slot array.
             Unknown15 = reader.ReadRRInt32(); // 0
 
-            Unknown16 = reader.ReadRRInt32(); // Gems?
-            Unknown17 = reader.ReadRRInt32(); // Gems?
+            Unknown16 = reader.ReadRRInt32(); // Gems? 20,
+            Unknown17 = reader.ReadRRInt32(); // Gems? 20,
 
             ExpPoints = reader.ReadRRInt32();
             ExpLevels = reader.ReadRRInt32();
@@ -213,8 +213,8 @@
             writer.Write(Unknown16, true);
             writer.Write(Unknown17, true);
 
-            writer.Write(ExpLevels, true);
             writer.Write(ExpPoints, true);
+            writer.Write(ExpLevels, true);
 
             writer.Write(Unknown18, true);
 
@@ -236,10 +236,17 @@
 
         private void WriteSlotArray(Slot[] array, MessageWriter writer)
         {
-            writer.Write(array.Length, true);
-            for (int i = 0; i < array.Length; i++)
+            if (array == null)
             {
-                array[i].WriteSlot(writer);
+                writer.Write(0, true);
+            }
+            else
+            {
+                writer.Write(array.Length, true);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    array[i].WriteSlot(writer);
+                }
             }
         }
 

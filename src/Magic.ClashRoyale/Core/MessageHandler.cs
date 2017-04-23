@@ -3,6 +3,7 @@ using Magic.Network;
 using Magic.Network.Cryptography.NaCl;
 using Magic.Network.Messages;
 using Magic.Network.Messages.Client;
+using Magic.Network.Messages.Components;
 using Magic.Network.Messages.Server;
 using System;
 using System.Collections.Generic;
@@ -108,9 +109,9 @@ namespace Magic.Core
 
             var ls = new LoginSuccessMessage
             {
-                UserId = 1,
-                HomeId = 1,
-                UserToken = "randomstuffxd",
+                UserId = lr.UserId,
+                HomeId = lr.UserId,
+                UserToken = lr.UserToken,
                 MajorVersion = 3,
                 BuildVersion = 193,
                 BuildVersion2 = 193,
@@ -123,7 +124,117 @@ namespace Magic.Core
             //    Id = 24101,
             //    DecryptedBytes = File.ReadAllBytes("bin7.bin")
             //};
-            var ohd = Utils.ReadMessage<OwnHomeDataMessage>("bin5.bin");
+            var ohd2 = Utils.ReadMessage<OwnHomeDataMessage>("bin5.bin");
+            //ohd2.Avatar.Username = "CrackRoyale";
+
+            var ohd = new OwnHomeDataMessage
+            {
+                UserId = lr.UserId,
+
+                Unknown1 = 32,
+                Unknown2 = 4,
+
+                UnknownTimer1 = ohd2.UnknownTimer1,
+
+                Unknown6 = 3,
+                Unknown7 = 255,
+                Unknown8 = 127,
+                Unknown9 = 63,
+                Unknown10 = 1491827316,
+                Unknown11 = 1,
+
+                BattleDeck = ohd2.BattleDeck,
+                Deck = ohd2.Deck,
+                Deck2 = ohd2.Deck2,
+                BattleCards = ohd2.BattleCards,
+                UnusedCards = ohd2.UnusedCards,
+
+                ChallengeName = string.Empty,
+
+                Unknown17 = 63,
+
+                Unknown76 = 2, // Critical can crash app
+
+                UnknownJsonData = "{\"ID\":\"CARD_RELEASE\",\"Params\":{\"Assassin\":\"20170324\"}}",
+                Unknown21 = 4,
+
+                Unknown22 = 0,
+                //Chests = ohd2.Chests,
+
+                Unknown26 = 0,
+
+                Unknown53 = 15,
+                Unknown55 = 2,
+
+                ExpLevels = 1,
+                ArenaType = 54,
+                ArenaId = 1,
+
+                Unknown34 = 542354048,
+
+                DayOfWeek = 1,
+                DayOfWeek2 = 1,
+
+                Unknown35 = 3,
+                ShopItems = ohd2.ShopItems,
+
+                Unknown45 = 16844288,
+
+                Unknown48 = ohd2.Unknown48,
+                UnknownCharacterArray = ohd2.UnknownCharacterArray,
+
+                Unknown50 = 9,
+
+                Unknown52 = 248,
+
+                Unknown56 = 7,
+                UnknownComponent1 = ohd2.UnknownComponent1,
+                Unknown57 = 54000010,
+
+                Unknown68 = 1,
+
+                //Avatar = ohd2.Avatar,
+                Avatar = new AvatarMessageComponent
+                {
+                    UserId = lr.UserId,
+                    HomeId = lr.UserId,
+                    UserId2 = lr.UserId,
+
+                    Username = "CrackRoyale",
+                    Unknown4 = 2,
+                    Unknown5 = 315,
+
+                    ExpLevels = 1,
+                    ExpPoints = 1,
+
+                    Unknown10 = 30,
+
+                    Unknown13 = 7,
+
+                    Resources = ohd2.Avatar.Resources,
+                    CompletedAchievements = ohd2.Avatar.CompletedAchievements,
+                    Achievements = ohd2.Avatar.Achievements,
+                    Stats = ohd2.Avatar.Stats,
+                    Characters = ohd2.Avatar.Characters,
+
+                    Unknown19 = 9,
+                    Clan = ohd2.Avatar.Clan,
+
+                    Unknown20 = 1,
+                    Unknown21 = 16,
+
+                    Unknown24 = 11,
+                    Unknown25 = 5,
+                    Unknown26 = 3,
+                    Unknown27 = 8,
+                },
+
+                Unknown72 = 170,
+
+                Unknown73 = 12022299,
+                Unknown74 = 1491892504,
+                Unknown75 = 1733095
+            };
 
             client.SendMessage(ls);
             client.SendMessage(ohd);

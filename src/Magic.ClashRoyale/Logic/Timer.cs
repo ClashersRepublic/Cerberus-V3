@@ -26,7 +26,7 @@ namespace Magic.Logic
 
             WriteTimeSpan(writer, Done);
             WriteTimeSpan(writer, Total);
-            writer.Write((int)TimeUtils.ToUnixTimestamp(End), true);
+            writer.Write(End == DateTime.MinValue ? 63 : (int)TimeUtils.ToUnixTimestamp(End), true);
         }
 
         private static TimeSpan ReadTimeSpan(MessageReader reader) => TimeSpan.FromSeconds(reader.ReadRRInt32() / 20d);

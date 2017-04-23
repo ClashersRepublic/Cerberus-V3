@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.ClashOfClans", "src\Magic.ClashOfClans\Magic.ClashOfClans.csproj", "{0E72C402-09B2-4545-AAEB-6AB58971D2FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.ClashOfClans.Old", "src\Magic.ClashOfClans.Old\Magic.ClashOfClans.Old.csproj", "{0E72C402-09B2-4545-AAEB-6AB58971D2FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Core", "src\Magic.Core\Magic.Core.csproj", "{7B5B7951-6901-4410-B3A9-CD242FD43C4D}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Network", "src\Magic.Network\Magic.Network.csproj", "{549125CE-3139-48E0-B99F-E321D465E369}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Restarter", "src\Magic.Restarter\Magic.Restarter.csproj", "{B75A39CD-0FB4-4659-B458-BFCD8C08469D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Loggers", "src\Magic.Loggers\Magic.Loggers.csproj", "{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.ClashOfClans", "src\Magic.ClashOfClans\Magic.ClashOfClans.csproj", "{02514731-B80E-4E00-A75C-3DA969394AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,22 @@ Global
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Release|x64.ActiveCfg = Release|Any CPU
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Release|x64.Build.0 = Release|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Debug|x64.Build.0 = Debug|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Release|x64.ActiveCfg = Release|Any CPU
+		{167F1119-61F7-4D1F-BF55-7C6BFFD8386A}.Release|x64.Build.0 = Release|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Debug|x64.Build.0 = Debug|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Release|x64.ActiveCfg = Release|Any CPU
+		{02514731-B80E-4E00-A75C-3DA969394AA2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
