@@ -134,7 +134,7 @@ namespace Magic.ClashOfClans.Network
                     else
                     {
                         // We done with sending can recycle EventArgs.
-                        Recycle(e);
+                        //Recycle(e);
                     }
                 }
                 catch (Exception ex)
