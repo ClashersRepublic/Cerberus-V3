@@ -85,7 +85,7 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            if (Thread.VolatileRead(ref client._dropped) == 1)
+            if (Interlocked.Read(ref client._dropped) == 1)
             {
                 Recycle(e);
             }
@@ -124,10 +124,11 @@ namespace Magic.ClashOfClans.Network
             {
                 try
                 {
+                    var offset = e.Offset;
                     var count = e.Count;
                     if (transferred < count)
                     {
-                        e.SetBuffer(transferred, count - transferred);
+                        e.SetBuffer(offset + transferred, count - transferred);
                         StartSend(e);
                     }
                     else
@@ -206,7 +207,7 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            if (Thread.VolatileRead(ref client._dropped) == 1)
+            if (Interlocked.Read(ref client._dropped) == 1)
             {
                 Recycle(e);
             }

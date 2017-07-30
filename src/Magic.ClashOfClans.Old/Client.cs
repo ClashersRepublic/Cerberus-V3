@@ -44,7 +44,7 @@ namespace Magic.ClashOfClans
         private readonly long _socketHandle;
 
         // Figure out if client has been dropped or not.
-        internal volatile int _dropped;        
+        internal long _dropped;        
 
         public ClientState State { get; set; }
 
