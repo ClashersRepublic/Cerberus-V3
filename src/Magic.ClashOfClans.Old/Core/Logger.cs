@@ -73,11 +73,14 @@ namespace Magic.ClashOfClans.Core
 
         public static void SayInfo(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
-            Console.WriteLine(message);
-            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
-            Console.ResetColor();
+            lock (s_lock)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+                Console.WriteLine(message);
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+                Console.ResetColor();
+            }
         }
 
         public static void SayAscii(string message)
@@ -91,16 +94,22 @@ namespace Magic.ClashOfClans.Core
 
         public static void Say(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
-            Console.WriteLine(message);
-            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
-            Console.ResetColor();
+            lock (s_lock)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+                Console.WriteLine(message);
+                Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+                Console.ResetColor();
+            }
         }
 
         public static void Say()
         {
-            Console.WriteLine();
+            lock (s_lock)
+            {
+                Console.WriteLine();
+            }
         }
 
         public static void Print(string message)
@@ -110,13 +119,13 @@ namespace Magic.ClashOfClans.Core
 
         public static void Error(string message)
         {
-            var text = "[ERROR]  " + message;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(text);
-            Console.ResetColor();
-
             lock (s_lock)
             {
+                var text = "[ERROR]  " + message;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(text);
+                Console.ResetColor();
+
                 s_errWriter.WriteLine(text);
             }
         }

@@ -54,6 +54,8 @@ namespace Magic.ClashOfClans
                 if (numDisc > 0)
                     Logger.Say($"Dropped {numDisc} clients due to keep alive timeouts.");
 
+                Logger.SayInfo($"Pools: Args => {Gateway.NumberOfArgs} Buffers => {Gateway.NumberOfBuffers}.");
+
                 Thread.Sleep(SLEEP_TIME);
             }
         }

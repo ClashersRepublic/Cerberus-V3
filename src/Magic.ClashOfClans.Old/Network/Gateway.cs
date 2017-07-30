@@ -13,6 +13,10 @@ namespace Magic.ClashOfClans.Network
         private static Pool<SocketAsyncEventArgs> s_argsPool;
         private static Pool<byte[]> s_bufferPool;
 
+
+        public static int NumberOfBuffers => s_bufferPool.Count;
+        public static int NumberOfArgs => s_argsPool.Count;
+
         public static void Initialize()
         {
             s_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -68,7 +72,8 @@ namespace Magic.ClashOfClans.Network
             var socket = client.Socket;
 
             var args = GetArgs();
-            args.SetBuffer(buffer, 0, buffer.Length);
+            //args.SetBuffer(buffer, 0, buffer.Length);
+            DefensiveSetBuffer(ref args, buffer);
             args.UserToken = client;
 
             try { message.Process(client.Level); }
@@ -85,12 +90,6 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            //if (Interlocked.Read(ref client._dropped) == 1)
-            //{
-            //    Recycle(e);
-            //}
-            //else
-            //{
             try
             {
                 while (true)
@@ -108,7 +107,6 @@ namespace Magic.ClashOfClans.Network
             {
                 ExceptionLogger.Log(ex, "Exception while starting receive");
             }
-            //}
         }
 
         private static void ProcessSend(SocketAsyncEventArgs e)
@@ -134,7 +132,7 @@ namespace Magic.ClashOfClans.Network
                     else
                     {
                         // We done with sending can recycle EventArgs.
-                        //Recycle(e);
+                        Recycle(e);
                     }
                 }
                 catch (Exception ex)
@@ -176,7 +174,7 @@ namespace Magic.ClashOfClans.Network
             {
                 try
                 {
-                    Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
+                    //Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Client(acceptSocket);
 
@@ -186,7 +184,8 @@ namespace Magic.ClashOfClans.Network
                     var args = GetArgs();
                     var buffer = GetBuffer();
                     args.UserToken = client;
-                    args.SetBuffer(buffer, 0, buffer.Length);
+                    //args.SetBuffer(buffer, 0, buffer.Length);
+                    DefensiveSetBuffer(ref args, buffer);
 
                     StartReceive(args);
                 }
@@ -207,12 +206,6 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            //if (Interlocked.Read(ref client._dropped) == 1)
-            //{
-            //    Recycle(e);
-            //}
-            //else
-            //{
             try
             {
                 while (true)
@@ -230,7 +223,6 @@ namespace Magic.ClashOfClans.Network
             {
                 ExceptionLogger.Log(ex, "Exception while start receive: ");
             }
-            //}
         }
 
         private static void ProcessReceive(SocketAsyncEventArgs e, bool startNew)
@@ -304,7 +296,10 @@ namespace Magic.ClashOfClans.Network
         private static void Recycle(SocketAsyncEventArgs e)
         {
             if (e == null)
+            {
+                Logger.SayInfo("Tried to recycle a null SocketAsyncEventArrgs object.");
                 return;
+            }
 
             var buffer = e.Buffer;
             e.UserToken = null;
@@ -314,6 +309,22 @@ namespace Magic.ClashOfClans.Network
             s_argsPool.Push(e);
 
             Recycle(buffer);
+        }
+
+        private static void DefensiveSetBuffer(ref SocketAsyncEventArgs args, byte[] buffer)
+        {
+            try
+            {
+                args.SetBuffer(buffer, 0, buffer.Length);
+            }
+            catch (InvalidOperationException)
+            {
+                Logger.SayInfo($"A SocketAsynceEvenArgs object was already in use. Last Op => {args.LastOperation}.");
+
+                args = new SocketAsyncEventArgs();
+                args.Completed += AsyncOperationCompleted;
+                args.SetBuffer(buffer, 0, buffer.Length);
+            }
         }
 
         private static void Recycle(byte[] buffer)
@@ -341,6 +352,8 @@ namespace Magic.ClashOfClans.Network
             var args = s_argsPool.Pop();
             if (args == null)
             {
+                Logger.SayInfo("Creating new SocketAsyncEventArgs object since pool was empty(returned null).");
+
                 args = new SocketAsyncEventArgs();
                 args.Completed += AsyncOperationCompleted;
             }

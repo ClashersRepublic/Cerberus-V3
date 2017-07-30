@@ -4,26 +4,27 @@ namespace Magic.ClashOfClans.Network
 {
     public class Pool<T>
     {
-        private readonly object _sync = new object();
-        private readonly ConcurrentQueue<T> _stack;
+        private readonly ConcurrentBag<T> _stack;
 
         internal Pool()
         {
-            _stack = new ConcurrentQueue<T>();
+            _stack = new ConcurrentBag<T>();
         }
 
-        internal T Pop()
+        public int Count => _stack.Count;
+
+        public T Pop()
         {
             var ret = default(T);
-            if (!_stack.TryDequeue(out ret))
+            if (!_stack.TryTake(out ret))
                 return default(T);
 
             return ret;
         }
 
-        internal void Push(T item)
+        public void Push(T item)
         {
-            _stack.Enqueue(item);
+            _stack.Add(item);
         }
     }
 }

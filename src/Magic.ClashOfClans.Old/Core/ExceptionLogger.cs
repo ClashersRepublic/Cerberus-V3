@@ -28,7 +28,8 @@ namespace Magic.ClashOfClans.Core
             lock (s_sync)
                 File.AppendAllText(filePath, text);
 
-            Logger.Error(moreInfo + ": " + ex.GetType().Name + ": " + ex.Message);
+            // Commented out for now, so we can have a more readable log.
+            //Logger.Error(moreInfo + ": " + ex.GetType().Name + ": " + ex.Message);
         }
 
         private static string GetLogFileName(Exception ex)
