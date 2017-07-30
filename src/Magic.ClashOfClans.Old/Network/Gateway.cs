@@ -85,30 +85,30 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            if (Interlocked.Read(ref client._dropped) == 1)
+            //if (Interlocked.Read(ref client._dropped) == 1)
+            //{
+            //    Recycle(e);
+            //}
+            //else
+            //{
+            try
+            {
+                while (true)
+                {
+                    if (!socket.SendAsync(e))
+                        ProcessSend(e);
+                    else break;
+                }
+            }
+            catch (ObjectDisposedException)
             {
                 Recycle(e);
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    while (true)
-                    {
-                        if (!socket.SendAsync(e))
-                            ProcessSend(e);
-                        else break;
-                    }
-                }
-                catch (ObjectDisposedException)
-                {
-                    Recycle(e);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionLogger.Log(ex, "Exception while starting receive");
-                }
+                ExceptionLogger.Log(ex, "Exception while starting receive");
             }
+            //}
         }
 
         private static void ProcessSend(SocketAsyncEventArgs e)
@@ -207,30 +207,30 @@ namespace Magic.ClashOfClans.Network
             var client = (Client)e.UserToken;
             var socket = client.Socket;
 
-            if (Interlocked.Read(ref client._dropped) == 1)
+            //if (Interlocked.Read(ref client._dropped) == 1)
+            //{
+            //    Recycle(e);
+            //}
+            //else
+            //{
+            try
+            {
+                while (true)
+                {
+                    if (!socket.ReceiveAsync(e))
+                        ProcessReceive(e, false);
+                    else break;
+                }
+            }
+            catch (ObjectDisposedException)
             {
                 Recycle(e);
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    while (true)
-                    {
-                        if (!socket.ReceiveAsync(e))
-                            ProcessReceive(e, false);
-                        else break;
-                    }
-                }
-                catch (ObjectDisposedException)
-                {
-                    Recycle(e);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionLogger.Log(ex, "Exception while start receive: ");
-                }
+                ExceptionLogger.Log(ex, "Exception while start receive: ");
             }
+            //}
         }
 
         private static void ProcessReceive(SocketAsyncEventArgs e, bool startNew)

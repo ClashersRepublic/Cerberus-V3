@@ -15,8 +15,8 @@ namespace Magic.ClashOfClans.Network
         internal T Pop()
         {
             var ret = default(T);
-            if (_stack.Count > 0)
-                _stack.TryDequeue(out ret);
+            if (!_stack.TryDequeue(out ret))
+                return default(T);
 
             return ret;
         }
