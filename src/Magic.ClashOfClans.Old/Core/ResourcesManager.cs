@@ -41,8 +41,9 @@ namespace Magic.ClashOfClans.Core
             Program.TitleAd();
         }
 
-        public static void DropClient(long socketHandle)
+        public static bool DropClient(long socketHandle)
         {
+            var closedSocket = false;
             try
             {
                 var client = default(Client);
@@ -56,6 +57,8 @@ namespace Magic.ClashOfClans.Core
                     try { socket.Dispose(); }
                     catch { /* Swallow */ }
 
+                    closedSocket = true;
+
                     // Clean level from memory if its Level has been loaded.
                     var level = client.Level;
                     if (level != null)
@@ -68,6 +71,7 @@ namespace Magic.ClashOfClans.Core
             {
                 ExceptionLogger.Log(ex, "Exception while dropping client.");
             }
+            return closedSocket;
         }
 
         public static List<Client> GetConnectedClients() => _clients.Values.ToList();

@@ -13,19 +13,23 @@ namespace Magic.ClashOfClans.Network
         private static Pool<SocketAsyncEventArgs> s_argsPool;
         private static Pool<byte[]> s_bufferPool;
 
-        private static int _buffersCreated;
-        private static int _argsCreated;
+        private static Semaphore s_semaphore;
+        private static int s_buffersCreated;
+        private static int s_argsCreated;
 
         public static int NumberOfBuffers => s_bufferPool.Count;
-        public static int NumberOfBuffersCreated => _buffersCreated;
-        public static int NumberOfBuffersInUse => _buffersCreated - s_bufferPool.Count;
+        public static int NumberOfBuffersCreated => s_buffersCreated;
+        public static int NumberOfBuffersInUse => s_buffersCreated - s_bufferPool.Count;
 
         public static int NumberOfArgs => s_argsPool.Count;
-        public static int NumberOfArgsCreated => _argsCreated;
-        public static int NumberOfArgsInUse => _argsCreated - s_argsPool.Count;
+        public static int NumberOfArgsCreated => s_argsCreated;
+        public static int NumberOfArgsInUse => s_argsCreated - s_argsPool.Count;
 
         public static void Initialize()
         {
+            var numThreads = Environment.ProcessorCount * 2;
+            s_semaphore = new Semaphore(numThreads, numThreads);
+
             s_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s_argsPool = new Pool<SocketAsyncEventArgs>();
 
@@ -104,7 +108,7 @@ namespace Magic.ClashOfClans.Network
             }
             catch (ObjectDisposedException)
             {
-                Recycle(e);
+                Drop(e);
             }
             catch (Exception ex)
             {
@@ -118,8 +122,7 @@ namespace Magic.ClashOfClans.Network
             var transferred = e.BytesTransferred;
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
-                ResourcesManager.DropClient(client.GetSocketHandle());
-                Recycle(e);
+                Drop(e);
             }
             else
             {
@@ -167,7 +170,7 @@ namespace Magic.ClashOfClans.Network
             if (e.SocketError != SocketError.Success)
             {
                 Logger.Say($"Failed to accept new socket: {e.SocketError}.");
-                KillSocket(acceptSocket);
+                Drop(e);
             }
             else
             {
@@ -211,11 +214,11 @@ namespace Magic.ClashOfClans.Network
             }
             catch (ObjectDisposedException)
             {
-                Recycle(e);
+                Drop(e);
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception while start receive: ");
+                ExceptionLogger.Log(ex, "Exception while start receive");
             }
         }
 
@@ -223,11 +226,10 @@ namespace Magic.ClashOfClans.Network
         {
             var client = (Client)e.UserToken;
             var transferred = e.BytesTransferred;
+
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
-                // Drop the client, which disposes connected socket.
-                ResourcesManager.DropClient(client.GetSocketHandle());
-                Recycle(e);
+                Drop(e);
             }
             else
             {
@@ -261,44 +263,85 @@ namespace Magic.ClashOfClans.Network
 
         private static void AsyncOperationCompleted(object sender, SocketAsyncEventArgs e)
         {
+            const int TIME_OUT = 5000;
+            var semaphoreAcquired = false;
             try
             {
-                switch (e.LastOperation)
+                semaphoreAcquired = s_semaphore.WaitOne(TIME_OUT);
+                if (semaphoreAcquired)
                 {
-                    case SocketAsyncOperation.Accept:
-                        ProcessAccept(e, true);
-                        break;
+                    if (e.SocketError == SocketError.Success)
+                    {
+                        switch (e.LastOperation)
+                        {
+                            case SocketAsyncOperation.Accept:
+                                ProcessAccept(e, true);
+                                break;
 
-                    case SocketAsyncOperation.Receive:
-                        ProcessReceive(e, true);
-                        break;
+                            case SocketAsyncOperation.Receive:
+                                ProcessReceive(e, true);
+                                break;
 
-                    case SocketAsyncOperation.Send:
-                        ProcessSend(e);
-                        break;
+                            case SocketAsyncOperation.Send:
+                                ProcessSend(e);
+                                break;
 
-                    default:
-                        throw new Exception("Unexpected operation.");
+                            default:
+                                throw new Exception("Unexpected operation.");
+                        }
+                    }
+                    else
+                    {
+                        Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
+                        Drop(e);
+                    }
+                }
+                else
+                {
+                    Logger.Error("SEMAPHORE DID NOT RESPOND IN TIME!");
+                    //Drop(e); ?
                 }
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception occurred while processing async operation(potentially critical)");
+                ExceptionLogger.Log(ex, "Exception occurred while processing async operation(potentially critical). Dropping connection");
+                Drop(e);
             }
+            finally
+            {
+                if (semaphoreAcquired)
+                    s_semaphore.Release();
+            }
+        }
+
+        private static void Drop(SocketAsyncEventArgs e)
+        {
+            if (e == null)
+                return;
+
+            var client = e.UserToken as Client;
+            if (client != null)
+            {
+                if (!ResourcesManager.DropClient(client.GetSocketHandle()))
+                    KillSocket(client.Socket);
+            }
+            else if (e.LastOperation == SocketAsyncOperation.Accept)
+            {
+                KillSocket(e.AcceptSocket);
+            }
+
+            Recycle(e);
         }
 
         private static void Recycle(SocketAsyncEventArgs e)
         {
             if (e == null)
-            {
-                Logger.SayInfo("Tried to recycle a null SocketAsyncEventArrgs object.");
                 return;
-            }
 
             var buffer = e.Buffer;
             e.UserToken = null;
-            e.SetBuffer(null, 0, 0);
             e.AcceptSocket = null;
+            e.SetBuffer(null, 0, 0);
 
             s_argsPool.Push(e);
 
@@ -333,7 +376,7 @@ namespace Magic.ClashOfClans.Network
                 args = new SocketAsyncEventArgs();
                 args.Completed += AsyncOperationCompleted;
 
-                Interlocked.Increment(ref _argsCreated);
+                Interlocked.Increment(ref s_argsCreated);
             }
             return args;
         }
@@ -345,7 +388,7 @@ namespace Magic.ClashOfClans.Network
             {
                 buffer = new byte[Constants.BufferSize];
 
-                Interlocked.Increment(ref _buffersCreated);
+                Interlocked.Increment(ref s_buffersCreated);
             }
             return buffer;
         }
