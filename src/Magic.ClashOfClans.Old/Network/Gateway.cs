@@ -33,13 +33,14 @@ namespace Magic.ClashOfClans.Network
             s_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s_argsPool = new Pool<SocketAsyncEventArgs>();
 
-            //const int PRE_ALLOC_SAEA = 128;
-            const int PRE_ALLOC_SAEA = 0;
+            const int PRE_ALLOC_SAEA = 128;
             for (int i = 0; i < PRE_ALLOC_SAEA; i++)
             {
                 var args = new SocketAsyncEventArgs();
                 args.Completed += AsyncOperationCompleted;
                 s_argsPool.Push(args);
+
+                s_argsCreated++;
             }
 
             s_bufferPool = new Pool<byte[]>();
@@ -120,6 +121,7 @@ namespace Magic.ClashOfClans.Network
         {
             var client = (Client)e.UserToken;
             var transferred = e.BytesTransferred;
+
             if (transferred == 0 || e.SocketError != SocketError.Success)
             {
                 Drop(e);
@@ -132,6 +134,7 @@ namespace Magic.ClashOfClans.Network
                     var count = e.Count;
                     if (transferred < count)
                     {
+                        // Move the offset so it points to the next piece of data to send.
                         e.SetBuffer(offset + transferred, count - transferred);
                         StartSend(e);
                     }
@@ -171,12 +174,15 @@ namespace Magic.ClashOfClans.Network
             {
                 Logger.Say($"Failed to accept new socket: {e.SocketError}.");
                 Drop(e);
+
+                // Get a new args from pool, since we dropped the previous one.
+                e = GetArgs();
             }
             else
             {
                 try
                 {
-                    Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
+                    //Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Client(acceptSocket);
 
@@ -263,7 +269,8 @@ namespace Magic.ClashOfClans.Network
 
         private static void AsyncOperationCompleted(object sender, SocketAsyncEventArgs e)
         {
-            const int TIME_OUT = 5000;
+            const int TIME_OUT = 10000;
+
             var semaphoreAcquired = false;
             try
             {
@@ -295,6 +302,8 @@ namespace Magic.ClashOfClans.Network
                         Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
                         Drop(e);
 
+                        // If the last operation was an accept operation, continue accepting
+                        // for new connections.
                         if (e.LastOperation == SocketAsyncOperation.Accept)
                         {
                             var args = GetArgs();
@@ -305,7 +314,7 @@ namespace Magic.ClashOfClans.Network
                 else
                 {
                     Logger.Error("SEMAPHORE DID NOT RESPOND IN TIME!");
-                    //Drop(e); ?
+                    Drop(e);
                 }
             }
             catch (Exception ex)
@@ -328,6 +337,7 @@ namespace Magic.ClashOfClans.Network
             var client = e.UserToken as Client;
             if (client != null)
             {
+                // If the resource manager did not mange to kill the socket, we do it here.
                 if (!ResourcesManager.DropClient(client.GetSocketHandle()))
                     KillSocket(client.Socket);
             }
@@ -336,6 +346,7 @@ namespace Magic.ClashOfClans.Network
                 KillSocket(e.AcceptSocket);
             }
 
+            // Recycle the object along with its buffer.
             Recycle(e);
         }
 
@@ -349,9 +360,9 @@ namespace Magic.ClashOfClans.Network
             e.AcceptSocket = null;
             e.SetBuffer(null, 0, 0);
 
-            s_argsPool.Push(e);
-
             Recycle(buffer);
+
+            s_argsPool.Push(e);
         }
 
         private static void Recycle(byte[] buffer)
