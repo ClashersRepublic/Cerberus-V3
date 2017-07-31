@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Magic.ClashOfClans.Core;
+using System.Collections.Concurrent;
 
 namespace Magic.ClashOfClans.Network
 {
@@ -18,7 +19,7 @@ namespace Magic.ClashOfClans.Network
             var ret = default(T);
             if (!_stack.TryTake(out ret))
                 return default(T);
-
+            
             return ret;
         }
 

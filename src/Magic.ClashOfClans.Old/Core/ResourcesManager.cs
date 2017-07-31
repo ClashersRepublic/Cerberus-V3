@@ -1,3 +1,8 @@
+using Magic.ClashOfClans;
+using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic;
+using Magic.ClashOfClans.Network;
+using Magic.ClashOfClans.Network.Messages.Server;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -5,11 +10,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Magic.ClashOfClans;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Network.Messages.Server;
-using Magic.ClashOfClans;
 
 namespace Magic.ClashOfClans.Core
 {
@@ -55,9 +55,6 @@ namespace Magic.ClashOfClans.Core
                     catch { /* Swallow */ }
                     try { socket.Dispose(); }
                     catch { /* Swallow */ }
-
-                    // Mark the client as dropped.
-                    Interlocked.CompareExchange(ref client._dropped, 1, 0);
 
                     // Clean level from memory if its Level has been loaded.
                     var level = client.Level;

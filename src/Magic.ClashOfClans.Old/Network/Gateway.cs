@@ -13,17 +13,25 @@ namespace Magic.ClashOfClans.Network
         private static Pool<SocketAsyncEventArgs> s_argsPool;
         private static Pool<byte[]> s_bufferPool;
 
+        private static int _buffersCreated;
+        private static int _argsCreated;
 
         public static int NumberOfBuffers => s_bufferPool.Count;
+        public static int NumberOfBuffersCreated => _buffersCreated;
+        public static int NumberOfBuffersInUse => _buffersCreated - s_bufferPool.Count;
+
         public static int NumberOfArgs => s_argsPool.Count;
+        public static int NumberOfArgsCreated => _argsCreated;
+        public static int NumberOfArgsInUse => _argsCreated - s_argsPool.Count;
 
         public static void Initialize()
         {
             s_listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s_argsPool = new Pool<SocketAsyncEventArgs>();
 
-            const int PRE_ALLOC_SEA = 128;
-            for (int i = 0; i < PRE_ALLOC_SEA; i++)
+            //const int PRE_ALLOC_SAEA = 128;
+            const int PRE_ALLOC_SAEA = 0;
+            for (int i = 0; i < PRE_ALLOC_SAEA; i++)
             {
                 var args = new SocketAsyncEventArgs();
                 args.Completed += AsyncOperationCompleted;
@@ -72,9 +80,8 @@ namespace Magic.ClashOfClans.Network
             var socket = client.Socket;
 
             var args = GetArgs();
-            //args.SetBuffer(buffer, 0, buffer.Length);
-            DefensiveSetBuffer(ref args, buffer);
             args.UserToken = client;
+            args.SetBuffer(buffer, 0, buffer.Length);
 
             try { message.Process(client.Level); }
             catch (Exception ex)
@@ -92,12 +99,8 @@ namespace Magic.ClashOfClans.Network
 
             try
             {
-                while (true)
-                {
-                    if (!socket.SendAsync(e))
-                        ProcessSend(e);
-                    else break;
-                }
+                while (!socket.SendAsync(e))
+                    ProcessSend(e);
             }
             catch (ObjectDisposedException)
             {
@@ -147,12 +150,8 @@ namespace Magic.ClashOfClans.Network
             try
             {
                 // Avoid StackOverflowExceptions cause we can.
-                while (true)
-                {
-                    if (!s_listener.AcceptAsync(e))
-                        ProcessAccept(e, false);
-                    else break;
-                }
+                while (!s_listener.AcceptAsync(e))
+                    ProcessAccept(e, false);
             }
             catch (Exception ex)
             {
@@ -167,14 +166,14 @@ namespace Magic.ClashOfClans.Network
             var acceptSocket = e.AcceptSocket;
             if (e.SocketError != SocketError.Success)
             {
-                KillSocket(acceptSocket);
                 Logger.Say($"Failed to accept new socket: {e.SocketError}.");
+                KillSocket(acceptSocket);
             }
             else
             {
                 try
                 {
-                    //Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
+                    Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Client(acceptSocket);
 
@@ -184,8 +183,7 @@ namespace Magic.ClashOfClans.Network
                     var args = GetArgs();
                     var buffer = GetBuffer();
                     args.UserToken = client;
-                    //args.SetBuffer(buffer, 0, buffer.Length);
-                    DefensiveSetBuffer(ref args, buffer);
+                    args.SetBuffer(buffer, 0, buffer.Length);
 
                     StartReceive(args);
                 }
@@ -208,12 +206,8 @@ namespace Magic.ClashOfClans.Network
 
             try
             {
-                while (true)
-                {
-                    if (!socket.ReceiveAsync(e))
-                        ProcessReceive(e, false);
-                    else break;
-                }
+                while (!socket.ReceiveAsync(e))
+                    ProcessReceive(e, false);
             }
             catch (ObjectDisposedException)
             {
@@ -311,22 +305,6 @@ namespace Magic.ClashOfClans.Network
             Recycle(buffer);
         }
 
-        private static void DefensiveSetBuffer(ref SocketAsyncEventArgs args, byte[] buffer)
-        {
-            try
-            {
-                args.SetBuffer(buffer, 0, buffer.Length);
-            }
-            catch (InvalidOperationException)
-            {
-                Logger.SayInfo($"A SocketAsynceEvenArgs object was already in use. Last Op => {args.LastOperation}.");
-
-                args = new SocketAsyncEventArgs();
-                args.Completed += AsyncOperationCompleted;
-                args.SetBuffer(buffer, 0, buffer.Length);
-            }
-        }
-
         private static void Recycle(byte[] buffer)
         {
             if (buffer == null)
@@ -352,14 +330,24 @@ namespace Magic.ClashOfClans.Network
             var args = s_argsPool.Pop();
             if (args == null)
             {
-                Logger.SayInfo("Creating new SocketAsyncEventArgs object since pool was empty(returned null).");
-
                 args = new SocketAsyncEventArgs();
                 args.Completed += AsyncOperationCompleted;
+
+                Interlocked.Increment(ref _argsCreated);
             }
             return args;
         }
 
-        private static byte[] GetBuffer() => s_bufferPool.Pop() ?? new byte[Constants.BufferSize];
+        private static byte[] GetBuffer()
+        {
+            var buffer = s_bufferPool.Pop();
+            if (buffer == null)
+            {
+                buffer = new byte[Constants.BufferSize];
+
+                Interlocked.Increment(ref _buffersCreated);
+            }
+            return buffer;
+        }
     }
 }

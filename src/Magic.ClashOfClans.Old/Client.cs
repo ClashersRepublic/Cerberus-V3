@@ -43,9 +43,6 @@ namespace Magic.ClashOfClans
         private readonly Socket _socket;
         private readonly long _socketHandle;
 
-        // Figure out if client has been dropped or not.
-        internal long _dropped;        
-
         public ClientState State { get; set; }
 
         public List<byte> DataStream => _dataStream;
@@ -68,7 +65,7 @@ namespace Magic.ClashOfClans
 
         public DateTime NextKeepAlive { get; set; }
         public DateTime LastKeepAlive { get; set; }
-       
+
         public bool TryGetPacket(out Message message)
         {
             const int HEADER_LEN = 7;
