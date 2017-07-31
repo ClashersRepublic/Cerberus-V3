@@ -294,6 +294,12 @@ namespace Magic.ClashOfClans.Network
                     {
                         Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
                         Drop(e);
+
+                        if (e.LastOperation == SocketAsyncOperation.Accept)
+                        {
+                            var args = GetArgs();
+                            StartAccept(args);
+                        }
                     }
                 }
                 else
