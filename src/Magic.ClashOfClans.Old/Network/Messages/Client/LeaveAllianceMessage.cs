@@ -26,97 +26,100 @@ namespace Magic.ClashOfClans.Network.Messages.Client
             var avatar = level.Avatar;
             var alliance = ObjectManager.GetAlliance(level.Avatar.GetAllianceId());
 
-            if (avatar.GetAllianceRole() == 2 && alliance.AllianceMembers.Count > 1)
+            lock (alliance)
             {
-                var members = alliance.AllianceMembers;
-                foreach (AllianceMemberEntry player in members.Where(player => player.GetRole() >= 3))
+                if (avatar.GetAllianceRole() == 2 && alliance.AllianceMembers.Count > 1)
                 {
-                    player.SetRole(2);
-
-                    if (ResourcesManager.IsPlayerOnline(ResourcesManager.GetPlayer(player.GetAvatarId())))
+                    var members = alliance.AllianceMembers;
+                    foreach (AllianceMemberEntry player in members.Where(player => player.GetRole() >= 3))
                     {
-                        var c = new AllianceRoleUpdateCommand();
-                        c.SetAlliance(alliance);
-                        c.SetRole(2);
-                        c.Tick(level);
+                        player.SetRole(2);
 
-                        var d = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
-                        d.SetCommandId(8);
-                        d.SetCommand(c);
-                        d.Send();
-                    }
-                    done = true;
-                    break;
-                }
-
-                if (!done)
-                {
-                    var count = alliance.AllianceMembers.Count;
-                    var rnd = new Random();
-                    var id = rnd.Next(1, count);
-                    while (id != level.Avatar.Id)
-                        id = rnd.Next(1, count);
-                    var loop = 0;
-                    foreach (AllianceMemberEntry player in members)
-                    {
-                        loop++;
-                        if (loop == id)
+                        if (ResourcesManager.IsPlayerOnline(ResourcesManager.GetPlayer(player.GetAvatarId())))
                         {
-                            player.SetRole(2);
-                            if (ResourcesManager.IsPlayerOnline(ResourcesManager.GetPlayer(player.GetAvatarId())))
-                            {
-                                var e = new AllianceRoleUpdateCommand();
-                                e.SetAlliance(alliance);
-                                e.SetRole(2);
-                                e.Tick(level);
+                            var c = new AllianceRoleUpdateCommand();
+                            c.SetAlliance(alliance);
+                            c.SetRole(2);
+                            c.Tick(level);
 
-                                var f = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
-                                f.SetCommandId(8);
-                                f.SetCommand(e);
-                                f.Send();
+                            var d = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
+                            d.SetCommandId(8);
+                            d.SetCommand(c);
+                            d.Send();
+                        }
+                        done = true;
+                        break;
+                    }
+
+                    if (!done)
+                    {
+                        var count = alliance.AllianceMembers.Count;
+                        var rnd = new Random();
+                        var id = rnd.Next(1, count);
+                        while (id != level.Avatar.Id)
+                            id = rnd.Next(1, count);
+                        var loop = 0;
+                        foreach (AllianceMemberEntry player in members)
+                        {
+                            loop++;
+                            if (loop == id)
+                            {
+                                player.SetRole(2);
+                                if (ResourcesManager.IsPlayerOnline(ResourcesManager.GetPlayer(player.GetAvatarId())))
+                                {
+                                    var e = new AllianceRoleUpdateCommand();
+                                    e.SetAlliance(alliance);
+                                    e.SetRole(2);
+                                    e.Tick(level);
+
+                                    var f = new AvailableServerCommandMessage(ResourcesManager.GetPlayer(player.GetAvatarId()).Client);
+                                    f.SetCommandId(8);
+                                    f.SetCommand(e);
+                                    f.Send();
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
-            }
 
-            var a = new LeavedAllianceCommand();
-            a.SetAlliance(alliance);
-            a.SetReason(1);
+                var a = new LeavedAllianceCommand();
+                a.SetAlliance(alliance);
+                a.SetReason(1);
 
-            var b = new AvailableServerCommandMessage(Client);
-            b.SetCommandId(2);
-            b.SetCommand(a);
-            b.Send();
+                var b = new AvailableServerCommandMessage(Client);
+                b.SetCommandId(2);
+                b.SetCommand(a);
+                b.Send();
 
-            alliance.RemoveMember(avatar.Id);
-            avatar.SetAllianceId(0);
+                alliance.RemoveMember(avatar.Id);
+                avatar.SetAllianceId(0);
 
-            if (alliance.AllianceMembers.Count > 0)
-            {
-                var eventStreamEntry = new AllianceEventStreamEntry();
-                eventStreamEntry.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-                eventStreamEntry.SetSender(avatar);
-                eventStreamEntry.SetEventType(4);
-                eventStreamEntry.SetAvatarId(avatar.Id);
-                eventStreamEntry.SetAvatarName(avatar.GetAvatarName());
-                alliance.AddChatMessage(eventStreamEntry);
-                foreach (Level onlinePlayer in ResourcesManager.OnlinePlayers)
+                if (alliance.AllianceMembers.Count > 0)
                 {
-                    if (onlinePlayer.Avatar.GetAllianceId() == alliance.AllianceId)
+                    var eventStreamEntry = new AllianceEventStreamEntry();
+                    eventStreamEntry.SetId((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+                    eventStreamEntry.SetSender(avatar);
+                    eventStreamEntry.SetEventType(4);
+                    eventStreamEntry.SetAvatarId(avatar.Id);
+                    eventStreamEntry.SetAvatarName(avatar.GetAvatarName());
+                    alliance.AddChatMessage(eventStreamEntry);
+                    foreach (Level onlinePlayer in ResourcesManager.OnlinePlayers)
                     {
-                        AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(onlinePlayer.Client);
-                        p.SetStreamEntry(eventStreamEntry);
-                        p.Send();
+                        if (onlinePlayer.Avatar.GetAllianceId() == alliance.AllianceId)
+                        {
+                            AllianceStreamEntryMessage p = new AllianceStreamEntryMessage(onlinePlayer.Client);
+                            p.SetStreamEntry(eventStreamEntry);
+                            p.Send();
+                        }
                     }
                 }
+                else
+                {
+                    DatabaseManager.Instance.RemoveAlliance(alliance);
+                }
+                new LeaveAllianceOkMessage(Client, alliance).Send();
             }
-            else
-            {
-                DatabaseManager.Instance.RemoveAlliance(alliance);
-            }
-            new LeaveAllianceOkMessage(Client, alliance).Send();
         }
     }
 }

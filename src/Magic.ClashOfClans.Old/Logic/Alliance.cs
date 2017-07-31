@@ -72,10 +72,13 @@ namespace Magic.ClashOfClans.Logic
 
         public void AddChatMessage(Magic.ClashOfClans.Logic.StreamEntries.StreamEntry message)
         {
-            if (m_vChatMessages.Count >= 30)
-                m_vChatMessages.RemoveAt(0);
+            lock (_sync)
+            {
+                if (m_vChatMessages.Count >= 30)
+                    m_vChatMessages.RemoveAt(0);
 
-            m_vChatMessages.Add(message);
+                m_vChatMessages.Add(message);
+            }
         }
 
         public byte[] EncodeFullEntry()
@@ -302,7 +305,11 @@ namespace Magic.ClashOfClans.Logic
 
         public AllianceMemberEntry GetAllianceMember(long avatarId)
         {
-            return m_vAllianceMembers[avatarId];
+            var member = (AllianceMemberEntry)null;
+            if (!m_vAllianceMembers.TryGetValue(avatarId, out member))
+                return null;
+
+            return member;
         }
 
         public void LoadFromJson(string jsonString)

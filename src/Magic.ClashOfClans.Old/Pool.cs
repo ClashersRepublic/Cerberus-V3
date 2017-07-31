@@ -1,7 +1,8 @@
 ﻿//#define CONCURRENT_STACK
-#define LIST
+#define LIST // Use LIST to enable tracing n stuff.
 
 using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Core.Settings;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -69,7 +70,8 @@ namespace Magic.ClashOfClans.Network
             {
                 if (_list.Contains(item))
                 {
-                    Logger.Error("We're pushing an item to the pool, but its already there! Ignoring it.");
+                    if (Constants.Verbosity > 2)
+                        Logger.Error("We're pushing an item to the pool, but its already there! Ignoring it.");
                 }
                 else
                 {

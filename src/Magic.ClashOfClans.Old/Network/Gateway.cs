@@ -172,7 +172,7 @@ namespace Magic.ClashOfClans.Network
             var acceptSocket = e.AcceptSocket;
             if (e.SocketError != SocketError.Success)
             {
-                Logger.Say($"Failed to accept new socket: {e.SocketError}.");
+                Logger.Error($"Failed to accept new socket: {e.SocketError}.");
                 Drop(e);
 
                 // Get a new args from pool, since we dropped the previous one.
@@ -182,10 +182,10 @@ namespace Magic.ClashOfClans.Network
             {
                 try
                 {
-                    //Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
+                    if (Constants.Verbosity > 3)
+                        Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Client(acceptSocket);
-
                     // Register the client in the ResourceManager.
                     ResourcesManager.AddClient(client);
 
@@ -299,7 +299,9 @@ namespace Magic.ClashOfClans.Network
                     }
                     else
                     {
-                        Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
+                        if (Constants.Verbosity > 1)
+                            Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
+
                         Drop(e);
 
                         // If the last operation was an accept operation, continue accepting

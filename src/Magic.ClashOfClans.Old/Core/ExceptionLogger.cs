@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Magic.ClashOfClans.Core.Settings;
+using System;
 using System.IO;
 
 namespace Magic.ClashOfClans.Core
@@ -28,8 +29,8 @@ namespace Magic.ClashOfClans.Core
             lock (s_sync)
                 File.AppendAllText(filePath, text);
 
-            // Commented out for now, so we can have a more readable log.
-            //Logger.Error(moreInfo + ": " + ex.GetType().Name + ": " + ex.Message);
+            if (Constants.Verbosity > 2)
+                Logger.Error(moreInfo + ": " + ex.GetType().Name + ": " + ex.Message);
         }
 
         private static string GetLogFileName(Exception ex)

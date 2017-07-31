@@ -197,15 +197,25 @@ namespace Magic.ClashOfClans.Logic
             var data = new List<byte>();
             data.AddInt64(_id);
             data.AddInt64(_homeId);
+
             if (_allianceId != 0)
             {
-                data.Add(1);
-                data.AddInt64(_allianceId);
                 var alliance = ObjectManager.GetAlliance(_allianceId);
-                data.AddString(alliance.AllianceName);
-                data.AddInt32(alliance.AllianceBadgeData);
-                data.AddInt32(alliance.GetAllianceMember(_id).GetRole());
-                data.AddInt32(alliance.AllianceLevel);
+                var inClan = alliance != null && alliance.GetAllianceMember(_id) != null;
+                if (inClan)
+                {
+                    data.Add(1);
+                    data.AddInt64(_allianceId);
+
+                    data.AddString(alliance.AllianceName);
+                    data.AddInt32(alliance.AllianceBadgeData);
+                    data.AddInt32(alliance.GetAllianceMember(_id).GetRole());
+                    data.AddInt32(alliance.AllianceLevel);
+                }
+                else
+                {
+                    _allianceId = 0;
+                }
             }
             data.Add(0);
 
