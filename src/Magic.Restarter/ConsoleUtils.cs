@@ -8,15 +8,16 @@ namespace Magic.Restarter
         public static void Welcome()
         {
             Console.WriteLine();
-            WriteLineCenterYellow(" ____ ___.__   __                                                  ");
-            WriteLineCenterDarkYellow("|    |   \\  |_/  |_____________  ______   ______  _  _______       ");
-            WriteLineCenterYellow("|    |   /  |\\   __\\_  __ \\__  \\ \\____ \\ /  _ \\ \\/ \\/ /\\__  \\      ");
-            WriteLineCenterDarkYellow("|    |  /|  |_|  |  |  | \\// __ \\|  |_> >  <_> )     /  / __ \\_    ");
-            WriteLineCenterYellow("|______/ |____/__|  |__|  (____  /   __/ \\____/ \\/\\_/  (____  /    ");
-            WriteLineCenterDarkYellow("                               \\/|__|    RESTARTER V" + Assembly.GetExecutingAssembly().GetName().Version + "\\/     ");
-            WriteLineCenterYellow("            ");
+            WriteLineCenterYellow(@"_________ .__                .__                          __________                   ___.   .__  .__        ");
+            WriteLineCenterYellow(@"\_   ___ \|  | _____    _____|  |__   ___________  ______ \______   \ ____ ______  __ _\_ |__ |  | |__| ____  ");
+            WriteLineCenterYellow(@"/    \  \/|  | \__  \  /  ___/  |  \_/ __ \_  __ \/  ___/  |       _// __ \\____ \|  |  \ __ \|  | |  |/ ___\ ");
+            WriteLineCenterYellow(@"\     \___|  |__/ __ \_\___ \|   Y  \  ___/|  | \/\___ \   |    |   \  ___/|  |_> >  |  / \_\ \  |_|  \  \___ ");
+            WriteLineCenterYellow(@" \______  /____(____  /____  >___|  /\___  >__|  /____  >  |____|_  /\___  >   __/|____/|___  /____/__|\___  >");
+            WriteLineCenterYellow(@"        \/          \/     \/     \/     \/           \/          \/     \/|__|             \/             \/ ");
+            WriteLineCenterYellow(@"                                                                               RESTARTER V" + Assembly.GetExecutingAssembly().GetName().Version);
 
-            WriteLineCenterGreen("Server Restarter has been loaded successfully.\n");
+
+            WriteLineCenterGreen("aServer Restarter has been loaded successfully.\n");
             WriteLineCenterCyan("Source code: https://www.github.com/PatrikCoC/ucs-restarter");
             WriteLineCenterCyan("This program was made by @FICTURE7 and @PatrikCoC.");
             WriteLineCenterYellow("Make sure to edit 'restarter.config' file for your needs!");
