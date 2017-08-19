@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Newtonsoft.Json.Linq;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Windows;
+using Magic.ClashOfClans.Logic.Components;
 using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Logic.Manager
@@ -14,11 +15,14 @@ namespace Magic.ClashOfClans.Logic.Manager
             m_vLevel = l;
         }
 
-        readonly List<List<Component>> m_vComponents;
+        private readonly List<List<Component>> m_vComponents;
 
-        readonly Level m_vLevel;
+        private readonly Level m_vLevel;
 
-        public void AddComponent(Component c) => m_vComponents[c.Type].Add(c);
+        public void AddComponent(Component c)
+        {
+            m_vComponents[c.Type].Add(c);
+        }
 
         public Component GetClosestComponent(int x, int y, Component_Filter cf)
         {
@@ -44,21 +48,9 @@ namespace Magic.ClashOfClans.Logic.Manager
             return result;
         }
 
-        public List<Component> GetComponents(int type) => m_vComponents[type];
-
-        /*public int GetMaxBarrackLevel()
+        public List<Component> GetComponents(int type)
         {
-            var result = 0;
-            var components = m_vComponents[3];
-            if (components.Count > 0)
-                foreach (UnitProductionComponent c in components)
-                    if (!c.IsSpellForge())
-                    {
-                        var level = ((Building) c.Parent).GetUpgradeLevel();
-                        if (level > result)
-                            result = level;
-                    }
-            return result;
+            return m_vComponents[type];
         }
 
         public int GetMaxSpellForgeLevel()
@@ -66,19 +58,54 @@ namespace Magic.ClashOfClans.Logic.Manager
             var result = 0;
             var components = m_vComponents[3];
             if (components.Count > 0)
-                foreach (UnitProductionComponent c in components)
-                    if (c.IsSpellForge())
-                    {
-                        var b = (Building) c.Parent;
-                        if (!b.IsConstructing() || b.IsUpgrading())
+                foreach (Unit_Production_Component c in components)
+                    if (c.IsSpellForge)
+                        if (c.Parent.ClassId == 0)
                         {
-                            var level = b.GetUpgradeLevel();
+                            var b = (Building) c.Parent;
+                            if (!b.IsConstructing || b.IsUpgrading)
+                            {
+                                var level = b.GetUpgradeLevel;
+                                if (level > result)
+                                    result = level;
+                            }
+                        }
+                        else if (c.Parent.ClassId == 7)
+                        {
+                            var b = (Builder_Building) c.Parent;
+                            if (!b.IsConstructing || b.IsUpgrading)
+                            {
+                                var level = b.GetUpgradeLevel;
+                                if (level > result)
+                                    result = level;
+                            }
+                        }
+            return result;
+        }
+
+        public int GetMaxBarrackLevel()
+        {
+            var result = 0;
+            var components = m_vComponents[3];
+            if (components.Count > 0)
+                foreach (Unit_Production_Component c in components)
+                    if (!c.IsSpellForge)
+                        if (c.Parent.ClassId == 0)
+                        {
+                            var level = ((Building) c.Parent).GetUpgradeLevel;
                             if (level > result)
                                 result = level;
                         }
-                    }
+                        else if (c.Parent.ClassId == 7)
+                        {
+                            var level = ((Builder_Building) c.Parent).GetUpgradeLevel;
+                            if (level > result)
+                                result = level;
+                        }
             return result;
         }
+
+        /*
 
         public int GetTotalMaxHousing(bool IsSpellForge = false)
         {
@@ -128,7 +155,7 @@ namespace Magic.ClashOfClans.Logic.Manager
             {
                 var markedForRemoval = new List<Component>();
                 foreach (var component in components)
-                    if (component.Parent== go)
+                    if (component.Parent == go)
                         markedForRemoval.Add(component);
                 foreach (var component in markedForRemoval)
                     components.Remove(component);

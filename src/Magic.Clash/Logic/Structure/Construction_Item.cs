@@ -3,6 +3,7 @@ using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Files.CSV_Logic;
+using Magic.ClashOfClans.Logic.Components;
 using Magic.ClashOfClans.Logic.Enums;
 using Newtonsoft.Json.Linq;
 using Resource = Magic.ClashOfClans.Logic.Enums.Resource;
@@ -55,8 +56,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal float GetBoostMultipier => 0;
 
-        internal int GetRequiredTownHallLevelForUpgrade => GetConstructionItemData.GetRequiredTownHallLevel(
-            Math.Min(UpgradeLevel + 1, GetConstructionItemData.GetUpgradeLevelCount() - 1));
+        internal int GetRequiredTownHallLevelForUpgrade => GetConstructionItemData.GetRequiredTownHallLevel(Math.Min(UpgradeLevel + 1, GetConstructionItemData.GetUpgradeLevelCount() - 1));
 
         internal bool CanUpgrade
         {
@@ -160,14 +160,15 @@ namespace Magic.ClashOfClans.Logic.Structure
 
             var constructionTime = GetConstructionItemData.GetConstructionTime(GetUpgradeLevel);
             Level.Avatar.AddExperience((int) Math.Pow(constructionTime, 0.5f));
-            /*if (GetHeroBaseComponent(true) != null)
+            if (GetHeroBaseComponent(true) != null)
             {
-                Buildings data = (Buildings)GetData();
+                Buildings data = (Buildings)Data;
                 Heroes hd = CSV.Tables.Get(Gamefile.Heroes).GetData(data.HeroType) as Heroes;
+                Console.WriteLine(Level.Avatar.Name);
                 Level.Avatar.SetUnitUpgradeLevel(hd, 0);
                 Level.Avatar.SetHeroHealth(hd, 0);
                 Level.Avatar.SetHeroState(hd, 3);
-            }*/
+            }
         }
 
         internal void CancelConstruction()
@@ -222,6 +223,35 @@ namespace Magic.ClashOfClans.Logic.Structure
                     resourceStorageComponent.SetMaxArray(maxStoredResourcesList);
                 }*/
             }
+        }
+        internal Hero_Base_Component GetHeroBaseComponent(bool enabled = false)
+        {
+            Component comp = GetComponent(10, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Hero_Base_Component)comp;
+            }
+            return null;
+        }
+
+        internal Unit_Upgrade_Component GetUnitUpgradeComponent(bool enabled = false)
+        {
+            var comp = GetComponent(9, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Unit_Upgrade_Component)comp;
+            }
+            return null;
+        }
+
+        internal Unit_Production_Component GetUnitProductionComponent(bool enabled = false)
+        {
+            var comp = GetComponent(3, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Unit_Production_Component)comp;
+            }
+            return null;
         }
 
         public override void Tick()

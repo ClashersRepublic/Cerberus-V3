@@ -45,8 +45,8 @@ namespace Magic.ClashOfClans.Logic.Components
         internal int WallX = -1;
         internal int WallP = -1;
         internal int WallI = -1;
-        internal int AimAngle;
-        internal int AimAngleDraft;
+        internal int AimAngle = 315;
+        internal int AimAngleDraft = 315;
         internal int TrapDirection;
         internal int TrapDirectionDraft;
         internal bool AltAttackMode;

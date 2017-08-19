@@ -16,7 +16,7 @@ namespace Magic.ClashOfClans.Core
             TypeNameHandling = TypeNameHandling.Auto,                            MissingMemberHandling = MissingMemberHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Include,                 NullValueHandling = NullValueHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Formatting = Formatting.Indented
+            //Formatting = Formatting.Indented
         };
         
 

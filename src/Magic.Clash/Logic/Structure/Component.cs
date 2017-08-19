@@ -11,6 +11,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         public Component(Game_Object parent)
         {
+            IsEnabled = true;
             Parent = parent;
         }
 

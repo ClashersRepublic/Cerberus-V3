@@ -58,8 +58,8 @@ namespace Magic.ClashOfClans.Logic.Manager
                         b.SpeedUpConstruction();
                     else
                     {
-                        /*var hero = b.GetHeroBaseComponent();
-                        hero?.SpeedUpUpgrade();*/
+                        var hero = b.GetHeroBaseComponent();
+                        hero?.SpeedUpUpgrade();
                     }
                 }
             }
@@ -95,14 +95,14 @@ namespace Magic.ClashOfClans.Logic.Manager
                         }
                         else
                         {
-                            /*var hero = c.GetHeroBaseComponent();
+                            var hero = c.GetHeroBaseComponent();
                             if (hero != null)
                             {
-                                if (hero.IsUpgrading())
+                                if (hero.IsUpgrading)
                                 {
-                                    currentGOTime = hero.GetRemainingUpgradeSeconds();
+                                    currentGOTime = hero.GetRemainingUpgradeSeconds;
                                 }
-                            }*/
+                            }
                         }
                     }
 

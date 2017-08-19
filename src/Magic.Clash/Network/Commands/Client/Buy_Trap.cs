@@ -8,7 +8,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 {
     internal class Buy_Trap : Command
     {
-        internal int[] XY = new int[2];
+        internal int[] XY;
         internal int TrapID;
         internal int Tick;
 
@@ -18,8 +18,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 
         public override void Decode()
         {
-            XY[0] = Reader.ReadInt32();
-            XY[1] = Reader.ReadInt32();
+            XY = new[] {Reader.ReadInt32(), Reader.ReadInt32()};
             TrapID = Reader.ReadInt32();
             Tick = Reader.ReadInt32();
         }

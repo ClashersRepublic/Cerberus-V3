@@ -1,4 +1,6 @@
-﻿using Magic.ClashOfClans.Core;
+﻿#define Info
+
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using System;
 using System.Diagnostics;
@@ -102,7 +104,9 @@ namespace Magic.ClashOfClans.Network
                 ExceptionLogger.Log(ex, $"Exception while processing outgoing message {message.GetType()}");
             }
 
-            Debug.WriteLine("[MESSAGE] " + message.Device.Socket.RemoteEndPoint + " --> " + message.GetType().Name + " [" + message.Identifier + "]");
+#if Info
+            Logger.SayInfo("[MESSAGE] " + message.Device.Socket.RemoteEndPoint + " --> " + message.GetType().Name + " [" + message.Identifier + "]");
+#endif
             StartSend(args);
         }
 

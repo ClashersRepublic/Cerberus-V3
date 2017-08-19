@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define Info
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
@@ -87,11 +88,13 @@ namespace Magic.ClashOfClans
                         var message = MessageFactory.Read(this, Reader, Identifier);
                         if (message != null)
                         {
-                            Debug.WriteLine("[MESSAGE] " + message.Device.Socket.RemoteEndPoint.ToString() + " --> " + message.GetType().Name + " [" + message.Identifier + "]");
                             message.Identifier = Identifier; // Just in case they don't do it in the constructor.
                             message.Length = Length;
                             message.Version = Version;
 
+#if Info
+                            Logger.SayInfo("[MESSAGE] " + message.Device.Socket.RemoteEndPoint + " --> " + message.GetType().Name + " [" + message.Identifier + "]");
+#endif
                             try
                             {
                                 message.Decrypt();

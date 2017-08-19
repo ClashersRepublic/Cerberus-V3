@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Files.CSV_Logic;
 using Magic.ClashOfClans.Logic.Components;
+using Magic.ClashOfClans.Logic.Enums;
 
 namespace Magic.ClashOfClans.Logic.Structure
 {
@@ -17,7 +19,6 @@ namespace Magic.ClashOfClans.Logic.Structure
             {
                 AddComponent(new Combat_Component(this));
             }
-            /*AddComponent(new Hitpoint_Component());
             if (GetBuildingData.IsHeroBarrack)
             {
                 Heroes hd = CSV.Tables.Get(Gamefile.Heroes).GetData(GetBuildingData.HeroType) as Heroes;
@@ -25,11 +26,13 @@ namespace Magic.ClashOfClans.Logic.Structure
             }
             if (GetBuildingData.UpgradesUnits)
                 AddComponent(new Unit_Upgrade_Component(this));
-            
+
             if (GetBuildingData.UnitProduction[0] > 0)
             {
                 AddComponent(new Unit_Production_Component(this));
             }
+            /*AddComponent(new Hitpoint_Component());
+
 
             //if (GetBuildingData.HousingSpace[0] > 0)
             {
