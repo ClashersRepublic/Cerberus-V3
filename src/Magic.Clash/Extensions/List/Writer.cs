@@ -113,6 +113,7 @@ namespace Magic.ClashOfClans.Extensions.List
 
        public static void AddCompressed(this List<byte> _Packet, string _Value, bool addbool = true)
         {
+            if (addbool)
                 _Packet.AddBool(true);
 
                 if (_Value == null)

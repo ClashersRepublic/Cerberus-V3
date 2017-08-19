@@ -54,9 +54,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
                                 if (Command != null)
                                 {
 #if DEBUG
-                                    Console.ForegroundColor = ConsoleColor.Blue;
-                                    Console.WriteLine("Command " + CommandID + " has  been handled.");
-                                    Console.ResetColor();
+                                    Logger.Say("Command " + CommandID + " has  been handled.", ConsoleColor.Blue);
 #endif
                                     try
                                     {
@@ -64,8 +62,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
                                     }
                                     catch (Exception Exception)
                                     {
-                                        ExceptionLogger.Log(Exception,
-                                            $"Exception while decoding command {Command.GetType()}");
+                                        ExceptionLogger.Log(Exception, $"Exception while decoding command {Command.GetType()}");
                                     }
 
                                     try
@@ -74,8 +71,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
                                     }
                                     catch (Exception Exception)
                                     {
-                                        ExceptionLogger.Log(Exception,
-                                            $"Exception while executing command {Command.GetType()}");
+                                        ExceptionLogger.Log(Exception, $"Exception while executing command {Command.GetType()}");
                                     }
 #if DEBUG
                                     LCommands.Add(Command);
@@ -85,12 +81,10 @@ namespace Magic.ClashOfClans.Network.Messages.Client
                             else
                             {
 #if DEBUG
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Command " + CommandID + " has not been handled.");
+                                Logger.Say("Command " + CommandID + " has not been handled.", ConsoleColor.Red);
                                 if (LCommands.Any())
-                                    Console.WriteLine("Previous command was " + LCommands.Last().Identifier +
-                                                      ". [" + (_Index + 1) + " / " + Count + "]");
-                                Console.ResetColor();
+                                    Logger.Say("Previous command was " + LCommands.Last().Identifier +
+                                                      ". [" + (_Index + 1) + " / " + Count + "]", ConsoleColor.Red);
                                 break;
 #endif
                             }

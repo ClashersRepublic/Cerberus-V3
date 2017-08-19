@@ -293,17 +293,22 @@
     <Compile Include="Logic\Structure\Slots\Variables.cs" />
     <Compile Include="Logic\Structure\Trap.cs" />
     <Compile Include="Logic\Structure\Village_Object.cs" />
+    <Compile Include="Network\Commands\Client\Battle\Place_Attacker.cs" />
     <Compile Include="Network\Commands\Client\Buy_Building.cs" />
+    <Compile Include="Network\Commands\Client\Buy_Multiple_Wall.cs" />
+    <Compile Include="Network\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Network\Commands\Client\Change_Village_Mode.cs" />
     <Compile Include="Network\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Construction.cs" />
     <Compile Include="Network\Commands\Client\Upgrade_Building.cs" />
     <Compile Include="Network\Commands\Server\Name_Change_Callback.cs" />
     <Compile Include="Network\Gateway.cs" />
+    <Compile Include="Network\Messages\Client\Avatar_Profile.cs" />
     <Compile Include="Network\Messages\Client\Battle\Attack_NPC.cs" />
     <Compile Include="Network\Messages\Client\Change_Name.cs" />
     <Compile Include="Network\Messages\Client\Execute_Commands.cs" />
     <Compile Include="Network\Messages\Server\Authentication\Authentication_OK.cs" />
+    <Compile Include="Network\Messages\Server\Avatar_Profile_Data.cs" />
     <Compile Include="Network\Messages\Server\Battle\Npc_Data.cs" />
     <Compile Include="Network\Messages\Server\Server_Commands.cs" />
     <Compile Include="Pool.cs" />
@@ -877,7 +882,9 @@
       <DefaultIcon>Server.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Network\Messages\Server\Errors\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\BarbarianLand Assets Hasher.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

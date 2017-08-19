@@ -11,7 +11,7 @@ namespace Magic.ClashOfClans.Logic.Structure
             if (GetBuildingData.BuildingClass == "Defense" || GetBuildingData.BuildingClass == "Wall")
             {
                 AddComponent(new Combat_Component(this));
-            }
+            }   
             /*AddComponent(new Hitpoint_Component());
             if (GetBuildingData.IsHeroBarrack)
             {

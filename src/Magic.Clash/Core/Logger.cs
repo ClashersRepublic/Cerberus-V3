@@ -92,11 +92,11 @@ namespace Magic.ClashOfClans.Core
             Console.ResetColor();
         }
 
-        public static void Say(string message)
+        public static void Say(string message, ConsoleColor color = ConsoleColor.Green)
         {
             lock (s_lock)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = color;
                 Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
                 Console.WriteLine(message);
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);

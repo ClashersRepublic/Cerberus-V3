@@ -47,21 +47,21 @@ namespace Magic.ClashOfClans.Logic.Manager
             {
                 if (go.ClassId == 3)
                 {
-                    /*var b = (Obstacle)go;
+                    var b = (Obstacle)go;
                     if (b.IsClearing)
-                        b.SpeedUpClearing();*/
+                        b.SpeedUpClearing();
                 }
                 else
                 {
-                    /*var b = (ConstructionItem)go;
-                    if (b.IsConstructing())
+                    var b = (Construction_Item)go;
+                    if (b.IsConstructing)
                         b.SpeedUpConstruction();
                     else
                     {
-                        var hero = b.GetHeroBaseComponent();
+                       /* var hero = b.GetHeroBaseComponent();
                         if (hero != null)
-                            hero.SpeedUpUpgrade();
-                    }*/
+                            hero.SpeedUpUpgrade();*/
+                    }
                 }
             }
         }
@@ -79,29 +79,30 @@ namespace Magic.ClashOfClans.Logic.Manager
 				currentGOTime = -1;
 				if (go.ClassId == 3)
 				{
-				    /*var c = (Obstacle)go;
+				    var c = (Obstacle)go;
 				    if (c.IsClearing)
 				    {
 				        currentGOTime = c.GetRemainingClearingTime();
-				    }*/
+				    }
                 }
 				else
 				{
-					/*if (c.IsConstructing())
+				    var c = (Construction_Item)go;
+                    if (c.IsConstructing)
 					{
-						currentGOTime = c.GetRemainingConstructionTime();
+						currentGOTime = c.GetRemainingConstructionTime;
 					}
 					else
 					{
-						var hero = c.GetHeroBaseComponent();
+						/*var hero = c.GetHeroBaseComponent();
 						if (hero != null)
 						{
 							if (hero.IsUpgrading())
 							{
 								currentGOTime = hero.GetRemainingUpgradeSeconds();
 							}
-						}
-					}*/
+						}*/
+					}
 				}
 				if (shortestTaskGO == null)
 				{

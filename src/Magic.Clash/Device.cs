@@ -127,7 +127,7 @@ namespace Magic.ClashOfClans
 
                         // Clean up. 
                         DataStream.RemoveRange(0, HEADER_LEN + Length);
-                        if ((DataStream.Count - 7) - Length >= 7)
+                        if (DataStream.Count >= 7)
                         {
                             this.Process();
                         }

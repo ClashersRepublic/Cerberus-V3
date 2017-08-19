@@ -58,7 +58,7 @@ namespace Magic.ClashOfClans.Network
             s_listener.Listen(BACK_LOG);
 
             var args = GetArgs();
-            StartAccept(args);
+            StartAccept(args);;
 
             Logger.Say($"Listening on {endPoint}...");
         }
@@ -370,10 +370,7 @@ namespace Magic.ClashOfClans.Network
 
         private static void Recycle(byte[] buffer)
         {
-            if (buffer == null)
-                return;
-
-            if (buffer.Length == Constants.BufferSize)
+            if (buffer?.Length == Constants.BufferSize)
                 s_bufferPool.Push(buffer);
         }
 

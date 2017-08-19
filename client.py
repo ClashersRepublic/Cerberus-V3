@@ -37,6 +37,6 @@ def main():
         client = Client()
         clients.append(client)
         client.start(('127.0.0.1', 9339))
-        time.sleep(.1)
+        time.sleep(0)
 if __name__ == "__main__":
     main()

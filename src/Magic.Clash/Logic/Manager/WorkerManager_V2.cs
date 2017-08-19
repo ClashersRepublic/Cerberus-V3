@@ -15,6 +15,7 @@ namespace Magic.ClashOfClans.Logic.Manager
             GameObjectReferences = new List<Game_Object>();
             WorkerCount = 1;
         }
+
         public static int GetFinishTaskOfOneWorkerCost() => 0;
 
         public static void RemoveGameObjectReferences(Game_Object go)
@@ -44,7 +45,7 @@ namespace Magic.ClashOfClans.Logic.Manager
             Game_Object go = GetShortestTaskGO;
             if (go != null)
             {
-                /*if (go.ClassId == 10)
+                if (go.ClassId == 10)
                 {
                     var b = (Builder_Obstacle)go;
                     if (b.IsClearing)
@@ -52,15 +53,15 @@ namespace Magic.ClashOfClans.Logic.Manager
                 }
                 else
                 {
-                    var b = (ConstructionItem)go;
+                    var b = (Construction_Item)go;
                     if (b.IsConstructing)
                         b.SpeedUpConstruction();
                     else
                     {
-                        var hero = b.GetHeroBaseComponent();
-                        hero?.SpeedUpUpgrade();
+                        /*var hero = b.GetHeroBaseComponent();
+                        hero?.SpeedUpUpgrade();*/
                     }
-                }*/
+                }
             }
         }
 
@@ -77,7 +78,7 @@ namespace Magic.ClashOfClans.Logic.Manager
                 Parallel.ForEach((this.GameObjectReferences), go =>
                 {
                     currentGOTime = -1;
-                    /*if (go.ClassId == 10)
+                    if (go.ClassId == 10)
                     {
                         var c = (Builder_Obstacle)go;
                         if (c.IsClearing)
@@ -87,21 +88,21 @@ namespace Magic.ClashOfClans.Logic.Manager
                     }
                     else
                     {
-                        var c = (ConstructionItem)go;
+                        var c = (Construction_Item)go;
                         if (c.IsConstructing)
                         {
-                            currentGOTime = c.GetRemainingConstructionTime();
+                            currentGOTime = c.GetRemainingConstructionTime;
                         }
                         else
                         {
-                            var hero = c.GetHeroBaseComponent();
+                            /*var hero = c.GetHeroBaseComponent();
                             if (hero != null)
                             {
                                 if (hero.IsUpgrading())
                                 {
                                     currentGOTime = hero.GetRemainingUpgradeSeconds();
                                 }
-                            }
+                            }*/
                         }
                     }
 
@@ -120,7 +121,7 @@ namespace Magic.ClashOfClans.Logic.Manager
                             shortestGOTime = currentGOTime;
                             shortestTaskGO = go;
                         }
-                    }*/
+                    }
                 });
                 return shortestTaskGO;
             }

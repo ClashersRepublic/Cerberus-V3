@@ -20,11 +20,11 @@ namespace Magic.ClashOfClans.Core.Events
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler Handler, bool Enabled);
 
-        internal async void ExitHandler()
+        internal void ExitHandler()
         {
             try
             {
-                await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels())).ConfigureAwait(false);
+                Task.WaitAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()));
             }
             catch (Exception)
             {

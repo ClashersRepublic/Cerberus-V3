@@ -41,6 +41,8 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal Construction_Item_Data GetConstructionItemData => (Construction_Item_Data) Data;
 
+        internal int GetRemainingConstructionTime => Timer.GetRemainingSeconds(Level.Avatar.LastTick);
+
         internal void BoostBuilding()
         {
             IsBoosted = true;
