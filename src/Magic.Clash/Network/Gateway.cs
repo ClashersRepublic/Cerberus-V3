@@ -1,6 +1,7 @@
 ﻿using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -65,7 +66,7 @@ namespace Magic.ClashOfClans.Network
         public static void Send(this Message message)
         {
             var buffer = default(byte[]);
-            var client = message.Client;
+            var client = message.Device;
 
             try { message.Encode(); }
             catch (Exception ex)
@@ -74,7 +75,14 @@ namespace Magic.ClashOfClans.Network
                 return;
             }
 
-            try { buffer = message.GetRawData(); }
+            try { message.Encrypt(); }
+            catch (Exception ex)
+            {
+                ExceptionLogger.Log(ex, $"Exception while encrypting message {message.GetType()}");
+                return;
+            }
+
+            try { buffer = message.ToBytes(); }
             catch (Exception ex)
             {
                 // Exit early since buffer will be null, we can't send a null buffer to the client.
@@ -88,23 +96,24 @@ namespace Magic.ClashOfClans.Network
             args.UserToken = client;
             args.SetBuffer(buffer, 0, buffer.Length);
 
-            try { message.Process(client.Level); }
+            try { message.Process(); }
             catch (Exception ex)
             {
                 ExceptionLogger.Log(ex, $"Exception while processing outgoing message {message.GetType()}");
             }
 
+            Debug.WriteLine("[MESSAGE] " + message.Device.Socket.RemoteEndPoint + " --> " + message.GetType().Name + " [" + message.Identifier + "]");
             StartSend(args);
         }
 
         private static void StartSend(SocketAsyncEventArgs e)
         {
-            var client = (Client)e.UserToken;
+            var client = (Device)e.UserToken;
             var socket = client.Socket;
 
             try
             {
-                while (!socket.SendAsync(e))
+                if (!socket.SendAsync(e))
                     ProcessSend(e);
             }
             catch (ObjectDisposedException)
@@ -119,7 +128,7 @@ namespace Magic.ClashOfClans.Network
 
         private static void ProcessSend(SocketAsyncEventArgs e)
         {
-            var client = (Client)e.UserToken;
+            var client = (Device)e.UserToken;
             var transferred = e.BytesTransferred;
 
             if (transferred == 0 || e.SocketError != SocketError.Success)
@@ -156,7 +165,7 @@ namespace Magic.ClashOfClans.Network
             try
             {
                 // Avoid StackOverflowExceptions cause we can.
-                while (!s_listener.AcceptAsync(e))
+                if (!s_listener.AcceptAsync(e))
                     ProcessAccept(e, false);
             }
             catch (Exception ex)
@@ -185,7 +194,7 @@ namespace Magic.ClashOfClans.Network
                     if (Constants.Verbosity > 3)
                         Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
-                    var client = new Client(acceptSocket);
+                    var client = new Device(acceptSocket);
                     // Register the client in the ResourceManager.
                     ResourcesManager.AddClient(client);
 
@@ -210,12 +219,12 @@ namespace Magic.ClashOfClans.Network
 
         private static void StartReceive(SocketAsyncEventArgs e)
         {
-            var client = (Client)e.UserToken;
+            var client = (Device)e.UserToken;
             var socket = client.Socket;
 
             try
             {
-                while (!socket.ReceiveAsync(e))
+                if (!socket.ReceiveAsync(e))
                     ProcessReceive(e, false);
             }
             catch (ObjectDisposedException)
@@ -230,7 +239,7 @@ namespace Magic.ClashOfClans.Network
 
         private static void ProcessReceive(SocketAsyncEventArgs e, bool startNew)
         {
-            var client = (Client)e.UserToken;
+            var client = (Device)e.UserToken;
             var transferred = e.BytesTransferred;
 
             if (transferred == 0 || e.SocketError != SocketError.Success)
@@ -246,16 +255,8 @@ namespace Magic.ClashOfClans.Network
                     for (int i = 0; i < transferred; i++)
                         client.DataStream.Add(buffer[offset + i]);
 
-                    var level = client.Level;
-                    var message = default(Message);
-                    while (client.TryGetPacket(out message))
-                    {
-                        try { message.Process(level); }
-                        catch (Exception ex)
-                        {
-                            ExceptionLogger.Log(ex, $"Exception while processing incoming message {message.GetType()}");
-                        }
-                    }
+                    var level = client.Player;
+                    client.Process();
                 }
                 catch (Exception ex)
                 {
@@ -336,7 +337,7 @@ namespace Magic.ClashOfClans.Network
             if (e == null)
                 return;
 
-            var client = e.UserToken as Client;
+            var client = e.UserToken as Device;
             if (client != null)
             {
                 // If the resource manager did not mange to kill the socket, we do it here.

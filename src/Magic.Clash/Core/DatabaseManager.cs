@@ -1,44 +1,30 @@
-using Magic.ClashOfClans.Core.Database;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Database;
-using Magic.ClashOfClans.Logic;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
-using System.Data.Entity.Core;
 using System.Data.Entity.Validation;
-using System.Linq;
 using System.Threading.Tasks;
-using static Magic.ClashOfClans.Core.Logger;
+using Newtonsoft.Json;
+using Magic.ClashOfClans.Core.Database;
+using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Core
 {
-    // This thing should have been a static class since the beginning.
-
-    internal class DatabaseManager
+    internal static class DatabaseManager
     {
-        public static DatabaseManager Instance => s_singleton;
-
-        private static DatabaseManager s_singleton = new DatabaseManager();
-
-        public DatabaseManager()
+        internal static JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            // Let them know we like it 1 instance.
-            if (s_singleton != null)
-                throw new InvalidOperationException("DatabaseManager is a singleton.");
+            TypeNameHandling = TypeNameHandling.Auto,                            MissingMemberHandling = MissingMemberHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Include,                 NullValueHandling = NullValueHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            Formatting = Formatting.Indented
+        };
+        
 
-            _connectionString = ConfigurationManager.AppSettings["databaseConnectionName"];
-        }
-
-        private readonly string _connectionString;
-
-        public long GetMaxAllianceId()
+        public static long GetMaxAllianceId()
         {
             try
             {
-                return MySQL.GetAllianceSeed();
+                return MySQL_V2.GetAllianceSeed();
             }
             catch (Exception ex)
             {
@@ -47,11 +33,11 @@ namespace Magic.ClashOfClans.Core
             return -1;
         }
 
-        public long GetMaxPlayerId()
+        public static long GetMaxPlayerId()
         {
             try
             {
-                return MySQL.GetPlayerSeed();
+                return MySQL_V2.GetPlayerSeed();
             }
             catch (Exception ex)
             {
@@ -60,7 +46,7 @@ namespace Magic.ClashOfClans.Core
             return -1;
         }
 
-        public void CreateLevel(Level level)
+        public static void CreateLevel(Level level)
         {
             try
             {
@@ -68,14 +54,10 @@ namespace Magic.ClashOfClans.Core
                 {
                     var newPlayer = new player
                     {
-                        PlayerId = level.Avatar.Id,
-                        AccountStatus = level.AccountStatus,
-                        AccountPrivileges = level.AccountPrivileges,
-                        LastUpdateTime = level.Time,
-                        IPAddress = level.IPAddress,
+                        Id = level.Avatar.UserId,
 
-                        Avatar = level.Avatar.SaveToJson(),
-                        GameObjects = level.SaveToJson()
+                        Avatar = JsonConvert.SerializeObject(level.Avatar, Settings),
+                        Village = level.Json
                     };
 
                     ctx.player.Add(newPlayer);
@@ -87,8 +69,9 @@ namespace Magic.ClashOfClans.Core
                 ExceptionLogger.Log(ex, "Exception while trying to create a new player account in database.");
             }
         }
+       
 
-        public void CreateAlliance(Alliance alliance)
+        /*public void CreateAlliance(Alliance alliance)
         {
             try
             {
@@ -109,9 +92,9 @@ namespace Magic.ClashOfClans.Core
             {
                 ExceptionLogger.Log(ex, "Exception while trying to create a new alliance in database.");
             }
-        }
+        }*/
 
-        public Level GetLevel(long userId)
+        public static Level GetLevel(long userId)
         {
             var level = default(Level);
             try
@@ -121,14 +104,11 @@ namespace Magic.ClashOfClans.Core
                     var player = ctx.player.Find(userId);
                     if (player != null)
                     {
-                        level = new Level();
-                        level.AccountStatus = player.AccountStatus;
-                        level.AccountPrivileges = player.AccountPrivileges;
-                        level.Time = player.LastUpdateTime;
-
-                        // Load JSON data.
-                        level.Avatar.LoadFromJson(player.Avatar);
-                        level.LoadFromJson(player.GameObjects);
+                        level = new Level
+                        {
+                            Avatar = JsonConvert.DeserializeObject<Avatar>(player.Avatar),
+                            Json = player.Village
+                        };
                     }
                 }
             }
@@ -142,7 +122,7 @@ namespace Magic.ClashOfClans.Core
             return level;
         }
 
-        public Alliance GetAlliance(long allianceId)
+       /* public Alliance GetAlliance(long allianceId)
         {
             var alliance = default(Alliance);
             try
@@ -222,9 +202,9 @@ namespace Magic.ClashOfClans.Core
                 }
                 await ctx.SaveChangesAsync();
             }
-        }
+        }*/
 
-        public void Save(Level level)
+        public static void Save(Level level)
         {
             try
             {
@@ -232,15 +212,11 @@ namespace Magic.ClashOfClans.Core
                 {
                     ctx.Configuration.AutoDetectChangesEnabled = false;
 
-                    var player = ctx.player.Find(level.Avatar.Id);
+                    var player = ctx.player.Find(level.Avatar.UserId);
                     if (player != null)
                     {
-                        player.LastUpdateTime = level.Time;
-                        player.AccountStatus = level.AccountStatus;
-                        player.AccountPrivileges = level.AccountPrivileges;
-                        player.IPAddress = level.IPAddress;
-                        player.Avatar = level.Avatar.SaveToJson();
-                        player.GameObjects = level.SaveToJson();
+                        player.Avatar = JsonConvert.SerializeObject(level.Avatar, Settings);
+                        player.Village = level.Json;
 
                         ctx.Entry(player).State = EntityState.Modified;
                     }
@@ -250,7 +226,7 @@ namespace Magic.ClashOfClans.Core
             }
             catch (DbEntityValidationException ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.Id} from the database. Check error for more information.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database. Check error for more information.");
                 foreach (var entry in ex.EntityValidationErrors)
                 {
                     foreach (var errs in entry.ValidationErrors)
@@ -260,12 +236,12 @@ namespace Magic.ClashOfClans.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.Id} from the database.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database.");
                 throw;
             }
         }
 
-        public async Task Save(List<Level> levels)
+        public static async Task Save(List<Level> levels)
         {
             try
             {
@@ -273,31 +249,34 @@ namespace Magic.ClashOfClans.Core
                 {
                     foreach (Level pl in levels)
                     {
-                        lock (pl)
+                        player p = await ctx.player.FindAsync(pl.Avatar.UserId); //Maybe to use lock instead
+                        if (p != null)
                         {
-                            player p = ctx.player.Find(pl.Avatar.Id);
-                            if (p != null)
-                            {
-                                p.LastUpdateTime = pl.Time;
-                                p.AccountStatus = pl.AccountStatus;
-                                p.AccountPrivileges = pl.AccountPrivileges;
-                                p.IPAddress = pl.IPAddress;
-                                p.Avatar = pl.Avatar.SaveToJson();
-                                p.GameObjects = pl.SaveToJson();
-                                ctx.Entry(p).State = EntityState.Modified;
-                            }
+                            p.Avatar = JsonConvert.SerializeObject(pl.Avatar);
+                            p.Village = pl.Json;
                         }
                     }
                     await ctx.BulkSaveChangesAsync();
                 }
             }
-            catch
+            catch (DbEntityValidationException ex)
             {
-                // 1 Actual fuck given.
+                ExceptionLogger.Log(ex, $"Exception while trying to save {levels.Count} of player to the database. Check error for more information.");
+                foreach (var entry in ex.EntityValidationErrors)
+                {
+                    foreach (var errs in entry.ValidationErrors)
+                        Logger.Error($"{errs.PropertyName}:{errs.ErrorMessage}");
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.Log(ex, $"Exception while trying to savesave {levels.Count} of player to the database.");
+                throw;
             }
         }
 
-        public async Task Save(List<Alliance> alliances)
+        /*public async Task Save(List<Alliance> alliances)
         {
             try
             {
@@ -323,6 +302,6 @@ namespace Magic.ClashOfClans.Core
             {
                 // 1 Actual fuck given.
             }
-        }
+        }*/
     }
 }

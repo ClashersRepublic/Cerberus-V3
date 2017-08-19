@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Crypto;
-using Magic.ClashOfClans.Core.Crypto.Blake2b;
-using Magic.ClashOfClans.Core.Crypto.CustomNaCl;
 using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans;
+using Magic.ClashOfClans.Extensions;
+using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
-using Magic.Packets.Messages.Server;
-using Magic.ClashOfClans;
+using Magic.ClashOfClans.Logic.Enums;
 
 namespace Magic.ClashOfClans.Network
 {
@@ -19,50 +15,33 @@ namespace Magic.ClashOfClans.Network
     {
         // NOTE: Maybe make disposable.
 
-        private PacketReader _reader;
-        private byte[] _data;
-        private int _length;
 
         public Message()
         {
             // Space
         }
 
-        public Message(Client client)
+        public Message(Device device)
         {
-            Client = client;
-            MessageType = 0;
-            MessageVersion = 0;
-
-            _length = -1;
-            _data = null;
+            Device = device;
+            Reader = null;
+            Data = new List<byte>();
         }
 
-        public Message(Client client, PacketReader reader)
+        public Message(Device device, Reader reader)
         {
-            Client = client;
-            _reader = reader;
+            Device = device;
+            Reader = reader;
+            Data = null;
         }
 
-        public Client Client { get; set; }
-        public PacketReader Reader => _reader;
+        public Device Device { get; set; }
+        public ushort Identifier { get; set; }
+        public ushort Version { get; set; }
 
-        public byte[] Data
-        {
-            get
-            {
-                return _data;
-            }
-            set
-            {
-                _data = value;
-                _length = value.Length;
-            }
-        }
-
-        public int Length => _length;
-        public ushort MessageType { get; set; }
-        public ushort MessageVersion { get; set; }
+        public Reader Reader;
+        public List<byte> Data;
+        public int Length;
 
         public virtual void Decode()
         {
@@ -74,7 +53,7 @@ namespace Magic.ClashOfClans.Network
             // Space
         }
 
-        public virtual void Process(Level level)
+        public virtual void Process()
         {
             // Space
         }
@@ -85,112 +64,84 @@ namespace Magic.ClashOfClans.Network
             {
                 if (Constants.IsRc4)
                 {
-                    Client.Decrypt(_data);
+                    var buffer = Reader.ReadBytes(Length);
+                    if (Identifier != 10100)
+                        Device.Decrypt(buffer);
 
-                    if (MessageType == 10101)
-                        Client.State = Client.ClientState.Login;
-                }
-                else
-                {
-                    if (MessageType == 10101)
-                    {
-                        var cipherText = _data;
-                        Client.CPublicKey = cipherText.Take(32).ToArray();
-
-                        var blake = Blake2B.Create(new Blake2BConfig
-                        {
-                            OutputSizeInBytes = 24
-                        });
-                        blake.Init();
-                        blake.Update(Client.CPublicKey);
-                        blake.Update(Key.Crypto.PublicKey);
-
-                        Client.CRNonce = blake.Finish();
-
-                        cipherText = CustomNaCl.OpenPublicBox(cipherText.Skip(32).ToArray(), Client.CRNonce, Key.Crypto.PrivateKey, Client.CPublicKey);
-
-                        Client.CSharedKey = Client.CPublicKey;
-                        Client.CSessionKey = cipherText.Take(24).ToArray();
-                        Client.CSNonce = cipherText.Skip(24).Take(24).ToArray();
-                        Client.State = Client.ClientState.Login;
-
-                        Data = cipherText.Skip(48).ToArray();
-                    }
-                    else
-                    {
-                        if (MessageType != 10100)
-                        {
-                            if (Client.State == Client.ClientState.LoginSuccess)
-                            {
-                                Client.CSNonce.Increment();
-                                Data = CustomNaCl.OpenSecretBox(new byte[16].Concat(_data).ToArray(), Client.CSNonce, Client.CSharedKey);
-                            }
-                        }
-                    }
+                    Reader = new Reader(buffer);
+                    Length = buffer.Length;
                 }
             }
             catch
             {
-                Client.State = Client.ClientState.Exception;
+                Device.State = State.DISCONNECTED;
                 throw;
             }
         }
 
-        public void Encrypt(byte[] plainText)
+        public void Encrypt()
         {
             try
             {
                 if (Constants.IsRc4)
-                {
-                    Client.Encrypt(plainText);
-                    if (MessageType == 20104)
-                        Client.State = Client.ClientState.LoginSuccess;
-
-                    Data = plainText;
-                }
-                else
-                {
-                    if (MessageType == 20104 || MessageType == 20103)
-                    {
-                        Hasher b = Blake2B.Create(new Blake2BConfig
-                        {
-                            OutputSizeInBytes = 24
-                        });
-                        b.Init();
-                        b.Update(Client.CSNonce);
-                        b.Update(Client.CPublicKey);
-                        b.Update(Key.Crypto.PublicKey);
-                        Data = CustomNaCl.CreatePublicBox(Client.CRNonce.Concat(Client.CSharedKey).Concat(plainText).ToArray(), b.Finish(), Key.Crypto.PrivateKey, Client.CPublicKey);
-                        if (MessageType == 20104)
-                            Client.State = Client.ClientState.LoginSuccess;
-                    }
-                    else
-                    {
-                        Client.CRNonce.Increment();
-                        Data = CustomNaCl.CreateSecretBox(plainText, Client.CRNonce, Client.CSharedKey).Skip(16).ToArray();
-                    }
-                }
+                    if (this.Device.State > State.SESSION_OK)
+                        Device.Encrypt(Data);
+                Length = Data.Count;
             }
             catch (Exception)
             {
-                Client.State = Client.ClientState.Exception;
+                Device.State = State.DISCONNECTED;
                 throw;
             }
         }
 
-        public byte[] GetRawData()
+        public byte[] ToBytes()
         {
-            var encodedMessage = new List<byte>(7 + _length);
-            encodedMessage.AddUInt16(MessageType);
-            encodedMessage.AddInt32WithSkip(_length, 1);
-            encodedMessage.AddUInt16(MessageVersion);
+            var encodedMessage = new List<byte>(7 + Length);
+            encodedMessage.AddUShort(Identifier);
+            encodedMessage.AddUInt24((uint)Length);
+            encodedMessage.AddUShort(Version);
 
-            if (_data == null)
-                Logger.Error("_data was null when getting raw data of message.");
+            if (Data == null)
+            {
+                Logger.Error("Data was null when getting raw data of message.");
+                throw new ArgumentNullException();
+            }
 
-            encodedMessage.AddRange(_data);
-
+            encodedMessage.AddRange(Data);
             return encodedMessage.ToArray();
+        }
+
+        internal void Debug()
+        {
+            Console.WriteLine(GetType().Name + " : " +
+                              BitConverter.ToString(
+                                  Reader.ReadBytes(
+                                      (int) (Reader.BaseStream.Length - Reader.BaseStream.Position))));
+        }
+
+        internal void SendChatMessage(string message)
+        {
+            /*new Global_Chat_Entry(this.Device)
+            {
+                Message = message,
+                Message_Sender = this.Device.Player.Avatar,
+                Bot = true
+            }.Send();*/
+        }
+
+        internal void ShowValues()
+        {
+            Console.WriteLine(Environment.NewLine);
+
+            foreach (var Field in GetType()
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                if (Field != null)
+                    Logger.SayInfo(Utils.Padding(GetType().Name) + " - " + Utils.Padding(Field.Name) + " : " +
+                                   Utils.Padding(
+                                       !string.IsNullOrEmpty(Field.Name)
+                                           ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)")
+                                           : "(null)", 40));
         }
     }
 }

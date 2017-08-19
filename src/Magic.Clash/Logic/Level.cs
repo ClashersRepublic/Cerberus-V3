@@ -4,84 +4,62 @@ using Magic.ClashOfClans.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Logic
 {
     internal class Level
     {
         public GameObjectManager GameObjectManager;
-        public WorkerManager WorkerManager;
-
-        private DateTime _timer;
-        private Client _client;
-        private byte _privilege;
-        private byte _status;
-        private string _ipAddress;
-        private readonly Avatar _avatar;
+        public WorkerManager VillageWorkerManager;
+        public WorkerManager_V2 BuilderWorkerManager;
 
         public Level()
         {
-            WorkerManager = new WorkerManager();
+            VillageWorkerManager = new WorkerManager();
+            BuilderWorkerManager = new WorkerManager_V2();
             GameObjectManager = new GameObjectManager(this);
 
-            _avatar = new Avatar();
-            _privilege = 0;
-            _status = 0;
-            _ipAddress = "0.0.0.0";
+            Avatar = new Avatar();
         }
 
-        public Level(long id, string token)
+        public Level(long id)
         {
-            WorkerManager = new WorkerManager();
+            VillageWorkerManager = new WorkerManager();
+            BuilderWorkerManager = new WorkerManager_V2();
             GameObjectManager = new GameObjectManager(this);
 
-            _avatar = new Avatar(id, token);
-            _timer = DateTime.UtcNow;
-            _privilege = 0;
-            _status = 0;
-            _ipAddress = "0.0.0.0";
+            Avatar = new Avatar(id);
         }
 
-        public Avatar Avatar => _avatar;
-        public DateTime Time { get; set; }
-        public string IPAddress { get; set; }
-        public byte AccountPrivileges { get; set; }
-        public byte AccountStatus { get; set; }
-        public Client Client { get; set; }
-
-        public bool Banned => _status > 99;
+        public Avatar Avatar { get; set; }
+        public Device Device { get; set; }
 
         public ComponentManager GetComponentManager() => GameObjectManager.GetComponentManager();
 
-        [Obsolete]
-        public Avatar GetHomeOwnerAvatar() => _avatar;
+        public bool HasFreeVillageWorkers => VillageWorkerManager.GetFreeWorkers() > 0;
+        public bool HasFreeBuilderWorkers => BuilderWorkerManager.GetFreeWorkers() > 0;
 
 
-        public bool HasFreeWorkers() => WorkerManager.GetFreeWorkers() > 0;
-
-        public void LoadFromJson(string jsonString)
+        public string Json
         {
-            JObject jsonObject = JObject.Parse(jsonString);
-            GameObjectManager.Load(jsonObject);
-        }
-
-        public string SaveToJson()
-        {
-            return JsonConvert.SerializeObject(GameObjectManager.Save());
+            get => JsonConvert.SerializeObject(GameObjectManager.Save());
+            set => GameObjectManager.Load(JObject.Parse(value));
         }
 
         public void SetHome(string jsonHome)
         {
             var gameObjects = GameObjectManager.GetAllGameObjects();
-            for (int i = 0; i < gameObjects.Count; i++)
-                gameObjects[i].Clear();
+            foreach (List<Game_Object> t in gameObjects)
+                t.Clear();
 
             GameObjectManager.Load(JObject.Parse(jsonHome));
         }
 
         public void Tick()
         {
-            Time = DateTime.UtcNow;
+            Avatar.LastTick = DateTime.UtcNow;
             GameObjectManager.Tick();
         }
     }

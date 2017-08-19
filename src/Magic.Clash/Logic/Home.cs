@@ -1,45 +1,45 @@
 using System.Collections.Generic;
 using System.IO;
 using Magic.ClashOfClans;
+using System;
+using Magic.ClashOfClans.Files;
+using Magic.ClashOfClans.Extensions;
+using Magic.ClashOfClans.Extensions.List;
 
 namespace Magic.ClashOfClans.Logic
 {
-    internal class Home : BaseHome
+    internal class Objects
     {
-        private const string EventsJson = "{\"events\":[]}";
+        internal Level Player;
+        internal string Json;
+        internal DateTime Timestamp = DateTime.UtcNow;
 
-        private readonly long _homeId;
-        private int _shieldTime;
-        private string _homeJson;
-
-        public Home(long homeId)
+        internal Objects(Level player, String Village)
         {
-            _homeId = homeId;
+            this.Player = player;
+            this.Json = Village;
         }
 
-        public override byte[] Encode()
+        internal byte[] ToBytes
         {
-            var data = new List<byte>();
-            data.AddInt64(_homeId);
-            data.AddInt32(_shieldTime);
-            data.AddInt32(1800);
-            data.AddInt32(0);
-            data.Add(1);
-            data.AddCompressedString(_homeJson);
-            data.Add(1);
-            data.AddCompressedString(EventsJson);
+            get
+            {
+                List<byte> _Packet = new List<byte>();
 
-            return data.ToArray();
-        }
+                _Packet.AddInt((int)TimeUtils.ToUnixTimestamp(Timestamp));
 
-        public void SetHomeJson(string json)
-        {
-            _homeJson = json;
-        }
+                _Packet.AddLong(Player.Avatar.UserId);
 
-        public void SetShieldTime(int seconds)
-        {
-            _shieldTime = seconds;
+                _Packet.AddInt(Player.Avatar.Shield);
+                _Packet.AddInt(Player.Avatar.Guard);
+
+                _Packet.AddInt((int)TimeSpan.FromDays(365).TotalSeconds); //Personal break
+
+                _Packet.AddCompressed(this.Json);
+                _Packet.AddCompressed(Game_Events.Events_Json);
+                _Packet.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
+                return _Packet.ToArray();
+            }
         }
     }
 }

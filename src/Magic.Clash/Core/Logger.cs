@@ -12,11 +12,11 @@ namespace Magic.ClashOfClans.Core
 {
     internal static class Logger
     {
-        static bool ValidLogLevel;
-        static int logLevel = ToInt32(ConfigurationManager.AppSettings["log_level"]);
-        static string timestamp = Convert.ToString(DateTime.Today).Remove(10).Replace(".", "-").Replace("/", "-");
-        static string path = "Logs/log_" + timestamp + "_.txt";
-        static SemaphoreSlim _fileLock = new SemaphoreSlim(1);
+        private static bool _validLogLevel;
+        private static readonly int LogLevel = ToInt32(ConfigurationManager.AppSettings["log_level"]);
+        private static readonly string Timestamp = Convert.ToString(DateTime.Today).Remove(10).Replace(".", "-").Replace("/", "-");
+        private static readonly string Path = "Logs/log_" + Timestamp + "_.txt";
+        private static readonly SemaphoreSlim _fileLock = new SemaphoreSlim(1);
 
         private static readonly object s_lock = new object();
         private static readonly string s_errPath = "Logs/err_" + DateTime.Now.ToFileTime() + "_.log";
@@ -24,21 +24,21 @@ namespace Magic.ClashOfClans.Core
 
         public static void Initialize()
         {
-            if (logLevel > 2)
+            if (LogLevel > 2)
             {
-                ValidLogLevel = false;
+                _validLogLevel = false;
                 LogLevelError();
             }
             else
             {
-                ValidLogLevel = true;
+                _validLogLevel = true;
             }
 
-            if (logLevel != 0 || ValidLogLevel == true)
+            if (LogLevel != 0 || _validLogLevel == true)
             {
-                if (!File.Exists("logs/log_" + timestamp + "_.txt"))
+                if (!File.Exists("logs/log_" + Timestamp + "_.txt"))
                 {
-                    using (var sw = new StreamWriter("logs/log_" + timestamp + "_.txt"))
+                    using (var sw = new StreamWriter("logs/log_" + Timestamp + "_.txt"))
                     {
                         sw.WriteLine("Log file created at " + DateTime.Now);
                         sw.WriteLine();
@@ -49,19 +49,19 @@ namespace Magic.ClashOfClans.Core
 
         public static async void Write(string text)
         {
-            if (logLevel != 0)
+            if (LogLevel != 0)
             {
                 try
                 {
                     await _fileLock.WaitAsync();
-                    if (logLevel == 1)
+                    if (LogLevel == 1)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("[LOG]    " + text);
                         Console.ResetColor();
                     }
 
-                    using (StreamWriter sw = new StreamWriter(path, true))
+                    using (StreamWriter sw = new StreamWriter(Path, true))
                         await sw.WriteLineAsync("[LOG]    " + text + " at " + DateTime.UtcNow);
                 }
                 finally

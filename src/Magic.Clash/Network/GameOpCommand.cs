@@ -9,15 +9,9 @@ namespace Magic.ClashOfClans.Network
 {
     internal class GameOpCommand
     {
-        public static void SendCommandFailedMessage(Client c)
+        public static void SendCommandFailedMessage(Device c)
         {
-            Console.WriteLine("GameOp command failed. Insufficient privileges. Requster ID -> " + c.Level.Avatar.Id);
-            var p = new GlobalChatLineMessage(c);
-            p.SetChatMessage("GameOp command failed. Insufficient privileges.");
-            p.SetPlayerId(0);
-            p.SetLeagueId(22);
-            p.SetPlayerName("Clash of Magic");
-            p.Send();
+
         }
 
         public virtual void Execute(Level level)

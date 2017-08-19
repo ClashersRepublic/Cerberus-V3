@@ -1,10 +1,10 @@
-using Magic.ClashOfClans;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Network;
 using System;
-using System.IO;
+using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
+using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Core.Database;
+using Magic.ClashOfClans.Core.Settings;
 
 namespace Magic.ClashOfClans
 {
@@ -14,51 +14,41 @@ namespace Magic.ClashOfClans
 
         public static void Main(string[] args)
         {
-            // Print welcome message.
-            MagicControl.WelcomeMessage();
+            UpdateTitle(true);
+            Logger.Say();
+            Logger.SayAscii(@"_________ .__                .__                          __________                   ___.   .__  .__        ");
+            Logger.SayAscii(@"\_   ___ \|  | _____    _____|  |__   ___________  ______ \______   \ ____ ______  __ _\_ |__ |  | |__| ____  ");
+            Logger.SayAscii(@"/    \  \/|  | \__  \  /  ___/  |  \_/ __ \_  __ \/  ___/  |       _// __ \\____ \|  |  \ __ \|  | |  |/ ___\ ");
+            Logger.SayAscii(@"\     \___|  |__/ __ \_\___ \|   Y  \  ___/|  | \/\___ \   |    |   \  ___/|  |_> >  |  / \_\ \  |_|  \  \___ ");
+            Logger.SayAscii(@" \______  /____(____  /____  >___|  /\___  >__|  /____  >  |____|_  /\___  >   __/|____/|___  /____/__|\___  >");
+            Logger.SayAscii(@"        \/          \/     \/     \/     \/           \/          \/     \/|__|             \/             \/ ");
+            Logger.SayAscii(@"                                                                                             Clash Edition  ");
 
-            // Check directories and files.
-            CheckDirectories();
-            CheckFiles();
+            Logger.SayInfo(Constants.IsRc4 ? "Crypto: RC4" : "Crypto: None");
+            Logger.SayInfo(@"Clashers Repbulic's programs are protected by our policies, available only to our partner.");
+            Logger.SayInfo(@"Clashers Repbulic's programs are under the 'Proprietary' license.");
+            Logger.SayInfo(@"Clashers Repbulic is NOT affiliated to 'Supercell Oy'.");
+            Logger.SayInfo(@"Clashers Repbulic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'." + Environment.NewLine);
 
-            // Initialize our stuff.
-            CsvManager.Initialize();
-            ResourcesManager.Initialize();
-            ObjectManager.Initialize();
+            Logger.Say(Assembly.GetExecutingAssembly().GetName().Name + @" is now starting..." + Environment.NewLine);
 
-            Logger.Initialize();
-            ExceptionLogger.Initialize();
+            Classes.Initialize();
 
-            WebApi.Initialize();
-            Gateway.Initialize();
+            Logger.Say(@"-------------------------------------" + Environment.NewLine);
 
-            // Start listening since we're done initializing.
-            Gateway.Listen();
+            Thread.Sleep(Timeout.Infinite);
+        }
 
-            while (true)
+        public static void UpdateTitle(bool Status)
+        {
+            if (Status == false)
             {
-                const int SLEEP_TIME = 5000;
-
-                var numDisc = 0;
-                var clients = ResourcesManager.GetConnectedClients();
-                for (int i = 0; i < clients.Count; i++)
-                {
-                    var client = clients[i];
-                    if (DateTime.Now > client.NextKeepAlive)
-                    {
-                        ResourcesManager.DropClient(client.GetSocketHandle());
-                        numDisc++;
-                    }
-                }
-
-                if (numDisc > 0)
-                    Logger.Say($"Dropped {numDisc} clients due to keep alive timeouts.");
-
-                Logger.SayInfo("-- Pools --");
-                Logger.SayInfo($"SocketAsyncEventArgs: created -> {Gateway.NumberOfArgsCreated} in-use -> {Gateway.NumberOfArgsInUse} available -> {Gateway.NumberOfArgs}");
-                Logger.SayInfo($"Buffers: created -> {Gateway.NumberOfBuffersCreated} in-use -> {Gateway.NumberOfBuffersInUse} available -> {Gateway.NumberOfBuffers}");
-
-                Thread.Sleep(SLEEP_TIME);
+                Console.Title = Constants.DefaultTitle + "OFFLINE";
+            }
+            else
+            {
+                Constants.DefaultTitle = Constants.DefaultTitle + "ONLINE | Players > ";
+                Console.Title = Constants.DefaultTitle;
             }
         }
 
@@ -70,30 +60,6 @@ namespace Magic.ClashOfClans
         public static void TitleDe()
         {
             Console.Title = Constants.DefaultTitle + Interlocked.Decrement(ref OP);
-        }
-
-        public static void CheckDirectories()
-        {
-            if (!Directory.Exists("logs"))
-                Directory.CreateDirectory("Logs");
-
-            if (!Directory.Exists("patch"))
-                Directory.CreateDirectory("patch");
-
-            if (!Directory.Exists("tools"))
-                Directory.CreateDirectory("tools");
-
-            if (!Directory.Exists("libs"))
-                Directory.CreateDirectory("libs");
-
-            if (!Directory.Exists("contents"))
-                Directory.CreateDirectory("contents");
-        }
-
-        public static void CheckFiles()
-        {
-            if (!File.Exists("filter.ucs"))
-                File.WriteAllText("filter.ucs", "./savegame");
         }
     }
 }

@@ -1,55 +1,59 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Logic.Manager
 {
     internal class WorkerManager
     {
-        readonly List<GameObject> m_vGameObjectReferences;
+        readonly List<Game_Object> _gameObjectReferences;
        
-        int m_vWorkerCount;
+        int _workerCount;
 
         public WorkerManager()
         {
-            m_vGameObjectReferences = new List<GameObject>();
-            m_vWorkerCount = 0;
+            _gameObjectReferences = new List<Game_Object>();
+            _workerCount = 0;
         }
 
         public static int GetFinishTaskOfOneWorkerCost() => 0;
 
-        public static void RemoveGameObjectReferences(GameObject go)
+        public static void RemoveGameObjectReferences(Game_Object go)
         {
         }
 
-        public void AllocateWorker(GameObject go)
+        public void AllocateWorker(Game_Object go)
         {
-            if (m_vGameObjectReferences.IndexOf(go) == -1)
+            if (_gameObjectReferences.IndexOf(go) == -1)
             {
-                m_vGameObjectReferences.Add(go);
+                _gameObjectReferences.Add(go);
             }
         }
 
-        public void DeallocateWorker(GameObject go)
+        public void DeallocateWorker(Game_Object go)
         {
-            if (m_vGameObjectReferences.IndexOf(go) != -1)
+            if (_gameObjectReferences.IndexOf(go) != -1)
             {
-                m_vGameObjectReferences.Remove(go);
+                _gameObjectReferences.Remove(go);
             }
         }
 
-        public void DecreaseWorkerCount() => m_vWorkerCount--;
+        public void DecreaseWorkerCount() => _workerCount--;
 
         public void FinishTaskOfOneWorker()
         {
-            var go = GetShortestTaskGO();
+            var go = GetShortestTaskGo();
             if (go != null)
             {
                 if (go.ClassId == 3)
                 {
+                    /*var b = (Obstacle)go;
+                    if (b.IsClearing)
+                        b.SpeedUpClearing();*/
                 }
                 else
                 {
-                    var b = (ConstructionItem)go;
+                    /*var b = (ConstructionItem)go;
                     if (b.IsConstructing())
                         b.SpeedUpConstruction();
                     else
@@ -57,29 +61,33 @@ namespace Magic.ClashOfClans.Logic.Manager
                         var hero = b.GetHeroBaseComponent();
                         if (hero != null)
                             hero.SpeedUpUpgrade();
-                    }
+                    }*/
                 }
             }
         }
 
-        public int GetFreeWorkers() => m_vWorkerCount - m_vGameObjectReferences.Count;
+        public int GetFreeWorkers() => _workerCount - _gameObjectReferences.Count;
 
-        public GameObject GetShortestTaskGO()
+        public Game_Object GetShortestTaskGo()
         {
-            GameObject shortestTaskGO = null;
+            Game_Object shortestTaskGO = null;
             int shortestGOTime = 0;
             int currentGOTime;
 
-			Parallel.ForEach((m_vGameObjectReferences), go =>
+			Parallel.ForEach((_gameObjectReferences), go =>
 			{
 				currentGOTime = -1;
 				if (go.ClassId == 3)
 				{
-				}
+				    /*var c = (Obstacle)go;
+				    if (c.IsClearing)
+				    {
+				        currentGOTime = c.GetRemainingClearingTime();
+				    }*/
+                }
 				else
 				{
-					var c = (ConstructionItem)go;
-					if (c.IsConstructing())
+					/*if (c.IsConstructing())
 					{
 						currentGOTime = c.GetRemainingConstructionTime();
 					}
@@ -93,7 +101,7 @@ namespace Magic.ClashOfClans.Logic.Manager
 								currentGOTime = hero.GetRemainingUpgradeSeconds();
 							}
 						}
-					}
+					}*/
 				}
 				if (shortestTaskGO == null)
 				{
@@ -115,8 +123,8 @@ namespace Magic.ClashOfClans.Logic.Manager
             return shortestTaskGO;
         }
 
-        public int GetTotalWorkers() => m_vWorkerCount;
+        public int GetTotalWorkers() => _workerCount;
 
-        public void IncreaseWorkerCount() => m_vWorkerCount++;
+        public void IncreaseWorkerCount() => _workerCount++;
     }
 }

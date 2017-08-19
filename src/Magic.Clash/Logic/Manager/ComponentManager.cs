@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Windows;
-using Magic.ClashOfClans.Core;
-using Magic.Files.Logic;
+using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Logic.Manager
 {
@@ -10,7 +9,7 @@ namespace Magic.ClashOfClans.Logic.Manager
         public ComponentManager(Level l)
         {
             m_vComponents = new List<List<Component>>();
-            for (var i = 0; i <= 10; i++)
+            for (var i = 0; i <= 11; i++)
                 m_vComponents.Add(new List<Component>());
             m_vLevel = l;
         }
@@ -21,7 +20,7 @@ namespace Magic.ClashOfClans.Logic.Manager
 
         public void AddComponent(Component c) => m_vComponents[c.Type].Add(c);
 
-        public Component GetClosestComponent(int x, int y, ComponentFilter cf)
+        public Component GetClosestComponent(int x, int y, Component_Filter cf)
         {
             Component result = null;
             var componentType = cf.Type;
@@ -34,7 +33,8 @@ namespace Magic.ClashOfClans.Logic.Manager
                     if (cf.TestComponent(c))
                     {
                         var go = c.Parent;
-                        var lengthSquared = (v - go.GetPosition()).LengthSquared;
+                        var xy = go.GetPosition();
+                        var lengthSquared = (v - new Vector(xy[0], xy[1])).LengthSquared;
                         if (lengthSquared < maxLengthSquared || result == null)
                         {
                             maxLengthSquared = lengthSquared;
@@ -46,7 +46,7 @@ namespace Magic.ClashOfClans.Logic.Manager
 
         public List<Component> GetComponents(int type) => m_vComponents[type];
 
-        public int GetMaxBarrackLevel()
+        /*public int GetMaxBarrackLevel()
         {
             var result = 0;
             var components = m_vComponents[3];
@@ -120,9 +120,9 @@ namespace Magic.ClashOfClans.Logic.Manager
                         m_vLevel.Avatar.SetResourceCap(resource, resourceCap);
                 }
             }
-        }
+        }*/
 
-        public void RemoveGameObjectReferences(GameObject go)
+        public void RemoveGameObjectReferences(Game_Object go)
         {
             foreach (var components in m_vComponents)
             {

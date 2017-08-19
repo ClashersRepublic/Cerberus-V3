@@ -6,15 +6,9 @@ namespace Magic.ClashOfClans.Network.Messages.Server
     // Packet 20108
     internal class KeepAliveOkMessage : Message
     {
-        public KeepAliveOkMessage(ClashOfClans.Client client) : base(client)
+        public KeepAliveOkMessage(Device device) : base(device)
         {
-            MessageType = 20108;
-        }
-
-        public override void Encode()
-        {
-            var data = new List<byte>();
-            Encrypt(data.ToArray());
+            Identifier = 20108;
         }
     }
 }

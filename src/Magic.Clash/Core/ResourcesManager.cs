@@ -3,6 +3,7 @@ using Magic.ClashOfClans;
 using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Network;
 using Magic.ClashOfClans.Network.Messages.Server;
+using Magic.ClashOfClans.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,26 +17,25 @@ namespace Magic.ClashOfClans.Core
     internal static class ResourcesManager
     {
         // Socket Handle -> Client instance.
-        private static ConcurrentDictionary<long, Client> _clients;
+        private static ConcurrentDictionary<long, Device> _clients;
 
         // User Id -> Level instance.
         private static ConcurrentDictionary<long, Level> _inMemoryLevels;
         // Alliance Id -> Alliance instance.
-        private static ConcurrentDictionary<long, Alliance> _inMemoryAlliances;
+        //private static ConcurrentDictionary<long, Alliance> _inMemoryAlliances;
 
         // Not sure why they are using this as well as InMemLevels.
-        private static List<Level> _onlinePlayers;
 
         public static void Initialize()
         {
-            _onlinePlayers = new List<Level>();
-            _clients = new ConcurrentDictionary<long, Client>();
+            OnlinePlayers = new List<Level>();
+            _clients = new ConcurrentDictionary<long, Device>();
 
             _inMemoryLevels = new ConcurrentDictionary<long, Level>();
-            _inMemoryAlliances = new ConcurrentDictionary<long, Alliance>();
+            //_inMemoryAlliances = new ConcurrentDictionary<long, Alliance>();
         }
 
-        public static void AddClient(Client client)
+        public static void AddClient(Device client)
         {
             _clients.TryAdd(client.GetSocketHandle(), client);
             Program.TitleAd();
@@ -46,7 +46,7 @@ namespace Magic.ClashOfClans.Core
             var closedSocket = false;
             try
             {
-                var client = default(Client);
+                var client = default(Device);
                 if (_clients.TryRemove(socketHandle, out client))
                 {
                     Program.TitleDe();
@@ -60,7 +60,7 @@ namespace Magic.ClashOfClans.Core
                     closedSocket = true;
 
                     // Clean level from memory if its Level has been loaded.
-                    var level = client.Level;
+                    var level = client.Player;
                     if (level != null)
                         LogPlayerOut(level);
 
@@ -74,19 +74,14 @@ namespace Magic.ClashOfClans.Core
             return closedSocket;
         }
 
-        public static List<Client> GetConnectedClients() => _clients.Values.ToList();
+        public static List<Device> GetConnectedClients() => _clients.Values.ToList();
 
         public static List<Level> GetInMemoryLevels()
         {
-            var levels = new List<Level>();
-
-            lock (_inMemoryLevels) // ??
-                levels.AddRange(_inMemoryLevels.Values);
-
-            return levels;
+            return _inMemoryLevels.Values.ToList();
         }
 
-        public static List<Level> OnlinePlayers => _onlinePlayers;
+        public static List<Level> OnlinePlayers { get; private set; }
 
         public static Level GetPlayer(long id, bool persistent = false)
         {
@@ -95,75 +90,65 @@ namespace Magic.ClashOfClans.Core
             var result = GetInMemoryLevel(id);
             if (result == null)
             {
-                result = DatabaseManager.Instance.GetLevel(id);
+                result = DatabaseManager.GetLevel(id);
                 if (result != null && persistent)
                     LoadLevel(result);
             }
             return result;
         }
 
-        public static bool IsPlayerOnline(Level l) => _onlinePlayers.Contains(l);
+        public static bool IsPlayerOnline(Level l) => OnlinePlayers.Contains(l);
 
         public static void LoadLevel(Level level)
         {
-            _inMemoryLevels.TryAdd(level.Avatar.Id, level);
+            _inMemoryLevels.TryAdd(level.Avatar.UserId, level);
         }
 
-        public static void LogPlayerIn(Level level, Client client)
+        public static void LogPlayerIn(Level level)
         {
-            // Set the back refs.
-            level.Client = client;
-            client.Level = level;
-
-            lock (_onlinePlayers)
+            var index = OnlinePlayers.IndexOf(level);
+            if (index == -1)
             {
-                var index = _onlinePlayers.IndexOf(level);
-                if (index == -1)
-                {
-                    _onlinePlayers.Add(level);
+                OnlinePlayers.Add(level);
 
-                    // Register level in dictionary.
-                    LoadLevel(level);
-                }
-                else
-                {
-                    Logger.Error("A client who is already logged in is trying to log in.");
+                // Register level in dictionary.
+                LoadLevel(level);
+            }
+            else
+            {
+                Logger.Error("A client who is already logged in is trying to log in.");
 
-                    var oldLevel = _onlinePlayers[index];
-                    DropClient(oldLevel.Client.GetSocketHandle());
+                var oldLevel = OnlinePlayers[index];
+                DropClient(oldLevel.Device.GetSocketHandle());
 
-                    _onlinePlayers.Add(level);
-                }
+                OnlinePlayers.Add(level);
             }
         }
 
         public static void LogPlayerOut(Level level)
         {
-            // Make sure to tick before dropping client because
-            // we're not morons right.
             level.Tick();
 
             try
             {
-                DatabaseManager.Instance.Save(level);
+                DatabaseManager.Save(level);
             }
             catch
             {
-                // No need logging since its already done in the Save method.
             }
 
-            _onlinePlayers.Remove(level);
-            _inMemoryLevels.TryRemove(level.Avatar.Id);
+            OnlinePlayers.Remove(level);
+            _inMemoryLevels.TryRemove(level.Avatar.UserId);
         }
 
         private static Level GetInMemoryLevel(long userId)
         {
-            var level = default(Level);
+            var level = default(Level); 
             _inMemoryLevels.TryGetValue(userId, out level);
             return level;
         }
 
-        public static List<Alliance> GetInMemoryAlliances() => _inMemoryAlliances.Values.ToList();
+        /*public static List<Alliance> GetInMemoryAlliances() => _inMemoryAlliances.Values.ToList();
 
         public static void AddAllianceInMemory(Alliance alliance)
         {
@@ -182,12 +167,12 @@ namespace Magic.ClashOfClans.Core
         public static void RemoveAllianceFromMemory(long key)
         {
             _inMemoryAlliances.TryRemove(key);
-        }
+        }*/
 
-        public static void DisconnectClient(Client c)
+        public static void DisconnectClient(Device device)
         {
-            new OutOfSyncMessage(c).Send();
-            DropClient(c.GetSocketHandle());
+            //Outofsync
+            DropClient(device.GetSocketHandle());
         }
     }
 }

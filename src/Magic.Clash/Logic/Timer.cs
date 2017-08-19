@@ -1,61 +1,72 @@
 using System;
+using Magic.ClashOfClans.Extensions;
 
 namespace Magic.ClashOfClans.Logic
 {
     internal class Timer
     {
-        int m_vSeconds;
-        DateTime m_vStartTime;
+        internal int Seconds;
+        internal DateTime StartTime;
+        internal int EndTime;
 
-        public Timer()
+        internal Timer()
         {
-            m_vStartTime = new DateTime(1970, 1, 1);
-            m_vSeconds = 0;
+            StartTime = new DateTime(1970, 1, 1);
+            EndTime = 0;
+            Seconds = 0;
         }
 
-        public void FastForward(int seconds)
+        internal void FastForward(int seconds) => Seconds -= seconds;
+
+        internal void IncreaseTime(int seconds)
         {
-            m_vSeconds -= seconds;
+            Seconds += seconds;
+            EndTime += seconds;
         }
 
-        public int GetRemainingSeconds(DateTime time, bool boost = false, DateTime boostEndTime = default(DateTime), float multiplier = 0f)
+
+        internal int GetRemainingSeconds(DateTime time, bool boost, DateTime boostEndTime = default(DateTime), float multiplier = 0f)
         {
-            var result = int.MaxValue;
+            int result;
             if (!boost)
-                result = m_vSeconds - (int)time.Subtract(m_vStartTime).TotalSeconds;
+            {
+                result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
+            }
             else
             {
                 if (boostEndTime >= time)
-                    result = m_vSeconds - (int)(time.Subtract(m_vStartTime).TotalSeconds * multiplier);
+                    result = Seconds - (int)(time.Subtract(StartTime).TotalSeconds * multiplier);
                 else
                 {
-                    var boostedTime = (float)time.Subtract(m_vStartTime).TotalSeconds -
-                                      (float)(time - boostEndTime).TotalSeconds;
-                    var notBoostedTime = (float)time.Subtract(m_vStartTime).TotalSeconds - boostedTime;
+                    var boostedTime = (float)time.Subtract(StartTime).TotalSeconds - (float)(time - boostEndTime).TotalSeconds;
+                    var notBoostedTime = (float)time.Subtract(StartTime).TotalSeconds - boostedTime;
 
-                    result = m_vSeconds - (int)(boostedTime * multiplier + notBoostedTime);
+                    result = Seconds - (int)(boostedTime * multiplier + notBoostedTime);
                 }
             }
-
             if (result <= 0)
                 result = 0;
             return result;
         }
 
-        public int GetRemainingSeconds(DateTime time)
+        internal int GetRemainingSeconds(DateTime time)
         {
-            var result = m_vSeconds - (int)time.Subtract(m_vStartTime).TotalSeconds;
+            int result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
             if (result <= 0)
+            {
                 result = 0;
+            }
             return result;
         }
 
-        public DateTime GetStartTime() => m_vStartTime;
+        internal DateTime GetStartTime => StartTime;
+        internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(EndTime);
 
-        public void StartTimer(int seconds, DateTime time)
+        internal void StartTimer(DateTime time, int durationSeconds)
         {
-            m_vStartTime = time;
-            m_vSeconds = seconds;
+            StartTime = time;
+            EndTime = (int)TimeUtils.ToUnixTimestamp(time) + durationSeconds;
+            Seconds = durationSeconds;
         }
     }
 }

@@ -8,9 +8,12 @@
         LOGIN = 4,
         LOGGED = 5,
         SEARCH_BATTLE = 6,
-        IN_BATTLE = 7,
-        VISIT = 8,
-        WAR_EMODE = 9,
-        REPLAY = 10,
+        IN_PC_BATTLE = 7,
+        IN_NPC_BATTLE = 8,
+        IN_AMICAL_BATTLE = 9,
+        IN_1VS1_BATTLE = 10,
+        VISIT = 11,
+        WAR_EMODE = 12,
+        REPLAY = 13,
     }
 }
