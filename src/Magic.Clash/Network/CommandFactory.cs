@@ -25,6 +25,8 @@ namespace Magic.ClashOfClans.Network
                 { 519, typeof(Mission_Progress) },
                 { 520, typeof(Unlock_Building) },
                 { 524, typeof(Change_Weapon_Mode)},
+                { 527, typeof(Upgrade_Hero)},
+                { 528, typeof(SpeedUp_Hero_Upgrade)},
                 { 533, typeof(Move_Multiple_Buildings)},
                 { 549, typeof(Upgrade_Multiple_Buildings)},
                 { 550, typeof(Remove_Units)},

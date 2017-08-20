@@ -83,8 +83,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
 #if DEBUG
                                 Logger.Say("Command " + CommandID + " has not been handled.", ConsoleColor.Red);
                                 if (LCommands.Any())
-                                    Logger.Say("Previous command was " + LCommands.Last().Identifier +
-                                                      ". [" + (_Index + 1) + " / " + Count + "]", ConsoleColor.Red);
+                                    Logger.Say("Previous command was " + LCommands.Last().Identifier + ". [" + (_Index + 1) + " / " + Count + "]", ConsoleColor.Red);
                                 break;
 #endif
                             }

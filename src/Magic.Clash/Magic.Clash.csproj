@@ -315,9 +315,11 @@
     <Compile Include="Network\Commands\Client\Move_Multiple_Buildings.cs" />
     <Compile Include="Network\Commands\Client\Remove_Units.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Construction.cs" />
+    <Compile Include="Network\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Upgrade_Unit.cs" />
     <Compile Include="Network\Commands\Client\Train_Unit.cs" />
     <Compile Include="Network\Commands\Client\Upgrade_Building.cs" />
+    <Compile Include="Network\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Network\Commands\Client\Upgrade_Multiple_Buildings.cs" />
     <Compile Include="Network\Commands\Client\Upgrade_Unit.cs" />
     <Compile Include="Network\Commands\Server\Name_Change_Callback.cs" />
