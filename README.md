@@ -6,13 +6,15 @@ The goal of this project is to ensure a clean, easy-to-die code environment.
 All programs developed by the Clashers' Republic Development Team are licensed by a license.
 
 ## Project Codenames:
-* Savage CoC - Clash of Clans Server
-* Savage CR - Clash Royale Server
-* Savage Hasher - Hash Generator
-* Savage Proxy - Supercell Proxy
-* Savage SC - SC Editor
-* Savage LZMA - LZMA Manager
-* Savage Patcher - Library Patcher
+* CRepublic.CoC - Clash of Clans Server
+* CRepublic.CR - Clash Royale Server
+* CRepublic.Hasher - Hash Generator
+* CRepublic.Proxy - Supercell Proxy
+* CRepublic.SCEditor - SC Editor
+* CRepublic.LZMAManager - LZMA Manager
+* CRepublic.LibraryPatcher - Library Patcher
+* CRepublic.Restarter - Advanced EXE Restarter
+* CRepublic.DoS - DoS & Stress Tester
 
 ## Disclaimer
 **Clashers' Republic**'s resources and programs are protected under the license and our policies available on our website.
