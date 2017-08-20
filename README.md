@@ -13,6 +13,7 @@ All programs developed by the Clashers' Republic Development Team are licensed b
 * CRepublic.SCEditor - SC Editor
 * CRepublic.LZMAManager - LZMA Manager
 * CRepublic.LibraryPatcher - Library Patcher
+* CRepublic.DoS - DoS & Stress Tester
 
 ## Disclaimer
 **Clashers' Republic**'s resources and programs are protected under the license and our policies available on our website.
