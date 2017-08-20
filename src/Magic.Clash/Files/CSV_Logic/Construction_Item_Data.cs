@@ -23,6 +23,7 @@ namespace Magic.ClashOfClans.Files.CSV_Logic
 
         public virtual bool IsTownHall() => false;
         public virtual bool IsTownHall2() => false;
+        public virtual bool IsAllianceCastle() => false;
     }
 
 }

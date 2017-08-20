@@ -1,16 +1,14 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Database;
 using Magic.ClashOfClans.Core.Settings;
 
 namespace Magic.ClashOfClans
 {
     internal class Program
     {
-        public static int OP = 0;
+        public static int OP;
 
         public static void Main(string[] args)
         {
@@ -25,10 +23,11 @@ namespace Magic.ClashOfClans
             Logger.SayAscii(@"                                                                                             Clash Edition  ");
 
             Logger.SayInfo(Constants.IsRc4 ? "Crypto: RC4" : "Crypto: None");
-            Logger.SayInfo(@"Clashers Repbulic's programs are protected by our policies, available only to our partner.");
-            Logger.SayInfo(@"Clashers Repbulic's programs are under the 'Proprietary' license.");
-            Logger.SayInfo(@"Clashers Repbulic is NOT affiliated to 'Supercell Oy'.");
-            Logger.SayInfo(@"Clashers Repbulic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'." + Environment.NewLine);
+            Logger.SayInfo(@"Clashers Republic's programs are protected by our policies, available only to our partner.");
+            Logger.SayInfo(@"Clashers Republic's programs are under the 'Proprietary' license.");
+            Logger.SayInfo(@"Clashers Republic is NOT affiliated to 'Supercell Oy'.");
+            Logger.SayInfo(@"Clashers Republic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'." +
+                           Environment.NewLine);
 
             Logger.Say(Assembly.GetExecutingAssembly().GetName().Name + @" is now starting..." + Environment.NewLine);
 

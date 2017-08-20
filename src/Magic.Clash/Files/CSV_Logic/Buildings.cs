@@ -232,7 +232,7 @@ namespace Magic.ClashOfClans.Files.CSV_Logic
         public override bool IsTownHall() => BuildingClass == "Town Hall";
         public override bool IsTownHall2() => BuildingClass == "Town Hall2";
         public bool IsSpellForge() => ForgesSpells || ForgesMiniSpells;
-        public bool IsAllianceCastle() => Name == "Alliance Castle";
+        public override bool IsAllianceCastle() => Name == "Alliance Castle";
 
         public bool IsWorkerBuilding() => BuildingClass == "Worker";
         public bool IsWorker2Building() => BuildingClass == "Worker2";

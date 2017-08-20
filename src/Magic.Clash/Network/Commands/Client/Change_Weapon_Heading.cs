@@ -34,7 +34,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             var a = (Combat_Component) Object.GetComponent(1, false);
             if (a.AimRotateStep)
             {
-                Console.WriteLine(a.AimAngle);
                 a.AimAngle = a.AimAngle == 360 ? 45 : a.AimAngle + 45;
                 a.AimAngleDraft = a.AimAngleDraft == 360 ? 45 : a.AimAngleDraft + 45;
             }

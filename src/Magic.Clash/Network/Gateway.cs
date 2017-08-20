@@ -1,4 +1,4 @@
-﻿#define Info
+﻿//#define Info
 
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;

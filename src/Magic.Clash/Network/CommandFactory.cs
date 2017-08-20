@@ -23,12 +23,20 @@ namespace Magic.ClashOfClans.Network
                 { 516, typeof(Upgrade_Unit) },
                 { 517, typeof(SpeedUp_Upgrade_Unit) },
                 { 519, typeof(Mission_Progress) },
+                { 520, typeof(Unlock_Building) },
                 { 524, typeof(Change_Weapon_Mode)},
                 { 533, typeof(Move_Multiple_Buildings)},
+                { 549, typeof(Upgrade_Multiple_Buildings)},
+                { 550, typeof(Remove_Units)},
                 { 554, typeof(Change_Weapon_Heading)},
                 { 590, typeof(Buy_Multiple_Wall)},
                 { 591, typeof(Change_Village_Mode)},
                 { 700, typeof(Place_Attacker)},
+                { 701, typeof(Place_Alliance_Attacker)},
+                { 703, typeof(Surrender_Attack)},
+                { 704, typeof(Place_Spell)},
+                { 705, typeof(Place_Hero)},
+                { 706, typeof(Hero_Rage)},
             };
         }
     }

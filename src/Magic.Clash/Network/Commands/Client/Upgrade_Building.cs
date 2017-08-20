@@ -33,18 +33,35 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             {
                 var b = (Construction_Item) go;
                 if (b.CanUpgrade)
-                    if (b.ClassId == 0 || b.ClassId == 7)
+                {
+                    var bd = b.GetConstructionItemData;
+                    var resource = b.ClassId == 0 || b.ClassId == 7
+                        ? IsAltResource
+                            ? (bd as Buildings)?.GetAltBuildResource(b.GetUpgradeLevel + 1)
+                            : bd.GetBuildResource(b.GetUpgradeLevel + 1)
+                        : bd.GetBuildResource(b.GetUpgradeLevel + 1);
+
+                    if (resource != null)
                     {
-                        var bd = (Buildings) b.GetConstructionItemData;
-                        var rd = IsAltResource ? bd.GetAltBuildResource(b.GetUpgradeLevel + 1) : bd.GetBuildResource(b.GetUpgradeLevel + 1);
-                        if (ca.HasEnoughResources(rd.GetGlobalId(),  bd.GetBuildCost(b.GetUpgradeLevel)))
-                            if (Device.Player.Avatar.Variables.IsBuilderVillage ? Device.Player.HasFreeBuilderWorkers : Device.Player.HasFreeVillageWorkers)
+                        if (ca.HasEnoughResources(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel)))
+                            if (Device.Player.Avatar.Variables.IsBuilderVillage
+                                ? Device.Player.HasFreeBuilderWorkers
+                                : Device.Player.HasFreeVillageWorkers)
                             {
 #if DEBUG
                                 var name = go.Data.Row.Name;
-                                Logger.SayInfo(b.ClassId == 0
-                                    ? "Building" + $" : Upgrading {name} with ID {BuildingId}"
-                                    : "Builder Building" + $" : Upgrading {name} with ID {BuildingId}");
+                                if (b.ClassId == 0 || b.ClassId == 7)
+                                    Logger.SayInfo(b.ClassId == 0
+                                        ? $"Building: Upgrading {name} with ID {BuildingId}"
+                                        : $"Builder Building: Upgrading {name} with ID {BuildingId}");
+                                else if (b.ClassId == 4 || b.ClassId == 11)
+                                    Logger.SayInfo(b.ClassId == 4
+                                        ? $"Trap: Upgrading {name} with ID {BuildingId}"
+                                        : $"Builder Trap: Upgrading {name} with ID {BuildingId}");
+                                else if (b.ClassId == 8 || b.ClassId == 15)
+                                    Logger.SayInfo(b.ClassId == 8
+                                        ? $"Village Object: Upgrading {name} with ID {BuildingId}"
+                                        : $"Buildeer Village Object: Upgrading {name} with ID {BuildingId}");
 #endif
 
                                 if (bd.IsTownHall2())
@@ -70,7 +87,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                                     ca.Builder_TownHall_Level++;
                                 }
 
-
                                 if (bd.IsAllianceCastle())
                                 {
                                     var a = (Building) go;
@@ -85,49 +101,16 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                                     ca.TownHall_Level++;
                                 }
 
-                                ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
+                                ca.Resources.Minus(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
                                 b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
                             }
                     }
-                    else if (b.ClassId == 4 || b.ClassId == 11)
+                    else
                     {
-                        var bd = (Traps) b.GetConstructionItemData;
-                        if (ca.HasEnoughResources(bd.GetBuildResource(b.GetUpgradeLevel).GetGlobalId(),
-                            bd.GetBuildCost(b.GetUpgradeLevel)))
-                            if (Device.Player.Avatar.Variables.IsBuilderVillage
-                                ? Device.Player.HasFreeBuilderWorkers
-                                : Device.Player.HasFreeVillageWorkers)
-                            {
-#if DEBUG
-                                var name = go.Data.Row.Name;
-                                Logger.SayInfo($"Trap: Upgrading {name} with ID {BuildingId}");
-#endif
-
-                                var rd = bd.GetBuildResource(b.GetUpgradeLevel + 1);
-                                ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
-                                b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
-                            }
+                        ExceptionLogger.Log(new NullReferenceException(),
+                            $"Resource data is null for building with {b.ClassId} class and {b.GlobalId} global id");
                     }
-                    else if (b.ClassId == 8 || b.ClassId == 15)
-                    {
-                        var bd = (Village_Objects) b.GetConstructionItemData;
-                        if (ca.HasEnoughResources(bd.GetBuildResource(b.GetUpgradeLevel).GetGlobalId(),
-                            bd.GetBuildCost(b.GetUpgradeLevel)))
-                            if (Device.Player.Avatar.Variables.IsBuilderVillage
-                                ? Device.Player.HasFreeBuilderWorkers
-                                : Device.Player.HasFreeVillageWorkers)
-                            {
-#if DEBUG
-                                var name = go.Data.Row.Name;
-
-                                Logger.SayInfo($"Village Object: Upgrading {name} with ID {BuildingId}");
-#endif
-
-                                var rd = bd.GetBuildResource(b.GetUpgradeLevel + 1);
-                                ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
-                                b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
-                            }
-                    }
+                }
             }
         }
     }
