@@ -13,8 +13,8 @@ namespace Magic.ClashOfClans.Core
         private static readonly object s_sync = new object();
         private static readonly Random s_rand = new Random();
 
-        private static long AllianceSeed;
-        private static long AvatarSeed;
+        public static long AllianceSeed;
+        public static long AvatarSeed;
 
         public static int DonationSeed;
 
@@ -135,7 +135,7 @@ namespace Magic.ClashOfClans.Core
             return levels[index];
         }
 
-        
+
 
         public static void RemoveInMemoryAlliance(long id)
         {

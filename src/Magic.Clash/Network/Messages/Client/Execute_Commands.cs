@@ -4,7 +4,6 @@ using System.Linq;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Network.Messages.Client
 {

@@ -8,7 +8,12 @@ namespace Magic.ClashOfClans.Network.Messages.Server.Battle
     internal class Pc_Battle_Data : Message
     {
         internal Level Enemy = null;
-        internal Battle_Mode BattleMode;
+        internal Battle_Mode BattleMode = Battle_Mode.PVP;
+
+        public Pc_Battle_Data(Device device) : base(device)
+        {
+            Identifier = 24107;
+        }
 
         public override void Encode()
         {

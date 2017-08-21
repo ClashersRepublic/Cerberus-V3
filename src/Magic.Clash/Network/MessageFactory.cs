@@ -21,6 +21,7 @@ namespace Magic.ClashOfClans.Network
                 {10212, typeof(Change_Name)},
                 {14101, typeof(Go_Home)},
                 {14102, typeof(Execute_Commands)},
+                {14123, typeof(Search_Opponent)},
                 {14134, typeof(Attack_NPC)},
                 {14325, typeof(Avatar_Profile)},
             };

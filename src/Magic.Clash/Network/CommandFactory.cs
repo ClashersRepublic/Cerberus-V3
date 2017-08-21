@@ -39,6 +39,7 @@ namespace Magic.ClashOfClans.Network
                 { 704, typeof(Place_Spell)},
                 { 705, typeof(Place_Hero)},
                 { 706, typeof(Hero_Rage)},
+                { 800, typeof(Search_Opponent)},
             };
         }
     }
