@@ -1,11 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.0
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Clash", "src\Magic.Clash\Magic.Clash.csproj", "{0E72C402-09B2-4545-AAEB-6AB58971D2FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic.Restarter", "src\Magic.Restarter\Magic.Restarter.csproj", "{B75A39CD-0FB4-4659-B458-BFCD8C08469D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRepublic.Hasher", "src\CRepublic.Hasher\CRepublic.Hasher.csproj", "{D1827AF7-82B1-45C3-AF43-0D91BB82837B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRepublic.LibraryPatcher", "src\CRepublic.LibraryPatcher\CRepublic.LibraryPatcher.csproj", "{086B7850-569A-499D-B078-309B1A0D286D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRepublic.LZMAManager", "src\CRepublic.LZMAManager\CRepublic.LZMAManager.csproj", "{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRepublic.Restarter", "src\CRepublic.Restarter\CRepublic.Restarter.csproj", "{B75A39CD-0FB4-4659-B458-BFCD8C08469D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +29,30 @@ Global
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.ActiveCfg = Release|x64
 		{0E72C402-09B2-4545-AAEB-6AB58971D2FC}.Release|x64.Build.0 = Release|x64
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Debug|x64.Build.0 = Debug|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Release|x64.ActiveCfg = Release|Any CPU
+		{D1827AF7-82B1-45C3-AF43-0D91BB82837B}.Release|x64.Build.0 = Release|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Debug|x64.Build.0 = Debug|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Release|x64.ActiveCfg = Release|Any CPU
+		{086B7850-569A-499D-B078-309B1A0D286D}.Release|x64.Build.0 = Release|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7EA6F76E-D8DB-4BC4-ACD3-5D53D54622CF}.Release|x64.Build.0 = Release|Any CPU
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B75A39CD-0FB4-4659-B458-BFCD8C08469D}.Debug|x64.ActiveCfg = Debug|Any CPU
