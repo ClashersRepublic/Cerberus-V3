@@ -1,4 +1,5 @@
 ﻿using System;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Logic.Components;
 
@@ -28,20 +29,32 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             var Object =
                 Device.Player.GameObjectManager.GetGameObjectByID(BuildingID,
                     Device.Player.Avatar.Variables.IsBuilderVillage);
-            if (Object?.GetComponent(1, false
-                ) == null)
-                return;
-            var a = (Combat_Component) Object.GetComponent(1, false);
-            if (a.AimRotateStep)
-            {
-                a.AimAngle = a.AimAngle == 360 ? 45 : a.AimAngle + 45;
-                a.AimAngleDraft = a.AimAngleDraft == 360 ? 45 : a.AimAngleDraft + 45;
-            }
 
-            if (a.AltDirectionMode)
+            if (Object != null)
             {
-                a.TrapDirection = a.TrapDirection == 4 ? 0 : a.TrapDirection++;
-                a.TrapDirectionDraft = a.TrapDirectionDraft == 4 ? 0 : a.TrapDirectionDraft++;
+                var a = Object.GetComponent(1, false);
+                if (a == null)
+                    return;
+
+                var component = (Combat_Component)a;
+                if (component.AimRotateStep)
+                {
+                    component.AimAngle = component.AimAngle == 360 ? 45 : component.AimAngle + 45;
+                    component.AimAngleDraft = component.AimAngleDraft == 360 ? 45 : component.AimAngleDraft + 45;
+                }
+
+                if (component.AltDirectionMode)
+                {
+                    component.TrapDirection = component.TrapDirection == 4 ? 0 : component.TrapDirection++;
+                    component.TrapDirectionDraft = component.TrapDirectionDraft == 4
+                        ? 0
+                        : component.TrapDirectionDraft++;
+                }
+            }
+            else
+            {
+                ExceptionLogger.Log(new NullReferenceException(),
+                    $"Object with id {BuildingID} from user {Device.Player.Avatar.UserId} is null at Change Weapon Heading");
             }
         }
     }

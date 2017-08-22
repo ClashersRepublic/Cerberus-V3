@@ -164,7 +164,6 @@ namespace Magic.ClashOfClans.Logic.Structure
             {
                 Buildings data = (Buildings)Data;
                 Heroes hd = CSV.Tables.Get(Gamefile.Heroes).GetData(data.HeroType) as Heroes;
-                Console.WriteLine(Level.Avatar.Name);
                 Level.Avatar.SetUnitUpgradeLevel(hd, 0);
                 Level.Avatar.SetHeroHealth(hd, 0);
                 Level.Avatar.SetHeroState(hd, 3);

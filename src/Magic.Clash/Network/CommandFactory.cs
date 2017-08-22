@@ -22,6 +22,7 @@ namespace Magic.ClashOfClans.Network
                 { 512, typeof(Buy_Deco)},
                 { 516, typeof(Upgrade_Unit) },
                 { 517, typeof(SpeedUp_Upgrade_Unit) },
+                { 518, typeof(Buy_Resource)},
                 { 519, typeof(Mission_Progress) },
                 { 520, typeof(Unlock_Building) },
                 { 524, typeof(Change_Weapon_Mode)},

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Logic.Enums;
 
@@ -38,7 +36,14 @@ namespace Magic.ClashOfClans.Files.CSV_Reader
                 GlobalID -= 1000000;
             }
 
-            return this.DataTables[Type].GetDataWithInstanceID(GlobalID);
+            try
+            {
+                return this.DataTables[Type].GetDataWithInstanceID(GlobalID);
+            }
+            catch (Exception e)
+            {
+                ExceptionLogger.Log(e, $"Datatable throw exception for {Type} with Global Id {GlobalID} ");
+            }
         }
 
         internal void Initialize(Table _Table, int _Index)

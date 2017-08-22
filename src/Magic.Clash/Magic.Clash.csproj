@@ -345,6 +345,7 @@
     <Compile Include="Network\Commands\Client\Buy_Building.cs" />
     <Compile Include="Network\Commands\Client\Buy_Deco.cs" />
     <Compile Include="Network\Commands\Client\Buy_Multiple_Wall.cs" />
+    <Compile Include="Network\Commands\Client\Buy_Resource.cs" />
     <Compile Include="Network\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Network\Commands\Client\Change_Village_Mode.cs" />
     <Compile Include="Network\Commands\Client\Change_Weapon_Heading.cs" />
@@ -374,6 +375,7 @@
     <Compile Include="Network\Messages\Server\Battle\Battle_Failed.cs" />
     <Compile Include="Network\Messages\Server\Battle\Npc_Data.cs" />
     <Compile Include="Network\Messages\Server\Battle\Pc_Battle_Data.cs" />
+    <Compile Include="Network\Messages\Server\Errors\Out_Of_Sync.cs" />
     <Compile Include="Network\Messages\Server\Server_Commands.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="Core\Settings\Constants.cs" />
@@ -945,9 +947,7 @@
       <DefaultIcon>Server.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Network\Messages\Server\Errors\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Tools\Clashers' Republic Hasher.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

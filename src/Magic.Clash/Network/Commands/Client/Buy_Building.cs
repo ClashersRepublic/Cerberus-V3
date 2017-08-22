@@ -29,66 +29,73 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         {
             var ca = Device.Player.Avatar;
             var bd = (Buildings) CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(BuildingId);
-            if (!ca.Variables.IsBuilderVillage)
+            if (bd != null)
             {
-                var b = new Building(bd, Device.Player);
-
-                if (ca.HasEnoughResources(bd.GetBuildResource(0).GetGlobalId(), bd.GetBuildCost(0)))
+                if (!ca.Variables.IsBuilderVillage)
                 {
-                    if (bd.IsWorkerBuilding())
+                    var b = new Building(bd, Device.Player);
+
+                    if (ca.HasEnoughResources(bd.GetBuildResource(0).GetGlobalId(), bd.GetBuildCost(0)))
                     {
-                        if (Device.Player.VillageWorkerManager.GetFreeWorkers() > 0)
+                        if (bd.IsWorkerBuilding())
                         {
-                            var Cost = 0;
-                            var row = CSV.Tables.Get(Gamefile.Globals);
-                            if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 1)
-                                Cost = ((Globals) row.GetData("WORKER_COST_2ND")).NumberValue;
-                            else if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 2)
-                                Cost = ((Globals) row.GetData("WORKER_COST_3RD")).NumberValue;
-                            else if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 3)
-                                Cost = ((Globals) row.GetData("WORKER_COST_4TH")).NumberValue;
-                            else if (Device.Player.VillageWorkerManager.GetTotalWorkers() >= 4)
-                                Cost = ((Globals) row.GetData("WORKER_COST_5TH")).NumberValue;
+                            if (Device.Player.VillageWorkerManager.GetFreeWorkers() > 0)
+                            {
+                                var Cost = 0;
+                                var row = CSV.Tables.Get(Gamefile.Globals);
+                                if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 1)
+                                    Cost = ((Globals) row.GetData("WORKER_COST_2ND")).NumberValue;
+                                else if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 2)
+                                    Cost = ((Globals) row.GetData("WORKER_COST_3RD")).NumberValue;
+                                else if (Device.Player.VillageWorkerManager.GetTotalWorkers() == 3)
+                                    Cost = ((Globals) row.GetData("WORKER_COST_4TH")).NumberValue;
+                                else if (Device.Player.VillageWorkerManager.GetTotalWorkers() >= 4)
+                                    Cost = ((Globals) row.GetData("WORKER_COST_5TH")).NumberValue;
 
-                            var rd = bd.GetBuildResource(0);
-                            ca.Resources.Minus(rd.GetGlobalId(), Cost);
+                                var rd = bd.GetBuildResource(0);
+                                ca.Resources.Minus(rd.GetGlobalId(), Cost);
+                            }
+                            b.StartConstructing(XY, false);
+                            Device.Player.GameObjectManager.AddGameObject(b);
+                            return;
                         }
-                        b.StartConstructing(XY, false);
-                        Device.Player.GameObjectManager.AddGameObject(b);
-                        return;
+
+                        if (Device.Player.HasFreeVillageWorkers)
+                        {
+                            var rd = bd.GetBuildResource(0);
+                            ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(0));
+
+                            b.StartConstructing(XY, false);
+                            Device.Player.GameObjectManager.AddGameObject(b);
+                        }
                     }
-
-                    if (Device.Player.HasFreeVillageWorkers)
+                }
+                else
+                {
+                    var b = new Builder_Building(bd, Device.Player);
+                    if (ca.HasEnoughResources(bd.GetBuildResource(0).GetGlobalId(), bd.GetBuildCost(0)))
                     {
-                        var rd = bd.GetBuildResource(0);
-                        ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(0));
+                        if (bd.IsWorker2Building())
+                        {
+                            b.StartConstructing(XY, true);
+                            Device.Player.GameObjectManager.AddGameObject(b);
+                            return;
+                        }
 
-                        b.StartConstructing(XY, false);
-                        Device.Player.GameObjectManager.AddGameObject(b);
+                        if (Device.Player.HasFreeBuilderWorkers)
+                        {
+                            var rd = bd.GetBuildResource(0);
+                            ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(0));
+
+                            b.StartConstructing(XY, true);
+                            Device.Player.GameObjectManager.AddGameObject(b);
+                        }
                     }
                 }
             }
             else
             {
-                var b = new Builder_Building(bd, Device.Player);
-                if (ca.HasEnoughResources(bd.GetBuildResource(0).GetGlobalId(), bd.GetBuildCost(0)))
-                {
-                    if (bd.IsWorker2Building())
-                    {
-                        b.StartConstructing(XY, true);
-                        Device.Player.GameObjectManager.AddGameObject(b);
-                        return;
-                    }
-
-                    if (Device.Player.HasFreeBuilderWorkers)
-                    {
-                        var rd = bd.GetBuildResource(0);
-                        ca.Resources.Minus(rd.GetGlobalId(), bd.GetBuildCost(0));
-
-                        b.StartConstructing(XY, true);
-                        Device.Player.GameObjectManager.AddGameObject(b);
-                    }
-                }
+                new Out_Of_Sync(this.Device).Send();
             }
         }
     }

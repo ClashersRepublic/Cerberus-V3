@@ -52,6 +52,7 @@ namespace Magic.ClashOfClans
         {
             return _socketHandle;
         }
+        internal int Depth { get; set; }
 
         internal uint ClientSeed { get; set; }
         internal string AndroidID { get; set; }
