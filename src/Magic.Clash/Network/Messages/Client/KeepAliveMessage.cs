@@ -1,9 +1,4 @@
 ﻿using System;
-using System.IO;
-
-using Magic.ClashOfClans;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Network.Messages.Server;
 using Magic.ClashOfClans.Extensions.Binary;
 
 namespace Magic.ClashOfClans.Network.Messages.Client

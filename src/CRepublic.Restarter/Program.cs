@@ -14,30 +14,30 @@ namespace CRepublic.Restarter
 
         public static void Main(string[] args)
         {
-            int GWL_EXSTYLE = -20;
-            int WS_EX_LAYERED = 0x80000;
+            var GWL_EXSTYLE = -20;
+            var WS_EX_LAYERED = 0x80000;
             uint LWA_ALPHA = 0x2;
             //int LWA_COLORKEY = 0x1;
 
             // Obtain our handle (hWnd)
-            int Handle = GetConsoleWindow();
+            var Handle = GetConsoleWindow();
             SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
             // Opacity = 0.5 = (255/2)
             SetLayeredWindowAttributes(Handle, 0, 210, LWA_ALPHA);
 
             if (Console.WindowHeight != 35 || Console.WindowWidth != 130)
-            {
                 Console.SetWindowSize(130, 35);
-            }
 
-            Console.Title = "Clashers' Republic Restarter v" + Assembly.GetExecutingAssembly().GetName().Version + " - Not Running";
+            Console.Title = "Clashers' Republic Restarter v" + Assembly.GetExecutingAssembly().GetName().Version +
+                            " - Not Running";
             Console.Clear();
             ConsoleUtils.Welcome();
 
             Version = UpdateChecker.GetVersionString();
             if (Version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
             {
-                ConsoleUtils.WriteLineCenterGreen("Restarter is up-to-date! v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                ConsoleUtils.WriteLineCenterGreen("Restarter is up-to-date! v" +
+                                                  Assembly.GetExecutingAssembly().GetName().Version);
             }
             else if (Version == "ConnError")
             {
@@ -45,10 +45,11 @@ namespace CRepublic.Restarter
             }
             else
             {
-                ConsoleUtils.WriteLineCenterRed("Restarter is not up-to-date! New Version: " + UpdateChecker.GetVersionString());
+                ConsoleUtils.WriteLineCenterRed("Restarter is not up-to-date! New Version: " +
+                                                UpdateChecker.GetVersionString());
                 ConsoleUtils.WriteLineCenterYellow("||");
                 ConsoleUtils.WriteLineCenterYellow("-> Downloading new version...");
-                UpdateChecker.DownloadUpdater();            
+                UpdateChecker.DownloadUpdater();
             }
 
             var interval = TimeSpan.FromMinutes(30);
@@ -57,10 +58,11 @@ namespace CRepublic.Restarter
             if (args.Length < 1)
             {
                 ConsoleUtils.WriteLineCenterGreen("||");
-                ConsoleUtils.WriteLineCenterGreen("Loaded file path from config: " + ConfigurationManager.AppSettings["FileName"]);
+                ConsoleUtils.WriteLineCenterGreen("Loaded file path from config: " +
+                                                  ConfigurationManager.AppSettings["FileName"]);
 
-                string filePath = ConfigurationManager.AppSettings["FileName"];
-                args = new string[]
+                var filePath = ConfigurationManager.AppSettings["FileName"];
+                args = new[]
                 {
                     filePath
                 };
@@ -70,7 +72,9 @@ namespace CRepublic.Restarter
             if (!File.Exists(args[0]))
             {
                 ConsoleUtils.WriteLineCenterRed("||");
-                ConsoleUtils.WriteLineCenterRed(string.Format("File '{0}' does not exists! Check your 'restarter.config' file and try again.", args[0]));
+                ConsoleUtils.WriteLineCenterRed(
+                    string.Format("File '{0}' does not exists! Check your 'restarter.config' file and try again.",
+                        args[0]));
                 ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit...");
                 while (Console.ReadKey(true).Key != ConsoleKey.Enter) ;
 
@@ -81,7 +85,9 @@ namespace CRepublic.Restarter
             if (Path.GetExtension(args[0]) != ".exe")
             {
                 ConsoleUtils.WriteLineCenterRed("||");
-                ConsoleUtils.WriteLineCenterRed(string.Format("File '{0}' is not a .exe! Check your 'restarter.config' file and try again.", args[0]));
+                ConsoleUtils.WriteLineCenterRed(
+                    string.Format("File '{0}' is not a .exe! Check your 'restarter.config' file and try again.",
+                        args[0]));
                 ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit...");
 
                 while (Console.ReadKey(true).Key != ConsoleKey.Enter) ;
@@ -90,12 +96,13 @@ namespace CRepublic.Restarter
             }
 
             // Make sure the argument (file) provided is not the restarter itself.
-            string restarterEXE = Assembly.GetExecutingAssembly().ManifestModule.ToString();
+            var restarterEXE = Assembly.GetExecutingAssembly().ManifestModule.ToString();
 
             if (Path.GetFileName(args[0]) == restarterEXE)
             {
                 ConsoleUtils.WriteLineCenterRed("||");
-                ConsoleUtils.WriteLineCenterRed(string.Format("File '{0}' is the restarter itself! Check your 'restarter.config' file and try again.", args[0]));
+                ConsoleUtils.WriteLineCenterRed(
+                    $"File '{args[0]}' is the restarter itself! Check your 'restarter.config' file and try again.");
                 ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit...");
 
                 while (Console.ReadKey(true).Key != ConsoleKey.Enter) ;
@@ -109,10 +116,11 @@ namespace CRepublic.Restarter
                 if (args.Length == 1)
                 {
                     ConsoleUtils.WriteLineCenterGreen("||");
-                    ConsoleUtils.WriteLineCenterGreen("Loaded restart interval from config: " + ConfigurationManager.AppSettings["RestartInterval"]);
+                    ConsoleUtils.WriteLineCenterGreen("Loaded restart interval from config: " +
+                                                      ConfigurationManager.AppSettings["RestartInterval"]);
 
                     var intervalStr = ConfigurationManager.AppSettings["RestartInterval"];
-                    args = new string[]
+                    args = new[]
                     {
                         args[0]
                     };
@@ -121,8 +129,11 @@ namespace CRepublic.Restarter
                 if (!TimeSpan.TryParse(ConfigurationManager.AppSettings["RestartInterval"], out interval))
                 {
                     ConsoleUtils.WriteLineCenterRed("||");
-                    ConsoleUtils.WriteLineCenterRed("Could not parse '" + ConfigurationManager.AppSettings["RestartInterval"] + "'. Make sure your interval is not higher than 24 hours!");
-                    ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit or SPACE to continue with the default 30 minutes interval...");
+                    ConsoleUtils.WriteLineCenterRed("Could not parse '" +
+                                                    ConfigurationManager.AppSettings["RestartInterval"] +
+                                                    "'. Make sure your interval is not higher than 24 hours!");
+                    ConsoleUtils.WriteLineCenterYellow(
+                        "Press ENTER to exit or SPACE to continue with the default 30 minutes interval...");
 
                     while (true)
                     {
@@ -146,17 +157,17 @@ namespace CRepublic.Restarter
             Console.Title = "Clashers' Republic Restarter";
 
             // Pass argument to the Restarter.
-            Restarter = new Restarter(args[0]);
-            Restarter.RestartInterval = interval;
+            Restarter = new Restarter(args[0]) {RestartInterval = interval};
             Restarter.Start();
 
             Thread.Sleep(Timeout.Infinite);
         }
-        [DllImport("user32.dll")]
-        static extern int SetWindowLong(int hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll")]
-        static extern bool SetLayeredWindowAttributes(int hWnd, uint crKey, byte bAlpha, uint dwFlags);
+        private static extern int SetWindowLong(int hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetLayeredWindowAttributes(int hWnd, uint crKey, byte bAlpha, uint dwFlags);
 
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern int GetWindowLong(int hWnd, int nIndex);

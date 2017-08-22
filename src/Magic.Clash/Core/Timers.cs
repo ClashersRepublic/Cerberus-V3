@@ -47,7 +47,7 @@ namespace Magic.ClashOfClans.Core
 
 #if DEBUG
                 if (numDisc > 0)
-                    Logger.SayInfo("KeepAlive dropped {numDisc} clients due to keep alive timeouts at " + DateTime.Now.ToString("T") +  ".");
+                    Logger.SayInfo($"KeepAlive dropped {numDisc} clients due to keep alive timeouts at " + DateTime.Now.ToString("T") +  ".");
 #endif
                 Logger.SayInfo("#" + DateTime.Now.ToString("d") + " ---- Pools ---- " + DateTime.Now.ToString("T") + " #");
                 Logger.SayInfo($"SocketAsyncEventArgs: created -> {Gateway.NumberOfArgsCreated} in-use -> {Gateway.NumberOfArgsInUse} available -> {Gateway.NumberOfArgs}.");
