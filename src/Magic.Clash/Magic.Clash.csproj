@@ -911,10 +911,10 @@
     <Folder Include="Network\Messages\Server\Errors\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Tools\BarbarianLand Assets Hasher.exe">
+    <Content Include="Tools\Clashers' Republic Hasher.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Tools\BarbarianLand Assets LZMA.exe">
+    <Content Include="Tools\Clashers' Republic LZMA Manager.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Tools\database.sql">
