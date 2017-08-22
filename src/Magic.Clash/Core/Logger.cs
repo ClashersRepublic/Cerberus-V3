@@ -86,7 +86,12 @@ namespace Magic.ClashOfClans.Core
         public static void SayAscii(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+
+            if (message.Length <= Console.WindowWidth)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+            }
+
             Console.WriteLine(message);
             Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
             Console.ResetColor();
@@ -97,7 +102,10 @@ namespace Magic.ClashOfClans.Core
             lock (s_lock)
             {
                 Console.ForegroundColor = color;
-                Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+                if (message.Length <= Console.WindowWidth)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2, Console.CursorTop);
+                }
                 Console.WriteLine(message);
                 Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
                 Console.ResetColor();
