@@ -43,6 +43,7 @@ namespace Magic.ClashOfClans.Files.CSV_Reader
             catch (Exception e)
             {
                 ExceptionLogger.Log(e, $"Datatable throw exception for {Type} with Global Id {GlobalID} ");
+                return null;
             }
         }
 

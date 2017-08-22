@@ -48,7 +48,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             {
                 var building = (Construction_Item)go;
 
-                var upgradeComponent = building.GetUnitUpgradeComponent();
+                var upgradeComponent = building.GetUnitUpgradeComponent(); //<==Here
 
 
                 var unitLevel = ca.GetUnitUpgradeLevel(IsSpell ? Spell : (Combat_Item) Troop);

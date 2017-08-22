@@ -4,6 +4,7 @@ using Magic.ClashOfClans.Files.CSV_Logic;
 using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Logic.Enums;
 using Magic.ClashOfClans.Logic.Structure;
+using Magic.ClashOfClans.Network.Messages.Server.Errors;
 
 namespace Magic.ClashOfClans.Network.Commands.Client
 {
