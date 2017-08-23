@@ -24,11 +24,12 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         public override void Decode()
         {
             BuidlingID = Reader.ReadInt32();
-            Reader.ReadInt32();
+            IsSpell = Reader.ReadInt32() == 1;
+
             GlobalId = Reader.ReadInt32();
-            if (GlobalId >= 26000000)
+
+            if (IsSpell)
             {
-                IsSpell = true;
                 Spell = CSV.Tables.Get(Gamefile.Spells).GetDataWithID(GlobalId) as Spells;
             }
             else
@@ -36,55 +37,64 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                 Troop = CSV.Tables.Get(Gamefile.Characters).GetDataWithID(GlobalId) as Characters;
             }
             Tick = Reader.ReadInt32();
+            ShowValues();
         }
 
         public override void Process()
         {
-            ShowValues();
             var ca = Device.Player.Avatar;
 
-            var go = Device.Player.GameObjectManager.GetGameObjectByID(BuidlingID,
-                Device.Player.Avatar.Variables.IsBuilderVillage);
-
-            if (go != null)
+            if (BuidlingID < 500000000)
             {
-                var building = (Construction_Item)go;
+                var go = Device.Player.GameObjectManager.GetGameObjectByID(BuidlingID,
+                    Device.Player.Avatar.Variables.IsBuilderVillage);
 
-                var upgradeComponent = building.GetUnitUpgradeComponent();
-
-                if (upgradeComponent != null)
+                if (go != null)
                 {
+                    var building = (Construction_Item) go;
 
-                    var unitLevel = ca.GetUnitUpgradeLevel(IsSpell ? Spell : (Combat_Item) Troop);
+                    var upgradeComponent = building.GetUnitUpgradeComponent();
 
-                    if (upgradeComponent.CanStartUpgrading(IsSpell ? Spell : (Combat_Item) Troop))
+                    if (upgradeComponent != null)
                     {
-                        var cost = IsSpell ? Spell.GetUpgradeCost(unitLevel) : Troop.GetUpgradeCost(unitLevel);
-                        var upgradeResource = IsSpell ? Spell.GetUpgradeResource() : Troop.GetUpgradeResource();
-                        if (ca.HasEnoughResources(upgradeResource.GetGlobalId(), cost))
+
+                        var unitLevel = ca.GetUnitUpgradeLevel(IsSpell ? Spell : (Combat_Item) Troop);
+
+                        if (upgradeComponent.CanStartUpgrading(IsSpell ? Spell : (Combat_Item) Troop))
                         {
+                            var cost = IsSpell ? Spell.GetUpgradeCost(unitLevel) : Troop.GetUpgradeCost(unitLevel);
+                            var upgradeResource = IsSpell ? Spell.GetUpgradeResource() : Troop.GetUpgradeResource();
+                            if (ca.HasEnoughResources(upgradeResource.GetGlobalId(), cost))
+                            {
 #if DEBUG
-                            Logger.SayInfo(IsSpell
-                                ? $"Spell : Upgrading {Spell.Row.Name} with ID {GlobalId}"
-                                : $"Unit : Upgrading {Troop.Row.Name} with ID {GlobalId}");
+                                Logger.SayInfo(IsSpell
+                                    ? $"Spell : Upgrading {Spell.Row.Name} with ID {GlobalId}"
+                                    : $"Unit : Upgrading {Troop.Row.Name} with ID {GlobalId}");
 #endif
-                            ca.Resources.Minus(upgradeResource.GetGlobalId(), cost);
-                            upgradeComponent.StartUpgrading(IsSpell ? Spell : (Combat_Item) Troop);
+                                ca.Resources.Minus(upgradeResource.GetGlobalId(), cost);
+                                upgradeComponent.StartUpgrading(IsSpell ? Spell : (Combat_Item) Troop);
+                            }
                         }
+                    }
+                    else
+                    {
+                        ExceptionLogger.Log(new NullReferenceException(),
+                            $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is not a Unit_Upgrade_Component at Upgrade Unit");
                     }
                 }
                 else
                 {
                     ExceptionLogger.Log(new NullReferenceException(),
-                        $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is not a Unit_Upgrade_Component at Upgrade Unit");
+                        $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is null at Upgrade Unit");
                 }
             }
             else
             {
-                ExceptionLogger.Log(new NullReferenceException(),
-                    $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is null at Upgrade Unit");
+                ExceptionLogger.Log(new Exception(),
+                    $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is having weird id at Upgrade Unit");
             }
         }
+
     }
 }
 

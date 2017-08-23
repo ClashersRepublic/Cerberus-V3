@@ -79,8 +79,7 @@ namespace Magic.ClashOfClans.Logic.Manager
             }
             catch (ArgumentOutOfRangeException e)
             {
-                StackTrace stackTrace = new StackTrace();
-                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId} and called by { stackTrace.GetFrame(1).GetMethod().Name}");
+                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId}");
                 return null;
             }
         }
