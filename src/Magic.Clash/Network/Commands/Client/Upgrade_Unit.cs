@@ -44,7 +44,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         {
             var ca = Device.Player.Avatar;
 
-            if (BuidlingID < 500000000)
+            if (BuidlingID >= 500000000)
             {
                 var go = Device.Player.GameObjectManager.GetGameObjectByID(BuidlingID,
                     Device.Player.Avatar.Variables.IsBuilderVillage);
