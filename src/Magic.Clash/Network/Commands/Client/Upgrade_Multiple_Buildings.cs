@@ -54,7 +54,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                         if (resource != null)
                         {
                             if (Avatar.HasEnoughResources(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel)))
-                            {
                                 if (Device.Player.Avatar.Variables.IsBuilderVillage
                                     ? Device.Player.HasFreeBuilderWorkers
                                     : Device.Player.HasFreeVillageWorkers)
@@ -73,6 +72,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                                         Logger.SayInfo(b.ClassId == 8
                                             ? $"Village Object: Upgrading {name} with ID {buildingId}"
                                             : $"Buildeer Village Object: Upgrading {name} with ID {buildingId}");
+#endif
 
                                     if (bd.IsTownHall2())
                                     {
@@ -114,8 +114,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                                     Avatar.Resources.Minus(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
                                     b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
                                 }
-#endif
-                            }
                         }
                         else
                         {
