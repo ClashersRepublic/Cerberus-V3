@@ -350,6 +350,7 @@
     <Compile Include="Network\Commands\Client\Change_Village_Mode.cs" />
     <Compile Include="Network\Commands\Client\Change_Weapon_Heading.cs" />
     <Compile Include="Network\Commands\Client\Change_Weapon_Mode.cs" />
+    <Compile Include="Network\Commands\Client\Free_Worker.cs" />
     <Compile Include="Network\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Network\Commands\Client\Move_Building.cs" />
     <Compile Include="Network\Commands\Client\Move_Multiple_Buildings.cs" />

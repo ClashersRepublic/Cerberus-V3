@@ -25,6 +25,7 @@ namespace Magic.ClashOfClans.Network
                 { 518, typeof(Buy_Resource)},
                 { 519, typeof(Mission_Progress) },
                 { 520, typeof(Unlock_Building) },
+                { 521, typeof(Free_Worker) },
                 { 524, typeof(Change_Weapon_Mode)},
                 { 527, typeof(Upgrade_Hero)},
                 { 528, typeof(SpeedUp_Hero_Upgrade)},
