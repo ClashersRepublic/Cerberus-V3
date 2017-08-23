@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Files.CSV_Logic;
@@ -7,6 +8,8 @@ using Magic.ClashOfClans.Logic.Enums;
 using Magic.ClashOfClans.Logic.Structure;
 using Newtonsoft.Json.Linq;
 using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Logic;
+using Magic.ClashOfClans.Logic.Manager;
 
 namespace Magic.ClashOfClans.Logic.Manager
 {
@@ -76,7 +79,8 @@ namespace Magic.ClashOfClans.Logic.Manager
             }
             catch (ArgumentOutOfRangeException e)
             {
-                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId} ");
+                StackTrace stackTrace = new StackTrace();
+                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId} and called by { stackTrace.GetFrame(1).GetMethod().Name}");
                 return null;
             }
         }

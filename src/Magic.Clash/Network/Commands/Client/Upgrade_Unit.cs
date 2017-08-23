@@ -40,6 +40,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 
         public override void Process()
         {
+            ShowValues();
             var ca = Device.Player.Avatar;
 
             var go = Device.Player.GameObjectManager.GetGameObjectByID(BuidlingID,
