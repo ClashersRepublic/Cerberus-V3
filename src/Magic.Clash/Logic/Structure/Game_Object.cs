@@ -53,7 +53,7 @@ namespace Magic.ClashOfClans.Logic.Structure
             Component result = null;
             if (ComponentsActive)
             {
-                if (!test || Components[index].IsEnabled)
+                if (test || Components[index].IsEnabled)
                     result = Components[index];
             }
             return result;

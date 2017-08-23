@@ -376,6 +376,7 @@
     <Compile Include="Network\Messages\Server\Battle\Battle_Failed.cs" />
     <Compile Include="Network\Messages\Server\Battle\Npc_Data.cs" />
     <Compile Include="Network\Messages\Server\Battle\Pc_Battle_Data.cs" />
+    <Compile Include="Network\Messages\Server\Battle\Pc_Battle_Data_V2.cs" />
     <Compile Include="Network\Messages\Server\Errors\Out_Of_Sync.cs" />
     <Compile Include="Network\Messages\Server\Server_Commands.cs" />
     <Compile Include="Pool.cs" />

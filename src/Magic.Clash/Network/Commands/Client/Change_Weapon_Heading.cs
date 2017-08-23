@@ -2,6 +2,7 @@
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Logic.Components;
+using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Network.Commands.Client
 {
@@ -35,20 +36,28 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                 var a = Object.GetComponent(1, false);
                 if (a == null)
                     return;
-
-                var component = (Combat_Component)a;
-                if (component.AimRotateStep)
+                
+                var component = a as Combat_Component;
+                if (component != null)
                 {
-                    component.AimAngle = component.AimAngle == 360 ? 45 : component.AimAngle + 45;
-                    component.AimAngleDraft = component.AimAngleDraft == 360 ? 45 : component.AimAngleDraft + 45;
+                    if (component.AimRotateStep)
+                    {
+                        component.AimAngle = component.AimAngle == 360 ? 45 : component.AimAngle + 45;
+                        component.AimAngleDraft = component.AimAngleDraft == 360 ? 45 : component.AimAngleDraft + 45;
+                    }
+
+                    if (component.AltDirectionMode)
+                    {
+                        component.TrapDirection = component.TrapDirection == 4 ? 0 : component.TrapDirection++;
+                        component.TrapDirectionDraft = component.TrapDirectionDraft == 4
+                            ? 0
+                            : component.TrapDirectionDraft++;
+                    }
                 }
-
-                if (component.AltDirectionMode)
+                else
                 {
-                    component.TrapDirection = component.TrapDirection == 4 ? 0 : component.TrapDirection++;
-                    component.TrapDirectionDraft = component.TrapDirectionDraft == 4
-                        ? 0
-                        : component.TrapDirectionDraft++;
+                    ExceptionLogger.Log(new NullReferenceException(),
+                        $"Object with id {BuildingID} from user {Device.Player.Avatar.UserId} is not a combat_component at Change Weapon Heading");
                 }
             }
             else

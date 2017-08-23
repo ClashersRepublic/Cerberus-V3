@@ -40,9 +40,9 @@ namespace Magic.ClashOfClans.Files.CSV_Reader
             {
                 return this.DataTables[Type].GetDataWithInstanceID(GlobalID);
             }
-            catch (Exception e)
+            catch (ArgumentOutOfRangeException e)
             {
-                ExceptionLogger.Log(e, $"Datatable throw exception for {Type} with Global Id {GlobalID} ");
+                ExceptionLogger.Log(e, $"Datatable throw ArgumentOutOfRangeException for {Type} with Global Id {GlobalID} ");
                 return null;
             }
         }

@@ -1,4 +1,5 @@
-﻿using Magic.ClashOfClans.Core;
+﻿using System;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Logic;
@@ -48,24 +49,39 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             {
                 var building = (Construction_Item)go;
 
-                var upgradeComponent = building.GetUnitUpgradeComponent(); //<==Here
+                var upgradeComponent = building.GetUnitUpgradeComponent();
 
-
-                var unitLevel = ca.GetUnitUpgradeLevel(IsSpell ? Spell : (Combat_Item) Troop);
-
-                if (upgradeComponent.CanStartUpgrading(IsSpell ? Spell : (Combat_Item) Troop))
+                if (upgradeComponent != null)
                 {
-                    var cost = IsSpell ? Spell.GetUpgradeCost(unitLevel) : Troop.GetUpgradeCost(unitLevel);
-                    var upgradeResource = IsSpell ? Spell.GetUpgradeResource() : Troop.GetUpgradeResource();
-                    if (ca.HasEnoughResources(upgradeResource.GetGlobalId(), cost))
+
+                    var unitLevel = ca.GetUnitUpgradeLevel(IsSpell ? Spell : (Combat_Item) Troop);
+
+                    if (upgradeComponent.CanStartUpgrading(IsSpell ? Spell : (Combat_Item) Troop))
                     {
+                        var cost = IsSpell ? Spell.GetUpgradeCost(unitLevel) : Troop.GetUpgradeCost(unitLevel);
+                        var upgradeResource = IsSpell ? Spell.GetUpgradeResource() : Troop.GetUpgradeResource();
+                        if (ca.HasEnoughResources(upgradeResource.GetGlobalId(), cost))
+                        {
 #if DEBUG
-                        Logger.SayInfo(IsSpell ? $"Spell : Upgrading {Spell.Row.Name} with ID {GlobalId}" : $"Unit : Upgrading {Troop.Row.Name} with ID {GlobalId}");
+                            Logger.SayInfo(IsSpell
+                                ? $"Spell : Upgrading {Spell.Row.Name} with ID {GlobalId}"
+                                : $"Unit : Upgrading {Troop.Row.Name} with ID {GlobalId}");
 #endif
-                        ca.Resources.Minus(upgradeResource.GetGlobalId(), cost);
-                        upgradeComponent.StartUpgrading(IsSpell ? Spell : (Combat_Item) Troop);
+                            ca.Resources.Minus(upgradeResource.GetGlobalId(), cost);
+                            upgradeComponent.StartUpgrading(IsSpell ? Spell : (Combat_Item) Troop);
+                        }
                     }
                 }
+                else
+                {
+                    ExceptionLogger.Log(new NullReferenceException(),
+                        $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is not a Unit_Upgrade_Component at Upgrade Unit");
+                }
+            }
+            else
+            {
+                ExceptionLogger.Log(new NullReferenceException(),
+                    $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is null at Upgrade Unit");
             }
         }
     }
