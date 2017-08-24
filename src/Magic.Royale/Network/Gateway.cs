@@ -1,14 +1,14 @@
 ﻿//#define Info
 
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
 using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     internal static class Gateway
     {

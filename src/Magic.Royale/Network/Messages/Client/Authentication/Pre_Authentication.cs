@@ -1,9 +1,9 @@
-﻿using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Logic.Enums;
-using Magic.ClashOfClans.Network.Messages.Server.Authentication;
+﻿using Magic.Royale.Logic;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Logic.Enums;
+using Magic.Royale.Network.Messages.Server.Authentication;
 
-namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
+namespace Magic.Royale.Network.Messages.Client.Authentication
 {
     internal class Pre_Authentication : Message
     {

@@ -1,9 +1,6 @@
-using System;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Logic;
 
-namespace Magic.ClashOfClans.Network.Messages.Server
+namespace Magic.Royale.Network.Messages.Server
 {
     internal class Own_Home_Data : Message
     {
@@ -16,7 +13,6 @@ namespace Magic.ClashOfClans.Network.Messages.Server
 
         public override void Encode()
         {
-
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Magic.ClashOfClans.Files.CSV_Reader
+namespace Magic.Royale.Files.CSV_Reader
 {
     [DebuggerDisplay("Name = {" + nameof(Name) + "}")]
     public class Column

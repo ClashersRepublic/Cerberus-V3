@@ -1,7 +1,7 @@
 using System.Reflection;
-using Magic.ClashOfClans.Extensions;
+using Magic.Royale.Extensions;
 
-namespace Magic.ClashOfClans.Core.Settings
+namespace Magic.Royale.Core.Settings
 {
     internal class Constants
     {

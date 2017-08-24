@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Network.Messages.Server.Battle
+﻿namespace Magic.Royale.Network.Messages.Server.Battle
 {
     internal class Battle_Failed : Message
     {

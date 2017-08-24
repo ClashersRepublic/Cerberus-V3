@@ -2,11 +2,11 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord;
-using Magic.ClashOfClans.Core.API.Discord;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Core.API.Discord;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Core.Events
+namespace Magic.Royale.Core.Events
 {
     internal class EventsHandler
     {

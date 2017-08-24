@@ -1,11 +1,11 @@
-using Magic.ClashOfClans.Logic;
+using Magic.Royale.Logic;
 using Magic.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Magic.ClashOfClans.Files;
+using Magic.Royale.Files;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 
 {
     internal static class ObjectManager

@@ -1,7 +1,7 @@
 using System;
-using Magic.ClashOfClans.Extensions;
+using Magic.Royale.Extensions;
 
-namespace Magic.ClashOfClans.Logic
+namespace Magic.Royale.Logic
 {
     internal class Timer
     {

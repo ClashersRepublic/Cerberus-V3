@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using Magic.Utilities.ZLib;
 
-namespace Magic.ClashOfClans.Extensions.Binary
+namespace Magic.Royale.Extensions.Binary
 {
     public class Reader : BinaryReader
     {

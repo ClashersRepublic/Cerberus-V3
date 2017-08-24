@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Core.Crypto;
+﻿using Magic.Royale.Core.Crypto;
 using System;
 using System.Collections.Generic;
 
-namespace Magic.ClashOfClans
+namespace Magic.Royale
 {
     internal partial class Device
     {

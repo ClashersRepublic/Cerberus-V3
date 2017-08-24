@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Files;
-using Magic.ClashOfClans.Files.CSV_Helpers;
+﻿using Magic.Royale.Files;
+using Magic.Royale.Files.CSV_Helpers;
 using Newtonsoft.Json.Linq;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class DataSlot
     {

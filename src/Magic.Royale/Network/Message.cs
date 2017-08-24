@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Extensions;
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Extensions;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Logic;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     internal class Message
     {

@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Logic.Structure.Slots.Items;
 
-namespace Magic.ClashOfClans.Extensions.List
+namespace Magic.Royale.Extensions.List
 {
     public static class Writer
     {

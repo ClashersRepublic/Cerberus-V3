@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Magic.ClashOfClans.Core.Database
+namespace Magic.Royale.Core.Database
 {
     using System;
     using System.Data.Entity;

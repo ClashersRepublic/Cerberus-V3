@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Logic.Enums
+﻿namespace Magic.Royale.Logic.Enums
 {
     public enum Avatar_Stream
     { // 2 : Défense PVP    3 : Demande refusé      4 : Invitation    5 : Exclusion du clan       6 : Message Clan         7 : Attaque PVP

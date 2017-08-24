@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Files.CSV_Helpers
+﻿namespace Magic.Royale.Files.CSV_Helpers
 {
     internal static class GlobalId
     {

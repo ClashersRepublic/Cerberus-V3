@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots.Items
+namespace Magic.Royale.Logic.Structure.Slots.Items
 {
     internal class Alliance_Unit
     {

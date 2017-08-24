@@ -1,9 +1,9 @@
 ﻿using System;
 using Discord;
 using Discord.WebSocket;
-using Magic.ClashOfClans.Core.Settings;
+using Magic.Royale.Core.Settings;
 
-namespace Magic.ClashOfClans.Core.API.Discord
+namespace Magic.Royale.Core.API.Discord
 {
     internal static class Client
     {

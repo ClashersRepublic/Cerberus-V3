@@ -1,7 +1,7 @@
-﻿using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Files.CSV_Reader;
+﻿using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Files.CSV_Reader;
 
-namespace Magic.ClashOfClans.Files.CSV_Logic
+namespace Magic.Royale.Files.CSV_Logic
 {
     internal class Missions : Data
     {

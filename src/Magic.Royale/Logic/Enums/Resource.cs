@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Logic.Enums
+﻿namespace Magic.Royale.Logic.Enums
 {
     public enum Resource
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Logic.Structure.Slots.Items;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class Npcs : List<Npc>
     {

@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Network;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Network;
 
-namespace Magic.ClashOfClans.Core.API.Discord.Modules
+namespace Magic.Royale.Core.API.Discord.Modules
 {
     [Name("Core")]
     internal class Core_Module : ModuleBase<SocketCommandContext>

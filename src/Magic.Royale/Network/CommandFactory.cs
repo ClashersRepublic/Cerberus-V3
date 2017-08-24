@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     internal static class CommandFactory
     {

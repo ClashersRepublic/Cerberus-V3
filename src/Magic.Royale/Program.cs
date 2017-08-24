@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
 using System.Threading;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
 
-namespace Magic.ClashOfClans
+namespace Magic.Royale
 {
     internal class Program
     {

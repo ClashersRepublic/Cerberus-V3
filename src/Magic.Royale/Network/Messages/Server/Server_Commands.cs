@@ -1,7 +1,7 @@
-﻿using Magic.ClashOfClans.Extensions;
-using Magic.ClashOfClans.Extensions.List;
+﻿using Magic.Royale.Extensions;
+using Magic.Royale.Extensions.List;
 
-namespace Magic.ClashOfClans.Network.Messages.Server
+namespace Magic.Royale.Network.Messages.Server
 {
     internal class Server_Commands : Message
     {

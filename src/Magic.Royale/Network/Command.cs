@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Extensions;
-using Magic.ClashOfClans.Extensions.Binary;
+using Magic.Royale.Core;
+using Magic.Royale.Extensions;
+using Magic.Royale.Extensions.Binary;
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     internal class Command
     {

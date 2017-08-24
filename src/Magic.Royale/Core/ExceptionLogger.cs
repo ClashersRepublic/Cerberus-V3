@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Core.Settings;
+﻿using Magic.Royale.Core.Settings;
 using System;
 using System.IO;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     public static class ExceptionLogger
     {

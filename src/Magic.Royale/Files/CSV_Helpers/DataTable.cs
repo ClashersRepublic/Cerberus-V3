@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Magic.ClashOfClans.Files.CSV_Logic;
-using Magic.ClashOfClans.Files.CSV_Reader;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Files.CSV_Logic;
+using Magic.Royale.Files.CSV_Reader;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Files.CSV_Helpers
+namespace Magic.Royale.Files.CSV_Helpers
 {
     internal class DataTable
     {

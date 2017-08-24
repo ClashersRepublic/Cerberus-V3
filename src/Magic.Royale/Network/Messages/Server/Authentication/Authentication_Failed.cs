@@ -1,9 +1,9 @@
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Logic.Enums;
 using Magic.Files;
 
-namespace Magic.ClashOfClans.Network.Messages.Server.Authentication
+namespace Magic.Royale.Network.Messages.Server.Authentication
 {
     internal class Authentication_Failed : Message
     {

@@ -1,12 +1,12 @@
-﻿using Magic.ClashOfClans.Logic.Structure.Slots;
+﻿using Magic.Royale.Logic.Structure.Slots;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Magic.ClashOfClans.Core;
+using Magic.Royale.Core;
 
-namespace Magic.ClashOfClans.Files
+namespace Magic.Royale.Files
 {
     internal static class Game_Events
     {

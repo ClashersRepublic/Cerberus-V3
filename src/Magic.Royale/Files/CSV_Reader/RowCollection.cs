@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Magic.ClashOfClans.Files.CSV_Reader
+namespace Magic.Royale.Files.CSV_Reader
 {
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     public class RowCollection : ICollection<Row>

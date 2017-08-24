@@ -1,6 +1,6 @@
-using Magic.ClashOfClans;
+using Magic.Royale;
 
-namespace Magic.ClashOfClans.Logic
+namespace Magic.Royale.Logic
 {
     internal class Level
     {

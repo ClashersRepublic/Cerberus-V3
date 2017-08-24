@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Core.Crypto
+﻿namespace Magic.Royale.Core.Crypto
 {
     public static class Key
     {

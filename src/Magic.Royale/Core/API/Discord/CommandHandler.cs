@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.WebSocket;
-using Magic.ClashOfClans.Core.API.Discord.Modules;
-using Magic.ClashOfClans.Core.Settings;
+using Magic.Royale.Core.API.Discord.Modules;
+using Magic.Royale.Core.Settings;
 
-namespace Magic.ClashOfClans.Core.API.Discord
+namespace Magic.Royale.Core.API.Discord
 {
     internal class CommandHandler
     {

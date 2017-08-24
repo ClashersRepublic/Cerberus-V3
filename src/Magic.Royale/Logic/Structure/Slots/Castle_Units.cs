@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+using Magic.Royale.Logic.Structure.Slots.Items;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class Castle_Units : List<Alliance_Unit>, ICloneable
     {

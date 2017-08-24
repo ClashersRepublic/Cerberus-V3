@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Magic.ClashOfClans.Files.CSV_Reader
+namespace Magic.Royale.Files.CSV_Reader
 {
     public class Row
     {

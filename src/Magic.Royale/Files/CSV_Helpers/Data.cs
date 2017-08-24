@@ -1,7 +1,7 @@
 ﻿using System;
-using Magic.ClashOfClans.Files.CSV_Reader;
+using Magic.Royale.Files.CSV_Reader;
 
-namespace Magic.ClashOfClans.Files.CSV_Helpers
+namespace Magic.Royale.Files.CSV_Helpers
 {
     public class Data
     {

@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace Magic.ClashOfClans.Core.Database
+namespace Magic.Royale.Core.Database
 {
     internal class MySQL_V2
     {

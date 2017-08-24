@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+﻿using Magic.Royale.Logic.Structure.Slots.Items;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class Calendar
     {

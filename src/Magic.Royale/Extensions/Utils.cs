@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
-using Magic.ClashOfClans.Network;
+using Magic.Royale.Network;
 
-namespace Magic.ClashOfClans.Extensions
+namespace Magic.Royale.Extensions
 {
     internal static class GamePlayUtil
     {

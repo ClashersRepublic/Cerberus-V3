@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Extensions;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Network;
+using Magic.Royale.Extensions;
+using Magic.Royale.Logic.Enums;
 using Timer = System.Timers.Timer;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     internal static class Timers
     {

@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Files.CSV_Reader;
-using Magic.ClashOfClans.Logic.Enums;
+﻿using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Files.CSV_Reader;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Files.CSV_Logic
+namespace Magic.Royale.Files.CSV_Logic
 {
     internal class Village_Objects : Construction_Item_Data
     {

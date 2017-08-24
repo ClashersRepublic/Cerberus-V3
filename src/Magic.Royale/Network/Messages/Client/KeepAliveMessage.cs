@@ -1,7 +1,7 @@
 ﻿using System;
-using Magic.ClashOfClans.Extensions.Binary;
+using Magic.Royale.Extensions.Binary;
 
-namespace Magic.ClashOfClans.Network.Messages.Client
+namespace Magic.Royale.Network.Messages.Client
 {
     internal class KeepAliveMessage : Message
     {

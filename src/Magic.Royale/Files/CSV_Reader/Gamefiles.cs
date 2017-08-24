@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Core;
+using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Files.CSV_Reader
+namespace Magic.Royale.Files.CSV_Reader
 {
     internal class Gamefiles
     {

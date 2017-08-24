@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
-using Magic.ClashOfClans.Extensions;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Files.CSV_Logic;
-using Magic.ClashOfClans.Logic.Enums;
-using Magic.ClashOfClans.Logic.Structure.Slots;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+using Magic.Royale.Extensions;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Files.CSV_Logic;
+using Magic.Royale.Logic.Enums;
+using Magic.Royale.Logic.Structure.Slots;
+using Magic.Royale.Logic.Structure.Slots.Items;
 using Newtonsoft.Json;
-using Npcs = Magic.ClashOfClans.Logic.Structure.Slots.Npcs;
-using Resource = Magic.ClashOfClans.Logic.Enums.Resource;
-using Variables = Magic.ClashOfClans.Logic.Structure.Slots.Variables;
+using Npcs = Magic.Royale.Logic.Structure.Slots.Npcs;
+using Resource = Magic.Royale.Logic.Enums.Resource;
+using Variables = Magic.Royale.Logic.Structure.Slots.Variables;
 
-namespace Magic.ClashOfClans.Logic
+namespace Magic.Royale.Logic
 {
     internal class Avatar
     {

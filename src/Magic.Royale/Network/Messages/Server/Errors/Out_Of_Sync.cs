@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Network.Messages.Server.Errors
+﻿namespace Magic.Royale.Network.Messages.Server.Errors
 {
     internal class Out_Of_Sync : Message
     {

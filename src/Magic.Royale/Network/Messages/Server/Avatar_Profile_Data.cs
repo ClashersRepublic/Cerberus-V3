@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic;
+﻿using Magic.Royale.Core;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Logic;
 
-namespace Magic.ClashOfClans.Network.Messages.Server
+namespace Magic.Royale.Network.Messages.Server
 {
     internal class Avatar_Profile_Data : Message
     {

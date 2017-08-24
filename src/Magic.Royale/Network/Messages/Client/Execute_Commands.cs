@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Network.Messages.Server.Errors;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Network.Messages.Server.Errors;
 
-namespace Magic.ClashOfClans.Network.Messages.Client
+namespace Magic.Royale.Network.Messages.Client
 {
     internal class Execute_Commands : Message
     {

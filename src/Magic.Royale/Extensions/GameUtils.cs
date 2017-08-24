@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Magic.ClashOfClans.Files;
-using Magic.ClashOfClans.Files.CSV_Logic;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Logic.Enums;
-using Resource = Magic.ClashOfClans.Files.CSV_Logic.Resource;
+using Magic.Royale.Files;
+using Magic.Royale.Files.CSV_Logic;
+using Magic.Royale.Logic;
+using Magic.Royale.Logic.Enums;
+using Resource = Magic.Royale.Files.CSV_Logic.Resource;
 
-namespace Magic.ClashOfClans.Extensions
+namespace Magic.Royale.Extensions
 {
     internal static class GameUtils
     {

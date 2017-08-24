@@ -1,7 +1,7 @@
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Network.Messages.Server;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Network.Messages.Server;
 
-namespace Magic.ClashOfClans.Network.Messages.Client
+namespace Magic.Royale.Network.Messages.Client
 {
     internal class Go_Home : Message
     {

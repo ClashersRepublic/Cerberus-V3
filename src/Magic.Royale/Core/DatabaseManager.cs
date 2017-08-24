@@ -4,10 +4,10 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Magic.ClashOfClans.Core.Database;
-using Magic.ClashOfClans.Logic;
+using Magic.Royale.Core.Database;
+using Magic.Royale.Logic;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     internal static class DatabaseManager
     {

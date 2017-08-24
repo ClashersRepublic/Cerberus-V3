@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Network.Messages.Client;
-using Magic.ClashOfClans.Network.Messages.Client.Authentication;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Network.Messages.Client;
+using Magic.Royale.Network.Messages.Client.Authentication;
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     internal static class MessageFactory
     {

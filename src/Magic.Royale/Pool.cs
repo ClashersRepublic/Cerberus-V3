@@ -1,12 +1,12 @@
 ﻿#define CONCURRENT_STACK
 //#define LIST // Use LIST to enable tracing n stuff.
 
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Magic.ClashOfClans.Network
+namespace Magic.Royale.Network
 {
     public class Pool<T>
     {

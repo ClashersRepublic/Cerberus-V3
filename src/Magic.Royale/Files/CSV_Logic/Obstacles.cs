@@ -1,8 +1,8 @@
-﻿using Magic.ClashOfClans.Files.CSV_Helpers;
-using Magic.ClashOfClans.Logic.Enums;
-using Magic.ClashOfClans.Files.CSV_Reader;
+﻿using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Logic.Enums;
+using Magic.Royale.Files.CSV_Reader;
 
-namespace Magic.ClashOfClans.Files.CSV_Logic
+namespace Magic.Royale.Files.CSV_Logic
 {
     internal class Obstacles : Data
     {

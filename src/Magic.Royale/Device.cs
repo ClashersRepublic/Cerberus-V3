@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Crypto;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Logic.Enums;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Network.Messages.Server;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Crypto;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Extensions.Binary;
+using Magic.Royale.Logic;
+using Magic.Royale.Logic.Enums;
+using Magic.Royale.Network;
+using Magic.Royale.Network.Messages.Server;
 
-namespace Magic.ClashOfClans
+namespace Magic.Royale
 {
     internal partial class Device
     {

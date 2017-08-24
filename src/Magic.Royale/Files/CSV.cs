@@ -1,15 +1,15 @@
-﻿using Magic.ClashOfClans.Files.CSV_Reader;
+﻿using Magic.Royale.Files.CSV_Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magic.ClashOfClans.Core;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Logic.Enums;
+using Magic.Royale.Core;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Logic.Enums;
 
-namespace Magic.ClashOfClans.Files
+namespace Magic.Royale.Files
 {
     internal static class CSV
     {

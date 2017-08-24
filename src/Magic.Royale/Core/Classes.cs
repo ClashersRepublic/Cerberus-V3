@@ -1,11 +1,11 @@
-﻿using Magic.ClashOfClans.Core.API.Discord;
-using Magic.ClashOfClans.Core.Events;
-using Magic.ClashOfClans.Core.Settings;
-using Magic.ClashOfClans.Files;
-using Magic.ClashOfClans.Network;
+﻿using Magic.Royale.Core.API.Discord;
+using Magic.Royale.Core.Events;
+using Magic.Royale.Core.Settings;
+using Magic.Royale.Files;
+using Magic.Royale.Network;
 using Magic.Files;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     internal static class Classes
     {

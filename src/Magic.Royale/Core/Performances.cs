@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     public static class PerformanceInfo
     {

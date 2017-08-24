@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Magic.ClashOfClans.Extensions
+namespace Magic.Royale.Extensions
 {
     internal static class TimeUtils
     {

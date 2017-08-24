@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Magic.ClashOfClans.Files.CSV_Reader
+namespace Magic.Royale.Files.CSV_Reader
 {
     public class Table
     {

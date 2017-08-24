@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Magic.ClashOfClans.Core;
+using Magic.Royale.Core;
 
-namespace Magic.ClashOfClans.Files
+namespace Magic.Royale.Files
 {
     internal static class Deck
     {

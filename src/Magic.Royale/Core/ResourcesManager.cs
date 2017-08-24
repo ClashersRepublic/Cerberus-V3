@@ -1,9 +1,9 @@
-using Magic.ClashOfClans;
-using Magic.ClashOfClans;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Network.Messages.Server;
-using Magic.ClashOfClans.Extensions;
+using Magic.Royale;
+using Magic.Royale;
+using Magic.Royale.Logic;
+using Magic.Royale.Network;
+using Magic.Royale.Network.Messages.Server;
+using Magic.Royale.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Magic.ClashOfClans.Core
+namespace Magic.Royale.Core
 {
     internal static class ResourcesManager
     {

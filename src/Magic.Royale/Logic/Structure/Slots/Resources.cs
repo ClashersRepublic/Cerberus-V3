@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Files;
-using Magic.ClashOfClans.Files.CSV_Logic;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
-using Resource = Magic.ClashOfClans.Logic.Enums.Resource;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Files;
+using Magic.Royale.Files.CSV_Logic;
+using Magic.Royale.Logic.Structure.Slots.Items;
+using Resource = Magic.Royale.Logic.Enums.Resource;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class Resources : List<Slot>
     {

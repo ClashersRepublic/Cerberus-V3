@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Magic.ClashOfClans.Extensions.List;
-using Magic.ClashOfClans.Logic.Enums;
-using Magic.ClashOfClans.Logic.Structure.Slots.Items;
+using Magic.Royale.Extensions.List;
+using Magic.Royale.Logic.Enums;
+using Magic.Royale.Logic.Structure.Slots.Items;
 
-namespace Magic.ClashOfClans.Logic.Structure.Slots
+namespace Magic.Royale.Logic.Structure.Slots
 {
     internal class Variables : List<Slot>
     {
