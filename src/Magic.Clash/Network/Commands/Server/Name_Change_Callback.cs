@@ -1,4 +1,6 @@
-﻿using Magic.ClashOfClans.Extensions.List;
+﻿using System;
+using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Extensions.List;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
 {
@@ -12,10 +14,16 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             Identifier = 3;
         }
 
+        public Name_Change_Callback(Reader Reader, Device _Client, int Identifier) : base(Reader, _Client, Identifier)
+        {
+        }
+
         public override void Decode()
         {
-            Previous = Name;
-            Name = Reader.ReadString();
+            Reader.ReadString();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
         }
 
         public override void Encode()

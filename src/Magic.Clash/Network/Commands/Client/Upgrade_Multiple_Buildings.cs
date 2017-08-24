@@ -5,6 +5,7 @@ using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Files.CSV_Logic;
 using Magic.ClashOfClans.Logic.Structure;
+using Magic.ClashOfClans.Network.Messages.Server.Errors;
 
 namespace Magic.ClashOfClans.Network.Commands.Client
 {
@@ -37,27 +38,30 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 
             foreach (var buildingId in BuildingIds)
             {
-                var go = Device.Player.GameObjectManager.GetGameObjectByID(buildingId,
-                    Device.Player.Avatar.Variables.IsBuilderVillage);
-                if (go != null)
+                if (buildingId >= 500000000)
                 {
-                    var b = (Construction_Item) go;
-                    if (b.CanUpgrade)
+                    var go = Device.Player.GameObjectManager.GetGameObjectByID(buildingId,
+                        Device.Player.Avatar.Variables.IsBuilderVillage);
+                    if (go != null)
                     {
-                        var bd = b.GetConstructionItemData;
-                        var resource = b.ClassId == 0 || b.ClassId == 7
-                            ? IsAltResource
-                                ? (bd as Buildings)?.GetAltBuildResource(b.GetUpgradeLevel + 1)
-                                : bd.GetBuildResource(b.GetUpgradeLevel + 1)
-                            : bd.GetBuildResource(b.GetUpgradeLevel + 1);
-
-                        if (resource != null)
+                        var b = (Construction_Item) go;
+                        if (b.CanUpgrade)
                         {
-                            if (Avatar.HasEnoughResources(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel)))
-                                if (Device.Player.Avatar.Variables.IsBuilderVillage
-                                    ? Device.Player.HasFreeBuilderWorkers
-                                    : Device.Player.HasFreeVillageWorkers)
-                                {
+                            var bd = b.GetConstructionItemData;
+                            var resource = b.ClassId == 0 || b.ClassId == 7
+                                ? IsAltResource
+                                    ? (bd as Buildings)?.GetAltBuildResource(b.GetUpgradeLevel + 1)
+                                    : bd.GetBuildResource(b.GetUpgradeLevel + 1)
+                                : bd.GetBuildResource(b.GetUpgradeLevel + 1);
+
+                            if (resource != null)
+                            {
+                                if (Avatar.HasEnoughResources(resource.GetGlobalId(),
+                                    bd.GetBuildCost(b.GetUpgradeLevel)))
+                                    if (Device.Player.Avatar.Variables.IsBuilderVillage
+                                        ? Device.Player.HasFreeBuilderWorkers
+                                        : Device.Player.HasFreeVillageWorkers)
+                                    {
 #if DEBUG
                                     var name = go.Data.Row.Name;
                                     if (b.ClassId == 0 || b.ClassId == 7)
@@ -73,54 +77,61 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                                             ? $"Village Object: Upgrading {name} with ID {buildingId}"
                                             : $"Buildeer Village Object: Upgrading {name} with ID {buildingId}");
 #endif
-
-                                    if (bd.IsTownHall2())
-                                    {
-                                        if (Avatar.Builder_TownHall_Level == 0)
-                                            Parallel.ForEach(Device.Player.GameObjectManager.GetGameObjects(7),
-                                                Object =>
-                                                {
-                                                    var b2 = (Builder_Building) Object;
-                                                    var bd2 = b2.GetBuildingData;
-                                                    if (b2.Locked)
+                                        if (bd.IsTownHall2())
+                                        {
+                                            if (Avatar.Builder_TownHall_Level == 0)
+                                                Parallel.ForEach(Device.Player.GameObjectManager.GetGameObjects(7),
+                                                    Object =>
                                                     {
-                                                        if (bd2.Locked)
-                                                            return;
+                                                        var b2 = (Builder_Building) Object;
+                                                        var bd2 = b2.GetBuildingData;
+                                                        if (b2.Locked)
+                                                        {
+                                                            if (bd2.Locked)
+                                                                return;
 #if DEBUG
                                                         Logger.SayInfo(
                                                             $"Builder Building: Unlocking {bd2.Name} with ID {Object.GlobalId}");
 #endif
-                                                        b2.Locked = false;
-                                                    }
-                                                });
+                                                            b2.Locked = false;
+                                                        }
+                                                    });
 
-                                        Avatar.Builder_TownHall_Level++;
+                                            Avatar.Builder_TownHall_Level++;
+                                        }
+
+                                        if (bd.IsAllianceCastle())
+                                        {
+                                            var a = (Building) go;
+                                            var al = a.GetBuildingData;
+
+                                            Avatar.Castle_Level++;
+                                            Avatar.Castle_Total = al.GetUnitStorageCapacity(Avatar.Castle_Level);
+                                            Avatar.Castle_Total_SP = al.GetAltUnitStorageCapacity(Avatar.Castle_Level);
+                                        }
+                                        else if (bd.IsTownHall())
+                                        {
+                                            Avatar.TownHall_Level++;
+                                        }
+
+                                        Avatar.Resources.Minus(resource.GetGlobalId(),
+                                            bd.GetBuildCost(b.GetUpgradeLevel));
+                                        b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
                                     }
-
-                                    if (bd.IsAllianceCastle())
-                                    {
-                                        var a = (Building) go;
-                                        var al = a.GetBuildingData;
-
-                                        Avatar.Castle_Level++;
-                                        Avatar.Castle_Total = al.GetUnitStorageCapacity(Avatar.Castle_Level);
-                                        Avatar.Castle_Total_SP = al.GetAltUnitStorageCapacity(Avatar.Castle_Level);
-                                    }
-                                    else if (bd.IsTownHall())
-                                    {
-                                        Avatar.TownHall_Level++;
-                                    }
-
-                                    Avatar.Resources.Minus(resource.GetGlobalId(), bd.GetBuildCost(b.GetUpgradeLevel));
-                                    b.StartUpgrading(Device.Player.Avatar.Variables.IsBuilderVillage);
-                                }
-                        }
-                        else
-                        {
-                            ExceptionLogger.Log(new NullReferenceException(),
-                                $"Resource data is null for building with {b.ClassId} class and {b.GlobalId} global id");
+                            }
+                            else
+                            {
+                                ExceptionLogger.Log(new NullReferenceException(),
+                                    $"Resource data is null for building with {b.ClassId} class and {b.GlobalId} global id");
+                            }
                         }
                     }
+                }
+                else
+                {
+                    ShowValues();
+                    new Out_Of_Sync(Device).Send();
+                    break;
                 }
             }
         }

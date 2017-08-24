@@ -10,7 +10,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
     internal class Upgrade_Building : Command
     {
         internal int BuildingId;
-        internal uint Unknown1;
+        internal int Tick;
         internal bool IsAltResource;
 
         public Upgrade_Building(Reader reader, Device client, int id) : base(reader, client, id)
@@ -21,7 +21,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         {
             BuildingId = Reader.ReadInt32();
             IsAltResource = Reader.ReadBoolean();
-            Unknown1 = Reader.ReadUInt32();
+            Tick = Reader.ReadInt32();
         }
 
         public override void Process()

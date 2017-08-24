@@ -341,6 +341,7 @@
     <Compile Include="Network\Commands\Client\Battle\Place_Hero.cs" />
     <Compile Include="Network\Commands\Client\Battle\Place_Spell.cs" />
     <Compile Include="Network\Commands\Client\Battle\Surrender_Attack.cs" />
+    <Compile Include="Network\Commands\Client\Battle\Trap_Triggered.cs" />
     <Compile Include="Network\Commands\Client\BuildingToMove.cs" />
     <Compile Include="Network\Commands\Client\Buy_Building.cs" />
     <Compile Include="Network\Commands\Client\Buy_Deco.cs" />
@@ -350,13 +351,16 @@
     <Compile Include="Network\Commands\Client\Change_Village_Mode.cs" />
     <Compile Include="Network\Commands\Client\Change_Weapon_Heading.cs" />
     <Compile Include="Network\Commands\Client\Change_Weapon_Mode.cs" />
+    <Compile Include="Network\Commands\Client\Claim_Achievement.cs" />
     <Compile Include="Network\Commands\Client\Free_Worker.cs" />
     <Compile Include="Network\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Network\Commands\Client\Move_Building.cs" />
     <Compile Include="Network\Commands\Client\Move_Multiple_Buildings.cs" />
+    <Compile Include="Network\Commands\Client\New_Shop_Items_Seen.cs" />
     <Compile Include="Network\Commands\Client\Remove_Units.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Construction.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
+    <Compile Include="Network\Commands\Client\SpeedUp_Training.cs" />
     <Compile Include="Network\Commands\Client\SpeedUp_Upgrade_Unit.cs" />
     <Compile Include="Network\Commands\Client\Train_Unit.cs" />
     <Compile Include="Network\Commands\Client\Upgrade_Building.cs" />

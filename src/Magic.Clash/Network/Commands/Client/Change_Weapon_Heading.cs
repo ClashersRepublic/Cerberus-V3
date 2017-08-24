@@ -9,6 +9,11 @@ namespace Magic.ClashOfClans.Network.Commands.Client
     internal class Change_Weapon_Heading : Command
     {
         internal int BuildingID;
+        internal byte Unknown1;
+        internal int Unknown2;
+        internal int Unknown3;
+        internal byte Unknown4;
+
         internal int Tick;
 
         public Change_Weapon_Heading(Reader reader, Device client, int id) : base(reader, client, id)
@@ -18,10 +23,10 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         public override void Decode()
         {
             BuildingID = Reader.ReadInt32();
-            Reader.ReadByte();
-            Reader.ReadInt32();
-            Reader.ReadString();
-            Reader.ReadByte();
+            Unknown1 = Reader.ReadByte();
+            Unknown2 = Reader.ReadInt32();
+            Unknown3 = Reader.ReadInt32();
+            Unknown4 =  Reader.ReadByte();
             Tick = Reader.ReadInt32();
         }
 

@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Logic.Manager;
+using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace Magic.ClashOfClans.Logic.Manager
 {
@@ -67,8 +69,9 @@ namespace Magic.ClashOfClans.Logic.Manager
         }
 
 
-        public Game_Object GetGameObjectByID(int globalId, bool builder)
+        public Game_Object GetGameObjectByID(int globalId, bool builder , [CallerFilePath]string callerFile = "")
         {
+
             var classId = builder ? GlobalId.GetType(globalId) - 493 : GlobalId.GetType(globalId) - 500;
             if (GameObjects.Count < classId)
                 return null;
@@ -79,7 +82,7 @@ namespace Magic.ClashOfClans.Logic.Manager
             }
             catch (ArgumentOutOfRangeException e)
             {
-                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId}");
+                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId}.Last command is {Level.Device.Last_Command}.Called by {Path.GetFileName(callerFile)}");
                 return null;
             }
         }

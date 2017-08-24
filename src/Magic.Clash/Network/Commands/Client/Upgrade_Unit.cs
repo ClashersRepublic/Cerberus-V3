@@ -37,7 +37,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                 Troop = CSV.Tables.Get(Gamefile.Characters).GetDataWithID(GlobalId) as Characters;
             }
             Tick = Reader.ReadInt32();
-            ShowValues();
         }
 
         public override void Process()
@@ -91,7 +90,7 @@ namespace Magic.ClashOfClans.Network.Commands.Client
             else
             {
                 ExceptionLogger.Log(new Exception(),
-                    $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is having weird id at Upgrade Unit");
+                    $"Object with id {BuidlingID} from user {Device.Player.Avatar.UserId} is having weird id at Upgrade Unit.Previous command is {Device.Last_Command}");
             }
         }
 
