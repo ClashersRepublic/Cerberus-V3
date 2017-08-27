@@ -1,5 +1,11 @@
-﻿using Magic.Royale.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Magic.Royale.Core.Crypto;
+using Magic.Royale.Extensions;
+using Magic.Royale.Extensions.Blake2B;
 using Magic.Royale.Extensions.List;
+using Magic.Royale.Extensions.Sodium;
 using Magic.Royale.Logic.Enums;
 
 namespace Magic.Royale.Network.Messages.Server.Authentication
@@ -12,45 +18,67 @@ namespace Magic.Royale.Network.Messages.Server.Authentication
             Device.State = State.LOGGED;
         }
 
-        internal int ServerBuild;
-        internal int ServerMajorVersion;
-        internal int ContentVersion;
 
         public override void Encode()
         {
-            var avatar = Device.Player.Avatar;
-            Data.AddLong(avatar.UserId);
-            Data.AddLong(avatar.UserId);
+            Data.AddLong(Device.Player.UserId); // UserID
 
-            Data.AddString(avatar.Token);
+            Data.AddLong(Device.Player.UserId); // HomeID
 
-            Data.AddString(null);
-            Data.AddString(null);
+            Data.AddString(Device.Player.Token); // Token
 
-            Data.AddInt(ServerMajorVersion);
-            Data.AddInt(ServerBuild);
-            Data.AddInt(ContentVersion);
+
+            Data.AddString(null); // Facebook
+
+            Data.AddString(null); // Gamecenter
+
+            Data.AddVInt(Device.Major); // Major
+            Data.AddVInt(Device.Minor); // Minor
+            Data.AddVInt(Device.Revision); // Revision
 
             Data.AddString("prod");
 
-            Data.AddInt(avatar.Login_Count++); //Session Count
-            Data.AddInt((int) avatar.PlayTime.TotalSeconds); //Playtime Second
-            Data.AddInt(0);
+            Data.AddVInt(0); // Session Count
+            Data.AddVInt(0); // Total Play Time Seconds
+            Data.AddVInt(0); // Time since creation
+
+            Data.AddString("1609113955765603"); // Facebook ID
+
+            Data.AddString(TimeUtils.ToJavaTimestamp(DateTime.Now).ToString()); // Server Time
+            Data.AddString(TimeUtils.ToJavaTimestamp(Device.Player.Created).ToString()); // Account Creation Date
+
+            Data.AddVInt(0); // VInt
+
+
+            Data.AddString(null); // Google Service ID
 
             Data.AddString(null);
-
-            Data.AddString(TimeUtils.ToJavaTimestamp(avatar.LastSave).ToString()); // 14 75 26 87 86 11 24 33
-            Data.AddString(TimeUtils.ToJavaTimestamp(avatar.Created).ToString()); // 14 78 03 95 03 10 0
-
-            Data.AddInt(0);
             Data.AddString(null);
-            Data.AddString(avatar.Region);
-            Data.AddString(null);
-            Data.AddInt(1); //Unknown
-            Data.AddString("https://www.clashersrepublic.com/events/");
+
+            Data.AddString(null); // Region
+
             Data.AddString(
-                "http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/"); //Patch server?
-            Data.AddString(null);
+                "http://7166046b142482e67b30-2a63f4436c967aa7d355061bd0d924a1.r65.cf1.rackcdn.com"); // Content URL
+            Data.AddString("https://event-assets.clashroyale.com"); // Event Asset URL
+
+            Data.AddByte(1);
+        }
+
+        public override void Encrypt()
+        {
+            var Blake = new Blake2BHasher();
+
+            Blake.Update(Device.SNonce);
+            Blake.Update(Device.PublicKey);
+            Blake.Update(Key.PublicKey);
+
+            var Nonce = Blake.Finish();
+            var Encrypted = Device.RNonce.Concat(Device.PublicKey).Concat(Data)
+                .ToArray();
+
+            Data = new List<byte>(Sodium.Encrypt(Encrypted, Nonce, Key.PrivateKey, Device.PublicKey));
+
+            Length = (ushort) Data.Count;
         }
     }
 }

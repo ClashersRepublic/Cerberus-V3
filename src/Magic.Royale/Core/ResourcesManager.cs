@@ -1,16 +1,10 @@
-using Magic.Royale;
-using Magic.Royale;
-using Magic.Royale.Logic;
-using Magic.Royale.Network;
-using Magic.Royale.Network.Messages.Server;
-using Magic.Royale.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
+using Magic.Royale.Extensions;
+using Magic.Royale.Logic;
 
 namespace Magic.Royale.Core
 {
@@ -20,7 +14,7 @@ namespace Magic.Royale.Core
         private static ConcurrentDictionary<long, Device> _clients;
 
         // User Id -> Level instance.
-        private static ConcurrentDictionary<long, Level> _inMemoryLevels;
+        private static ConcurrentDictionary<long, Avatar> _inMemoryLevels;
         // Alliance Id -> Alliance instance.
         //private static ConcurrentDictionary<long, Alliance> _inMemoryAlliances;
 
@@ -28,10 +22,10 @@ namespace Magic.Royale.Core
 
         public static void Initialize()
         {
-            OnlinePlayers = new List<Level>();
+            OnlinePlayers = new List<Avatar>();
             _clients = new ConcurrentDictionary<long, Device>();
 
-            _inMemoryLevels = new ConcurrentDictionary<long, Level>();
+            _inMemoryLevels = new ConcurrentDictionary<long, Avatar>();
             //_inMemoryAlliances = new ConcurrentDictionary<long, Alliance>();
         }
 
@@ -50,12 +44,24 @@ namespace Magic.Royale.Core
                 if (_clients.TryRemove(socketHandle, out client))
                 {
                     Program.TitleDe();
-                    
+
                     var socket = client.Socket;
-                    try { socket.Shutdown(SocketShutdown.Both); }
-                    catch { /* Swallow */ }
-                    try { socket.Dispose(); }
-                    catch { /* Swallow */ }
+                    try
+                    {
+                        socket.Shutdown(SocketShutdown.Both);
+                    }
+                    catch
+                    {
+                        /* Swallow */
+                    }
+                    try
+                    {
+                        socket.Dispose();
+                    }
+                    catch
+                    {
+                        /* Swallow */
+                    }
 
                     closedSocket = true;
 
@@ -74,16 +80,19 @@ namespace Magic.Royale.Core
             return closedSocket;
         }
 
-        public static List<Device> GetConnectedClients() => _clients.Values.ToList();
+        public static List<Device> GetConnectedClients()
+        {
+            return _clients.Values.ToList();
+        }
 
-        public static List<Level> GetInMemoryLevels()
+        public static List<Avatar> GetInMemoryLevels()
         {
             return _inMemoryLevels.Values.ToList();
         }
 
-        public static List<Level> OnlinePlayers { get; private set; }
+        public static List<Avatar> OnlinePlayers { get; private set; }
 
-        public static Level GetPlayer(long id, bool persistent = false)
+        public static Avatar GetPlayer(long id, bool persistent = false)
         {
             // Try to get player from the memory, if not found
             // we look into the database.
@@ -97,14 +106,17 @@ namespace Magic.Royale.Core
             return result;
         }
 
-        public static bool IsPlayerOnline(Level l) => OnlinePlayers.Contains(l);
-
-        public static void LoadLevel(Level level)
+        public static bool IsPlayerOnline(Avatar l)
         {
-            _inMemoryLevels.TryAdd(level.Avatar.UserId, level);
+            return OnlinePlayers.Contains(l);
         }
 
-        public static void LogPlayerIn(Level level)
+        public static void LoadLevel(Avatar level)
+        {
+            _inMemoryLevels.TryAdd(level.UserId, level);
+        }
+
+        public static void LogPlayerIn(Avatar level)
         {
             var index = OnlinePlayers.IndexOf(level);
             if (index == -1)
@@ -125,9 +137,8 @@ namespace Magic.Royale.Core
             }
         }
 
-        public static void LogPlayerOut(Level level)
+        public static void LogPlayerOut(Avatar level)
         {
-
             try
             {
                 DatabaseManager.Save(level);
@@ -137,12 +148,12 @@ namespace Magic.Royale.Core
             }
 
             OnlinePlayers.Remove(level);
-            _inMemoryLevels.TryRemove(level.Avatar.UserId);
+            _inMemoryLevels.TryRemove(level.UserId);
         }
 
-        private static Level GetInMemoryLevel(long userId)
+        private static Avatar GetInMemoryLevel(long userId)
         {
-            var level = default(Level); 
+            var level = default(Avatar);
             _inMemoryLevels.TryGetValue(userId, out level);
             return level;
         }

@@ -147,21 +147,7 @@ namespace Magic.Royale.Logic.Structure.Slots
 
         internal void Initialize()
         {
-#if DEBUG
-            Set(Resource.Diamonds, 2000000000);
 
-            Set(Resource.Gold, 2000000000);
-            Set(Resource.Elixir, 2000000000);
-            Set(Resource.DarkElixir, 2000000000);
-            Set(Resource.Builder_Elixir, 2000000000);
-            Set(Resource.Builder_Gold, 2000000000);
-#else
-            this.Set(Enums.Resource.Diamonds, (CSV.Tables.Get(Enums.Gamefile.Globals).GetData("STARTING_DIAMONDS") as Globals).NumberValue);
-            this.Set(Enums.Resource.Gold, ( CSV.Tables.Get(Enums.Gamefile.Globals).GetData("STARTING_GOLD") as Globals).NumberValue);
-            this.Set(Enums.Resource.Elixir, (CSV.Tables.Get(Enums.Gamefile.Globals).GetData("STARTING_ELIXIR") as Globals).NumberValue);
-            this.Set(Enums.Resource.Builder_Elixir, (CSV.Tables.Get(Enums.Gamefile.Globals).GetData("STARTING_GOLD2") as Globals).NumberValue);
-            this.Set(Enums.Resource.Builder_Gold, (CSV.Tables.Get(Enums.Gamefile.Globals).GetData("STARTING_ELIXIR2") as Globals).NumberValue);
-#endif
         }
     }
 }

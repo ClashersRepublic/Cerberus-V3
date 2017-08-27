@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Magic.Royale.Core;
-using Magic.Royale.Core.Settings;
 using Magic.Royale.Extensions;
 using Magic.Royale.Extensions.Binary;
 using Magic.Royale.Extensions.List;
-using Magic.Royale.Logic;
+using Magic.Royale.Extensions.Sodium;
 using Magic.Royale.Logic.Enums;
 
 namespace Magic.Royale.Network
@@ -58,48 +58,46 @@ namespace Magic.Royale.Network
             // Space
         }
 
-        public void Decrypt()
+        public virtual void Decrypt()
         {
-            try
+            if (Device.State >= State.LOGGED)
             {
-                if (Constants.IsRc4)
-                {
-                    var buffer = Reader.ReadBytes(Length);
-                    if (Identifier != 10100)
-                        Device.Decrypt(buffer);
+                Device.SNonce.Increment();
 
+                var buffer = Reader.ReadBytes(Length);
+                buffer = Sodium.Decrypt(new byte[16].Concat(buffer).ToArray(), Device.SNonce,
+                    Device.PublicKey);
+
+                if (buffer != null)
+                {
                     Reader = new Reader(buffer);
                     Length = buffer.Length;
                 }
-            }
-            catch
-            {
-                Device.State = State.DISCONNECTED;
-                throw;
+                else
+                {
+                    Length = 0;
+                }
             }
         }
 
-        public void Encrypt()
+        public virtual void Encrypt()
         {
-            try
+            if (Device.State >= State.LOGGED)
             {
-                if (Constants.IsRc4)
-                    if (this.Device.State > State.SESSION_OK)
-                        Device.Encrypt(Data);
-                Length = Data.Count;
+                Device.RNonce.Increment();
+
+                Data = new List<byte>(
+                    Sodium.Encrypt(Data.ToArray(), Device.RNonce, Device.PublicKey).Skip(16).ToArray());
             }
-            catch (Exception)
-            {
-                Device.State = State.DISCONNECTED;
-                throw;
-            }
+
+            Length = Data.Count;
         }
 
         public byte[] ToBytes()
         {
             var encodedMessage = new List<byte>(7 + Length);
             encodedMessage.AddUShort(Identifier);
-            encodedMessage.AddUInt24((uint)Length);
+            encodedMessage.AddUInt24((uint) Length);
             encodedMessage.AddUShort(Version);
 
             if (Data == null)

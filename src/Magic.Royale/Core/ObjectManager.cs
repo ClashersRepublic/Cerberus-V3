@@ -4,12 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Magic.Royale.Files;
+using Magic.Royale.Logic.Structure.Slots;
+using Newtonsoft.Json;
 
 namespace Magic.Royale.Core
 
 {
     internal static class ObjectManager
     {
+
         private static readonly object s_sync = new object();
         private static readonly Random s_rand = new Random();
 
@@ -54,7 +57,7 @@ namespace Magic.Royale.Core
             return alliance;
         }*/
 
-        public static Level CreateLevel(long seed, string token = "")
+        public static Avatar CreateLevel(long seed, string token = "")
         {
             // Increment & manage AvatarSeed thread safely.
             lock (s_sync)
@@ -70,35 +73,37 @@ namespace Magic.Royale.Core
                 }
             }
 
-            var level = new Level(seed);
+            var level = new Avatar(seed);
 
             if (string.IsNullOrEmpty(token))
             {
-                if (string.IsNullOrEmpty(level.Avatar.Token))
+                if (string.IsNullOrEmpty(level.Token))
                 {
                     for (int i = 0; i < 20; i++)
                     {
-                        char Letter = (char)s_rand.Next('A', 'Z');
-                        level.Avatar.Token += Letter;
+                        char Letter = (char) s_rand.Next('A', 'Z');
+                        level.Token += Letter;
                     }
                 }
             }
             else
             {
-                level.Avatar.Token = token;
+                level.Token = token;
             }
 
-            if (string.IsNullOrEmpty(level.Avatar.Password))
+            if (string.IsNullOrEmpty(level.Password))
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    char Letter = (char)s_rand.Next('A', 'Z');
-                    char Number = (char)s_rand.Next('1', '9');
-                    level.Avatar.Password += Letter;
-                    level.Avatar.Password += Number;
+                    char Letter = (char) s_rand.Next('A', 'Z');
+                    char Number = (char) s_rand.Next('1', '9');
+                    level.Password += Letter;
+                    level.Password += Number;
                 }
             }
-            
+
+            level.Cards = JsonConvert.DeserializeObject<Logic.Structure.Slots.Cards>(Files.Cards.Starting_Card, DatabaseManager.Settings);
+            level.Decks = JsonConvert.DeserializeObject<Decks>(Deck.Starting_Deck, DatabaseManager.Settings);
 
             DatabaseManager.CreateLevel(level);
 
@@ -127,7 +132,7 @@ namespace Magic.Royale.Core
             return ResourcesManager.GetInMemoryAlliances();
         }*/
 
-        public static Level GetRandomOnlinePlayer()
+        public static Avatar GetRandomOnlinePlayer()
         {
             var levels = ResourcesManager.GetInMemoryLevels();
             int index = s_rand.Next(0, levels.Count);

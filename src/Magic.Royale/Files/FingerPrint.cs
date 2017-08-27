@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Magic.ClashOfClans.Core;
+using Magic.Royale.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

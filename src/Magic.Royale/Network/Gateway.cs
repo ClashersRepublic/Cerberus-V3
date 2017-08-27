@@ -1,4 +1,4 @@
-﻿//#define Info
+﻿#define Info
 
 using Magic.Royale.Core;
 using Magic.Royale.Core.Settings;

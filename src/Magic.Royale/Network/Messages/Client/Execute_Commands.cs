@@ -11,7 +11,7 @@ namespace Magic.Royale.Network.Messages.Client
     internal class Execute_Commands : Message
     {
         internal int CTick;
-        internal uint Checksum;
+        internal int Checksum;
         internal int Count;
 
         internal byte[] Commands;
@@ -23,10 +23,9 @@ namespace Magic.Royale.Network.Messages.Client
 
         public override void Decode()
         {
-            CTick = Reader.ReadInt32();
-            Checksum = Reader.ReadUInt32();
-            Count = Reader.ReadInt32();
-
+            CTick = Reader.ReadVInt();
+            Checksum =  Reader.ReadVInt();
+            Count = Reader.ReadVInt();
             Commands = Reader.ReadBytes((int) (Reader.BaseStream.Length - Reader.BaseStream.Position));
 #if DEBUG
             LCommands = new List<Command>(Count);
@@ -39,13 +38,12 @@ namespace Magic.Royale.Network.Messages.Client
             // Resources.Battles.Get(this.Device.Player.Avatar.Battle_ID).Battle_Tick = (int)this.CTick;
 
             if (Count > -1)
-            {
                 if (Constants.MaxCommand == 0 || Count <= Constants.MaxCommand)
                     using (var Reader = new Reader(Commands))
                     {
                         for (var _Index = 0; _Index < Count; _Index++)
                         {
-                            var CommandID = Reader.ReadInt32();
+                            var CommandID = Reader.ReadVInt();
                             if (CommandFactory.Commands.ContainsKey(CommandID))
                             {
                                 var Command = Activator.CreateInstance(CommandFactory.Commands[CommandID], Reader,
@@ -62,7 +60,8 @@ namespace Magic.Royale.Network.Messages.Client
                                     }
                                     catch (Exception Exception)
                                     {
-                                        ExceptionLogger.Log(Exception, $"Exception while decoding command {Command.GetType()}");
+                                        ExceptionLogger.Log(Exception,
+                                            $"Exception while decoding command {Command.GetType()}");
                                     }
 
                                     try
@@ -71,7 +70,8 @@ namespace Magic.Royale.Network.Messages.Client
                                     }
                                     catch (Exception Exception)
                                     {
-                                        ExceptionLogger.Log(Exception, $"Exception while executing command {Command.GetType()}");
+                                        ExceptionLogger.Log(Exception,
+                                            $"Exception while executing command {Command.GetType()}");
                                     }
 
                                     Device.Last_Command = CommandID;
@@ -82,18 +82,18 @@ namespace Magic.Royale.Network.Messages.Client
                             }
                             else
                             {
-
                                 new Out_Of_Sync(Device).Send();
 #if DEBUG
                                 Logger.Say("Command " + CommandID + " has not been handled.", ConsoleColor.Red);
                                 if (LCommands.Any())
-                                    Logger.Say("Previous command was " + LCommands.Last().Identifier + ". [" + (_Index + 1) + " / " + Count + "]", ConsoleColor.Red);
+                                    Logger.Say(
+                                        "Previous command was " + LCommands.Last().Identifier + ". [" + (_Index + 1) +
+                                        " / " + Count + "]", ConsoleColor.Red);
                                 break;
 #endif
                             }
                         }
                     }
-            }
         }
     }
 }

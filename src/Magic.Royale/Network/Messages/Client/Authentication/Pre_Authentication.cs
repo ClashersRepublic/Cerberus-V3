@@ -41,11 +41,11 @@ namespace Magic.Royale.Network.Messages.Client.Authentication
                 {
                     // if (string.Equals(this.Hash, Fingerprint.Sha))
                     {
-                        //   new Pre_Authentication_OK(this.Device).Send();
+                           new Pre_Authentication_OK(this.Device).Send();
                         //}
                         //else
                         //{
-                        new Authentication_Failed(Device, Reason.Patch).Send();
+                        //new Authentication_Failed(Device, Reason.Patch).Send();
                     }
                 }
                // else

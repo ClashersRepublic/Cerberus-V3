@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Magic.Royale.Logic.Structure;
 using Magic.Utilities.ZLib;
 
 namespace Magic.Royale.Extensions.Binary
@@ -198,6 +199,78 @@ namespace Magic.Royale.Extensions.Binary
                     string homeJson = ZlibStream.UncompressString(br.ReadFully());
                     return homeJson;
                 }
+            }
+            return null;
+        }
+        internal int ReadVInt()
+        {
+            byte num1 = this.ReadByte();
+            int num2 = (int)num1 & 128;
+            int num3 = (int)num1 & 63;
+            if (((int)num1 & 64) != 0)
+            {
+                if (num2 != 0)
+                {
+                    byte num4 = this.ReadByte();
+                    int num5 = (int)num4 << 6 & 8128 | num3;
+                    if (((int)num4 & 128) != 0)
+                    {
+                        byte num6 = this.ReadByte();
+                        int num7 = num5 | (int)num6 << 13 & 1040384;
+                        if (((int)num6 & 128) != 0)
+                        {
+                            byte num8 = this.ReadByte();
+                            int num9 = num7 | (int)num8 << 20 & 133169152;
+                            if (((int)num8 & 128) != 0)
+                            {
+                                byte num10 = this.ReadByte();
+                                num3 = (int)((long)(num9 | (int)num10 << 27) | 2147483648L);
+                            }
+                            else
+                                num3 = (int)((long)num9 | 4160749568L);
+                        }
+                        else
+                            num3 = (int)((long)num7 | 4293918720L);
+                    }
+                    else
+                        num3 = (int)((long)num5 | 4294959104L);
+                }
+            }
+            else if (num2 != 0)
+            {
+                byte num4 = this.ReadByte();
+                num3 |= (int)num4 << 6 & 8128;
+                if (((int)num4 & 128) != 0)
+                {
+                    byte num5 = this.ReadByte();
+                    num3 |= (int)num5 << 13 & 1040384;
+                    if (((int)num5 & 128) != 0)
+                    {
+                        byte num6 = this.ReadByte();
+                        num3 |= (int)num6 << 20 & 133169152;
+                        if (((int)num6 & 128) != 0)
+                        {
+                            byte num7 = this.ReadByte();
+                            num3 |= (int)num7 << 27;
+                        }
+                    }
+                }
+            }
+            return num3;
+        }
+
+        internal long ReadVLong()
+        {
+            return (((long)ReadVInt()) << 32) | ((long)ReadVInt());
+        }
+
+        internal SCID ReadSCID()
+        {
+            int High = ReadVInt();
+            if (High > 0)
+            {
+                int Low = ReadVInt();
+                return  new SCID(High, Low);
             }
             return null;
         }

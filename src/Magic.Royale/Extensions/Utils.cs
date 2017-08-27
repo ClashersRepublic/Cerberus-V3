@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Configuration;
 using Magic.Royale.Network;
 
@@ -23,7 +24,14 @@ namespace Magic.Royale.Extensions
     internal static class Utils
     {
         public static Random Random { get; } = new Random();
-
+        public static float RandomFloat()
+        {
+            double range = (double)float.MaxValue - (double)float.MinValue;
+            double sample = Random.NextDouble();
+            double scaled = (sample * range) + float.MinValue;
+            float f = (float)scaled;
+            return f;
+        }
         internal static Command Handle(this Command Command)
         {
             Command.Encode();
@@ -92,6 +100,19 @@ namespace Magic.Royale.Extensions
                 throw new ArgumentException("comp is not a member of StringComparison", "comp");
 
             return str.IndexOf(substring, comp) >= 0;
+        }
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                int k = (Random.Next(0, n) % n);
+                n--;
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
     }
 }

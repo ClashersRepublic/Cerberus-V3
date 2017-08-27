@@ -4,6 +4,7 @@ using Magic.Royale.Core.Settings;
 using Magic.Royale.Files;
 using Magic.Royale.Network;
 using Magic.Files;
+using Magic.Royale.Logic.Structure.Game;
 
 namespace Magic.Royale.Core
 {
@@ -17,7 +18,13 @@ namespace Magic.Royale.Core
             CSV.Initialize();
             Game_Events.Initialize();
             Deck.Initialize();
+            Files.Cards.Initialize();
             Fingerprint.Initialize();
+
+            Arenas.Initialize();
+            Rarities.Initialize();
+            Logic.Structure.Game.Cards.Initialize();
+            Chests.Initialize();
 
             ResourcesManager.Initialize();
             ObjectManager.Initialize();

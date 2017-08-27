@@ -21,7 +21,6 @@
           </Key>
           <Property Name="Id" Type="bigint" Nullable="false" />
           <Property Name="Avatar" Type="mediumtext" Nullable="false" />
-          <Property Name="Village" Type="mediumtext" Nullable="false" />
         </EntityType>
         <EntityContainer Name="MysqlModelStoreContainer">
           <EntitySet Name="clan" EntityType="Self.clan" Schema="Mysql" store:Type="Tables" />
@@ -47,8 +46,6 @@
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" />
           <Property Name="Avatar" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Village" Type="String" Nullable="false" MaxLength="Max" FixedLength="false"
-                    Unicode="false" />
         </EntityType>
         <EntityContainer Name="MysqlEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="clan" EntityType="Self.clan" />
@@ -73,7 +70,6 @@
               <MappingFragment StoreEntitySet="player">
                 <ScalarProperty Name="Id" ColumnName="Id"/>
                 <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-                <ScalarProperty Name="Village" ColumnName="Village" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

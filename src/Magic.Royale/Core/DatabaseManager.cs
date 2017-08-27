@@ -46,7 +46,7 @@ namespace Magic.Royale.Core
             return -1;
         }
 
-        public static void CreateLevel(Level level)
+        public static void CreateLevel(Avatar level)
         {
             try
             {
@@ -54,9 +54,9 @@ namespace Magic.Royale.Core
                 {
                     var newPlayer = new player
                     {
-                        Id = level.Avatar.UserId,
+                        Id = level.UserId,
 
-                        Avatar = JsonConvert.SerializeObject(level.Avatar, Settings),
+                        Avatar = JsonConvert.SerializeObject(level, Settings),
                     };
 
                     ctx.player.Add(newPlayer);
@@ -93,9 +93,9 @@ namespace Magic.Royale.Core
             }
         }*/
 
-        public static Level GetLevel(long userId)
+        public static Avatar GetLevel(long userId)
         {
-            var level = default(Level);
+            Avatar avatar = default(Avatar);
             try
             {
                 using (var ctx = new MysqlEntities())
@@ -103,10 +103,7 @@ namespace Magic.Royale.Core
                     var player = ctx.player.Find(userId);
                     if (player != null)
                     {
-                        level = new Level
-                        {
-                            Avatar = JsonConvert.DeserializeObject<Avatar>(player.Avatar),
-                        };
+                        avatar = JsonConvert.DeserializeObject<Avatar>(player.Avatar);
                     }
                 }
             }
@@ -115,9 +112,9 @@ namespace Magic.Royale.Core
                 ExceptionLogger.Log(ex, $"Exception while trying to get a level {userId} from the database.");
 
                 // In case the level instance was already created before the exception.
-                level = null;
+                avatar = null;
             }
-            return level;
+            return avatar;
         }
 
        /* public Alliance GetAlliance(long allianceId)
@@ -202,7 +199,7 @@ namespace Magic.Royale.Core
             }
         }*/
 
-        public static void Save(Level level)
+        public static void Save(Avatar level)
         {
             try
             {
@@ -210,10 +207,10 @@ namespace Magic.Royale.Core
                 {
                     ctx.Configuration.AutoDetectChangesEnabled = false;
 
-                    var player = ctx.player.Find(level.Avatar.UserId);
+                    var player = ctx.player.Find(level.UserId);
                     if (player != null)
                     {
-                        player.Avatar = JsonConvert.SerializeObject(level.Avatar, Settings);
+                        player.Avatar = JsonConvert.SerializeObject(level, Settings);
 
                         ctx.Entry(player).State = EntityState.Modified;
                     }
@@ -223,7 +220,7 @@ namespace Magic.Royale.Core
             }
             catch (DbEntityValidationException ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database. Check error for more information.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.UserId} to the database. Check error for more information.");
                 foreach (var entry in ex.EntityValidationErrors)
                 {
                     foreach (var errs in entry.ValidationErrors)
@@ -233,23 +230,23 @@ namespace Magic.Royale.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database.");
+                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.UserId} to the database.");
                 throw;
             }
         }
 
-        public static async Task Save(List<Level> levels)
+        public static async Task Save(List<Avatar> levels)
         {
             try
             {
                 using (var ctx = new MysqlEntities())
                 {
-                    foreach (Level pl in levels)
+                    foreach (var pl in levels)
                     {
-                        player p = await ctx.player.FindAsync(pl.Avatar.UserId); //Maybe to use lock instead
+                        player p = await ctx.player.FindAsync(pl.UserId); //Maybe to use lock instead
                         if (p != null)
                         {
-                            p.Avatar = JsonConvert.SerializeObject(pl.Avatar);
+                            p.Avatar = JsonConvert.SerializeObject(pl);
                         }
                     }
                     await ctx.BulkSaveChangesAsync();

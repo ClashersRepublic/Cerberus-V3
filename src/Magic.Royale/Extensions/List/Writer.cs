@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Magic.Royale.Files.CSV_Helpers;
+using Magic.Royale.Logic.Structure;
 using Magic.Royale.Logic.Structure.Slots.Items;
 
 namespace Magic.Royale.Extensions.List
@@ -101,6 +102,20 @@ namespace Magic.Royale.Extensions.List
             _Packet.Add((byte)_Value);
         }
 
+        public static void AddVLong(this List<byte> _Packet, long _Value)
+        {
+            _Packet.AddVInt((int)(_Value >> 32));
+            _Packet.AddVInt((int)_Value);
+        }
+
+        internal static void AddSCID(this List<byte> _Packet, SCID Scid)
+        {
+           _Packet.AddVInt(Scid.High);
+            if (Scid.High > 0)
+                _Packet.AddVInt(Scid.Low);
+
+        }
+
         public static void AddUShort(this List<byte> _Packet, ushort _Value)
         {
             _Packet.AddRange(BitConverter.GetBytes(_Value).Reverse());
@@ -168,7 +183,6 @@ namespace Magic.Royale.Extensions.List
                 _Packet.AddRange(data);
             }
         }
-
         /*internal static void Shuffle<T>(this IList<T> List)
         {
             int c = List.Count;

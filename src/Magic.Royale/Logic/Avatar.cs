@@ -1,24 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Magic.Royale.Extensions;
 using Magic.Royale.Extensions.List;
 using Magic.Royale.Files.CSV_Helpers;
 using Magic.Royale.Files.CSV_Logic;
 using Magic.Royale.Logic.Enums;
+using Magic.Royale.Logic.Structure.Components;
 using Magic.Royale.Logic.Structure.Slots;
 using Magic.Royale.Logic.Structure.Slots.Items;
 using Newtonsoft.Json;
-using Npcs = Magic.Royale.Logic.Structure.Slots.Npcs;
 using Resource = Magic.Royale.Logic.Enums.Resource;
-using Variables = Magic.Royale.Logic.Structure.Slots.Variables;
 
 namespace Magic.Royale.Logic
 {
     internal class Avatar
     {
-        // Ids
+        [JsonIgnore] internal float RareChance;
+        [JsonIgnore] internal float EpicChance;
+        [JsonIgnore] internal float LegendaryChance;
 
-        [JsonIgnore] internal int ObstacleClearCount;
+        [JsonIgnore] internal Device Device;
+        [JsonIgnore] internal Component Component;
 
         [JsonIgnore]
         internal long UserId
@@ -58,6 +61,7 @@ namespace Magic.Royale.Logic
 
         [JsonProperty("xp_level")] internal int Level = 1;
         [JsonProperty("xp")] internal int Experience;
+        [JsonProperty("active_deck")] internal int Active_Deck;
 
         [JsonProperty("wins")] internal int Wons;
         [JsonProperty("loses")] internal int Loses;
@@ -69,7 +73,6 @@ namespace Magic.Royale.Logic
         [JsonProperty("shield")] internal int Shield;
         [JsonProperty("guard")] internal int Guard;
         [JsonProperty("score")] internal int Trophies;
-        [JsonProperty("duel_score")] internal int Builder_Trophies = 1;
         [JsonProperty("legend_troph")] internal int Legendary_Trophies;
         [JsonProperty("league_type")] internal int League;
 
@@ -78,44 +81,18 @@ namespace Magic.Royale.Logic
 
         [JsonProperty("rank")] internal Rank Rank = Rank.PLAYER;
 
-        [JsonProperty("town_hall_level")] internal int TownHall_Level;
-        [JsonProperty("th_v2_lvl")] internal int Builder_TownHall_Level;
-        [JsonProperty("castle_lvl")] internal int Castle_Level = -1;
-        [JsonProperty("castle_total")] internal int Castle_Total;
-        [JsonProperty("castle_used")] internal int Castle_Used;
-        [JsonProperty("castle_total_sp")] internal int Castle_Total_SP;
-        [JsonProperty("castle_used_sp")] internal int Castle_Used_SP;
-        [JsonProperty("castle_resource")] internal Resources Castle_Resources;
-
         [JsonProperty("bookmarks")] internal List<long> Bookmarks = new List<long>();
         [JsonProperty("tutorials")] internal List<int> Tutorials = new List<int>();
         [JsonProperty("last_search_enemy_id")] internal List<long> Last_Attack_Enemy_ID = new List<long>();
         [JsonProperty("account_locked")] internal bool Locked;
 
         [JsonProperty("badge_id")] internal int Badge_ID = -1;
-        [JsonProperty("wall_group_id")] internal int Wall_Group_ID = -1;
         [JsonProperty("alliance_role")] internal int Alliance_Role = -1;
         [JsonProperty("alliance_level")] internal int Alliance_Level = -1;
 
-        [JsonProperty("units")] internal Units Units;
-        [JsonProperty("units2")] internal Units Units2;
-        [JsonProperty("spells")] internal Units Spells;
-        [JsonProperty("alliance_units")] internal Castle_Units Castle_Units;
-        [JsonProperty("alliance_spells")] internal Castle_Units Castle_Spells;
-
-
-        [JsonProperty("unit_upgrades")] internal Upgrades Unit_Upgrades;
-        [JsonProperty("spell_upgrades")] internal Upgrades Spell_Upgrades;
-        [JsonProperty("hero_upgrade")] internal Upgrades Heroes_Upgrades;
-
-        [JsonProperty("hero_states")] internal Slots Heroes_States;
-        [JsonProperty("hero_health")] internal Slots Heroes_Health;
-        [JsonProperty("hero_modes")] internal Slots Heroes_Modes;
-
         [JsonProperty("resources")] internal Resources Resources;
-        [JsonProperty("resources_cap")] internal Resources Resources_Cap;
-        [JsonProperty("npcs")] internal Npcs Npcs;
-        [JsonProperty("variable")] internal Variables Variables;
+        [JsonProperty("decks")] internal Decks Decks;
+        [JsonProperty("cards")] internal Cards Cards;
         [JsonProperty("debug_mode")] internal Modes Modes;
 
         [JsonProperty("login_count")] internal int Login_Count;
@@ -135,382 +112,26 @@ namespace Magic.Royale.Logic
 
         internal bool Banned => BanTime > DateTime.UtcNow;
 
+        [JsonConstructor]
         public Avatar()
         {
-            Castle_Resources = new Resources();
+            Console.WriteLine("Yo");
+            Cards = new Cards(this);
+            Decks = new Decks(this);
+            Component = new Component(this);
             Resources = new Resources();
-            Resources_Cap = new Resources();
-            Npcs = new Npcs();
-            Variables = new Variables();
             Modes = new Modes();
-
-            Units = new Units();
-            Units2 = new Units();
-            Spells = new Units();
-            Castle_Units = new Castle_Units();
-            Castle_Spells = new Castle_Units();
-
-            Unit_Upgrades = new Upgrades();
-            Spell_Upgrades = new Upgrades();
-            Heroes_Upgrades = new Upgrades();
-
-            Heroes_Health = new Slots();
-            Heroes_Modes = new Slots();
-            Heroes_States = new Slots();
         }
 
         public Avatar(long id)
         {
             UserId = id;
-
-            Castle_Resources = new Resources(false);
+            Component = new Component(this);
+            Decks = new Decks(this);
+            Cards = new Cards(this);
             Resources = new Resources(true);
-            Resources_Cap = new Resources(false);
-            Npcs = new Npcs();
-            Variables = new Variables(true);
             Modes = new Modes(true);
-
-            Units = new Units();
-            Units2 = new Units();
-            Spells = new Units();
-            Castle_Units = new Castle_Units();
-            Castle_Spells = new Castle_Units();
-
-            Unit_Upgrades = new Upgrades();
-            Spell_Upgrades = new Upgrades();
-            Heroes_Upgrades = new Upgrades();
-
-            Heroes_Health = new Slots();
-            Heroes_Modes = new Slots();
-            Heroes_States = new Slots();
         }
-
-        internal byte[] ToBytes
-        {
-            get
-            {
-                //this.Refresh();
-
-                var _Packet = new List<byte>();
-
-                _Packet.AddLong(UserId);
-                _Packet.AddLong(UserId);
-
-
-                /*if (this.ClanId > 0)
-                {
-                    Clan clan = Core.Resources.Clans.Get(ClanId);
-
-                    _Packet.AddBool(clan != null);
-                    if (clan != null)
-                    {
-                        _Packet.AddLong(this.ClanId);
-                        _Packet.AddString(clan.Name);
-                        _Packet.AddInt(clan.Badge); // Badge
-                        _Packet.AddInt((int)clan.Members[UserId].Role); // Role
-                        _Packet.AddInt(clan.Level); // Level
-
-                        _Packet.AddBool(false); // Alliance War
-                        {
-                            // _Packet.AddLong(1); // War ID
-                        }
-
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Clan is null");
-                        this.ClanId = 0;
-                        this.Alliance_Role = -1;
-                        this.Alliance_Level = -1;
-                        this.Alliance_Name = string.Empty;
-                        this.Badge_ID = -1;
-                    }
-                }
-                else*/
-                _Packet.AddBool(false);
-
-                _Packet.AddInt(Legendary_Trophies);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-
-
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0); //Builder base Versus Battle Win
-                _Packet.AddInt(0); //5
-                _Packet.AddInt(0); //8
-
-                _Packet.AddInt(League);
-                _Packet.AddInt(Castle_Level);
-                _Packet.AddInt(Castle_Total);
-                _Packet.AddInt(Castle_Used);
-                _Packet.AddInt(Castle_Total_SP);
-                _Packet.AddInt(Castle_Used_SP);
-
-                _Packet.AddInt(TownHall_Level);
-                _Packet.AddInt(Builder_TownHall_Level);
-
-#if DEBUG
-                _Packet.AddString($"{Name} #{UserId}:{GameUtils.GetHashtag(UserId)}");
-#else
-                _Packet.AddString(this.Name);
-#endif
-                _Packet.AddString(null);
-                // _Packet.AddString(!string.IsNullOrEmpty(this.Facebook.Identifier) ? this.Facebook.Identifier : null);
-
-                _Packet.AddInt(Level);
-                _Packet.AddInt(Experience);
-                _Packet.AddInt(Resources.Gems);
-                _Packet.AddInt(Resources.Gems);
-
-                _Packet.AddInt(0); // 1200
-                _Packet.AddInt(0); // 60
-
-                _Packet.AddInt(Trophies);
-                _Packet.AddInt(Builder_Trophies);
-
-                _Packet.AddInt(Wons);
-                _Packet.AddInt(Loses);
-                _Packet.AddInt(0); // Def Wins
-                _Packet.AddInt(0); // Def Loses
-
-                _Packet.AddInt(Castle_Resources.Get(Resource.WarGold));
-                _Packet.AddInt(Castle_Resources.Get(Resource.WarElixir));
-                _Packet.AddInt(Castle_Resources.Get(Resource.WarDarkElixir));
-
-                _Packet.AddInt(0);
-
-                _Packet.AddBool(true);
-                _Packet.AddInt(220);
-                _Packet.AddInt(1828055880);
-
-                _Packet.AddByte(NameState); //Name changed count
-
-                _Packet.AddInt(NameState > 1 ? 1 : 0); //Name Changed
-
-                _Packet.AddInt(6900); //6900
-                _Packet.AddInt(0);
-                _Packet.AddInt(WarState ? 1 : 0);
-
-                _Packet.AddInt(0);
-                _Packet.AddInt(0); // Total Attack with shield
-
-                _Packet.AddBool(false); //0
-
-                _Packet.AddDataSlots(Resources_Cap);
-
-                _Packet.AddRange(Resources.ToBytes);
-
-                _Packet.AddDataSlots(Units);
-                _Packet.AddDataSlots(Spells);
-                _Packet.AddDataSlots(Unit_Upgrades);
-                _Packet.AddDataSlots(Spell_Upgrades);
-
-                _Packet.AddDataSlots(Heroes_Upgrades);
-                _Packet.AddDataSlots(Heroes_Health);
-                _Packet.AddDataSlots(Heroes_States);
-
-                _Packet.AddInt(Castle_Units.Count + Castle_Spells.Count);
-
-                foreach (var _Unit in Castle_Units)
-                {
-                    _Packet.AddInt(_Unit.Data);
-                    _Packet.AddInt(_Unit.Count);
-                    _Packet.AddInt(_Unit.Level);
-                }
-
-                foreach (var _Spell in Castle_Spells)
-                {
-                    _Packet.AddInt(_Spell.Data);
-                    _Packet.AddInt(_Spell.Count);
-                    _Packet.AddInt(_Spell.Level);
-                }
-
-
-                _Packet.AddInt(Tutorials.Count);
-                foreach (var Tutorial in Tutorials)
-                    _Packet.AddInt(Tutorial);
-
-                _Packet.AddInt(0); //Achievements
-                _Packet.AddInt(0); //Achievements Progress
-
-                _Packet.AddRange(Npcs.ToBytes);
-
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-
-                _Packet.AddDataSlots(Variables);
-
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                _Packet.AddDataSlots(Units2);
-                _Packet.AddInt(0);
-                _Packet.AddInt(0);
-                return _Packet.ToArray();
-            }
-        }
-
-
-        internal static int GetDataIndex(List<Slot> dsl, Data d)
-        {
-            return dsl.FindIndex(ds => ds.Data == d.Id);
-        }
-
-        internal static int GetDataIndex(Units dsl, Data d)
-        {
-            return dsl.FindIndex(ds => ds.Data == d.Id);
-        }
-
-        internal void Add_Unit(int Data, int Count)
-        {
-            var _Index = Units.FindIndex(U => U.Data == Data);
-
-            if (_Index > -1)
-                Units[_Index].Count += Count;
-            else
-                Units.Add(new Slot(Data, Count));
-        }
-
-        public void Add_Spells(int Data, int Count)
-        {
-            var _Index = Spells.FindIndex(S => S.Data == Data);
-
-            if (_Index > -1)
-                Spells[_Index].Count += Count;
-            else
-                Spells.Add(new Slot(Data, Count));
-        }
-
-        public int GetUnitUpgradeLevel(Combat_Item cd)
-        {
-            var result = 0;
-            switch (cd.GetCombatItemType())
-            {
-                case 2:
-                {
-                    var index = GetDataIndex(Heroes_Upgrades, cd);
-                    if (index != -1)
-                        result = Heroes_Upgrades[index].Count;
-                    break;
-                }
-                case 1:
-                {
-                    var index = GetDataIndex(Spell_Upgrades, cd);
-                    if (index != -1)
-                        result = Spell_Upgrades[index].Count;
-                    break;
-                }
-
-                default:
-                {
-                    var index = GetDataIndex(Unit_Upgrades, cd);
-                    if (index != -1)
-                        result = Unit_Upgrades[index].Count;
-                    break;
-                }
-            }
-            return result;
-        }
-
-        public void SetUnitUpgradeLevel(Combat_Item cd, int level)
-        {
-            switch (cd.GetCombatItemType())
-            {
-                case 2:
-                {
-                    var index = GetDataIndex(Heroes_Upgrades, cd);
-                    if (index != -1)
-                    {
-                        Heroes_Upgrades[index].Count = level;
-                    }
-                    else
-                    {
-                        var ds = new Slot(cd.GetGlobalId(), level);
-                        Heroes_Upgrades.Add(ds);
-                    }
-                    break;
-                }
-                case 1:
-                {
-                    var index = GetDataIndex(Spell_Upgrades, cd);
-                    if (index != -1)
-                    {
-                        Spell_Upgrades[index].Count = level;
-                    }
-                    else
-                    {
-                        var ds = new Slot(cd.GetGlobalId(), level);
-                        Spell_Upgrades.Add(ds);
-                    }
-                    break;
-                }
-                default:
-                {
-                    var index = GetDataIndex(Unit_Upgrades, cd);
-                    if (index != -1)
-                    {
-                        Unit_Upgrades[index].Count = level;
-                    }
-                    else
-                    {
-                        var ds = new Slot(cd.GetGlobalId(), level);
-                        Unit_Upgrades.Add(ds);
-                    }
-                    break;
-                }
-            }
-        }
-
-        public void SetHeroHealth(Heroes hd, int health)
-        {
-            var index = GetDataIndex(Heroes_Health, hd);
-            if (index == -1)
-            {
-                var ds = new Slot(hd.GetGlobalId(), health);
-                Heroes_Health.Add(ds);
-            }
-            else
-            {
-                Heroes_Health[index].Count = health;
-            }
-        }
-
-        public void SetHeroState(Heroes hd, int state)
-        {
-            var index = GetDataIndex(Heroes_States, hd);
-            if (index == -1)
-            {
-                var ds = new Slot(hd.GetGlobalId(), state);
-                Heroes_States.Add(ds);
-            }
-            else
-            {
-                Heroes_States[index].Count = state;
-            }
-        }
-
 
         public bool HasEnoughResources(Resource resource, int buildCost)
         {

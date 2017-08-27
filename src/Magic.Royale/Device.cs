@@ -1,4 +1,4 @@
-﻿//#define Info
+﻿#define Info
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using Magic.Royale.Core;
 using Magic.Royale.Core.Crypto;
 using Magic.Royale.Core.Settings;
+using Magic.Royale.Extensions;
 using Magic.Royale.Extensions.Binary;
 using Magic.Royale.Logic;
 using Magic.Royale.Logic.Enums;
@@ -46,7 +47,7 @@ namespace Magic.Royale
 
         public Socket Socket { get; }
 
-        public Level Player { get; set; }
+        public Avatar Player { get; set; }
 
         public long GetSocketHandle()
         {
@@ -54,6 +55,10 @@ namespace Magic.Royale
         }
         internal int Depth { get; set; }
         internal int Last_Command { get; set; }
+
+        internal int Major { get; set; }
+        internal int Minor { get; set; }
+        internal int Revision { get; set; }
 
         internal uint ClientSeed { get; set; }
         internal string AndroidID { get; set; }
@@ -125,9 +130,8 @@ namespace Magic.Royale
                         {
                             Logger.Say("Unhandled message " + Identifier);
 
-                            // Make sure we don't break the RC4 stream.
-                            if (Constants.IsRc4)
-                                Decrypt(Reader.ReadBytes(Length));
+                            // Make sure we don't break the stream.
+                            SNonce.Increment();
                         }
 
                         // Clean up. 

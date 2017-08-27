@@ -16,6 +16,5 @@ namespace Magic.Royale.Core.Database
     {
         public long Id { get; set; }
         public string Avatar { get; set; }
-        public string Village { get; set; }
     }
 }

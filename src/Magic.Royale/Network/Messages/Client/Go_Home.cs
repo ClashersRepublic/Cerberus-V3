@@ -37,7 +37,7 @@ namespace Magic.Royale.Network.Messages.Client
 
             new Own_Home_Data(Device).Send();
 
-            if (Device.Player.Avatar.ClanId > 0)
+            if (Device.Player.ClanId > 0)
             {
             }
         }

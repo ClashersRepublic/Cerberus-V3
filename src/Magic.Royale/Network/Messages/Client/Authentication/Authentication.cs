@@ -1,11 +1,14 @@
+using System.Linq;
+using Magic.Files;
 using Magic.Royale.Core;
+using Magic.Royale.Core.Crypto;
 using Magic.Royale.Core.Settings;
 using Magic.Royale.Extensions.Binary;
-using Magic.Royale.Logic;
+using Magic.Royale.Extensions.Blake2B;
+using Magic.Royale.Extensions.Sodium;
 using Magic.Royale.Logic.Enums;
 using Magic.Royale.Network.Messages.Server;
 using Magic.Royale.Network.Messages.Server.Authentication;
-using Magic.Files;
 
 namespace Magic.Royale.Network.Messages.Client.Authentication
 {
@@ -18,10 +21,26 @@ namespace Magic.Royale.Network.Messages.Client.Authentication
 
         internal long UserId;
 
-        internal string Token, MasterHash, Language, Udid;
+        internal string Token, MasterHash, Language, UDID;
 
-        internal int Major, Minor, Revision, Locale;
-        internal string ClientVersion;
+        public override void Decrypt()
+        {
+            var buffer = Reader.ReadBytes(Length);
+            Device.PublicKey = buffer.Take(32).ToArray();
+
+            var Blake = new Blake2BHasher();
+
+            Blake.Update(Device.PublicKey);
+            Blake.Update(Key.PublicKey);
+
+            Device.RNonce = Blake.Finish();
+
+            buffer = Sodium.Decrypt(buffer.Skip(32).ToArray(), Device.RNonce, Key.PrivateKey, Device.PublicKey);
+            Device.SNonce = buffer.Skip(24).Take(24).ToArray();
+            Reader = new Reader(buffer.Skip(48).ToArray());
+
+            Length = (ushort) buffer.Length;
+        }
 
         public override void Decode()
         {
@@ -29,57 +48,51 @@ namespace Magic.Royale.Network.Messages.Client.Authentication
 
             Token = Reader.ReadString();
 
-            Major = Reader.ReadInt32();
-            Minor = Reader.ReadInt32();
-            Revision = Reader.ReadInt32();
+            Device.Major = Reader.ReadVInt();
+            Device.Minor = Reader.ReadVInt();
+            Device.Revision = Reader.ReadVInt();
 
             MasterHash = Reader.ReadString();
 
-            Reader.ReadString();
+            UDID = Reader.ReadString();
 
-            Device.AndroidID = Reader.ReadString();
+            Device.OpenUDID = Reader.ReadString();
             Device.MACAddress = Reader.ReadString();
             Device.Model = Reader.ReadString();
+            Device.AdvertiseID = Reader.ReadString();
 
-            Locale = Reader.ReadInt32(); // 2000001
-
-            Language = Reader.ReadString();
-            Device.OpenUDID = Reader.ReadString();
             Device.OSVersion = Reader.ReadString();
 
-            Device.Android = Reader.ReadBoolean();
+            Reader.ReadByte();
 
-            Reader.ReadString();
+            Reader.Seek(4);
 
             Device.AndroidID = Reader.ReadString();
-
-            Reader.ReadString();
-
-            Device.Advertising = Reader.ReadBoolean();
-
-            Reader.ReadString();
-
-            Device.ClientSeed = Reader.ReadUInt32();
+            Language = Reader.ReadString();
 
             Reader.ReadByte();
-            Reader.ReadString();
+            Reader.ReadByte();
+
             Reader.ReadString();
 
-            ClientVersion = Reader.ReadString();
+            Reader.ReadByte();
+
+            Reader.Seek(4);
+
+            Reader.ReadByte();
+
+            Reader.Seek(17);
         }
 
         public override void Process()
         {
-
-            if (!string.IsNullOrEmpty(Constants.PatchServer))
-            {
-                if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(this.MasterHash, Fingerprint.Sha))
+            /*if (!string.IsNullOrEmpty(Constants.PatchServer))
+                if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(MasterHash, Fingerprint.Sha))
                 {
-                    new Authentication_Failed(this.Device, Reason.Patch).Send();
+                    new Authentication_Failed(Device, Reason.Patch).Send();
                     return;
                 }
-            }
-
+            */
             CheckClient();
         }
 
@@ -101,7 +114,7 @@ namespace Magic.Royale.Network.Messages.Client.Authentication
                     Device.Player = ObjectManager.CreateLevel(0);
 
                     if (Device.Player != null)
-                        if (Device.Player.Avatar.Locked)
+                        if (Device.Player.Locked)
                             new Authentication_Failed(Device, Reason.Locked).Send();
                         else
                             LogUser();
@@ -122,12 +135,12 @@ namespace Magic.Royale.Network.Messages.Client.Authentication
                     Device.Player = DatabaseManager.GetLevel(UserId);
                     if (Device.Player != null)
                     {
-                        if (string.Equals(Token, Device.Player.Avatar.Token))
-                            if (Device.Player.Avatar.Locked)
+                        if (string.Equals(Token, Device.Player.Token))
+                            if (Device.Player.Locked)
                             {
                                 new Authentication_Failed(Device, Reason.Locked).Send();
                             }
-                            else if (Device.Player.Avatar.Banned)
+                            else if (Device.Player.Banned)
                             {
                             }
                             else
