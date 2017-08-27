@@ -17,6 +17,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal override bool Builder => false;
         internal override int ClassId => 3;
+        internal override int OppositeClassId => 13;
 
         internal Obstacles GetObstacleData()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Magic.ClashOfClans.Core;
@@ -32,7 +33,11 @@ namespace Magic.ClashOfClans
             Logger.Say(Assembly.GetExecutingAssembly().GetName().Name + @" is now starting..." + Environment.NewLine);
 
             Classes.Initialize();
-
+            foreach (var guild in
+                Core.API.Discord.Client._Client.GroupChannels.ToList())
+            {
+                Console.WriteLine(guild.Name);
+            }
             Logger.Say(@"-------------------------------------" + Environment.NewLine);
 
             Thread.Sleep(Timeout.Infinite);

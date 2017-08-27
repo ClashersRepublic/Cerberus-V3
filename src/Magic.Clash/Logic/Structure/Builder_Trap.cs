@@ -18,6 +18,7 @@ namespace Magic.ClashOfClans.Logic.Structure
         internal override bool Builder => true;
         internal override int ClassId => 11;
 
+        internal override int OppositeClassId => 4;
         public Traps GetTrapData => (Traps)Data;
     }
 }

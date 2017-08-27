@@ -8,6 +8,7 @@ using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Logic.Enums;
+using Magic.ClashOfClans.Network.Messages.Server;
 
 namespace Magic.ClashOfClans.Network
 {
@@ -122,12 +123,12 @@ namespace Magic.ClashOfClans.Network
 
         internal void SendChatMessage(string message)
         {
-            /*new Global_Chat_Entry(this.Device)
+            new Global_Chat_Entry(this.Device)
             {
                 Message = message,
-                Message_Sender = this.Device.Player.Avatar,
+                Message_Sender = Device.Player.Avatar,
                 Bot = true
-            }.Send();*/
+            }.Send();
         }
 
         internal void ShowValues()

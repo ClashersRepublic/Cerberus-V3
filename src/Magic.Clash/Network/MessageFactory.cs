@@ -24,6 +24,7 @@ namespace Magic.ClashOfClans.Network
                 {14123, typeof(Search_Opponent)},
                 {14134, typeof(Attack_NPC)},
                 {14325, typeof(Avatar_Profile)},
+                {14715, typeof(Add_Global_Message)},
             };
         }
 

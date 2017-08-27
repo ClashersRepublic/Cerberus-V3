@@ -12,6 +12,7 @@ using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Logic.Manager;
 using System.Runtime.CompilerServices;
 using System.IO;
+using System.Linq;
 
 namespace Magic.ClashOfClans.Logic.Manager
 {
@@ -69,7 +70,7 @@ namespace Magic.ClashOfClans.Logic.Manager
         }
 
 
-        public Game_Object GetGameObjectByID(int globalId, bool builder , [CallerFilePath]string callerFile = "")
+        public Game_Object GetGameObjectByID(int globalId, bool builder, [CallerFilePath] string callerFile = "")
         {
 
             var classId = builder ? GlobalId.GetType(globalId) - 493 : GlobalId.GetType(globalId) - 500;
@@ -78,11 +79,25 @@ namespace Magic.ClashOfClans.Logic.Manager
 
             try
             {
-                return GameObjects[classId].Find(g => g.GlobalId == globalId);
+                var patrikisgay = GameObjects[classId].Find(g => g.GlobalId == globalId);
+                if (patrikisgay != null)
+                    return patrikisgay;
+
+                classId = !builder ? GlobalId.GetType(globalId) - 493 : GlobalId.GetType(globalId) - 500;
+                var patrikisgay2 = GameObjects[classId].Find(g => g.GlobalId == globalId);
+                if (patrikisgay2 != null)
+                {
+                    Level.Avatar.Variables.Set(Variable.VillageToGoTo,
+                        Convert.ToInt32(!Level.Avatar.Variables.IsBuilderVillage));
+                    return patrikisgay2;
+
+                }
+                return null;
             }
             catch (ArgumentOutOfRangeException e)
             {
-                ExceptionLogger.Log(e, $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId}.Last command is {Level.Device.Last_Command}.Called by {Path.GetFileName(callerFile)}");
+                ExceptionLogger.Log(e,
+                    $"GameObjects throw ArgumentOutOfRangeException for {classId} with Global Id {globalId}.Last command is {Level.Device.Last_Command}.Called by {Path.GetFileName(callerFile)}");
                 return null;
             }
         }

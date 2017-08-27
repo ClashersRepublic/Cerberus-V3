@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Magic.ClashOfClans.Files;
+﻿using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Files.CSV_Logic;
 using Magic.ClashOfClans.Logic.Components;
@@ -16,21 +11,17 @@ namespace Magic.ClashOfClans.Logic.Structure
         public Building(Data data, Level level) : base(data, level)
         {
             if (GetBuildingData.BuildingClass == "Defense")
-            {
                 AddComponent(new Combat_Component(this));
-            }
             if (GetBuildingData.IsHeroBarrack)
             {
-                Heroes hd = CSV.Tables.Get(Gamefile.Heroes).GetData(GetBuildingData.HeroType) as Heroes;
+                var hd = CSV.Tables.Get(Gamefile.Heroes).GetData(GetBuildingData.HeroType) as Heroes;
                 AddComponent(new Hero_Base_Component(this, hd));
             }
             if (GetBuildingData.UpgradesUnits)
                 AddComponent(new Unit_Upgrade_Component(this));
 
             if (GetBuildingData.UnitProduction[0] > 0)
-            {
                 AddComponent(new Unit_Production_Component(this));
-            }
             /*AddComponent(new Hitpoint_Component());
 
 
@@ -53,7 +44,8 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal override bool Builder => false;
         internal override int ClassId => 0;
+        internal override int OppositeClassId => 7;
 
-        public Buildings GetBuildingData => (Buildings)Data;
+        public Buildings GetBuildingData => (Buildings) Data;
     }
 }

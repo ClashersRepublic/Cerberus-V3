@@ -28,6 +28,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal virtual bool Builder => false;
         internal virtual int ClassId => -1;
+        internal virtual int OppositeClassId => -1;
 
         internal int GlobalId;
 

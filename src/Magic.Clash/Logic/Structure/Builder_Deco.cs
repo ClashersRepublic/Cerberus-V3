@@ -11,6 +11,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal override bool Builder => true;
         internal override int ClassId => 13;
+        internal override int OppositeClassId => 6;
 
         public Decos GetDecoData => (Decos)Data;
 

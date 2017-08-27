@@ -11,6 +11,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal override bool Builder => false;
         internal override int ClassId => 8;
+        internal override int OppositeClassId => 15;
 
         public Village_Objects GetVillageObjectsData => (Village_Objects)Data;
     }

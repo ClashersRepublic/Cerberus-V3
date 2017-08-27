@@ -43,6 +43,7 @@ namespace Magic.ClashOfClans.Logic.Structure
 
         internal override bool Builder => true;
         internal override int ClassId => 7;
+        internal override int OppositeClassId => 0;
 
         public Buildings GetBuildingData => (Buildings) Data;
     }
