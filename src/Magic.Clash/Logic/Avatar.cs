@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Files.CSV_Helpers;
@@ -23,7 +24,7 @@ namespace Magic.ClashOfClans.Logic
         [JsonIgnore]
         internal long UserId
         {
-            get => ((long) UserHighId << 32) | (UserLowId & 0xFFFFFFFFL);
+            get => ((long)UserHighId << 32) | (long)UserLowId;
             set
             {
                 UserHighId = Convert.ToInt32(value >> 32);
@@ -34,7 +35,7 @@ namespace Magic.ClashOfClans.Logic
         [JsonIgnore]
         internal long ClanId
         {
-            get => ((long) ClanHighID << 32) | (ClanLowID & 0xFFFFFFFFL);
+            get => ((long) ClanHighID << 32) | (long)ClanLowID;
             set
             {
                 ClanHighID = Convert.ToInt32(value >> 32);
@@ -197,37 +198,38 @@ namespace Magic.ClashOfClans.Logic
                 _Packet.AddLong(UserId);
 
 
-                /*if (this.ClanId > 0)
+                if (ClanId > 0)
                 {
-                    Clan clan = Core.Resources.Clans.Get(ClanId);
+                    var clan = ObjectManager.GetAlliance(ClanId);
 
                     _Packet.AddBool(clan != null);
                     if (clan != null)
                     {
-                        _Packet.AddLong(this.ClanId);
+                        _Packet.AddLong(ClanId);
                         _Packet.AddString(clan.Name);
                         _Packet.AddInt(clan.Badge); // Badge
-                        _Packet.AddInt((int)clan.Members[UserId].Role); // Role
+                        _Packet.AddInt((int) clan.Members[UserId].Role); // Role
                         _Packet.AddInt(clan.Level); // Level
 
                         _Packet.AddBool(false); // Alliance War
                         {
                             // _Packet.AddLong(1); // War ID
                         }
-
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Clan is null");
-                        this.ClanId = 0;
-                        this.Alliance_Role = -1;
-                        this.Alliance_Level = -1;
-                        this.Alliance_Name = string.Empty;
-                        this.Badge_ID = -1;
+                        ExceptionLogger.Log(new NullReferenceException(), $"Clan {ClanId} is null for avatar {UserId}");
+                        ClanId = 0;
+                        Alliance_Role = -1;
+                        Alliance_Level = -1;
+                        Alliance_Name = string.Empty;
+                        Badge_ID = -1;
                     }
                 }
-                else*/
-                _Packet.AddBool(false);
+                else
+                {
+                    _Packet.AddBool(false);
+                }
 
                 _Packet.AddInt(Legendary_Trophies);
                 _Packet.AddInt(0);

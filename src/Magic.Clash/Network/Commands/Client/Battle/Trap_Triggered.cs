@@ -16,7 +16,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client.Battle
 
         public override void Decode()
         {
-            Console.WriteLine(BitConverter.ToString(Reader.ReadFully()).Replace("-",""));
         }
     }
 }

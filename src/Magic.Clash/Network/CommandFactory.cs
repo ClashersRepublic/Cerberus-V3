@@ -14,7 +14,9 @@ namespace Magic.ClashOfClans.Network
         {
             Commands = new Dictionary<int, Type>
             {
+                {1, typeof(Joined_Alliance)},
                 {3, typeof(Name_Change_Callback)},
+                {8, typeof(Role_Update)},
                 {500, typeof(Buy_Building)},
                 {501, typeof(Move_Building)},
                 {502, typeof(Upgrade_Building)},
@@ -38,6 +40,7 @@ namespace Magic.ClashOfClans.Network
                 {538, typeof(My_League)},
                 {549, typeof(Upgrade_Multiple_Buildings)},
                 {550, typeof(Remove_Units)},
+                {553, typeof(Unknown_553)},
                 {554, typeof(Change_Weapon_Heading)},
                 {590, typeof(Buy_Multiple_Wall)},
                 {591, typeof(Change_Village_Mode)},

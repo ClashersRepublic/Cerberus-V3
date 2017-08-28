@@ -1,29 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Logic.Enums;
-using Timer = System.Timers.Timer;
+using Magic.ClashOfClans.Network;
 
 namespace Magic.ClashOfClans.Core
 {
     internal static class Timers
     {
-
-        internal static readonly Dictionary<Logic.Enums.Timer, Timer> LTimers = new Dictionary<Logic.Enums.Timer, Timer>();
+        internal static readonly Dictionary<Timer, System.Timers.Timer> LTimers =
+            new Dictionary<Timer, System.Timers.Timer>();
 
         internal static void Initialize()
         {
             Save();
             KeepAlive();
+            Random();
         }
+
+        internal static void Random()
+        {
+            var Timer = new System.Timers.Timer
+            {
+                Interval = TimeSpan.FromHours(1).TotalMilliseconds,
+                AutoReset = true
+            };
+            Timer.Elapsed += (_Sender, _Args) =>
+            {
+                ObjectManager.Random = new Random(DateTime.Now.ToString("T").GetHashCode());
+            };
+            LTimers.Add(Logic.Enums.Timer.Random, Timer);
+        }
+
 
         internal static void KeepAlive()
         {
-            Timer Timer = new Timer
+            var Timer = new System.Timers.Timer
             {
                 Interval = 60000,
                 AutoReset = true
@@ -33,25 +45,27 @@ namespace Magic.ClashOfClans.Core
             {
                 var numDisc = 0;
 #if DEBUG
-                Logger.SayInfo("KeepAlive executed at " + DateTime.Now.ToString("T") +  ".");
+                Logger.SayInfo("KeepAlive executed at " + DateTime.Now.ToString("T") + ".");
 #endif
                 var clients = ResourcesManager.GetConnectedClients();
                 foreach (var client in clients)
-                {
                     if (DateTime.Now > client.NextKeepAlive)
                     {
                         ResourcesManager.DropClient(client.GetSocketHandle());
                         numDisc++;
                     }
-                }
 
 #if DEBUG
                 if (numDisc > 0)
-                    Logger.SayInfo($"KeepAlive dropped {numDisc} clients due to keep alive timeouts at " + DateTime.Now.ToString("T") +  ".");
+                    Logger.SayInfo($"KeepAlive dropped {numDisc} clients due to keep alive timeouts at " +
+                                   DateTime.Now.ToString("T") + ".");
 #endif
-                Logger.SayInfo("#" + DateTime.Now.ToString("d") + " ---- Pools ---- " + DateTime.Now.ToString("T") + " #");
-                Logger.SayInfo($"SocketAsyncEventArgs: created -> {Gateway.NumberOfArgsCreated} in-use -> {Gateway.NumberOfArgsInUse} available -> {Gateway.NumberOfArgs}.");
-                Logger.SayInfo($"Buffers: created -> {Gateway.NumberOfBuffersCreated} in-use -> {Gateway.NumberOfBuffersInUse} available -> {Gateway.NumberOfBuffers}.");
+                Logger.SayInfo("#" + DateTime.Now.ToString("d") + " ---- Pools ---- " + DateTime.Now.ToString("T") +
+                               " #");
+                Logger.SayInfo(
+                    $"SocketAsyncEventArgs: created -> {Gateway.NumberOfArgsCreated} in-use -> {Gateway.NumberOfArgsInUse} available -> {Gateway.NumberOfArgs}.");
+                Logger.SayInfo(
+                    $"Buffers: created -> {Gateway.NumberOfBuffersCreated} in-use -> {Gateway.NumberOfBuffersInUse} available -> {Gateway.NumberOfBuffers}.");
             };
 
             LTimers.Add(Logic.Enums.Timer.Keep_Alive, Timer);
@@ -59,7 +73,7 @@ namespace Magic.ClashOfClans.Core
 
         internal static void Save()
         {
-            Timer Timer = new Timer
+            var Timer = new System.Timers.Timer
             {
                 Interval = TimeSpan.FromMinutes(30).TotalMilliseconds,
                 AutoReset = true
@@ -72,11 +86,13 @@ namespace Magic.ClashOfClans.Core
 #endif
                 try
                 {
-                    await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels())).ConfigureAwait(false);
+                    await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()),
+                        DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances()));
                 }
                 catch (Exception ex)
                 {
-                    ExceptionLogger.Log(ex,"[: Failed at " + DateTime.Now.ToString("T") + ']' + Environment.NewLine + ex.StackTrace);
+                    ExceptionLogger.Log(ex,
+                        "[: Failed at " + DateTime.Now.ToString("T") + ']' + Environment.NewLine + ex.StackTrace);
                     return;
                 }
 #if DEBUG
@@ -90,10 +106,8 @@ namespace Magic.ClashOfClans.Core
 
         internal static void Run()
         {
-            foreach (Timer Timer in LTimers.Values)
-            {
+            foreach (var Timer in LTimers.Values)
                 Timer.Start();
-            }
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Network.Messages.Server;
 
 namespace Magic.ClashOfClans.Network.Messages.Client
@@ -61,14 +63,20 @@ namespace Magic.ClashOfClans.Network.Messages.Client
             else
             {
                 var onlinePlayers = ResourcesManager.OnlinePlayers;
-                for (var i = 0; i < onlinePlayers.Count; i++)
-                    new Global_Chat_Entry(onlinePlayers[i].Device)
+                //Parallel.ForEach(onlinePlayers, t =>
+                    foreach (var t in onlinePlayers.ToArray())
+                {
+                    if (t != null)
                     {
-                        Message = Message,
-                        Message_Sender = Device.Player.Avatar,
-                        Regex = true,
-                        Sender = Device == onlinePlayers[i].Device
-                    }.Send();
+                        new Global_Chat_Entry(t.Device)
+                        {
+                            Message = Message,
+                            Message_Sender = Device.Player.Avatar,
+                            Regex = false,
+                            Sender = Device == t.Device
+                        }.Send();
+                    }
+                }//);
             }
         }
     }

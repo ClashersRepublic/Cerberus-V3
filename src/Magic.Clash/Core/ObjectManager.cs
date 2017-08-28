@@ -1,9 +1,8 @@
-using Magic.ClashOfClans.Logic;
-using Magic.Files;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using Magic.ClashOfClans.Files;
+using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Core
 
@@ -11,48 +10,40 @@ namespace Magic.ClashOfClans.Core
     internal static class ObjectManager
     {
         private static readonly object s_sync = new object();
-        private static readonly Random s_rand = new Random();
 
         public static long AllianceSeed;
         public static long AvatarSeed;
-
-        public static int DonationSeed;
+        public static Random Random;
 
         public static void Initialize()
         {
             AvatarSeed = DatabaseManager.GetMaxPlayerId() + 1;
             AllianceSeed = DatabaseManager.GetMaxAllianceId() + 1;
-
-            // Shit went down, should probs shutdown.
-
-            // Every 30 minutes.
-           // const int TIMER_PERIOD = 1000 * 60 * 30;
-            //m_vSaveTimer = new Timer(SaveCycle, null, 0, TIMER_PERIOD);
+            Random = new Random(DateTime.Now.ToString(CultureInfo.InvariantCulture).GetHashCode());
         }
 
-       /* private static void SaveCycle(object state)
+        public static Clan CreateClan(Clan clan)
         {
-            var level = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryLevels());
-            var alliance = DatabaseManager.Instance.Save(ResourcesManager.GetInMemoryAlliances());
-
-            level.Wait();
-            alliance.Wait();
-        }*/
-
-        /*public static Alliance CreateAlliance()
-        {
-            Alliance alliance;
-
             var seed = AllianceSeed;
 
-            alliance = new Alliance(seed);
-            AllianceSeed++;
+            clan.Clan_ID = AllianceSeed++;
 
-            DatabaseManager.Instance.CreateAlliance(alliance);
+            DatabaseManager.CreateAlliance(clan);
+
+            ResourcesManager.AddAllianceInMemory(clan);
+            return clan;
+        }
+
+        public static Clan CreateClan()
+        {
+            var alliance = default(Clan);
+            alliance = new Clan(AllianceSeed++);
+
+            DatabaseManager.CreateAlliance(alliance);
 
             ResourcesManager.AddAllianceInMemory(alliance);
             return alliance;
-        }*/
+        }
 
         public static Level CreateLevel(long seed, string token = "")
         {
@@ -75,13 +66,11 @@ namespace Magic.ClashOfClans.Core
             if (string.IsNullOrEmpty(token))
             {
                 if (string.IsNullOrEmpty(level.Avatar.Token))
-                {
-                    for (int i = 0; i < 20; i++)
+                    for (var i = 0; i < 20; i++)
                     {
-                        char Letter = (char)s_rand.Next('A', 'Z');
+                        var Letter = (char) Random.Next('A', 'Z');
                         level.Avatar.Token += Letter;
                     }
-                }
             }
             else
             {
@@ -89,15 +78,13 @@ namespace Magic.ClashOfClans.Core
             }
 
             if (string.IsNullOrEmpty(level.Avatar.Password))
-            {
-                for (int i = 0; i < 6; i++)
+                for (var i = 0; i < 6; i++)
                 {
-                    char Letter = (char)s_rand.Next('A', 'Z');
-                    char Number = (char)s_rand.Next('1', '9');
+                    var Letter = (char) Random.Next('A', 'Z');
+                    var Number = (char) Random.Next('1', '9');
                     level.Avatar.Password += Letter;
                     level.Avatar.Password += Number;
                 }
-            }
 
             level.Json = Home.Starting_Home;
 
@@ -106,16 +93,16 @@ namespace Magic.ClashOfClans.Core
             return level;
         }
 
-        /*public static Alliance GetAlliance(long allianceId)
+        public static Clan GetAlliance(long allianceId)
         {
-            var alliance = default(Alliance);
+            var alliance = default(Clan);
 
             // Try to get alliance from memory first then db.
             // Could be improved.
             if (ResourcesManager.InMemoryAlliancesContain(allianceId))
                 return ResourcesManager.GetInMemoryAlliance(allianceId);
 
-            alliance = DatabaseManager.Instance.GetAlliance(allianceId);
+            alliance = DatabaseManager.GetClan(allianceId);
 
             if (alliance != null)
                 ResourcesManager.AddAllianceInMemory(alliance);
@@ -123,23 +110,22 @@ namespace Magic.ClashOfClans.Core
             return alliance;
         }
 
-        public static List<Alliance> GetInMemoryAlliances()
+        public static List<Clan> GetInMemoryAlliances()
         {
             return ResourcesManager.GetInMemoryAlliances();
-        }*/
+        }
 
         public static Level GetRandomOnlinePlayer()
         {
             var levels = ResourcesManager.GetInMemoryLevels();
-            int index = s_rand.Next(0, levels.Count);
+            int index = Random.Next(0, levels.Count);
             return levels[index];
         }
 
 
-
         public static void RemoveInMemoryAlliance(long id)
         {
-            //ResourcesManager.RemoveAllianceFromMemory(id);
+            ResourcesManager.RemoveAllianceFromMemory(id);
         }
     }
 }

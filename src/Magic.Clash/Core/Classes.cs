@@ -23,6 +23,7 @@ namespace Magic.ClashOfClans.Core
             ResourcesManager.Initialize();
             ObjectManager.Initialize();
 
+
             Logger.Initialize();
             ExceptionLogger.Initialize();
 

@@ -13,12 +13,25 @@ namespace Magic.ClashOfClans.Core
     {
         internal static JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto,                            MissingMemberHandling = MissingMemberHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Include,                 NullValueHandling = NullValueHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Include,
+            NullValueHandling = NullValueHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             //Formatting = Formatting.Indented
         };
-        
+
+        internal static JsonSerializerSettings Settings2 = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //Formatting = Formatting.Indented
+        };
+
 
         public static long GetMaxAllianceId()
         {
@@ -69,9 +82,9 @@ namespace Magic.ClashOfClans.Core
                 ExceptionLogger.Log(ex, "Exception while trying to create a new player account in database.");
             }
         }
-       
 
-        /*public void CreateAlliance(Alliance alliance)
+
+        public static void CreateAlliance(Clan alliance)
         {
             try
             {
@@ -79,9 +92,8 @@ namespace Magic.ClashOfClans.Core
                 {
                     var newClan = new clan
                     {
-                        ClanId = alliance.AllianceId,
-                        LastUpdateTime = DateTime.Now,
-                        Data = alliance.SaveToJson()
+                        Id = alliance.Clan_ID,
+                        Data = JsonConvert.SerializeObject(alliance, Settings2)
                     };
 
                     ctx.clan.Add(newClan);
@@ -92,7 +104,7 @@ namespace Magic.ClashOfClans.Core
             {
                 ExceptionLogger.Log(ex, "Exception while trying to create a new alliance in database.");
             }
-        }*/
+        }
 
         public static Level GetLevel(long userId)
         {
@@ -106,7 +118,7 @@ namespace Magic.ClashOfClans.Core
                     {
                         level = new Level
                         {
-                            Avatar = JsonConvert.DeserializeObject<Avatar>(player.Avatar),
+                            Avatar = JsonConvert.DeserializeObject<Avatar>(player.Avatar, Settings),
                             Json = player.Village
                         };
                     }
@@ -122,18 +134,17 @@ namespace Magic.ClashOfClans.Core
             return level;
         }
 
-       /* public Alliance GetAlliance(long allianceId)
+        public static Clan GetClan(long allianceId)
         {
-            var alliance = default(Alliance);
+            var clan = default(Clan);
             try
             {
                 using (var ctx = new MysqlEntities())
                 {
-                    var clan = ctx.clan.Find(allianceId);
-                    if (clan != null)
+                    var data = ctx.clan.Find(allianceId);
+                    if (data != null)
                     {
-                        alliance = new Alliance();
-                        alliance.LoadFromJson(clan.Data);
+                        clan = JsonConvert.DeserializeObject<Clan>(data.Data, Settings2);
                     }
                 }
             }
@@ -142,16 +153,16 @@ namespace Magic.ClashOfClans.Core
                 ExceptionLogger.Log(ex, "Exception while trying to get alliance from database.");
 
                 // In case it fails to LoadFromJSON.
-                alliance = null;
+                clan = null;
             }
 
-            return alliance;
+            return clan;
         }
 
         // Used whenever the clients searches for an alliance however no alliances is loaded in memory.
-        public List<Alliance> GetAllAlliances()
+        public static List<Clan> GetAllAlliances()
         {
-            var alliances = new List<Alliance>();
+            var alliances = new List<Clan>();
             try
             {
                 using (var ctx = new MysqlEntities())
@@ -159,9 +170,9 @@ namespace Magic.ClashOfClans.Core
                     var clans = ctx.clan;
                     Parallel.ForEach(clans, c =>
                     {
-                        Alliance alliance = new Alliance();
-                        alliance.LoadFromJson(c.Data);
-                        alliances.Add(alliance);
+                        Clan clan = default(Clan);
+                        clan = JsonConvert.DeserializeObject<Clan>(c.Data, Settings2);
+                        alliances.Add(clan);
                     });
                 }
             }
@@ -173,36 +184,55 @@ namespace Magic.ClashOfClans.Core
             return alliances;
         }
 
-        public void RemoveAlliance(Alliance alliance)
+        public static void RemoveAlliance(Clan alliance)
         {
-            long allianceId = alliance.AllianceId;
+            long Id = alliance.Clan_ID;
             using (MysqlEntities ctx = new MysqlEntities())
             {
-                var clan = ctx.clan.Find(allianceId);
-
-                ctx.clan.Remove(clan);
-                ctx.SaveChanges();
+                var clan = ctx.clan.Find(Id);
+                if (clan != null)
+                {
+                    ctx.clan.Remove(clan);
+                    ctx.SaveChanges();
+                }
             }
 
-            ObjectManager.RemoveInMemoryAlliance(allianceId);
+            ObjectManager.RemoveInMemoryAlliance(Id);
         }
 
-        public async Task Save(Alliance alliance)
+        public static void Save(Clan alliance)
         {
-            using (MysqlEntities ctx = new MysqlEntities())
+            try
             {
-                ctx.Configuration.AutoDetectChangesEnabled = false;
-                ctx.Configuration.ValidateOnSaveEnabled = false;
-                clan c = await ctx.clan.FindAsync((int)alliance.AllianceId);
-                if (c != null)
+                using (MysqlEntities ctx = new MysqlEntities())
                 {
-                    c.LastUpdateTime = DateTime.Now;
-                    c.Data = alliance.SaveToJson();
-                    ctx.Entry(c).State = EntityState.Modified;
+                    ctx.Configuration.AutoDetectChangesEnabled = false;
+                    var c = ctx.clan.Find((int) alliance.Clan_ID);
+                    if (c != null)
+                    {
+                        c.Data = JsonConvert.SerializeObject(alliance, Settings2);
+                        ctx.Entry(c).State = EntityState.Modified;
+                    }
+                    ctx.SaveChanges();
                 }
-                await ctx.SaveChangesAsync();
             }
-        }*/
+            catch (DbEntityValidationException ex)
+            {
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to save a clan {alliance.Clan_ID} to the database. Check error for more information.");
+                foreach (var entry in ex.EntityValidationErrors)
+                {
+                    foreach (var errs in entry.ValidationErrors)
+                        Logger.Error($"{errs.PropertyName}:{errs.ErrorMessage}");
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.Log(ex, $"Exception while trying to save a clan {alliance.Clan_ID} to the database.");
+                throw;
+            }
+        }
 
         public static void Save(Level level)
         {
@@ -226,7 +256,8 @@ namespace Magic.ClashOfClans.Core
             }
             catch (DbEntityValidationException ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database. Check error for more information.");
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to save a level {level.Avatar.UserId} to the database. Check error for more information.");
                 foreach (var entry in ex.EntityValidationErrors)
                 {
                     foreach (var errs in entry.ValidationErrors)
@@ -236,7 +267,8 @@ namespace Magic.ClashOfClans.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save a level {level.Avatar.UserId} to the database.");
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to save a level {level.Avatar.UserId} to the database.");
                 throw;
             }
         }
@@ -261,7 +293,8 @@ namespace Magic.ClashOfClans.Core
             }
             catch (DbEntityValidationException ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to save {levels.Count} of player to the database. Check error for more information.");
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to save {levels.Count} of player to the database. Check error for more information.");
                 foreach (var entry in ex.EntityValidationErrors)
                 {
                     foreach (var errs in entry.ValidationErrors)
@@ -271,37 +304,45 @@ namespace Magic.ClashOfClans.Core
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, $"Exception while trying to savesave {levels.Count} of player to the database.");
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to savesave {levels.Count} of player to the database.");
                 throw;
             }
         }
 
-        /*public async Task Save(List<Alliance> alliances)
+        public static async Task Save(List<Clan> alliances)
         {
             try
             {
                 using (MysqlEntities ctx = new MysqlEntities())
                 {
-                    foreach (Alliance alliance in alliances)
+                    foreach (var alliance in alliances)
                     {
-                        lock (alliance)
+                        var c = await ctx.clan.FindAsync((int) alliance.Clan_ID);
+                        if (c != null)
                         {
-                            clan c = ctx.clan.Find((int)alliance.AllianceId);
-                            if (c != null)
-                            {
-                                c.LastUpdateTime = DateTime.Now;
-                                c.Data = alliance.SaveToJson();
-                                ctx.Entry(c).State = EntityState.Modified;
-                            }
+                            c.Data = JsonConvert.SerializeObject(alliance, Settings2);
                         }
                     }
                     await ctx.BulkSaveChangesAsync();
                 }
             }
-            catch
+            catch (DbEntityValidationException ex)
             {
-                // 1 Actual fuck given.
+                ExceptionLogger.Log(ex,
+                    $"Exception while trying to save {alliances.Count} of clan to the database. Check error for more information.");
+                foreach (var entry in ex.EntityValidationErrors)
+                {
+                    foreach (var errs in entry.ValidationErrors)
+                        Logger.Error($"{errs.PropertyName}:{errs.ErrorMessage}");
+                }
+                throw;
             }
-        }*/
+            catch (Exception ex)
+            {
+                ExceptionLogger.Log(ex, $"Exception while trying to save {alliances.Count} of clan to the database.");
+                throw;
+            }
+        }
     }
 }

@@ -1,10 +1,10 @@
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Extensions.Binary;
-using Magic.ClashOfClans.Logic;
 using Magic.ClashOfClans.Logic.Enums;
 using Magic.ClashOfClans.Network.Messages.Server;
 using Magic.ClashOfClans.Network.Messages.Server.Authentication;
+using Magic.ClashOfClans.Network.Messages.Server.Clans;
 using Magic.Files;
 
 namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
@@ -74,13 +74,11 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
                 new SessionKey(Device).Send();
 
             if (!string.IsNullOrEmpty(Constants.PatchServer))
-            {
-                if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(this.MasterHash, Fingerprint.Sha))
+                if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(MasterHash, Fingerprint.Sha))
                 {
-                    new Authentication_Failed(this.Device, Reason.Patch).Send();
+                    new Authentication_Failed(Device, Reason.Patch).Send();
                     return;
                 }
-            }
 
             CheckClient();
         }
@@ -93,6 +91,25 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
             new Authentication_OK(Device).Send();
 
             new Own_Home_Data(Device).Send();
+            if (Device.Player.Avatar.ClanId > 0)
+            {
+                var Alliance = ObjectManager.GetAlliance(Device.Player.Avatar.ClanId);
+
+                if (Alliance != null)
+                {
+                    Device.Player.Avatar.Alliance_Level = Alliance.Level;
+
+                    new Alliance_Full_Entry(Device) {Clan = Alliance}.Send();
+
+                    if (Alliance.Chats != null)
+                        new Alliance_All_Stream_Entry(Device, Alliance).Send();
+                }
+                else
+                {
+                    Device.Player.Avatar.ClanId = 0;
+                }
+            }
+            new Bookmark(Device).Send();
         }
 
         private void CheckClient()

@@ -1,16 +1,12 @@
-using Magic.ClashOfClans;
-using Magic.ClashOfClans;
-using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Network.Messages.Server;
-using Magic.ClashOfClans.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
+using Magic.ClashOfClans.Extensions;
+using Magic.ClashOfClans.Logic;
+using Magic.ClashOfClans.Network;
+using Magic.ClashOfClans.Network.Messages.Server.Errors;
 
 namespace Magic.ClashOfClans.Core
 {
@@ -21,8 +17,9 @@ namespace Magic.ClashOfClans.Core
 
         // User Id -> Level instance.
         private static ConcurrentDictionary<long, Level> _inMemoryLevels;
+
         // Alliance Id -> Alliance instance.
-        //private static ConcurrentDictionary<long, Alliance> _inMemoryAlliances;
+        private static ConcurrentDictionary<long, Clan> _inMemoryAlliances;
 
         // Not sure why they are using this as well as InMemLevels.
 
@@ -32,7 +29,7 @@ namespace Magic.ClashOfClans.Core
             _clients = new ConcurrentDictionary<long, Device>();
 
             _inMemoryLevels = new ConcurrentDictionary<long, Level>();
-            //_inMemoryAlliances = new ConcurrentDictionary<long, Alliance>();
+            _inMemoryAlliances = new ConcurrentDictionary<long, Clan>();
         }
 
         public static void AddClient(Device client)
@@ -50,12 +47,24 @@ namespace Magic.ClashOfClans.Core
                 if (_clients.TryRemove(socketHandle, out client))
                 {
                     Program.TitleDe();
-                    
+
                     var socket = client.Socket;
-                    try { socket.Shutdown(SocketShutdown.Both); }
-                    catch { /* Swallow */ }
-                    try { socket.Dispose(); }
-                    catch { /* Swallow */ }
+                    try
+                    {
+                        socket.Shutdown(SocketShutdown.Both);
+                    }
+                    catch
+                    {
+                        /* Swallow */
+                    }
+                    try
+                    {
+                        socket.Dispose();
+                    }
+                    catch
+                    {
+                        /* Swallow */
+                    }
 
                     closedSocket = true;
 
@@ -74,7 +83,10 @@ namespace Magic.ClashOfClans.Core
             return closedSocket;
         }
 
-        public static List<Device> GetConnectedClients() => _clients.Values.ToList();
+        public static List<Device> GetConnectedClients()
+        {
+            return _clients.Values.ToList();
+        }
 
         public static List<Level> GetInMemoryLevels()
         {
@@ -97,7 +109,10 @@ namespace Magic.ClashOfClans.Core
             return result;
         }
 
-        public static bool IsPlayerOnline(Level l) => OnlinePlayers.Contains(l);
+        public static bool IsPlayerOnline(Level l)
+        {
+            return OnlinePlayers.Contains(l);
+        }
 
         public static void LoadLevel(Level level)
         {
@@ -143,35 +158,40 @@ namespace Magic.ClashOfClans.Core
 
         private static Level GetInMemoryLevel(long userId)
         {
-            var level = default(Level); 
+            var level = default(Level);
             _inMemoryLevels.TryGetValue(userId, out level);
             return level;
         }
 
-        /*public static List<Alliance> GetInMemoryAlliances() => _inMemoryAlliances.Values.ToList();
-
-        public static void AddAllianceInMemory(Alliance alliance)
+        public static List<Clan> GetInMemoryAlliances()
         {
-            _inMemoryAlliances.TryAdd(alliance.AllianceId, alliance);
+            return _inMemoryAlliances.Values.ToList();
         }
 
-        public static bool InMemoryAlliancesContain(long key) => _inMemoryAlliances.Keys.Contains(key);
-
-        public static Alliance GetInMemoryAlliance(long key)
+        public static void AddAllianceInMemory(Clan alliance)
         {
-            Alliance a;
-            _inMemoryAlliances.TryGetValue(key, out a);
+            _inMemoryAlliances.TryAdd(alliance.Clan_ID, alliance);
+        }
+
+        public static bool InMemoryAlliancesContain(long key)
+        {
+            return _inMemoryAlliances.Keys.Contains(key);
+        }
+
+        public static Clan GetInMemoryAlliance(long key)
+        {
+            _inMemoryAlliances.TryGetValue(key, out Clan a);
             return a;
         }
 
         public static void RemoveAllianceFromMemory(long key)
         {
             _inMemoryAlliances.TryRemove(key);
-        }*/
+        }
 
         public static void DisconnectClient(Device device)
         {
-            //Outofsync
+            new Out_Of_Sync(device).Send();
             DropClient(device.GetSocketHandle());
         }
     }
