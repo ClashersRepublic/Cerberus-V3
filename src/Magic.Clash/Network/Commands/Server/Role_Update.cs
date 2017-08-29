@@ -1,4 +1,5 @@
-﻿using Magic.ClashOfClans.Extensions.List;
+﻿using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
@@ -13,6 +14,10 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             Identifier = 8;
         }
 
+        public Role_Update(Reader Reader, Device _Client, int Identifier) : base(Reader, _Client, Identifier)
+        {
+        }
+
         public override void Encode()
         {
             Data.AddLong(Clan.Clan_ID);
@@ -23,7 +28,11 @@ namespace Magic.ClashOfClans.Network.Commands.Server
 
         public override void Decode()
         {
-            Debug();
+            Reader.ReadInt64();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
+
         }
     }
 }

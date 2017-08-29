@@ -153,10 +153,10 @@ namespace Magic.ClashOfClans.Logic.Structure
                 Level.VillageWorkerManager.DeallocateWorker(this);
 
             SetUpgradeLevel(GetUpgradeLevel + 1);
-            /*if (GetResourceProductionComponent() != null)
+            if (GetResourceProductionComponent() != null)
             {
                 GetResourceProductionComponent().Reset();
-            }*/
+            }
 
             var constructionTime = GetConstructionItemData.GetConstructionTime(GetUpgradeLevel);
             Level.Avatar.AddExperience((int) Math.Pow(constructionTime, 0.5f));
@@ -202,6 +202,18 @@ namespace Magic.ClashOfClans.Logic.Structure
             UpgradeLevel = level;
             if (UpgradeLevel > -1 || IsUpgrading || !IsConstructing)
             {
+                if (GetUnitStorageV2Component(true) != null)
+                {
+                    var data = (Buildings)Data;
+                    if (data.GetUnitStorageV2Capacity() > 0)
+                    {
+                        if (!data.Bunker)
+                        {
+                            GetUnitStorageV2Component(true).MaxCapacity = data.GetUnitStorageV2Capacity();
+                            GetUnitStorageV2Component(true).IsEnabled = !IsConstructing;
+                        }
+                    }
+                }
                 /*if (GetUnitStorageComponent(true) != null)
                 {
                     var data = (Buildings)GetData();
@@ -215,12 +227,12 @@ namespace Magic.ClashOfClans.Logic.Structure
                     }
                 }*/
 
-                /*var resourceStorageComponent = GetResourceStorageComponent(true);
+                var resourceStorageComponent = GetResourceStorageComponent(true);
                 if (resourceStorageComponent != null)
                 {
-                    var maxStoredResourcesList = ((Buildings)GetData()).GetMaxStoredResourceCounts(UpgradeLevel);
+                    var maxStoredResourcesList = ((Buildings)Data).GetMaxStoredResourceCounts(UpgradeLevel);
                     resourceStorageComponent.SetMaxArray(maxStoredResourcesList);
-                }*/
+                }
             }
         }
         internal Hero_Base_Component GetHeroBaseComponent(bool enabled = false)
@@ -243,12 +255,42 @@ namespace Magic.ClashOfClans.Logic.Structure
             return null;
         }
 
+        internal Resource_Production_Component GetResourceProductionComponent(bool enabled = false)
+        {
+            var comp = GetComponent(5, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Resource_Production_Component)comp;
+            }
+            return null;
+        }
+
+        internal Resource_Storage_Component GetResourceStorageComponent(bool enabled = false)
+        {
+            Component comp = GetComponent(6, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Resource_Storage_Component)comp;
+            }
+            return null;
+        }
+
         internal Unit_Production_Component GetUnitProductionComponent(bool enabled = false)
         {
             var comp = GetComponent(3, enabled);
             if (comp != null && comp.Type != -1)
             {
                 return (Unit_Production_Component)comp;
+            }
+            return null;
+        }
+
+        internal Unit_Storage_V2_Componenent GetUnitStorageV2Component(bool enabled = false)
+        {
+            var comp = GetComponent(11, enabled);
+            if (comp != null && comp.Type != -1)
+            {
+                return (Unit_Storage_V2_Componenent)comp;
             }
             return null;
         }

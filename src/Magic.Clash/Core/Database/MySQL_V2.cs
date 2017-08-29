@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System;
+using MySql.Data.MySqlClient;
 
 namespace Magic.ClashOfClans.Core.Database
 {
@@ -24,7 +25,7 @@ namespace Magic.ClashOfClans.Core.Database
                 {
                     cmd.Prepare();
                     Seed = (long)cmd.ExecuteScalar();
-                    Logger.Say("Successfully retrieved max player ID: " + Seed + " player(s).");
+                    Logger.Say("Successfully retrieved max player seed: " + Seed);
                 }
             }
 
@@ -44,10 +45,48 @@ namespace Magic.ClashOfClans.Core.Database
                 {
                     cmd.Prepare();
                     Seed = (long)cmd.ExecuteScalar();
-                    Logger.Say("Successfully retrieved max alliance ID: " + Seed + " alliance(s).");
+                    Logger.Say("Successfully retrieved highest alliance seed: " + Seed);
                 }
             }
 
+            return Seed;
+        }
+
+        internal static long GetPlayerCount()
+        {
+            const string SQL = "SELECT COUNT(*) FROM player";
+            long Seed = -1;
+
+            using (MySqlConnection Conn = new MySqlConnection(Credentials))
+            {
+                Conn.Open();
+
+                using (MySqlCommand CMD = new MySqlCommand(SQL, Conn))
+                {
+                    CMD.Prepare();
+                    Seed = (long)CMD.ExecuteScalar();
+                    
+                }
+            }
+            return Seed;
+        }
+
+        internal static long GetClanCount()
+        {
+            const string SQL = "SELECT COUNT(*) FROM clan";
+            long Seed = -1;
+
+            using (MySqlConnection Conn = new MySqlConnection(Credentials))
+            {
+                Conn.Open();
+
+                using (MySqlCommand CMD = new MySqlCommand(SQL, Conn))
+                {
+                    CMD.Prepare();
+                    Seed = (long)CMD.ExecuteScalar();
+                    
+                }
+            }
             return Seed;
         }
     }

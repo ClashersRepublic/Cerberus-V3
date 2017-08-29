@@ -10,6 +10,7 @@ using Magic.ClashOfClans.Network.Commands.Server;
 using Magic.ClashOfClans.Network.Messages.Server;
 using Magic.ClashOfClans.Network.Messages.Server.Clans;
 using Magic.ClashOfClans.Network.Messages.Server.Errors;
+using Resource = Magic.ClashOfClans.Files.CSV_Logic.Resource;
 
 namespace Magic.ClashOfClans.Network.Messages.Client.Clans
 {
@@ -44,10 +45,12 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Clans
 
         public override void Process()
         {
-            var Avatar = Device.Player.Avatar;
-            int ResourceID = (CSV.Tables.Get(Gamefile.Resources).GetData((CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_RESOURCE") as Globals).TextValue) as Files.CSV_Logic.Resource).GetGlobalId();
-            int Cost = (CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_COST") as Globals).NumberValue;
-            if (Avatar.HasEnoughResources(ResourceID, Cost))
+            var Avatar = Device.Player;
+            var ResourceID = (CSV.Tables.Get(Gamefile.Resources)
+                .GetData((CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_RESOURCE") as Globals)
+                    .TextValue) as Resource).GetGlobalId();
+            var Cost = (CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_COST") as Globals).NumberValue;
+            if (Avatar.Avatar.HasEnoughResources(ResourceID, Cost))
             {
                 var Clan = new Clan
                 {
@@ -64,37 +67,40 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Clans
 
                 var Alliance = ObjectManager.CreateClan(Clan);
 
-                Avatar.Resources.Minus(ResourceID, Cost);
-                Avatar.ClanId = Alliance.Clan_ID;
-                Avatar.Alliance_Level = Alliance.Level;
-                Avatar.Alliance_Name = Name;
-                Avatar.Alliance_Role = (int)Role.Leader;
-                Avatar.Badge_ID = Badge;
+                Avatar.Avatar.Resources.Minus(ResourceID, Cost);
+                Avatar.Avatar.ClanId = Alliance.Clan_ID;
+                Avatar.Avatar.Alliance_Level = Alliance.Level;
+                Avatar.Avatar.Alliance_Name = Name;
+                Avatar.Avatar.Alliance_Role = (int) Role.Leader;
+                Avatar.Avatar.Badge_ID = Badge;
 
-                Alliance.Members.Add(this.Device.Player.Avatar);
+                Alliance.Members.Add(Device.Player.Avatar);
 
                 Alliance.Chats.Add(new Entry
                 {
                     Stream_Type = Alliance_Stream.EVENT,
-                    Sender_ID = this.Device.Player.Avatar.UserId,
-                    Sender_Name = this.Device.Player.Avatar.Name,
-                    Sender_Level = this.Device.Player.Avatar.Level,
-                    Sender_League = this.Device.Player.Avatar.League,
+                    Sender_ID = Device.Player.Avatar.UserId,
+                    Sender_Name = Device.Player.Avatar.Name,
+                    Sender_Level = Device.Player.Avatar.Level,
+                    Sender_League = Device.Player.Avatar.League,
                     Sender_Role = Role.Leader,
                     Event_ID = Events.JOIN_ALLIANCE,
-                    Event_Player_ID = this.Device.Player.Avatar.UserId,
-                    Event_Player_Name = this.Device.Player.Avatar.Name
+                    Event_Player_ID = Device.Player.Avatar.UserId,
+                    Event_Player_Name = Device.Player.Avatar.Name
                 });
 
+                new Alliance_Full_Entry(Device) {Clan = Alliance}.Send();
+                new Server_Commands(Device) {Command = new Joined_Alliance(Device) {Clan = Alliance}.Handle()}.Send();
+                new Server_Commands(Device)
+                {
+                    Command = new Role_Update(Device) {Clan = Alliance, Role = (int) Role.Leader}.Handle()
+                }.Send();
                 DatabaseManager.Save(Alliance);
-
-                 new Alliance_Full_Entry(this.Device) { Clan = Alliance }.Send();
-                 new Server_Commands(this.Device) { Command = new Joined_Alliance(this.Device) { Clan = Alliance }.Handle() }.Send();
-                 new Server_Commands(this.Device) { Command = new Role_Update(this.Device) { Clan = Alliance, Role = (int)Role.Leader }.Handle() }.Send();
+                DatabaseManager.Save(Avatar);
             }
             else
             {
-                new Out_Of_Sync(this.Device).Send();
+                new Out_Of_Sync(Device).Send();
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
+using Magic.ClashOfClans.Extensions;
 
 namespace Magic.ClashOfClans
 {
@@ -32,15 +33,14 @@ namespace Magic.ClashOfClans
 
             Logger.Say(Assembly.GetExecutingAssembly().GetName().Name + @" is now starting..." + Environment.NewLine);
 
+            NativeCalls.DisableMenus();
+            Logger.Say("Menu has been disabled.Exit the emulator by pressing F4 Key on console");
+
             Classes.Initialize();
-            foreach (var guild in
-                Core.API.Discord.Client._Client.GroupChannels.ToList())
-            {
-                Console.WriteLine(guild.Name);
-            }
+
             Logger.Say(@"-------------------------------------" + Environment.NewLine);
 
-            Thread.Sleep(Timeout.Infinite);
+                Thread.Sleep(Timeout.Infinite);
         }
 
         public static void UpdateTitle(bool Status)

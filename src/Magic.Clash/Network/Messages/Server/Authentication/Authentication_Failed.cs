@@ -10,6 +10,7 @@ namespace Magic.ClashOfClans.Network.Messages.Server.Authentication
         public Authentication_Failed(Device Device, Reason Reason = Reason.Default) : base(Device)
         {
             Identifier = 20103;
+            Version = 3;
             this.Reason = Reason;
         }
 

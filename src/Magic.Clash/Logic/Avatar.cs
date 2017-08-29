@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.List;
@@ -24,7 +25,7 @@ namespace Magic.ClashOfClans.Logic
         [JsonIgnore]
         internal long UserId
         {
-            get => ((long)UserHighId << 32) | (long)UserLowId;
+            get => ((long) UserHighId << 32) | UserLowId;
             set
             {
                 UserHighId = Convert.ToInt32(value >> 32);
@@ -35,7 +36,7 @@ namespace Magic.ClashOfClans.Logic
         [JsonIgnore]
         internal long ClanId
         {
-            get => ((long) ClanHighID << 32) | (long)ClanLowID;
+            get => ((long) ClanHighID << 32) | ClanLowID;
             set
             {
                 ClanHighID = Convert.ToInt32(value >> 32);
@@ -129,10 +130,11 @@ namespace Magic.ClashOfClans.Logic
         [JsonProperty("creation_date")] internal DateTime Created = DateTime.UtcNow;
         [JsonProperty("ban_date")] internal DateTime BanTime = DateTime.UtcNow;
 
+
+        [JsonProperty("inbox")] internal Inbox Inbox;
         /*[JsonProperty("facebook")] internal Structure.API.Facebook Facebook;
         [JsonProperty("google")] internal Structure.API.Google Google;
-        [JsonProperty("gamecenter")] internal Structure.API.Gamecenter Gamecenter;
-        [JsonProperty("inbox")] internal Inbox Inbox;*/
+        [JsonProperty("gamecenter")] internal Structure.API.Gamecenter Gamecenter;*/
 
         internal bool Banned => BanTime > DateTime.UtcNow;
 
@@ -158,6 +160,8 @@ namespace Magic.ClashOfClans.Logic
             Heroes_Health = new Slots();
             Heroes_Modes = new Slots();
             Heroes_States = new Slots();
+
+            Inbox = new Inbox(this);
         }
 
         public Avatar(long id)
@@ -184,6 +188,8 @@ namespace Magic.ClashOfClans.Logic
             Heroes_Health = new Slots();
             Heroes_Modes = new Slots();
             Heroes_States = new Slots();
+                
+            Inbox = new Inbox(this);
         }
 
         internal byte[] ToBytes
@@ -202,22 +208,38 @@ namespace Magic.ClashOfClans.Logic
                 {
                     var clan = ObjectManager.GetAlliance(ClanId);
 
-                    _Packet.AddBool(clan != null);
                     if (clan != null)
                     {
-                        _Packet.AddLong(ClanId);
-                        _Packet.AddString(clan.Name);
-                        _Packet.AddInt(clan.Badge); // Badge
-                        _Packet.AddInt((int) clan.Members[UserId].Role); // Role
-                        _Packet.AddInt(clan.Level); // Level
-
-                        _Packet.AddBool(false); // Alliance War
+                        var member = clan.Members.Get(UserId);
+                        _Packet.AddBool(member != null);
+                        if (member != null)
                         {
-                            // _Packet.AddLong(1); // War ID
+                            Console.WriteLine("Im not null"); 
+                            _Packet.AddLong(ClanId);
+                            _Packet.AddString(clan.Name);
+                            _Packet.AddInt(clan.Badge); // Badge
+                            _Packet.AddInt((int) member.Role); // Role
+                            _Packet.AddInt(clan.Level); // Level
+
+                            _Packet.AddBool(false); // Alliance War
+                            {
+                                // _Packet.AddLong(1); // War ID
+                            }
+                        }
+                        else
+                        {
+                            ExceptionLogger.Log(new NullReferenceException(),
+                                $"Member {UserId} is null for clan {ClanId}");
+                            ClanId = 0;
+                            Alliance_Role = -1;
+                            Alliance_Level = -1;
+                            Alliance_Name = string.Empty;
+                            Badge_ID = -1;
                         }
                     }
                     else
                     {
+                        _Packet.AddBool(false);
                         ExceptionLogger.Log(new NullReferenceException(), $"Clan {ClanId} is null for avatar {UserId}");
                         ClanId = 0;
                         Alliance_Role = -1;
@@ -367,7 +389,8 @@ namespace Magic.ClashOfClans.Logic
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
-                _Packet.AddDataSlots(Units2);
+                _Packet.AddDataSlots(Units2); //Retrain
+
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
                 return _Packet.ToArray();
@@ -383,6 +406,39 @@ namespace Magic.ClashOfClans.Logic
         internal static int GetDataIndex(Units dsl, Data d)
         {
             return dsl.FindIndex(ds => ds.Data == d.Id);
+        }
+
+        internal int Get_Unit_Count_V2(Combat_Item cd)
+        {
+            var result = 0;
+            var index = GetDataIndex(Units2, cd);
+            if (index != -1)
+                result = Units2[index].Count;
+            return result;
+        }
+
+        internal void Set_Unit_Count_V2(Combat_Item cd, int count)
+        {
+            var index = GetDataIndex(Units2, cd);
+            if (index != -1)
+            {
+                Units2[index].Count = count;
+            }
+            else
+            {
+                var ds = new Slot(cd.GetGlobalId(), count);
+                Units2.Add(ds);
+            }
+        }
+
+        internal void Add_Unit2(int Data, int Count)
+        {
+            var _Index = Units2.FindIndex(U => U.Data == Data);
+
+            if (_Index > -1)
+                Units2[_Index].Count += Count;
+            else
+                Units2.Add(new Slot(Data, Count));
         }
 
         internal void Add_Unit(int Data, int Count)
@@ -522,6 +578,19 @@ namespace Magic.ClashOfClans.Logic
         public bool HasEnoughResources(int globalId, int buildCost)
         {
             return Resources.Get(globalId) >= buildCost;
+        }
+        internal void ShowValues()
+        {
+            Console.WriteLine(Environment.NewLine);
+
+            foreach (var Field in GetType()
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                if (Field != null)
+                    Logger.SayInfo(Utils.Padding(GetType().Name) + " - " + Utils.Padding(Field.Name) + " : " +
+                                   Utils.Padding(
+                                       !string.IsNullOrEmpty(Field.Name)
+                                           ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)")
+                                           : "(null)", 40));
         }
     }
 }

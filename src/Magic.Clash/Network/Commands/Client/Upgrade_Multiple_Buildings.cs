@@ -129,7 +129,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                 }
                 else
                 {
-                    ShowValues();
                     new Out_Of_Sync(Device).Send();
                     break;
                 }

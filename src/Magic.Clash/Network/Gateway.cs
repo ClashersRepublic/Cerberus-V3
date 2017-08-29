@@ -304,7 +304,7 @@ namespace Magic.ClashOfClans.Network
                     }
                     else
                     {
-                        if (Constants.Verbosity > 1)
+                        if (Constants.Verbosity >= 3)
                             Logger.SayInfo($"A socket operation wasn't successful => {e.LastOperation}. Dropping connection.");
 
                         Drop(e);

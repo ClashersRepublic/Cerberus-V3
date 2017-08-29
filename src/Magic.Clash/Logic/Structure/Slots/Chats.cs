@@ -17,10 +17,10 @@ namespace Magic.ClashOfClans.Logic.Structure.Slots
 
         internal Chats()
         {
-            Slots = new List<Entry>(50);
+            Slots = new List<Entry>(5);
         }
 
-        internal Chats(Clan Clan, int Limit = 50)
+        internal Chats(Clan Clan, int Limit = 5)
         {
             this.Clan = Clan;
             Slots = new List<Entry>(Limit);

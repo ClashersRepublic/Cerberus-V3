@@ -22,22 +22,21 @@ namespace Magic.ClashOfClans.Logic.Structure
 
             if (GetBuildingData.UnitProduction[0] > 0)
                 AddComponent(new Unit_Production_Component(this));
+
+            if (!string.IsNullOrEmpty(GetBuildingData.ProducesResource))
+            {
+                AddComponent(new Resource_Production_Component(this, level));
+            }
+            if (GetBuildingData.MaxStoredGold[0] > 0 || GetBuildingData.MaxStoredElixir[0] > 0 || GetBuildingData.MaxStoredDarkElixir[0] > 0 || GetBuildingData.MaxStoredWarGold[0] > 0 || GetBuildingData.MaxStoredWarElixir[0] > 0 || GetBuildingData.MaxStoredWarDarkElixir[0] > 0)
+            {
+                AddComponent(new Resource_Storage_Component(this));
+            }
             /*AddComponent(new Hitpoint_Component());
 
 
             //if (GetBuildingData.HousingSpace[0] > 0)
             {
                 //AddComponent(new UnitStorageComponent(this, 0));
-            }
-
-            if (!string.IsNullOrEmpty(GetBuildingData.ProducesResource))
-            {
-                AddComponent(new Resource_Production_Component(this, level));
-            }
-
-            if (GetBuildingData.MaxStoredGold[0] > 0 || GetBuildingData.MaxStoredElixir[0] > 0 || GetBuildingData.MaxStoredDarkElixir[0] > 0 || GetBuildingData.MaxStoredWarGold[0] > 0 || GetBuildingData.MaxStoredWarElixir[0] > 0 || GetBuildingData.MaxStoredWarDarkElixir[0] > 0)
-            {
-                AddComponent(new Resource_Storage_Component(this));
             }*/
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
@@ -18,6 +19,10 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             this.Clan = Clan;
         }
 
+        public Joined_Alliance(Reader Reader, Device _Client, int Identifier) : base(Reader, _Client, Identifier)
+        {
+        }
+
         public override void Encode()
         {
             Data.AddRange(Clan.ToBytesHeader());
@@ -25,7 +30,13 @@ namespace Magic.ClashOfClans.Network.Commands.Server
 
         public override void Decode()
         {
-            Debug();
+            Reader.ReadInt64();
+            Reader.ReadString();
+            Reader.ReadInt32();
+            Reader.ReadByte();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
+            Reader.ReadInt32();
         }
     }
 }

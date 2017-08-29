@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Magic.ClashOfClans.Network.Commands.Client;
 using Magic.ClashOfClans.Network.Commands.Client.Battle;
+using Magic.ClashOfClans.Network.Commands.Client.Clan;
 using Magic.ClashOfClans.Network.Commands.Server;
 
 namespace Magic.ClashOfClans.Network
@@ -15,12 +16,15 @@ namespace Magic.ClashOfClans.Network
             Commands = new Dictionary<int, Type>
             {
                 {1, typeof(Joined_Alliance)},
+                {2, typeof(Leaved_Alliance)},
                 {3, typeof(Name_Change_Callback)},
+                {6, typeof(Changed_Alliance_Setting)},
                 {8, typeof(Role_Update)},
                 {500, typeof(Buy_Building)},
                 {501, typeof(Move_Building)},
                 {502, typeof(Upgrade_Building)},
                 {504, typeof(SpeedUp_Construction)},
+                {506, typeof(Collect_Resources)},
                 {508, typeof(Train_Unit)},
                 {510, typeof(Buy_Trap)},
                 {512, typeof(Buy_Deco)},
@@ -37,6 +41,7 @@ namespace Magic.ClashOfClans.Network
                 {528, typeof(SpeedUp_Hero_Upgrade)},
                 {532, typeof(New_Shop_Items_Seen)},
                 {533, typeof(Move_Multiple_Buildings)},
+                {537, typeof(Send_Mail)},
                 {538, typeof(My_League)},
                 {549, typeof(Upgrade_Multiple_Buildings)},
                 {550, typeof(Remove_Units)},
@@ -44,6 +49,8 @@ namespace Magic.ClashOfClans.Network
                 {554, typeof(Change_Weapon_Heading)},
                 {590, typeof(Buy_Multiple_Wall)},
                 {591, typeof(Change_Village_Mode)},
+                {592, typeof(Train_Unit_V2)},
+                {596, typeof(Remove_Units_V2)},
                 {597, typeof(Unknown_597)},
                 {604, typeof(Unknown_604)},
                 {700, typeof(Place_Attacker)},

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Threading.Tasks;
 using Magic.ClashOfClans.Logic.Enums;
 using Magic.ClashOfClans.Network;
@@ -16,6 +17,46 @@ namespace Magic.ClashOfClans.Core
             Save();
             KeepAlive();
             Random();
+            Restart();
+        }
+
+        internal static void Restart()
+        {
+            if (!TimeSpan.TryParse(ConfigurationManager.AppSettings["RestartInterval"], out TimeSpan interval))
+            {
+                interval = TimeSpan.FromMinutes(30);
+            }
+            if (Math.Abs(interval.TotalSeconds) > 60)
+            {
+
+                Logger.SayInfo($"Server Restarter has been loaded successfully");
+                var Timer = new System.Timers.Timer
+                {
+                    Interval = interval.TotalMilliseconds,
+                    AutoReset = true
+                };
+
+                Timer.Elapsed += async (_Sender, _Args) =>
+                {
+                    try
+                    {
+                        await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()), DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances())).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionLogger.Log(ex,
+                            "[: Failed at " + DateTime.Now.ToString("T") + ']' + Environment.NewLine + ex.StackTrace);
+                        return;
+                    }
+
+                    Environment.Exit(0);
+                };
+                LTimers.Add(Logic.Enums.Timer.Restart, Timer);
+            }
+            else
+            {
+                Logger.SayInfo("Server Restarter has been disabled");
+            }
         }
 
         internal static void Random()
@@ -75,7 +116,7 @@ namespace Magic.ClashOfClans.Core
         {
             var Timer = new System.Timers.Timer
             {
-                Interval = TimeSpan.FromMinutes(30).TotalMilliseconds,
+                Interval = TimeSpan.FromMinutes(25).TotalMilliseconds,
                 AutoReset = true
             };
 
@@ -86,8 +127,7 @@ namespace Magic.ClashOfClans.Core
 #endif
                 try
                 {
-                    await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()),
-                        DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances()));
+                    await Task.WhenAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()), DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances())).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

@@ -25,20 +25,20 @@ namespace Magic.ClashOfClans.Logic.Structure
             {
                 AddComponent(new Unit_Production_Component(this));
             }
-            /*AddComponent(new Hitpoint_Component());
-            if (GetBuildingData.Village2Housing > 0)
-            {
-                AddComponent(new Unit_Storage_V2_Componenent(this, 0));
-            }
             if (!string.IsNullOrEmpty(GetBuildingData.ProducesResource))
             {
                 AddComponent(new Resource_Production_Component(this, level));
             }
-    
+
             if (GetBuildingData.MaxStoredElixir2[0] > 0 || GetBuildingData.MaxStoredGold2[0] > 0)
             {
                 AddComponent(new Resource_Storage_Component(this));
-            }*/
+            }
+            if (GetBuildingData.Village2Housing > 0)
+            {
+                AddComponent(new Unit_Storage_V2_Componenent(this, 0));
+            }
+            /*AddComponent(new Hitpoint_Component());*/
         }
 
         internal override bool Builder => true;

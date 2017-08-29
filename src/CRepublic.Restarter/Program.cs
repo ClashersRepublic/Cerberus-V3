@@ -14,9 +14,9 @@ namespace CRepublic.Restarter
 
         public static void Main(string[] args)
         {
-            var GWL_EXSTYLE = -20;
-            var WS_EX_LAYERED = 0x80000;
-            uint LWA_ALPHA = 0x2;
+            const int GWL_EXSTYLE = -20;
+            const int WS_EX_LAYERED = 0x80000;
+            const uint LWA_ALPHA = 0x2;
             //int LWA_COLORKEY = 0x1;
 
             // Obtain our handle (hWnd)
@@ -32,27 +32,6 @@ namespace CRepublic.Restarter
                             " - Not Running";
             Console.Clear();
             ConsoleUtils.Welcome();
-
-            Version = UpdateChecker.GetVersionString();
-            if (Version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
-            {
-                ConsoleUtils.WriteLineCenterGreen("Restarter is up-to-date! v" +
-                                                  Assembly.GetExecutingAssembly().GetName().Version);
-            }
-            else if (Version == "ConnError")
-            {
-                ConsoleUtils.WriteLineCenterRed("An error occurred while checking for updates...");
-            }
-            else
-            {
-                ConsoleUtils.WriteLineCenterRed("Restarter is not up-to-date! New Version: " +
-                                                UpdateChecker.GetVersionString());
-                ConsoleUtils.WriteLineCenterYellow("||");
-                ConsoleUtils.WriteLineCenterYellow("-> Downloading new version...");
-                UpdateChecker.DownloadUpdater();
-            }
-
-            var interval = TimeSpan.FromMinutes(30);
 
             // Make sure we have at least 1 argument.
             if (args.Length < 1)
@@ -73,8 +52,7 @@ namespace CRepublic.Restarter
             {
                 ConsoleUtils.WriteLineCenterRed("||");
                 ConsoleUtils.WriteLineCenterRed(
-                    string.Format("File '{0}' does not exists! Check your 'restarter.config' file and try again.",
-                        args[0]));
+                    $"File '{args[0]}' does not exists! Check your 'restarter.config' file and try again.");
                 ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit...");
                 while (Console.ReadKey(true).Key != ConsoleKey.Enter) ;
 
@@ -86,8 +64,7 @@ namespace CRepublic.Restarter
             {
                 ConsoleUtils.WriteLineCenterRed("||");
                 ConsoleUtils.WriteLineCenterRed(
-                    string.Format("File '{0}' is not a .exe! Check your 'restarter.config' file and try again.",
-                        args[0]));
+                    $"File '{args[0]}' is not a .exe! Check your 'restarter.config' file and try again.");
                 ConsoleUtils.WriteLineCenterYellow("Press ENTER to exit...");
 
                 while (Console.ReadKey(true).Key != ConsoleKey.Enter) ;
@@ -110,54 +87,10 @@ namespace CRepublic.Restarter
                 Environment.Exit(0);
             }
 
-            while (true)
-            {
-                // If we dont have a restart interval provided.
-                if (args.Length == 1)
-                {
-                    ConsoleUtils.WriteLineCenterGreen("||");
-                    ConsoleUtils.WriteLineCenterGreen("Loaded restart interval from config: " +
-                                                      ConfigurationManager.AppSettings["RestartInterval"]);
-
-                    var intervalStr = ConfigurationManager.AppSettings["RestartInterval"];
-                    args = new[]
-                    {
-                        args[0]
-                    };
-                }
-
-                if (!TimeSpan.TryParse(ConfigurationManager.AppSettings["RestartInterval"], out interval))
-                {
-                    ConsoleUtils.WriteLineCenterRed("||");
-                    ConsoleUtils.WriteLineCenterRed("Could not parse '" +
-                                                    ConfigurationManager.AppSettings["RestartInterval"] +
-                                                    "'. Make sure your interval is not higher than 24 hours!");
-                    ConsoleUtils.WriteLineCenterYellow(
-                        "Press ENTER to exit or SPACE to continue with the default 30 minutes interval...");
-
-                    while (true)
-                    {
-                        var read = Console.ReadKey();
-                        if (read.Key == ConsoleKey.Enter)
-                        {
-                            Environment.Exit(0);
-                        }
-                        else if (read.Key == ConsoleKey.Spacebar)
-                        {
-                            interval = TimeSpan.FromMinutes(30);
-                            goto Exit;
-                        }
-                    }
-                }
-
-                Exit:
-                break;
-            }
-
             Console.Title = "Clashers' Republic Restarter";
 
             // Pass argument to the Restarter.
-            Restarter = new Restarter(args[0]) {RestartInterval = interval};
+            Restarter = new Restarter(args[0]);
             Restarter.Start();
 
             Thread.Sleep(Timeout.Infinite);

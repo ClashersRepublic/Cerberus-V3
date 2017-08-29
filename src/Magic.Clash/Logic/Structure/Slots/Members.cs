@@ -51,6 +51,14 @@ namespace Magic.ClashOfClans.Logic.Structure.Slots
             }
         }
 
+        internal Member Get(long UserID)
+        {
+            lock (Gate)
+            {
+                return ContainsKey(UserID) ? this[UserID] : null;
+            }
+        }
+
         internal void Remove(Avatar Player)
         {
             lock (Gate)

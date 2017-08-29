@@ -281,6 +281,7 @@ namespace Magic.ClashOfClans.Core
                 {
                     foreach (Level pl in levels)
                     {
+                        Console.WriteLine($"Level id {pl.Avatar.UserId}");
                         player p = await ctx.player.FindAsync(pl.Avatar.UserId); //Maybe to use lock instead
                         if (p != null)
                         {
@@ -318,6 +319,7 @@ namespace Magic.ClashOfClans.Core
                 {
                     foreach (var alliance in alliances)
                     {
+                        Console.WriteLine($"Alliance id {alliance.Clan_ID}");
                         var c = await ctx.clan.FindAsync((int) alliance.Clan_ID);
                         if (c != null)
                         {

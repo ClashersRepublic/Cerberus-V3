@@ -4,6 +4,7 @@
     {
         Keep_Alive,
         Save,
-        Random
+        Random,
+        Restart
     }
 }

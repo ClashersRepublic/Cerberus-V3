@@ -1,4 +1,4 @@
-﻿//#define Info
+﻿#define Info
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -123,6 +123,7 @@ namespace Magic.ClashOfClans
                         }
                         else
                         {
+                            if (Constants.Verbosity >= 3)
                             Logger.Say("Unhandled message " + Identifier);
 
                             // Make sure we don't break the RC4 stream.

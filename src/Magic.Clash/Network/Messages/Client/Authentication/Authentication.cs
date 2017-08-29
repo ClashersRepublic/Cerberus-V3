@@ -6,6 +6,7 @@ using Magic.ClashOfClans.Network.Messages.Server;
 using Magic.ClashOfClans.Network.Messages.Server.Authentication;
 using Magic.ClashOfClans.Network.Messages.Server.Clans;
 using Magic.Files;
+using Avatar_Stream = Magic.ClashOfClans.Network.Messages.Server.Avatar_Stream;
 
 namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
 {
@@ -21,7 +22,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
         internal string Token, MasterHash, Language, Udid;
 
         internal int Major, Minor, Revision, Locale;
-        internal string ClientVersion;
+        internal string[] ClientVersion;
 
         public override void Decode()
         {
@@ -65,13 +66,19 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
             Reader.ReadString();
             Reader.ReadString();
 
-            ClientVersion = Reader.ReadString();
+            ClientVersion = Reader.ReadString().Split('.');
         }
 
         public override void Process()
         {
             if (Constants.IsRc4)
                 new SessionKey(Device).Send();
+
+            if (ClientVersion[0] != Constants.ClientVersion[0] || ClientVersion[1] != Constants.ClientVersion[1])
+            {
+                new Authentication_Failed(Device, Reason.Update).Send();
+                return;
+            }
 
             if (!string.IsNullOrEmpty(Constants.PatchServer))
                 if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(MasterHash, Fingerprint.Sha))
@@ -89,8 +96,10 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
             Device.Player.Device = Device;
 
             new Authentication_OK(Device).Send();
-
             new Own_Home_Data(Device).Send();
+            new Avatar_Stream(Device).Send();
+            new Bookmark(Device).Send();
+
             if (Device.Player.Avatar.ClanId > 0)
             {
                 var Alliance = ObjectManager.GetAlliance(Device.Player.Avatar.ClanId);
@@ -109,7 +118,6 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
                     Device.Player.Avatar.ClanId = 0;
                 }
             }
-            new Bookmark(Device).Send();
         }
 
         private void CheckClient()

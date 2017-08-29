@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.Configuration;
+using System.Runtime.InteropServices;
 
 namespace CRepublic.Restarter
 {
@@ -31,19 +32,14 @@ namespace CRepublic.Restarter
         }
 
         // Number of times the application was restarted.  => RestartedTimes.Count
-        public int RestartCount { get { return RestartedTimes.Count; } }
+        public int RestartCount => RestartedTimes.Count;
 
         // List of DateTime the application was restarted.
-        public List<DateTime> RestartedTimes { get; private set; }
-
-        // DateTime of the next restart time.
-        public DateTime NextRestart { get; private set; }
+        public List<DateTime> RestartedTimes { get; private set; }    
 
         // DateTime of when the Restarter started.
         public DateTime StartTime { get; private set; }
 
-        // Duration between each restart interval.
-        public TimeSpan RestartInterval { get; set; }
 
         public TimeSpan AverageRunTime
         {
@@ -62,7 +58,7 @@ namespace CRepublic.Restarter
         // Process of application to restart.
         private Process _process;
         // Path to .exe file.
-        private string _path;
+        private readonly string _path;
         // Determines if the Restarter is running.
         private bool _started;
 
@@ -71,12 +67,10 @@ namespace CRepublic.Restarter
         {
             _started = true;
             _process = Process.Start(_path);
-
-            NextRestart = DateTime.Now.Add(RestartInterval);
+            
             StartTime = DateTime.Now;
 
-            _restarterThread = new Thread(HandleRestarting);
-            _restarterThread.Name = "Restarter Thread";
+            _restarterThread = new Thread(HandleRestarting) {Name = "Restarter Thread"};
             _restarterThread.Start();
         }
 
@@ -100,9 +94,7 @@ namespace CRepublic.Restarter
                 {
                     try
                     {
-                        var remaining = (NextRestart - DateTime.Now).ToString(@"hh\:mm\:ss\.f");
-                        var avgRunTime = AverageRunTime.ToString(@"hh\:mm\:ss\.f");
-                        var title = "Clashers' Republic Restarter v" + Assembly.GetExecutingAssembly().GetName().Version + " - Remaining: " + remaining + ", Count: " + RestartedTimes.Count + ", Average Run Time: " + avgRunTime;
+                        var title = "Clashers' Republic Restarter v" + Assembly.GetExecutingAssembly().GetName().Version + " Count: " + RestartedTimes.Count;
                         Console.Title = title;
 
                         // Check if hasCrashed.
@@ -126,16 +118,6 @@ namespace CRepublic.Restarter
                         {
                             ConsoleUtils.WriteLineCenterRed("||");
                             ConsoleUtils.WriteLineCenterRed("Detected that " + ConfigurationManager.AppSettings["FileName"] + " has been closed.");
-                            ConsoleUtils.WriteLineCenterYellow("-> Restarting " + ConfigurationManager.AppSettings["FileName"] + " at " + DateTime.Now);
-
-                            Restart();
-                        }
-
-                        // Check if we have NextRestart time has passed.
-                        if (DateTime.Now >= NextRestart)
-                        {
-                            ConsoleUtils.WriteLineCenterGreen("||");
-                            ConsoleUtils.WriteLineCenterGreen(RestartInterval + " has passed.");
                             ConsoleUtils.WriteLineCenterYellow("-> Restarting " + ConfigurationManager.AppSettings["FileName"] + " at " + DateTime.Now);
 
                             Restart();
@@ -179,13 +161,15 @@ namespace CRepublic.Restarter
         {
             // Make sure it is not dead before killing it because we don't want to kill a dead process.
             if (!_process.HasExited)
+            {
                 _process.Kill();
+            }
 
             _process = Process.Start(_path);
             RestartedTimes.Add(DateTime.Now);
-            NextRestart = DateTime.Now.Add(RestartInterval);
             ConsoleUtils.WriteLineCenterGreen("||");
             ConsoleUtils.WriteLineCenterGreen("" + ConfigurationManager.AppSettings["FileName"] + " has been restarted successfully at " + DateTime.Now);
         }
+
     }
 }

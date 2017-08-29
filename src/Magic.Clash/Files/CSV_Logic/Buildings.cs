@@ -229,6 +229,8 @@ namespace Magic.ClashOfClans.Files.CSV_Logic
 
         public int GetAltUnitStorageCapacity(int level) => HousingSpaceAlt[level];
 
+        public int GetUnitStorageV2Capacity() => Village2Housing;
+
         public override bool IsTownHall() => BuildingClass == "Town Hall";
         public override bool IsTownHall2() => BuildingClass == "Town Hall2";
         public bool IsSpellForge() => ForgesSpells || ForgesMiniSpells;

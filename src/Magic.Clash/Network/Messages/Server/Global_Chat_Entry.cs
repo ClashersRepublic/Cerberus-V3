@@ -1,4 +1,5 @@
-﻿using Magic.ClashOfClans.Extensions.List;
+﻿using Magic.ClashOfClans.Core;
+using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Network.Messages.Server
@@ -27,7 +28,7 @@ namespace Magic.ClashOfClans.Network.Messages.Server
                         ? $"[{Message_Sender.Rank}] {Message_Sender.Name}"
                         : Message_Sender.Name);
 
-            Data.AddInt(Message_Sender.Level); // Unknown
+            Data.AddInt(Message_Sender.Castle_Level); // Unknown
             Data.AddInt(Bot ? 22 : Message_Sender.League);
 
             Data.AddLong(Message_Sender.UserId);
@@ -36,6 +37,10 @@ namespace Magic.ClashOfClans.Network.Messages.Server
             Data.AddBool(Message_Sender.ClanId > 0);
             if (Message_Sender.ClanId > 0)
             {
+                var _Clan = ObjectManager.GetAlliance(Message_Sender.ClanId);
+                Data.AddLong(_Clan.Clan_ID);
+                Data.AddString(_Clan.Name);
+                Data.AddInt(_Clan.Badge);
             }
         }
     }

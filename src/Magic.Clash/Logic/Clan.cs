@@ -124,5 +124,6 @@ namespace Magic.ClashOfClans.Logic
 
             return Packet.ToArray();
         }
+        internal bool IsFull => Members.Count >= 50;
     }
 }

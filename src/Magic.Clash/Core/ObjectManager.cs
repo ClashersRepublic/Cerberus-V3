@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Magic.ClashOfClans.Core.Database;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Logic;
 
@@ -24,8 +25,6 @@ namespace Magic.ClashOfClans.Core
 
         public static Clan CreateClan(Clan clan)
         {
-            var seed = AllianceSeed;
-
             clan.Clan_ID = AllianceSeed++;
 
             DatabaseManager.CreateAlliance(clan);

@@ -10,7 +10,7 @@ namespace Magic.ClashOfClans.Core.Settings
         public static bool IsRc4 = Utils.ParseConfigBoolean("use_rc4"); // false = Pepper Crypto
 
         public const int BufferSize = 2048;
-        public const int Verbosity = 3;
+        public const int Verbosity = 4;
         public const int MaxCommand = 0;
 
         public const bool UseDiscord = true;
@@ -20,5 +20,6 @@ namespace Magic.ClashOfClans.Core.Settings
 
         public static readonly string PatchServer = Utils.ParseConfigString("PatchUrl");
         public static readonly string UpdateServer = Utils.ParseConfigString("UpdateUrl");
+        internal static readonly string[] ClientVersion = Utils.ParseConfigString("ClientVersion").Split('.');
     }
 }

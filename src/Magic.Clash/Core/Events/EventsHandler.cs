@@ -27,9 +27,9 @@ namespace Magic.ClashOfClans.Core.Events
         {
             try
             {
-                if (Constants.UseDiscord)
-                    Client.Deinitialize();
                 Task.WaitAll(DatabaseManager.Save(ResourcesManager.GetInMemoryLevels()));
+
+                Task.WaitAll(DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances()));
             }
             catch (Exception)
             {

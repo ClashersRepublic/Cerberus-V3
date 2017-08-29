@@ -29,7 +29,7 @@ namespace Magic.ClashOfClans.Core
             lock (s_sync)
                 File.AppendAllText(filePath, text);
 
-            if (Constants.Verbosity > 2)
+            if (Constants.Verbosity >= 2)
                 Logger.Error(moreInfo + ": " + ex.GetType().Name + ": " + ex.Message);
         }
 

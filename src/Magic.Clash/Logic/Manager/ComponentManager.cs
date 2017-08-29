@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Windows;
+using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Logic.Components;
+using Magic.ClashOfClans.Logic.Enums;
 using Magic.ClashOfClans.Logic.Structure;
 
 namespace Magic.ClashOfClans.Logic.Manager
@@ -12,12 +14,12 @@ namespace Magic.ClashOfClans.Logic.Manager
             m_vComponents = new List<List<Component>>();
             for (var i = 0; i <= 11; i++)
                 m_vComponents.Add(new List<Component>());
-            m_vLevel = l;
+            Level = l;
         }
 
         private readonly List<List<Component>> m_vComponents;
 
-        private readonly Level m_vLevel;
+        private readonly Level Level;
 
         public void AddComponent(Component c)
         {
@@ -105,6 +107,25 @@ namespace Magic.ClashOfClans.Logic.Manager
             return result;
         }
 
+        public int GetTotalMaxHousingV2()
+        {
+            var result = 0;
+            var components = m_vComponents[11];
+            if (components.Count >= 1)
+                foreach (var c in components)
+                    result += ((Unit_Storage_V2_Componenent)c).MaxCapacity;
+            return result;
+        }
+
+        public int GetTotalUsedHousingV2()
+        {
+            var result = 0;
+            var components = m_vComponents[11];
+            if (components.Count >= 1)
+                foreach (var c in components)
+                    result += ((Unit_Storage_V2_Componenent)c).GetUsedCapacity();
+            return result;
+        }
         /*
 
         public int GetTotalMaxHousing(bool IsSpellForge = false)
@@ -127,27 +148,29 @@ namespace Magic.ClashOfClans.Logic.Manager
                     if (((UnitStorageComponent) c).IsSpellForge == IsSpellForge)
                         result += ((UnitStorageComponent) c).GetUsedCapacity();
             return result;
-        }
+        }*/
 
         public void RefreshResourcesCaps()
         {
-            var table = CsvManager.DataTables.GetTable(2);
-            var resourceCount = table.GetItemCount();
+            var table = CSV.Tables.Get(Gamefile.Resources);
+            var resourceCount = table.Datas.Count;
             var resourceStorageComponentCount = GetComponents(6).Count;
             for (var i = 0; i < resourceCount; i++)
             {
                 var resourceCap = 0;
                 for (var j = 0; j < resourceStorageComponentCount; j++)
                 {
-                    var res = (ResourceStorageComponent) GetComponents(6)[j];
+                    var res = (Resource_Storage_Component)GetComponents(6)[j];
                     if (res.IsEnabled)
                         resourceCap += res.GetMax(i);
-                    var resource = (ResourceData) table.GetItemAt(i);
+                    var resource = (Files.CSV_Logic.Resource)table.Datas[i];
                     if (!resource.PremiumCurrency)
-                        m_vLevel.Avatar.SetResourceCap(resource, resourceCap);
+                    {
+                       Level.Avatar.Resources_Cap.Set(resource.GetGlobalId(), resourceCap);
+                    }
                 }
             }
-        }*/
+        }
 
         public void RemoveGameObjectReferences(Game_Object go)
         {

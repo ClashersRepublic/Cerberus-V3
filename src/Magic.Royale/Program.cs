@@ -46,7 +46,7 @@ namespace Magic.Royale
             Classes.Initialize();
             
             Logger.Say(@"-------------------------------------" + Environment.NewLine);
-            //Test.Unpack();
+            Test.Unpack();
             //Console.WriteLine(Chests.Get(22).Name);
 
             //Console.WriteLine(Chests.Get("Star") == null);

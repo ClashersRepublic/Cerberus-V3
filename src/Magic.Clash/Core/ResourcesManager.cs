@@ -92,6 +92,10 @@ namespace Magic.ClashOfClans.Core
         {
             return _inMemoryLevels.Values.ToList();
         }
+        public static int GetInMemoryAllianceCount()
+        {
+            return _inMemoryAlliances.Count;
+        }
 
         public static List<Level> OnlinePlayers { get; private set; }
 
@@ -178,6 +182,16 @@ namespace Magic.ClashOfClans.Core
             return _inMemoryAlliances.Keys.Contains(key);
         }
 
+        public static List<Clan> LoadAllAlliance()
+        {
+            var alliances = DatabaseManager.GetAllAlliances();
+            foreach (var alliance in alliances)
+            {
+                _inMemoryAlliances.TryAdd(alliance.Clan_ID, alliance);
+            }
+            return alliances;
+        }
+
         public static Clan GetInMemoryAlliance(long key)
         {
             _inMemoryAlliances.TryGetValue(key, out Clan a);
@@ -191,7 +205,6 @@ namespace Magic.ClashOfClans.Core
 
         public static void DisconnectClient(Device device)
         {
-            new Out_Of_Sync(device).Send();
             DropClient(device.GetSocketHandle());
         }
     }
