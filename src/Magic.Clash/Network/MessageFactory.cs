@@ -41,6 +41,7 @@ namespace Magic.ClashOfClans.Network
                 {14343, typeof(Add_To_Bookmark)},
                 {14344, typeof(Remove_From_Bookmark)},
                 {14325, typeof(Avatar_Profile)},
+                {14600, typeof(Request_Name_Change)},
                 {14715, typeof(Add_Global_Message)}
             };
         }

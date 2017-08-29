@@ -10,7 +10,7 @@ namespace Magic.ClashOfClans.Core.Settings
         public static bool IsRc4 = Utils.ParseConfigBoolean("use_rc4"); // false = Pepper Crypto
 
         public const int BufferSize = 2048;
-        public const int Verbosity = 4;
+        public const int Verbosity = 2;
         public const int MaxCommand = 0;
 
         public const bool UseDiscord = true;

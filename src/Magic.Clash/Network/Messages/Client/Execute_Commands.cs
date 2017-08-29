@@ -82,7 +82,10 @@ namespace Magic.ClashOfClans.Network.Messages.Client
                             }
                             else
                             {
-                                Console.WriteLine(BitConverter.ToString(Reader.ReadFully()).Replace("-",""));
+
+                                //Console.WriteLine(BitConverter.ToString(Reader.ReadFully()).Replace("-",""));
+                                DatabaseManager.Save(Device.Player);
+                                new Out_Of_Sync(Device).Send();
 #if DEBUG
                                 Logger.Say("Command " + CommandID + " has not been handled.", ConsoleColor.Red);
                                 if (LCommands.Any())
