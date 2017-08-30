@@ -379,7 +379,6 @@
     <Compile Include="Extensions\ZLib\ZlibConstants.cs" />
     <Compile Include="Extensions\ZLib\ZlibStream.cs" />
     <Compile Include="Test.cs" />
-    <Compile Include="WebApi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

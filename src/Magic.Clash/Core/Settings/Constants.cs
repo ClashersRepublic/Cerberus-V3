@@ -13,7 +13,7 @@ namespace Magic.ClashOfClans.Core.Settings
         public const int Verbosity = 2;
         public const int MaxCommand = 0;
 
-        public const bool UseDiscord = true;
+        public const bool UseDiscord = false;
         public const string DiscordPrefix = "~";
         public const string DiscordToken = "MzQ5MTYwNDM5Mjc3NTUxNjE5.DHxcjw.86ZDIW9378bIxguBkHoolpTQxPc";
 
