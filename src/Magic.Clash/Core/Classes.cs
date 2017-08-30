@@ -4,6 +4,7 @@ using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Network;
 using Magic.Files;
+using System;
 
 namespace Magic.ClashOfClans.Core
 {
@@ -34,8 +35,12 @@ namespace Magic.ClashOfClans.Core
 
             // Start listening since we're done initializing.
             Gateway.Listen();
+
             if (Constants.UseDiscord)
+            {
                 Client.Initialize();
+            }
+
             //Events = new EventsHandler();
             Parser.Initialize();
         }

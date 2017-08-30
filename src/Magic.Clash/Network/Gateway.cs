@@ -3,7 +3,6 @@
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -60,7 +59,7 @@ namespace Magic.ClashOfClans.Network
             s_listener.Listen(BACK_LOG);
 
             var args = GetArgs();
-            StartAccept(args);;
+            StartAccept(args); ;
 
             Logger.Say($"Listening on {endPoint}...");
         }
@@ -126,7 +125,7 @@ namespace Magic.ClashOfClans.Network
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception while starting receive");
+                ExceptionLogger.Log(ex, "Exception while starting to receive");
             }
         }
 
@@ -159,7 +158,7 @@ namespace Magic.ClashOfClans.Network
                 }
                 catch (Exception ex)
                 {
-                    ExceptionLogger.Log(ex, "Exception while processing send");
+                    ExceptionLogger.Log(ex, "Exception while processing to send");
                 }
             }
         }
@@ -175,7 +174,7 @@ namespace Magic.ClashOfClans.Network
             catch (Exception ex)
             {
                 // If this is reached, we won't start listening again, therefore no more clients.
-                ExceptionLogger.Log(ex, "Exception while starting to accept(critical)");
+                ExceptionLogger.Log(ex, "Exception while starting to accept (critical)");
                 // Could try to resurrect listeners or something here.
             }
         }
@@ -199,6 +198,7 @@ namespace Magic.ClashOfClans.Network
                         Logger.Say($"Accepted connection at {acceptSocket.RemoteEndPoint}.");
 
                     var client = new Device(acceptSocket);
+
                     // Register the client in the ResourceManager.
                     ResourcesManager.AddClient(client);
 
@@ -237,7 +237,7 @@ namespace Magic.ClashOfClans.Network
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception while start receive");
+                ExceptionLogger.Log(ex, "Exception while starting to receive");
             }
         }
 
@@ -326,7 +326,7 @@ namespace Magic.ClashOfClans.Network
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Exception occurred while processing async operation(potentially critical). Dropping connection");
+                ExceptionLogger.Log(ex, "Exception occurred while processing async operation (potentially critical). Dropping connection");
                 Drop(e);
             }
             finally

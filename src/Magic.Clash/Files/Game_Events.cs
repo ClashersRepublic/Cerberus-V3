@@ -22,8 +22,8 @@ namespace Magic.ClashOfClans.Files
             if (!File.Exists(JsonPath))
                 throw new Exception($"{JsonPath} does not exist in current directory!");
 
-            Game_Events.Events_Json = Regex.Replace(File.ReadAllText(JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
-            JsonConvert.PopulateObject(Game_Events.Events_Json, Game_Events.Events_Calendar);
+            Events_Json = Regex.Replace(File.ReadAllText(JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+            JsonConvert.PopulateObject(Events_Json, Events_Calendar);
             Logger.SayInfo("Game Events successfully loaded and stored in memory.");
         }
     }

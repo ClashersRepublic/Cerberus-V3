@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net.Sockets;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Logic;
-using Magic.ClashOfClans.Network;
-using Magic.ClashOfClans.Network.Messages.Server.Errors;
 
 namespace Magic.ClashOfClans.Core
 {
@@ -152,8 +150,9 @@ namespace Magic.ClashOfClans.Core
             {
                 DatabaseManager.Save(level);
             }
-            catch
+            catch (Exception ex)
             {
+                ExceptionLogger.Log(ex, "Exception while saving.");
             }
 
             OnlinePlayers.Remove(level);

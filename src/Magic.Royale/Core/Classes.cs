@@ -32,7 +32,6 @@ namespace Magic.Royale.Core
             Logger.Initialize();
             ExceptionLogger.Initialize();
 
-            WebApi.Initialize();
             Gateway.Initialize();
             Timers.Initialize();
             Timers.Run();

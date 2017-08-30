@@ -6,7 +6,7 @@ namespace Magic.ClashOfClans.Core.Settings
     internal class Constants
     {
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public static string DefaultTitle = "Magic.ClashOfClans v" + Version + " - © 2017 | ";
+        public static string DefaultTitle = "CRepublic.CoC v" + Version + " - © 2017 | ";
         public static bool IsRc4 = Utils.ParseConfigBoolean("UseRC4");
 
         public const int BufferSize = 2048;

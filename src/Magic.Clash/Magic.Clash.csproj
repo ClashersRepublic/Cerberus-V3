@@ -418,6 +418,7 @@
     <Compile Include="Network\Messages\Client\Execute_Commands.cs" />
     <Compile Include="Network\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Network\DebugFactory.cs" />
+    <Compile Include="Network\Messages\Client\News_Seen.cs" />
     <Compile Include="Network\Messages\Client\Request_Name_Change.cs" />
     <Compile Include="Network\Messages\Server\Authentication\Authentication_OK.cs" />
     <Compile Include="Network\Messages\Server\Avatar_Profile_Data.cs" />
@@ -443,6 +444,7 @@
     <Compile Include="Network\Messages\Server\Errors\Out_Of_Sync.cs" />
     <Compile Include="Network\Messages\Server\Global_Chat_Entry.cs" />
     <Compile Include="Network\Messages\Server\Name_Change_Response.cs" />
+    <Compile Include="Network\Messages\Server\News_Seen_Response.cs" />
     <Compile Include="Network\Messages\Server\Remove_From_Bookmark.cs" />
     <Compile Include="Network\Messages\Server\Server_Commands.cs" />
     <Compile Include="Network\Messages\Server\Visit_Home_Data.cs" />
@@ -472,7 +474,6 @@
     <Compile Include="Extensions\ZLib\ZlibCodec.cs" />
     <Compile Include="Extensions\ZLib\ZlibConstants.cs" />
     <Compile Include="Extensions\ZLib\ZlibStream.cs" />
-    <Compile Include="WebApi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -12,20 +12,20 @@ namespace Magic.ClashOfClans.Files.CSV_Helpers
 
         internal DataTable()
         {
-            this.Datas = new List<Data>();
+            Datas = new List<Data>();
         }
 
         internal DataTable(Table Table, int Index)
         {
             this.Index = Index;
-            this.Datas = new List<Data>();
+            Datas = new List<Data>();
 
             for (int i = 0; i < Table.GetRowCount(); i++)
             {
                 Row Row = Table.GetRowAt(i);
-                Data Data = this.Create(Row);
+                Data Data = Create(Row);
 
-                this.Datas.Add(Data);
+                Datas.Add(Data);
             }
         }
 
@@ -33,7 +33,7 @@ namespace Magic.ClashOfClans.Files.CSV_Helpers
         {
             Data _Data;
 
-            switch ((Gamefile)this.Index)
+            switch ((Gamefile) Index)
             {
 
                 case Gamefile.Buildings:
@@ -164,17 +164,17 @@ namespace Magic.ClashOfClans.Files.CSV_Helpers
         internal Data GetDataWithID(int ID)
         {
             int InstanceID = GlobalId.GetID(ID);
-            return this.Datas[InstanceID];
+            return Datas[InstanceID];
         }
 
         internal Data GetDataWithInstanceID(int ID)
         {
-            return this.Datas[ID];
+            return Datas[ID];
         }
 
         internal Data GetData(string _Name)
         {
-            return this.Datas.Find(_Data => _Data.Row.Name == _Name);
+            return Datas.Find(_Data => _Data.Row.Name == _Name);
         }
     }
 }

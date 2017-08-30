@@ -1,16 +1,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows;
 
-[assembly: AssemblyTitle("Magic.ClashOfClans")]
+[assembly: AssemblyTitle("Clashers' Republic Emulator for CoC")]
 [assembly: AssemblyDescription("A Clash of Clans server emulator.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Magic.ClashOfClans")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyProduct("CRepublic.CoC")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("0.1.2.1")]
-[assembly: AssemblyFileVersion("0.1.2.1")]
+[assembly: AssemblyVersion("9.105.10")]
+[assembly: AssemblyFileVersion("9.105.10")]

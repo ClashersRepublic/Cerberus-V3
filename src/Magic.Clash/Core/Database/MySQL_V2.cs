@@ -1,5 +1,4 @@
-﻿using System;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 
 namespace Magic.ClashOfClans.Core.Database
 {
@@ -36,7 +35,7 @@ namespace Magic.ClashOfClans.Core.Database
         {
             const string SQL = "SELECT coalesce(MAX(Id), 0) FROM clan";
             long Seed = -1;
-               
+
             using (var conn = new MySqlConnection(Credentials))
             {
                 conn.Open();
@@ -65,7 +64,7 @@ namespace Magic.ClashOfClans.Core.Database
                 {
                     CMD.Prepare();
                     Seed = (long)CMD.ExecuteScalar();
-                    
+
                 }
             }
             return Seed;
@@ -84,7 +83,7 @@ namespace Magic.ClashOfClans.Core.Database
                 {
                     CMD.Prepare();
                     Seed = (long)CMD.ExecuteScalar();
-                    
+
                 }
             }
             return Seed;

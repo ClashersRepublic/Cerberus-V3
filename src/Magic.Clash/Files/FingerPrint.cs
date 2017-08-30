@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Magic.ClashOfClans.Core;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Magic.Files
@@ -10,11 +8,8 @@ namespace Magic.Files
     internal static class Fingerprint
     {
         internal static string Json;
-
         internal static string Sha;
-
         internal static string[] Version;
-
         internal static bool Custom;
 
         internal static void Initialize()
@@ -25,11 +20,11 @@ namespace Magic.Files
                 {
                     if (File.Exists(@"Gamefiles\fingerprint.json"))
                     {
-                        Fingerprint.Json = File.ReadAllText(Directory.GetCurrentDirectory() + @"\Gamefiles\fingerprint.json");
-                        JObject _Json = JObject.Parse(Fingerprint.Json);
-                        Fingerprint.Sha = _Json["sha"].ToObject<string>();
-                        Fingerprint.Version = _Json["version"].ToObject<string>().Split('.');
-                        Logger.SayInfo("Default patch detected, with version " + string.Join(".", Fingerprint.Version) + "." + Environment.NewLine);
+                        Json = File.ReadAllText(Directory.GetCurrentDirectory() + @"\Gamefiles\fingerprint.json");
+                        JObject _Json = JObject.Parse(Json);
+                        Sha = _Json["sha"].ToObject<string>();
+                        Version = _Json["version"].ToObject<string>().Split('.');
+                        Logger.SayInfo("Default patch detected, with version " + string.Join(".", Version) + "." + Environment.NewLine);
                     }
                     else
                     {
@@ -38,7 +33,7 @@ namespace Magic.Files
                 }
                 else
                 {
-                    Logger.SayInfo("Custom patch detected, with version " + string.Join(".", Fingerprint.Version) + "." + Environment.NewLine);
+                    Logger.SayInfo("Custom patch detected, with version " + string.Join(".", Version) + "." + Environment.NewLine);
                 }
             }
             catch (Exception)
@@ -57,24 +52,23 @@ namespace Magic.Files
 
                 if (!string.IsNullOrEmpty(_Lines[0]))
                 {
-                    Fingerprint.Version = _Lines[0].Split('.');
+                    Version = _Lines[0].Split('.');
 
                     if (_Lines.Length > 1 && !string.IsNullOrEmpty(_Lines[1]))
                     {
-                        Fingerprint.Sha = _Lines[1];
+                        Sha = _Lines[1];
 
-                        if (File.Exists(Directory.GetCurrentDirectory() + "\\Patchs\\" + Fingerprint.Sha + "\\fingerprint.json"))
+                        if (File.Exists(Directory.GetCurrentDirectory() + "\\Patchs\\" + Sha + "\\fingerprint.json"))
                         {
-                            Fingerprint.Json = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Patchs\\" + Fingerprint.Sha + "\\fingerprint.json");
-                            Fingerprint.Json.Trim('\n', '\r');
+                            Json = File.ReadAllText(Directory.GetCurrentDirectory() + "\\Patchs\\" + Sha + "\\fingerprint.json");
+                            Json.Trim('\n', '\r');
 
                             _Result = true;
-                            Fingerprint.Custom = true;
+                            Custom = true;
                         }
                     }
                 }
             }
-
             return _Result;
         }
     }

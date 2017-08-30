@@ -22,14 +22,14 @@ namespace Magic.ClashOfClans.Core.API.Discord
 
                 CommandHandler = new CommandHandler();
                 CommandHandler.InstallAsync(_Client).Wait();
-                
+
                 await _Client.LoginAsync(TokenType.Bot, Constants.DiscordToken);
                 await _Client.StartAsync();
-                await _Client.SetGameAsync("Hearing for Status request");
+                await _Client.SetGameAsync("Waiting for Status request");
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Fail to connect to Discord API server");
+                ExceptionLogger.Log(ex, "Failed to connect to the Discord API server.");
             }
         }
         internal static async void Deinitialize()
@@ -41,7 +41,7 @@ namespace Magic.ClashOfClans.Core.API.Discord
             }
             catch (Exception ex)
             {
-                ExceptionLogger.Log(ex, "Fail to diconnect from Discord API server");
+                ExceptionLogger.Log(ex, "Failed to diconnect from the Discord API server.");
             }
         }
     }
