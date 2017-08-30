@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using static System.Convert;
 
 namespace Magic.ClashOfClans.Core
@@ -13,7 +9,7 @@ namespace Magic.ClashOfClans.Core
     internal static class Logger
     {
         private static bool _validLogLevel;
-        private static readonly int LogLevel = ToInt32(ConfigurationManager.AppSettings["log_level"]);
+        private static readonly int LogLevel = ToInt32(ConfigurationManager.AppSettings["LogLevel"]);
         private static readonly string Timestamp = Convert.ToString(DateTime.Today).Remove(10).Replace(".", "-").Replace("/", "-");
         private static readonly string Path = "Logs/log_" + Timestamp + "_.txt";
         private static readonly SemaphoreSlim _fileLock = new SemaphoreSlim(1);
@@ -36,9 +32,9 @@ namespace Magic.ClashOfClans.Core
 
             if (LogLevel != 0 || _validLogLevel == true)
             {
-                if (!File.Exists("logs/log_" + Timestamp + "_.txt"))
+                if (!File.Exists("Logs/log_" + Timestamp + "_.txt"))
                 {
-                    using (var sw = new StreamWriter("logs/log_" + Timestamp + "_.txt"))
+                    using (var sw = new StreamWriter("Logs/log_" + Timestamp + "_.txt"))
                     {
                         sw.WriteLine("Log file created at " + DateTime.Now);
                         sw.WriteLine();
@@ -120,11 +116,6 @@ namespace Magic.ClashOfClans.Core
             }
         }
 
-        public static void Print(string message)
-        {
-            Console.WriteLine(message);
-        }
-
         public static void Error(string message)
         {
             lock (s_lock)
@@ -143,7 +134,7 @@ namespace Magic.ClashOfClans.Core
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine();
             Console.WriteLine("Please choose a valid Log Level");
-            Console.WriteLine("UCS Emulator is now closing...");
+            Console.WriteLine("Emulator is now closing...");
             Console.ResetColor();
             Thread.Sleep(5000);
             Environment.Exit(0);
