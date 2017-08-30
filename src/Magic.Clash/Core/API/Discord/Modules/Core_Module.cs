@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Magic.ClashOfClans.Core.Database;
-using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Network;
+using Magic.ClashOfClans.Extensions;
 
 namespace Magic.ClashOfClans.Core.API.Discord.Modules
 {
@@ -34,18 +31,18 @@ namespace Magic.ClashOfClans.Core.API.Discord.Modules
                 },
                 Timestamp = DateTime.UtcNow,
             };
-            _Builder.WithTitle("Savage Magic Status");
+            _Builder.WithTitle(Utils.ParseConfigString("DiscordServerName") + " Status");
 
 
             _Builder.AddInlineField("SocketAsyncEventArgs", $"Created: {Gateway.NumberOfArgsCreated}\nIn-use: {Gateway.NumberOfArgsInUse}\nAvailable: {Gateway.NumberOfArgs}");
             _Builder.AddInlineField("Buffer", $"Created: {Gateway.NumberOfBuffersCreated}\nIn-use: {Gateway.NumberOfBuffersInUse}\nAvailable: {Gateway.NumberOfBuffers}");
    
-            _Builder.AddInlineField("Players Online", $"{ResourcesManager.OnlinePlayers.Count}");
+            _Builder.AddInlineField("Online Players", $"{ResourcesManager.OnlinePlayers.Count}");
             _Builder.AddInlineField("In Memory Clans", $"{ResourcesManager.GetInMemoryAllianceCount()}");
-
 
             await ReplyAsync("", false, _Builder);
         }
+
         [Command("statusextra", RunMode = RunMode.Async)]
         public async Task StatusExtra()
         {
@@ -58,17 +55,16 @@ namespace Magic.ClashOfClans.Core.API.Discord.Modules
                 },
                 Timestamp = DateTime.UtcNow,
             };
-            _Builder.WithTitle("Savage Magic Status");
+            _Builder.WithTitle(Utils.ParseConfigString("DiscordServerName") + " Status");
 
 
             _Builder.AddInlineField("SocketAsyncEventArgs", $"Created: {Gateway.NumberOfArgsCreated}\nIn-use: {Gateway.NumberOfArgsInUse}\nAvailable: {Gateway.NumberOfArgs}");
             _Builder.AddInlineField("Buffer", $"Created: {Gateway.NumberOfBuffersCreated}\nIn-use: {Gateway.NumberOfBuffersInUse}\nAvailable: {Gateway.NumberOfBuffers}");
 
-            _Builder.AddInlineField("Players Online", $"{ResourcesManager.OnlinePlayers.Count}");
+            _Builder.AddInlineField("Online Players", $"{ResourcesManager.OnlinePlayers.Count}");
             _Builder.AddInlineField("In Memory Clans", $"{ResourcesManager.GetInMemoryAllianceCount()}");
             _Builder.AddInlineField("Saved Players", MySQL_V2.GetPlayerCount());
             _Builder.AddInlineField("Saved Clans", MySQL_V2.GetClanCount());
-
 
             await ReplyAsync("", false, _Builder);
         }

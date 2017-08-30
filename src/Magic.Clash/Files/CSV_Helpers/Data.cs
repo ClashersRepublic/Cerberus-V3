@@ -9,13 +9,13 @@ namespace Magic.ClashOfClans.Files.CSV_Helpers
         internal Row Row;
 
         internal readonly int Id;
-        internal int Type => this.DataTable.Index;
+        internal int Type => DataTable.Index;
 
         internal Data(Row Row, DataTable DataTable)
         {
             this.Row = Row;
             this.DataTable = DataTable;
-            this.Id = DataTable.Datas.Count + 1000000 * DataTable.Index;
+            Id = DataTable.Datas.Count + 1000000 * DataTable.Index;
         }
 
         public void Load(Row row)
@@ -107,12 +107,12 @@ namespace Magic.ClashOfClans.Files.CSV_Helpers
 
         internal int GetId()
         {
-            return GlobalId.GetID(this.Id);
+            return GlobalId.GetID(Id);
         }
 
         internal int GetGlobalId()
         {
-            return this.Id;
+            return Id;
         }
     }
 }

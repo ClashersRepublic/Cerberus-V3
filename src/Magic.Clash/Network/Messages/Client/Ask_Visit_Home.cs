@@ -26,7 +26,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
 
                 if (Device.Player.Avatar.ClanId > 0)
                 {
-                    // new Alliance_All_Stream_Entry(this.Device).Send();
+                    //new Alliance_All_Stream_Entry(this.Device).Send();
                 }
             }
             else

@@ -25,16 +25,12 @@ namespace Magic.ClashOfClans
             Logger.SayAscii(@"                                                                                             Clash Edition  ");
 
             Logger.SayInfo(Constants.IsRc4 ? "Crypto: RC4" : "Crypto: None");
-            Logger.SayInfo(@"Clashers Republic's programs are protected by our policies, available only to our partner.");
-            Logger.SayInfo(@"Clashers Republic's programs are under the 'Proprietary' license.");
-            Logger.SayInfo(@"Clashers Republic is NOT affiliated to 'Supercell Oy'.");
-            Logger.SayInfo(@"Clashers Republic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'." +
-                           Environment.NewLine);
+            Logger.Say();
 
             Logger.Say(Assembly.GetExecutingAssembly().GetName().Name + @" is now starting..." + Environment.NewLine);
 
             NativeCalls.DisableMenus();
-            Logger.Say("Menu has been disabled.Exit the emulator by pressing F4 Key on console");
+            Logger.Say("Menu has been disabled. Exit the emulator by pressing the F4 Key.");
 
             Classes.Initialize();
 

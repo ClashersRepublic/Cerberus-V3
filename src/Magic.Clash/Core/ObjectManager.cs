@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Magic.ClashOfClans.Core.Database;
 using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Logic;
 

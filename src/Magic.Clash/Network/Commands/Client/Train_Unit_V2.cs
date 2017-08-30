@@ -20,20 +20,20 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 
         public override void Decode()
         {
-            this.BuildingID = this.Reader.ReadInt32();
-            this.Unknown1 = this.Reader.ReadInt32();
-            this.Unit = CSV.Tables.Get(Gamefile.Characters).GetDataWithID(this.Reader.ReadInt32()) as Characters;
-            this.Tick = this.Reader.ReadInt32();
+            BuildingID = Reader.ReadInt32();
+            Unknown1 = Reader.ReadInt32();
+            Unit = CSV.Tables.Get(Gamefile.Characters).GetDataWithID(Reader.ReadInt32()) as Characters;
+            Tick = Reader.ReadInt32();
         }
 
         public override void Process()
         {
-            var go = this.Device.Player.GameObjectManager.GetGameObjectByID(this.BuildingID, true);
+            var go = Device.Player.GameObjectManager.GetGameObjectByID(BuildingID, true);
             if (go != null)
             {
                 Builder_Building b = (Builder_Building)go;
                 Unit_Storage_V2_Componenent c = b.GetUnitStorageV2Component();
-                c?.AddUnit(this.Unit);
+                c?.AddUnit(Unit);
             }
         }
     }

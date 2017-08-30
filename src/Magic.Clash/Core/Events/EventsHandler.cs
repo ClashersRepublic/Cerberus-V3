@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Discord;
-using Magic.ClashOfClans.Core.API.Discord;
-using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Logic.Enums;
 
 namespace Magic.ClashOfClans.Core.Events
@@ -31,9 +28,9 @@ namespace Magic.ClashOfClans.Core.Events
 
                 Task.WaitAll(DatabaseManager.Save(ResourcesManager.GetInMemoryAlliances()));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Mmh, something happen when we tried to save everything.");
+                ExceptionLogger.Log(ex, "Exception while trying to save everything");
             }
         }
 

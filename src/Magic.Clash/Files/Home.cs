@@ -19,7 +19,7 @@ namespace Magic.ClashOfClans.Files
             if (!File.Exists(JsonPath))
                 throw new Exception($"{JsonPath} does not exist in current directory!");
 
-            Home.Starting_Home = Regex.Replace(File.ReadAllText(JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+            Starting_Home = Regex.Replace(File.ReadAllText(JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
 
             Logger.SayInfo("Home successfully loaded and stored in memory.");
 
