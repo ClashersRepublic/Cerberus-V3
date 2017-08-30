@@ -402,6 +402,7 @@
     <Compile Include="Network\Messages\Client\Ask_Visit_Home.cs" />
     <Compile Include="Network\Messages\Client\Avatar_Profile.cs" />
     <Compile Include="Network\Messages\Client\Battle\Attack_NPC.cs" />
+    <Compile Include="Network\Messages\Client\Battle\Execute_Battle_Commands.cs" />
     <Compile Include="Network\Messages\Client\Battle\Search_Opponent.cs" />
     <Compile Include="Network\Messages\Client\Change_Name.cs" />
     <Compile Include="Network\Messages\Client\Clans\Add_Alliance_Message.cs" />
@@ -415,6 +416,7 @@
     <Compile Include="Network\Messages\Client\Clans\Request_Join_Alliance.cs" />
     <Compile Include="Network\Messages\Client\Clans\Search_Alliances.cs" />
     <Compile Include="Network\Messages\Client\Clans\Send_Alliance_Invitation.cs" />
+    <Compile Include="Network\Messages\Client\Clans\Take_Decision.cs" />
     <Compile Include="Network\Messages\Client\Execute_Commands.cs" />
     <Compile Include="Network\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Network\DebugFactory.cs" />

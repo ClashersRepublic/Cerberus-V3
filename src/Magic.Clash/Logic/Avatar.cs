@@ -214,7 +214,6 @@ namespace Magic.ClashOfClans.Logic
                         _Packet.AddBool(member != null);
                         if (member != null)
                         {
-                            Console.WriteLine("Im not null"); 
                             _Packet.AddLong(ClanId);
                             _Packet.AddString(clan.Name);
                             _Packet.AddInt(clan.Badge); // Badge

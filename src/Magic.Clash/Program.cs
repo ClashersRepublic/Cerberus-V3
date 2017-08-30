@@ -39,8 +39,7 @@ namespace Magic.ClashOfClans
             Classes.Initialize();
 
             Logger.Say(@"-------------------------------------" + Environment.NewLine);
-
-                Thread.Sleep(Timeout.Infinite);
+            Thread.Sleep(Timeout.Infinite);
         }
 
         public static void UpdateTitle(bool Status)
