@@ -1,11 +1,8 @@
-﻿using Magic.Royale.Files;
-using Magic.Royale.Files.CSV_Logic;
-using Magic.Royale.Logic.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Magic.Royale.Logic.Structure.Slots.Items
 {
-    internal class Card
+    internal class Card_Item
     {
         [JsonProperty("cnt")] internal int Count;
 
@@ -16,11 +13,11 @@ namespace Magic.Royale.Logic.Structure.Slots.Items
         [JsonProperty("status")] internal byte Status;
         [JsonProperty("type")] internal int Type;
 
-        public Card()
+        public Card_Item()
         {
         }
 
-        public Card(int _Type, int _ID, int _Count, int _Level, byte _isNew)
+        public Card_Item(int _Type, int _ID, int _Count, int _Level, byte _isNew)
         {
             Type = _Type;
             Index = _ID;

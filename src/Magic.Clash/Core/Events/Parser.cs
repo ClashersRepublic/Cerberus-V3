@@ -7,7 +7,6 @@ namespace Magic.ClashOfClans.Core.Events
     internal static class Parser
     {
         internal static Thread Thread;
-        internal static bool BleeedingEdge;
 
         internal static void Initialize()
         {

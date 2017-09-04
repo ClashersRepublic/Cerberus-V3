@@ -7,12 +7,17 @@ using Newtonsoft.Json;
 
 namespace Magic.Royale.Logic.Structure.Slots.Items
 {
-    internal class Deck 
+    internal class Deck
     {
-        [JsonIgnore]public Avatar Player { get; set; }
+        [JsonIgnore] public Avatar Player;
         public List<Deck_Card> Cards = new List<Deck_Card>(8);
 
         public const int DECK_CARDS_COUNT = 8;
+
+        public Deck(Avatar avatar)
+        {
+            Player = avatar;
+        }
 
         public void Add(int ID, SCID scid)
         {
@@ -28,7 +33,7 @@ namespace Magic.Royale.Logic.Structure.Slots.Items
 
             foreach (var _Card in Cards.ToList().GetRange(0, 8))
             {
-                var card = Player.Cards.Get(_Card.Index);
+                var card = Player.Cards[Player.Active_Deck].Get(_Card.Index);
                 _Packet.AddVInt(card.Index); // Card ID
                 _Packet.AddVInt(card.Level - 1); // Card Level
                 _Packet.AddVInt(0); // Bought time
@@ -47,14 +52,14 @@ namespace Magic.Royale.Logic.Structure.Slots.Items
 
             foreach (var _Card in Cards.ToList())
             {
-                var card = Player.Cards.Get(_Card.Index);
+                var card = Player.Cards[Player.Active_Deck].Get(_Card.Index);
                 _Packet.AddVInt(_Card.Index); // Card ID
                 _Packet.AddVInt(card.Level - 1); // Card Level
                 _Packet.AddVInt(0); // Bought time
                 _Packet.AddVInt(card.Count); // Card Count
                 _Packet.AddVInt(0); // Unknown
-                _Packet.AddVInt(card.Status); // New Card = 2
                 _Packet.AddVInt(0); // Unknown
+                _Packet.AddVInt(card.Status); // New Card = 2
             }
 
             return _Packet.ToArray();
@@ -68,7 +73,7 @@ namespace Magic.Royale.Logic.Structure.Slots.Items
             data.Shuffle();
             foreach (var _Card in data)
             {
-                var card = Player.Cards.Get(_Card.Index);
+                var card = Player.Cards[Player.Active_Deck].Get(_Card.Index);
                 _Packet.AddVInt(card.Index); // Card ID
                 _Packet.AddVInt(card.Level); // Card Level
             }
@@ -88,20 +93,17 @@ namespace Magic.Royale.Logic.Structure.Slots.Items
             Cards[slot2] = temp;
         }
 
-        public Card SwapCard(int slot, Card targetCard)
+        public Card_Item SwapCard(int slot, Card_Item targetCard)
         {
-
             if (slot < 0 || slot >= DECK_CARDS_COUNT)
-            {
                 throw new NullReferenceException("slot");
-            }
 
             var result = Cards[slot]; //Old card
 
-            Cards[slot] = new Deck_Card { Index = targetCard.Index, Scid = targetCard.Scid }; //New card
-            Console.WriteLine($"Cards Index {result.Index}");
-            return Player.Cards.Get(result.Index); //Return old card
 
+            Cards[slot] = new Deck_Card {Index = targetCard.Index, Scid = targetCard.Scid}; //New card
+            Console.WriteLine($"Cards Index {result.Index}");
+            return Player.Cards[Player.Active_Deck].Get(result.Index); //Return old card
         }
     }
 }

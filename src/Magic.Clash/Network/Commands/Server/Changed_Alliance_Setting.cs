@@ -1,6 +1,8 @@
 ﻿using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
+using System.Diagnostics;
+using System;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
 {
@@ -23,7 +25,7 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             Data.AddLong(Clan.Clan_ID);
             Data.AddInt(Clan.Badge);
             Data.AddInt(Clan.Level);
-            Data.AddInt(-1);
+            Data.AddInt(Device.Player.Avatar.Tick);
         }
 
         public override void Decode()

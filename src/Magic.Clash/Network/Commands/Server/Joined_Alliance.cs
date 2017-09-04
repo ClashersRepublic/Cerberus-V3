@@ -1,5 +1,6 @@
 ﻿using System;
 using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
@@ -26,6 +27,7 @@ namespace Magic.ClashOfClans.Network.Commands.Server
         public override void Encode()
         {
             Data.AddRange(Clan.ToBytesHeader());
+            Data.AddInt(Device.Player.Avatar.Tick);
         }
 
         public override void Decode()

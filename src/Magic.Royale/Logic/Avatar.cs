@@ -112,25 +112,37 @@ namespace Magic.Royale.Logic
 
         internal bool Banned => BanTime > DateTime.UtcNow;
 
-        [JsonConstructor]
         public Avatar()
         {
-            Console.WriteLine("Yo");
+            Decks = new Decks();
             Cards = new Cards(this);
-            Decks = new Decks(this);
-            Component = new Component(this);
             Resources = new Resources();
             Modes = new Modes();
+
+            Component = new Component(this);
         }
 
         public Avatar(long id)
         {
             UserId = id;
-            Component = new Component(this);
-            Decks = new Decks(this);
+            Decks = new Decks();
             Cards = new Cards(this);
             Resources = new Resources(true);
             Modes = new Modes(true);
+
+            Component = new Component(this);
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            Cards.Player = this;
+            for (var i = 0; i < Decks.DECK_COUNT; i++)
+            {
+                Decks[i].Player = this;
+                Cards[i].Player = this;
+
+            }
         }
 
         public bool HasEnoughResources(Resource resource, int buildCost)

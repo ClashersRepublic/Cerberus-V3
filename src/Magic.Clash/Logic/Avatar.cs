@@ -4,6 +4,7 @@ using System.Reflection;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.List;
+using Magic.ClashOfClans.Files;
 using Magic.ClashOfClans.Files.CSV_Helpers;
 using Magic.ClashOfClans.Files.CSV_Logic;
 using Magic.ClashOfClans.Logic.Enums;
@@ -21,11 +22,29 @@ namespace Magic.ClashOfClans.Logic
         // Ids
 
         [JsonIgnore] internal int ObstacleClearCount;
+        [JsonIgnore] internal DateTime _gamelastticktime;
+        [JsonIgnore] private int _gamelasttick;
+
+        [JsonIgnore]
+        internal int Tick
+        {
+            get
+            {
+                var diff = DateTime.Now - _gamelastticktime;
+                return (int)(_gamelasttick + Math.Round(diff.TotalMilliseconds * 0.02));
+            }
+            set
+            {
+                _gamelasttick = value;
+                _gamelastticktime = DateTime.Now;
+            }
+        }
+
 
         [JsonIgnore]
         internal long UserId
         {
-            get => ((long) UserHighId << 32) | UserLowId;
+            get => ((long) UserHighId << 32) | (long)UserLowId;
             set
             {
                 UserHighId = Convert.ToInt32(value >> 32);
@@ -36,7 +55,7 @@ namespace Magic.ClashOfClans.Logic
         [JsonIgnore]
         internal long ClanId
         {
-            get => ((long) ClanHighID << 32) | ClanLowID;
+            get => ((long) ClanHighID << 32) | (long)ClanLowID;
             set
             {
                 ClanHighID = Convert.ToInt32(value >> 32);
@@ -196,7 +215,7 @@ namespace Magic.ClashOfClans.Logic
         {
             get
             {
-                //this.Refresh();
+                Refresh();
 
                 var _Packet = new List<byte>();
 
@@ -388,7 +407,7 @@ namespace Magic.ClashOfClans.Logic
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
-                _Packet.AddDataSlots(Units2); //Retrain
+                _Packet.AddDataSlots(Units2); 
 
                 _Packet.AddInt(0);
                 _Packet.AddInt(0);
@@ -396,6 +415,22 @@ namespace Magic.ClashOfClans.Logic
             }
         }
 
+        internal void Refresh()
+        {
+            var table = CSV.Tables.Get(Gamefile.Leagues);
+            var i = 0;
+            var found = false;
+            while (!found && i < table.Datas.Count)
+            {
+                var league = (Leagues)table.Datas[i];
+                if (Trophies <= league.BucketPlacementRangeHigh[league.BucketPlacementRangeHigh.Length - 1] && Trophies >= league.BucketPlacementRangeLow[0])
+                {
+                    found = true;
+                    League = i;
+                }
+                i++;
+            }
+        }
 
         internal static int GetDataIndex(List<Slot> dsl, Data d)
         {

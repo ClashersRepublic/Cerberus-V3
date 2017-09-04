@@ -42,7 +42,7 @@ namespace Magic.ClashOfClans.Network
                 {14315, typeof(Add_Alliance_Message)},
                 {14316, typeof(Edit_Alliance_Settings)},
                 {14317, typeof(Request_Join_Alliance)},
-                //{14321, typeof(Take_Decision)},
+                {14321, typeof(Take_Decision)},
                 {14322, typeof(Send_Alliance_Invitation)},
                 {14323, typeof(Join_Alliance_Using_Invitation)},
                 {14324, typeof(Search_Alliances)},
@@ -55,7 +55,7 @@ namespace Magic.ClashOfClans.Network
                 //{14403, typeof(Request_Global_Players)},
                 //{14404, typeof(Request_Local_Players)},
                 //{14406, typeof(Request_League_Players)},
-                //{14510, typeof(Execute_Battle_Commands)},
+                {14510, typeof(Execute_Battle_Commands)},
                 {14600, typeof(Request_Name_Change)},
                 {14715, typeof(Add_Global_Message)}
                 //{15000, typeof(Request_War_Home_Data)},

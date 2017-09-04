@@ -6,6 +6,7 @@ using Magic.ClashOfClans.Network.Messages.Server;
 using Magic.ClashOfClans.Network.Messages.Server.Authentication;
 using Magic.ClashOfClans.Network.Messages.Server.Clans;
 using Magic.Files;
+using System;
 using Avatar_Stream = Magic.ClashOfClans.Network.Messages.Server.Avatar_Stream;
 
 namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
@@ -94,6 +95,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client.Authentication
         {
             ResourcesManager.LogPlayerIn(Device.Player);
             Device.Player.Device = Device;
+            Device.Player.Avatar.Tick = 0;
 
             new Authentication_OK(Device).Send();
             new Own_Home_Data(Device).Send();

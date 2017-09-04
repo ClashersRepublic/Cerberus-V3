@@ -7,6 +7,9 @@ namespace Magic.ClashOfClans.Logic.Structure
 {
     internal class Game_Object
     {
+        public const int Width = 48;
+        public const int Height = 48;
+
         public Game_Object(Data data, Level level, bool component = true)
         {
             Level = level;
@@ -31,15 +34,45 @@ namespace Magic.ClashOfClans.Logic.Structure
         internal virtual int OppositeClassId => -1;
 
         internal int GlobalId;
+        internal int X
+        {
+            get => _x;
+            set
+            {
+                if (value < 0 || value > Width)
+                {
+                    if (ClassId != 15 && ClassId != 8)
+                        throw new ArgumentOutOfRangeException(nameof(value),
+                        "value must be non-negative and Game_Object.Width.");
+                }
+                _x = value;
+            }
+        }
 
-        internal int X;
+        public int Y
+        {
+            get => _y;
+            set
+            {
+                if (value < 0 || value > Height)
+                {
+                    if (ClassId != 15 && ClassId != 8)
+                    throw new ArgumentOutOfRangeException(nameof(value),
+                        "value must be non-negative and Game_Object.Height.");
+                }
 
-        internal int Y;
+                _y = value;
+            }
+        }
+
+        private int _x;
+
+        private int _y;
 
         internal bool ComponentsActive;
 
         public int[] GetPosition() => new[] {X, Y};
-
+            
         public void AddComponent(Component component)
         {
             if (Components[component.Type].Type == -1)

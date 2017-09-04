@@ -46,21 +46,7 @@ namespace Magic.Royale
             Classes.Initialize();
             
             Logger.Say(@"-------------------------------------" + Environment.NewLine);
-            Test.Unpack();
-            //Console.WriteLine(Chests.Get(22).Name);
 
-            //Console.WriteLine(Chests.Get("Star") == null);
-            /*var a = new ChestGenerator().GenerateChest(new Avatar(), Chests.Get("Free"), new Random());
-
-            Logger.Say("Generating card : ");
-
-            a?.End();
-            Console.WriteLine(a.SelectedCard.Count);
-            foreach (var cardStacks in a.SelectedCard)
-            {
-                    Console.WriteLine($"{cardStacks.Card.Name} with value of {cardStacks.Count}");
-                
-            }*/
             Thread.Sleep(Timeout.Infinite);
         }
 

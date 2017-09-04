@@ -120,8 +120,6 @@ namespace Magic.ClashOfClans.Logic
             Packet.AddBool(Members.Count <= 1); //Founded a clan bool
             Packet.AddInt(Level);
             Packet.AddInt(1);
-            Packet.AddInt(-1);
-
             return Packet.ToArray();
         }
         internal bool IsFull => Members.Count >= 50;

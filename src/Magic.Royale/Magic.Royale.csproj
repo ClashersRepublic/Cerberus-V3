@@ -327,10 +327,11 @@
     <Compile Include="Logic\Structure\Game\Rarities.cs" />
     <Compile Include="Logic\Structure\SCID.cs" />
     <Compile Include="Logic\Structure\Slots\Calendar.cs" />
+    <Compile Include="Logic\Structure\Slots\Card.cs" />
     <Compile Include="Logic\Structure\Slots\Cards.cs" />
     <Compile Include="Logic\Structure\Slots\DataSlot.cs" />
     <Compile Include="Logic\Structure\Slots\Decks.cs" />
-    <Compile Include="Logic\Structure\Slots\Items\Card.cs" />
+    <Compile Include="Logic\Structure\Slots\Items\Card_Item.cs" />
     <Compile Include="Logic\Structure\Slots\Items\Deck.cs" />
     <Compile Include="Logic\Structure\Slots\Items\Deck_Card.cs" />
     <Compile Include="Logic\Structure\Slots\Items\Event.cs" />

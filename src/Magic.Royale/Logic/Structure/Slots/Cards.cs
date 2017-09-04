@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Magic.Royale.Extensions.List;
 using Magic.Royale.Logic.Structure.Slots.Items;
@@ -19,68 +18,67 @@ namespace Magic.Royale.Logic.Structure.Slots
             Player = avatar;
         }
 
-        public new void Add(Card _Card)
+        public void Add(Card_Item _Card)
         {
-            if (Contains(_Card))
+            foreach (var card in this.ToList())
             {
-                var _Index = FindIndex(Card => Card.Index == _Card.Index && Card.Type == _Card.Type);
+                if (card.Contains(_Card))
+                {
+                    var _Index = card.FindIndex(Card => Card.Index == _Card.Index && Card.Type == _Card.Type);
 
-                if (_Index > -1)
-                    this[_Index].Count += _Card.Count;
+                    if (_Index > -1)
+                        card[_Index].Count += _Card.Count;
+                    else
+                        card.Add(_Card);
+                }
                 else
-                    base.Add(_Card);
-            }
-            else
-            {
-                base.Add(_Card);
+                {
+                    card.Add(_Card);
+                }
             }
         }
 
         public void Add(byte _Type, int _ID, int _Count, int _Level, byte _isNew)
         {
-            var _Card = new Card(_Type, _ID, _Count, _Level, _isNew);
-
-            if (Contains(_Card))
+            var _Card = new Card_Item(_Type, _ID, _Count, _Level, _isNew);
+            foreach (var card in this.ToList())
             {
-                var _Index = FindIndex(Card => Card.Index == _Card.Index && Card.Type == _Card.Type);
+                if (card.Contains(_Card))
+                {
+                    var _Index = card.FindIndex(Card => Card.Index == _Card.Index && Card.Type == _Card.Type);
 
-                if (_Index > -1)
-                    this[_Index].Count += _Card.Count;
+                    if (_Index > -1)
+                        card[_Index].Count += _Card.Count;
+                    else
+                        card.Add(_Card);
+                }
                 else
-                    base.Add(_Card);
+                {
+                    card.Add(_Card);
+                }
             }
-            else
-            {
-                base.Add(_Card);
-            }
-        }
-
-        public Card Get(int _ID)
-        { 
-            var _Index = FindIndex(Card => Card.Index == _ID);
-            if (_Index > -1)
-                return this[_Index];
-
-            return null;
         }
 
         public byte[] ToBytes()
         {
-            var _Packet = new List<byte>();
-            var first8 = Player.Decks[Player.Active_Deck].Cards.ToList();
-            foreach (var _Card in this.ToList().Where(x => first8.All(e => e.Index != x.Index)))
+            var packet = new List<byte>();
+            var unactive = this[Player.Active_Deck].ToArray();
+            var active = Player.Decks[Player.Active_Deck].Cards.ToArray();
+
+            packet.AddVInt(unactive.Length - active.Length);
+
+            foreach (var card in unactive.Where(t2 => active.All(t1 => t2.Index != t1.Index)))
             {
-                //Console.WriteLine("Crash");
-                _Packet.AddVInt(_Card.Index); // Card ID
-                _Packet.AddVInt(_Card.Level - 1); // Card Level
-                _Packet.AddVInt(0); // Bought time
-                _Packet.AddVInt(_Card.Count); // Card Count
-                _Packet.AddVInt(0); // Unknown
-                _Packet.AddVInt(_Card.Status); // New Card = 2
-                _Packet.AddVInt(0); // Unknown
+                packet.AddVInt(card.Index); // Card ID
+                packet.AddVInt(card.Level - 1); // Card Level
+                packet.AddVInt(0); // Bought time
+                packet.AddVInt(card.Count); // Card Count
+                packet.AddVInt(0); // Unknown
+                packet.AddVInt(0); // Unknown
+                packet.AddVInt(card.Status); // New Card = 2
             }
 
-            return _Packet.ToArray();
+            return packet.ToArray();
         }
     }
 }

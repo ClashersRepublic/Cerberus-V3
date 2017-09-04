@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Discord;
 using Magic.Royale.Extensions.Binary;
 using Magic.Royale.Files;
@@ -35,20 +36,23 @@ namespace Magic.Royale.Network.Commands.Client
 
         public override void Process()
         {
-            int Index = Device.Player.Cards.FindIndex(_Card => _Card.Scid.Value == SCID.Value);
-
-            if (Index > -1)
+            foreach (var cardlist in Device.Player.Cards.ToList())
             {
-                var card = Device.Player.Cards[Index];
-                var CardData = Cards.Get(SCID);
-                var rarity = CardData.Rarity;
+                int Index = cardlist.FindIndex(_Card => _Card.Scid.Value == SCID.Value);
 
-                int gold = rarity.UpgradeCost[card.Level - 1];
-                int cardstack = rarity.UpgradeMaterialCount[card.Level - 1];
-                int exp = rarity.UpgradeExp[card.Level - 1];
+                if (Index > -1)
+                {
+                    var card = cardlist[Index];
+                    var CardData = Cards.Get(SCID);
+                    var rarity = CardData.Rarity;
 
-                card.Level++;
-                card.Count -= cardstack;
+                    int gold = rarity.UpgradeCost[card.Level - 1];
+                    int cardstack = rarity.UpgradeMaterialCount[card.Level - 1];
+                    int exp = rarity.UpgradeExp[card.Level - 1];
+
+                    card.Level++;
+                    card.Count -= cardstack;
+                }
             }
         }
     }

@@ -1,9 +1,7 @@
 ﻿
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Logic.Enums;
@@ -24,40 +22,40 @@ namespace Magic.ClashOfClans.Network.Commands.Client
 
         public override void Decode()
         {
-            this.Resource_Count = this.Reader.ReadInt32();
-            this.Resource_Data = this.Reader.ReadInt32();
+            Resource_Count = Reader.ReadInt32();
+            Resource_Data = Reader.ReadInt32();
 
-            this.EmbedCommands = this.Reader.ReadBoolean();
+            EmbedCommands = Reader.ReadBoolean();
             if (EmbedCommands)
             {
-                this.Device.Depth++;
-                if (this.Device.Depth >= MaxEmbeddedDepth)
+                Device.Depth++;
+                if (Device.Depth >= MaxEmbeddedDepth)
                 {
-                    new Out_Of_Sync(this.Device).Send();
+                    new Out_Of_Sync(Device).Send();
                     return;
                 }
             }
             else
             {
-                this.Device.Depth--;
+                Device.Depth--;
             }
-            this.Reader.ReadInt32();
+            Reader.ReadInt32();
         }
 
         public override void Process()
         {
-            this.Gems_Price = GameUtils.GetResourceDiamondCost(this.Resource_Count, this.Resource_Data);
-            if (this.Device.Player.Avatar.Resources.Gems >= this.Gems_Price)
+            Gems_Price = GameUtils.GetResourceDiamondCost(Resource_Count, Resource_Data);
+            if (Device.Player.Avatar.Resources.Gems >= Gems_Price)
             {
-                this.Device.Player.Avatar.Resources.Minus(Resource.Diamonds, this.Gems_Price);
-                this.Device.Player.Avatar.Resources.Plus(this.Resource_Data, this.Resource_Count);
+                Device.Player.Avatar.Resources.Minus(Resource.Diamonds, Gems_Price);
+                Device.Player.Avatar.Resources.Plus(Resource_Data, Resource_Count);
                 if (EmbedCommands)
                 {
-                    int CommandID = Reader.ReadInt32();
+                    var CommandID = Reader.ReadInt32();
                     if (CommandFactory.Commands.ContainsKey(CommandID))
                     {
-                        Command Command =
-                            Activator.CreateInstance(CommandFactory.Commands[CommandID], Reader, this.Device,
+                        var Command =
+                            Activator.CreateInstance(CommandFactory.Commands[CommandID], Reader, Device,
                                 CommandID) as Command;
 
                         if (Command != null)
@@ -71,11 +69,16 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                             Command.Process();
                         }
                     }
+                    else
+                    {
+                        DatabaseManager.Save(Device.Player);
+                        new Out_Of_Sync(Device).Send();
+                    }
                 }
             }
             else
             {
-                new Out_Of_Sync(this.Device).Send();
+                new Out_Of_Sync(Device).Send();
             }
         }
     }

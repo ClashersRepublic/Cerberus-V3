@@ -1,4 +1,5 @@
 ﻿using System;
+using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Network.Messages.Server.Errors;
 
@@ -69,6 +70,11 @@ namespace Magic.ClashOfClans.Network.Commands.Client
                         Command.Decode();
                         Command.Process();
                     }
+                }
+                else
+                {
+                    DatabaseManager.Save(Device.Player);
+                    new Out_Of_Sync(Device).Send();
                 }
             }
         }

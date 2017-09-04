@@ -42,10 +42,7 @@ namespace Magic.ClashOfClans.Network
         public T Pop()
         {
 #if CONCURRENT_STACK
-            var ret = default(T);
-            if (!_stack.TryDequeue(out ret))
-                return default(T);
-            return ret;
+            return !_stack.TryDequeue(out T ret) ? default(T) : ret;
 #elif LIST
             lock (_list)
             {

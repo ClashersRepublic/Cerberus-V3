@@ -21,7 +21,7 @@ namespace Magic.ClashOfClans.Network.Commands.Server
         {
             Data.AddLong(AllianceID);
             Data.AddInt(Reason); //1 = leave, 2 = kick (Not worth it to make an enum for this)
-            Data.AddInt(-1);
+            Data.AddInt(Device.Player.Avatar.Tick);
         }
 
         public override void Decode()

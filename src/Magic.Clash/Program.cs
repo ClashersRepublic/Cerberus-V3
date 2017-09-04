@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Magic.ClashOfClans.Core;
@@ -46,8 +45,8 @@ namespace Magic.ClashOfClans
             }
             else
             {
-                Constants.DefaultTitle = Constants.DefaultTitle + "ONLINE | Players > ";
-                Console.Title = Constants.DefaultTitle;
+                Constants.DefaultTitle = Constants.DefaultTitle + "ONLINE | Active Connections > ";
+                Console.Title = Constants.DefaultTitle + OP;
             }
         }
 

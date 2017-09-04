@@ -20,7 +20,7 @@ namespace Magic.ClashOfClans.Network.Messages.Server.Battle
             Enemy.Tick();
             var Home = new Objects(Enemy, Enemy.Json);
             {
-                Data.AddInt((int) (Home.Timestamp - DateTime.UtcNow).TotalSeconds);
+                Data.AddInt(Device.Player.Avatar.Tick);
                 Data.AddInt(-1);
 
                 Data.AddRange(Home.ToBytes);

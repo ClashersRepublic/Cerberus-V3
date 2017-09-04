@@ -1,6 +1,7 @@
 ﻿using System;
 using Magic.ClashOfClans.Extensions.Binary;
 using Magic.ClashOfClans.Extensions.List;
+using System.Diagnostics;
 
 namespace Magic.ClashOfClans.Network.Commands.Server
 {
@@ -24,6 +25,7 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             Reader.ReadInt32();
             Reader.ReadInt32();
             Reader.ReadInt32();
+            
         }
 
         public override void Encode()
@@ -31,7 +33,7 @@ namespace Magic.ClashOfClans.Network.Commands.Server
             Data.AddString(Device.Player.Avatar.Name);
             Data.AddInt(Device.Player.Avatar.NameState);
             Data.AddInt(4);
-            Data.AddInt(-1);
+            Data.AddInt(Device.Player.Avatar.Tick);
         }
     }
 }

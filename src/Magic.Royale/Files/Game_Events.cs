@@ -16,8 +16,8 @@ namespace Magic.Royale.Files
 
         internal static void Initialize()
         {
-            if (!Directory.Exists("Gamefiles/level/"))
-                throw new DirectoryNotFoundException("Directory Gamefiles/level does not exist!");
+            if (!Directory.Exists("Gamefiles/"))
+                throw new DirectoryNotFoundException("Directory Gamefiles does not exist!");
 
             if (!File.Exists(JsonPath))
                 throw new Exception($"{JsonPath} does not exist in current directory!");

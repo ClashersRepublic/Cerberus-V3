@@ -1,6 +1,7 @@
 ﻿using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic.Enums;
+using System;
 
 namespace Magic.ClashOfClans.Network.Messages.Server.Authentication
 {

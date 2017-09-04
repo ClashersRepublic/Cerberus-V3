@@ -21,15 +21,6 @@ namespace Magic.Royale.Logic.Structure.Components
         {
             get
             {
-                if (!Player.Decks.Initialized)
-                {
-                    Player.Cards.Player = Player;
-                    for (int i = 0; i < Decks.DECK_COUNT; i++)
-                    {
-                        Player.Decks[i].Player = Player;
-
-                    }
-                }
                 var Data = new List<byte>();
                 var TimeStamp = (int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                 Data.AddLong(Player.UserId);
@@ -62,8 +53,7 @@ namespace Magic.Royale.Logic.Structure.Components
 
                 Data.AddByte(255);
                 Data.AddRange(Player.Decks[Player.Active_Deck].Get8FirstCard());
-                    Data.AddVInt(Player.Cards.Count - 8);
-                    Data.AddRange(Player.Cards.ToBytes());
+                Data.AddRange(Player.Cards.ToBytes());
 
                 Data.AddVInt(Player.Active_Deck); //Active deck
                 Data.AddHexa("FF 2B 00 7F 00 00 00 00 04 00 7F 00 00 00 00 12 00 7F 00 00 00 00 0E 00 7F 00 00 00 00 93 01 00 7F 00 00 00 00 09 00 7F 00 00 00 00 17 00 7F 00 00 00 00 89 01 00 7F 00 00 00 00 09 98 11 "); //Unknown nigger

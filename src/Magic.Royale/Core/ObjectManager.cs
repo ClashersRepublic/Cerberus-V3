@@ -105,6 +105,12 @@ namespace Magic.Royale.Core
             level.Cards = JsonConvert.DeserializeObject<Logic.Structure.Slots.Cards>(Files.Cards.Starting_Card, DatabaseManager.Settings);
             level.Decks = JsonConvert.DeserializeObject<Decks>(Deck.Starting_Deck, DatabaseManager.Settings);
 
+            level.Cards.Player = level;
+            for (var i = 0; i < Decks.DECK_COUNT; i++)
+            {
+                level.Decks[i].Player = level;
+            }
+
             DatabaseManager.CreateLevel(level);
 
             return level;

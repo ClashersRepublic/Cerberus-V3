@@ -16,7 +16,6 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         {
             BuildingID = Reader.ReadInt32();
             Tick = Reader.ReadInt32();
-            ShowValues();
         }
 
         public override void Process()

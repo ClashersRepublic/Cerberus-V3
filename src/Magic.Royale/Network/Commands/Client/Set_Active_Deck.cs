@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Magic.Royale.Extensions.Binary;
+﻿using Magic.Royale.Extensions.Binary;
 
 namespace Magic.Royale.Network.Commands.Client
 {
@@ -16,7 +11,6 @@ namespace Magic.Royale.Network.Commands.Client
 
         public Set_Active_Deck(Reader Reader, Device Device, int _ID) : base(Reader, Device, _ID)
         {
-
         }
 
         public override void Decode()

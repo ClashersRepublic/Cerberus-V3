@@ -1,4 +1,4 @@
-﻿#define Info
+﻿//#define Info
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -77,7 +77,6 @@ namespace Magic.ClashOfClans
         {
             const int HEADER_LEN = 7;
 
-            var result = false;
             if (DataStream.Count >= 5)
                 using (Reader Reader = new Reader(DataStream.ToArray()))
                 {

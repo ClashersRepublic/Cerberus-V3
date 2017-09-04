@@ -1,4 +1,5 @@
-﻿using Magic.ClashOfClans.Network.Messages.Server;
+﻿using Magic.ClashOfClans.Extensions.Binary;
+using Magic.ClashOfClans.Network.Messages.Server;
 
 namespace Magic.ClashOfClans.Network.Messages.Client
 {
@@ -6,7 +7,7 @@ namespace Magic.ClashOfClans.Network.Messages.Client
     {
         internal int Unknown;
 
-        public News_Seen(Device device) : base(device)
+        public News_Seen(Device device, Reader reader) : base(device, reader)
         {
         }
 
