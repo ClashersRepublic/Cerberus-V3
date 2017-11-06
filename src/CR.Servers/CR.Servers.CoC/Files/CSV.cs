@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using CR.Servers.CoC.Files.CSV_Reader;
+using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.Files.CSV_Reader;
+
+namespace CR.Servers.CoC.Files
+{
+    internal static class CSV
+    {
+        internal static readonly Dictionary<int, string> Gamefiles = new Dictionary<int, string>();
+
+        internal static Gamefiles Tables;
+
+        internal static void Initialize()
+        {
+
+            Tables = new Gamefiles();
+
+            Gamefiles.Add((int)Gamefile.Buildings, @"Gamefiles/logic/buildings.csv");
+            Gamefiles.Add((int)Gamefile.Resources, @"Gamefiles/logic/resources.csv");
+            Gamefiles.Add((int)Gamefile.Building_Classes, @"Gamefiles/logic/building_classes.csv");
+
+            foreach (var File in Gamefiles)
+            {
+                if (new FileInfo(File.Value).Exists)
+                {
+                    Tables.Initialize(new Table(File.Value), File.Key);
+                }
+                else
+                {
+                    throw new FileNotFoundException($"{File.Value} does not exist!");
+                }
+            }
+
+            foreach (var table in Tables.DataTables.Values)
+            {
+                foreach (var data in table.Datas)
+                {
+                    data.Process();
+                }
+            }
+
+            Console.WriteLine(Gamefiles.Count + " CSV Files loaded and stored in memory.");
+        }
+    }
+}
