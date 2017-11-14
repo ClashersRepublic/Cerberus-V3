@@ -18,7 +18,7 @@ namespace CR.Servers.CoC.Logic
 
         }
 
-        public UnitItem(Data Data, int Count, int Level) : base(Data, Count)
+        public UnitItem(int Data, int Count, int Level) : base(Data, Count)
         {
             this.Level = Level;
         }

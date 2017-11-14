@@ -11,6 +11,7 @@ using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Mode;
 using CR.Servers.CoC.Packets;
 using CR.Servers.CoC.Packets.Cryptography;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Library;
@@ -26,6 +27,7 @@ namespace CR.Servers.CoC.Logic
         internal DeviceInfo Info;
         internal GameMode GameMode;
         internal DateTime LastGlobalChatEntry;
+        internal readonly Keep_Alive_Ok KeepAliveOk;
 
         internal Account Account;
 
@@ -44,6 +46,7 @@ namespace CR.Servers.CoC.Logic
         {
             this.Socket = Socket;
             this.GameMode = new GameMode(this);
+            this.KeepAliveOk = new Keep_Alive_Ok(this);
         }
 
         internal Device(Socket Socket, Token Token) : this(Socket)

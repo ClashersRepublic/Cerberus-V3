@@ -26,7 +26,10 @@ namespace CR.Servers.CoC.Files
             Gamefiles.Add((int)Gamefile.Traps, @"Gamefiles/logic/traps.csv");
             Gamefiles.Add((int)Gamefile.Building_Classes, @"Gamefiles/logic/building_classes.csv");
             Gamefiles.Add((int)Gamefile.Globals, @"Gamefiles/logic/globals.csv");
+            Gamefiles.Add((int)Gamefile.Experience_Levels, @"Gamefiles/logic/experience_levels.csv");
             Gamefiles.Add((int)Gamefile.Townhall_Levels, @"Gamefiles/logic/townhall_levels.csv");
+            Gamefiles.Add((int)Gamefile.Npcs, @"Gamefiles/logic/npcs.csv");
+            Gamefiles.Add((int)Gamefile.Missions, @"Gamefiles/logic/missions.csv");
             Gamefiles.Add((int)Gamefile.Variables, @"Gamefiles/logic/variables.csv");
 
             foreach (var File in Gamefiles)

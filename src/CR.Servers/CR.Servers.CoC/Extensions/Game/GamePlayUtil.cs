@@ -1,9 +1,13 @@
-﻿using CR.Servers.CoC.Files.CSV_Logic.Logic;
+﻿using System;
+using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Enums;
+using Math = CR.Servers.CoC.Logic.Math;
 
 namespace CR.Servers.CoC.Extensions.Game
 {
-    internal class GamePlayUtil
+    internal static class GamePlayUtil
     {
         public static int TimeToXp(int BuildTime)
         {
@@ -210,6 +214,67 @@ namespace CR.Servers.CoC.Extensions.Game
             }
 
             return 0;
+        }
+
+        public static bool Mission_Finish(this Player Player, int Global_ID)
+        {
+            if (Player.Tutorials.FindIndex(M => M == Global_ID) < 0)
+            {
+                var Mission = CSV.Tables.Get(Gamefile.Missions).GetDataWithID(Global_ID) as MissionData;
+
+#if DEBUG
+                Console.WriteLine($"Mission received {Mission.Name} marked as finished");
+#endif
+                if (!string.IsNullOrEmpty(Mission.RewardResource))
+                {
+                    var CSV_Resources =
+                        CSV.Tables.Get(Gamefile.Resources).GetData(Mission.RewardResource) as ResourceData;
+
+                    Player.Resources.Plus(CSV_Resources.GlobalId, Mission.RewardResourceCount);
+                }
+                if (!string.IsNullOrEmpty(Mission.RewardTroop))
+                {
+                    var CSV_Characters =
+                        CSV.Tables.Get(Gamefile.Characters).GetData(Mission.RewardTroop) as CharacterData;
+
+#if DEBUG
+                    Console.WriteLine($"Player received {CSV_Characters.Name} as mission rewards");
+#endif
+                    Player.Add_Unit(CSV_Characters.GlobalId, Mission.RewardTroopCount);
+                }
+
+                if (!string.IsNullOrEmpty(Mission.Dependencies))
+                {
+                    var DependenciesID = CSV.Tables.Get(Gamefile.Missions).GetData(Mission.Dependencies).GlobalId;
+                    if (Player.Tutorials.FindIndex(M => M == DependenciesID) < 0)
+                    {
+#if DEBUG
+                        Console.WriteLine($"Mission Dependencies {(CSV.Tables.Get(Gamefile.Missions).GetDataWithID(DependenciesID) as MissionData).Name} marked as finished");
+#endif
+                        Mission_Finish(Player, DependenciesID);
+                    }
+                }
+                if (!string.IsNullOrEmpty(Mission.AttackNPC))
+                {
+                    var CSV_Npcs = CSV.Tables.Get(Gamefile.Npcs).GetData(Mission.AttackNPC) as NpcData;
+                    
+                    if (Player.NpcMapProgress.FindIndex(N => N.Data == CSV_Npcs.GlobalId) > -1)
+                    {
+                        Player.Resources.Plus(Resource.Gold, CSV_Npcs.Gold);
+                        Player.Resources.Plus(Resource.Elixir, CSV_Npcs.Elixir);
+                    }
+                }
+                if (Mission.ChangeName)
+                {
+                    Player.Resources.Plus(Resource.Gold, 900);
+                    Player.Resources.Plus(Resource.Elixir, 400);
+                }
+
+                Player.AddExperience(Mission.RewardXP);
+                Player.Tutorials.Add(Mission.GlobalId);
+                return true;
+            }
+            return false;
         }
     }
 }

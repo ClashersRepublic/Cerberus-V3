@@ -10,17 +10,17 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Item
     {
-        [JsonProperty] internal Data Data;
+        [JsonProperty] internal int Data;
         [JsonProperty] internal int Count;
 
-        internal virtual int Checksum => (Data?.GlobalId ?? 0) + this.Count;
+        internal virtual int Checksum => Data + this.Count;
 
         public Item()
         {
 
         }
 
-        public Item(Data Data, int Count)
+        public Item(int Data, int Count)
         {
             this.Data = Data;
             this.Count = Count;
@@ -28,19 +28,19 @@ namespace CR.Servers.CoC.Logic
 
         internal virtual void Decode(Reader Reader)
         {
-            this.Data = Reader.ReadData();
+            this.Data = Reader.ReadInt32();
             this.Count = Reader.ReadInt32();
         }
 
         internal virtual void Encode(List<byte> Packet)
         {
-            Packet.AddInt(this.Data.GlobalId);
+            Packet.AddInt(this.Data);
             Packet.AddInt(this.Count);
         }
 
         internal virtual void Load(JToken Token)
         {
-            JsonHelper.GetJsonData(Token, "id", out this.Data);
+            JsonHelper.GetJsonNumber(Token, "id", out this.Data);
             JsonHelper.GetJsonNumber(Token, "cnt", out this.Count);
         }
 
@@ -48,10 +48,7 @@ namespace CR.Servers.CoC.Logic
         {
             JObject Json = new JObject();
 
-            if (this.Data != null)
-            {
-                Json.Add("id", this.Data.GlobalId);
-            }
+            Json.Add("id", this.Data);
 
             Json.Add("cnt", this.Count);
 

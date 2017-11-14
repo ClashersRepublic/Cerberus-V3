@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
@@ -30,7 +31,18 @@ namespace CR.Servers.CoC.Logic
             // DataSlots.
         }
 
+
         internal void Add(Data Data, int Count)
+        {
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
+            {
+                Current.Count += Count;
+            }
+            else
+                base.Add(new Item(Data.GlobalId, Count));
+        }
+
+        internal void Add(int Data, int Count)
         {
             if (this.TryGet(T => T.Data == Data, out Item Current))
             {
@@ -52,27 +64,27 @@ namespace CR.Servers.CoC.Logic
 
         internal Item GetByData(Data Data)
         {
-            return this.Find(T => T.Data == Data);
+            return this.Find(T => T.Data == Data.GlobalId);
         }
 
         internal Item GetByGlobalId(int Id)
         {
-            return this.Find(T => T.Data.GlobalId == Id);
+            return this.Find(T => T.Data == Id);
         }
 
         internal int GetCountByData(Data Data)
         {
-            return this.Find(T => T.Data == Data)?.Count ?? 0;
+            return this.Find(T => T.Data == Data.GlobalId)?.Count ?? 0;
         }
 
         internal int GetCountByGlobalId(int Id)
         {
-            return this.Find(T => T.Data.GlobalId == Id)?.Count ?? 0;
+            return this.Find(T => T.Data == Id)?.Count ?? 0;
         }
 
         internal void Remove(Data Data, int Count)
         {
-            if (this.TryGet(T => T.Data == Data, out Item Current))
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
             {
                 Current.Count -= Count;
             }
@@ -102,17 +114,22 @@ namespace CR.Servers.CoC.Logic
 
         internal void Set(int Id, int Count)
         {
-            this.Set(CSV.Tables.GetWithGlobalId(Id), Count);
-        }
-
-        internal void Set(Data Data, int Count)
-        {
-            if (this.TryGet(T => T.Data == Data, out Item Current))
+            if (this.TryGet(T => T.Data == Id, out Item Current))
             {
                 Current.Count = Count;
             }
             else
-                base.Add(new Item(Data, Count));
+                base.Add(new Item(Id, Count));
+        }
+
+        internal void Set(Data Data, int Count)
+        {
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
+            {
+                Current.Count = Count;
+            }
+            else
+                base.Add(new Item(Data.GlobalId, Count));
         }
 
         internal void Set(Item Item)

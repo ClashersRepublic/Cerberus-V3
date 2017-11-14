@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CR.Servers.CoC.Core;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -12,14 +13,14 @@ namespace CR.Servers.CoC.Logic
 
         public WorkerManager()
         {
-            this.GameObjects = new List<GameObject>(5);
+            this.GameObjects = new List<GameObject>();
         }
 
         internal void AllocateWorker(GameObject GameObject)
         {
             if (this.GameObjects.Contains(GameObject))
             {
-                //Logging.Error(this.GetType(), "AllocateWorker() called twice for same target!");
+                Logging.Error(this.GetType(), "AllocateWorker() called twice for same target!");
                 return;
             }
 
@@ -30,7 +31,7 @@ namespace CR.Servers.CoC.Logic
         {
             if (!this.GameObjects.Remove(GameObject))
             {
-                //Logging.Error(this.GetType(), "DeallocateWorker() - GameObject is not in array!");
+                Logging.Error(this.GetType(), "DeallocateWorker() - GameObject is not in array!");
             }
         }
 
@@ -52,7 +53,7 @@ namespace CR.Servers.CoC.Logic
 
                             if (!Building.Constructing)
                             {
-                                //Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to building with remaining construction time 0");
+                                Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to building with remaining construction time 0");
                                 break;
                             }
 
@@ -67,7 +68,7 @@ namespace CR.Servers.CoC.Logic
 
                             if (!Obstacle.ClearingOnGoing)
                             {
-                                //Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
+                                Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
                                 break;
                             }
 

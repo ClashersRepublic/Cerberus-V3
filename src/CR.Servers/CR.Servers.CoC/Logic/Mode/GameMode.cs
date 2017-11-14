@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Logic.Mode.Enums;
+﻿using CR.Servers.CoC.Logic.Mode.Enums;
 
 namespace CR.Servers.CoC.Logic.Mode
 {
@@ -32,8 +27,6 @@ namespace CR.Servers.CoC.Logic.Mode
 
         internal void LoadHomeState(Home Home, Player Player)
         {
-            Console.WriteLine(Home.HomeJSON);
-
             this.Time = new Time();
             this.State = State.Home;
 
@@ -42,49 +35,6 @@ namespace CR.Servers.CoC.Logic.Mode
             //this.Level.FastForwardTime(Player.s);
             this.Level.Process();
         }
-        /*
-
-        internal void LoadNpcAttackState(PlayerBase NpcPlayer, Home Home, PlayerBase VisitorPlayer, int Timestamp, int SecondsSinceLastSave)
-        {
-            if (this.State <= 0)
-            {
-                if (this.Level != null)
-                {
-                    this.Level = null;
-                }
-
-                this.Time = new Time();
-                this.State = State.Attack;
-                this.Timestamp = Timestamp;
-
-                this.Level = new Level(this);
-                this.Level.SetPlayer(NpcPlayer);
-                this.Level.SetHome(Home);
-                this.Level.SetVistorPlayer(VisitorPlayer);
-                this.Level.FastForwardTime(SecondsSinceLastSave);
-                this.Level.LoadingFinished();
-            }
-        }
-
-        internal void EndDefendState()
-        {
-            if (this.State == State.Defend)
-            {
-                this.State = State.Home;
-                this.Level.DefenseStateEnded();
-            }
-            else
-                Logging.Error(this.GetType(), "EndDefendState called from invalid state");
-        }
-        internal void StartDefendState(Player Attacker)
-        {
-            if (this.State == State.Home || this.State == State.Defend)
-            {
-                this.State = State.Defend;
-                this.Level.DefenseStateStarted(Attacker);
-            }
-            else
-                Logging.Error(this.GetType(), "StartDefendState called from invalid state");
-        }*/
+      
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CR.Servers.Library.ZLib;
 
 namespace CR.Servers.Extensions.List
 {
@@ -206,7 +207,7 @@ namespace CR.Servers.Extensions.List
                 _Packet.AddInt(-1);
             else
             {
-                byte[] Compressed = /*ZlibStream.CompressString(_Value)*/ new byte[2];
+                byte[] Compressed = ZlibStream.CompressString(_Value);
 
                 _Packet.AddInt(Compressed.Length + 4);
                 _Packet.AddIntEndian(_Value.Length);

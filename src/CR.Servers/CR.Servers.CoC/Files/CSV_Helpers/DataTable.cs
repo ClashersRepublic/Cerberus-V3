@@ -59,8 +59,17 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Globals:
                     _Data = new GlobalData(_Row, this);
                     break;
+                case Gamefile.Experience_Levels:
+                    _Data = new ExperienceLevelData(_Row, this);
+                    break;
                 case Gamefile.Townhall_Levels:
                     _Data = new TownhallLevelData(_Row, this);
+                    break;
+                case Gamefile.Npcs:
+                    _Data = new NpcData(_Row, this);
+                    break;
+                case Gamefile.Missions:
+                    _Data = new MissionData(_Row, this);
                     break;
                 case Gamefile.Variables:
                     _Data = new VariableData(_Row, this);

@@ -21,6 +21,7 @@ namespace CR.Servers.CoC.Core
             Factory.Initialize();
             CSV.Initialize();
             LevelFile.Initialize();
+            Game_Events.Initialize();
 
 
             Globals.Initialize();

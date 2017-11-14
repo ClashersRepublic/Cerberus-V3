@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.Extensions.List;
@@ -10,13 +11,13 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Home
     {
+
+        [JsonProperty("home_id_high")] internal int HighID;
+        [JsonProperty("home_id_low")] internal int LowID;
+        [JsonProperty("level")] internal JToken LastSave;
+
         internal Level Level;
-
-        internal int HighID;
-        internal int LowID;
-
-        internal JToken LastSave;
-
+        internal DateTime Timestamp = DateTime.UtcNow;
         internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
 
         public Home()
@@ -32,6 +33,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void Encode(List<byte> Packet)
         {
+            Packet.AddInt((int)TimeUtils.ToUnixTimestamp(Timestamp));
             Packet.AddInt(this.HighID);
             Packet.AddInt(this.LowID);
 
@@ -40,7 +42,7 @@ namespace CR.Servers.CoC.Logic
             Packet.AddInt(365 * 86400);
 
             Packet.AddCompressed(this.HomeJSON.ToString());
-            Packet.AddCompressed("{}");
+            Packet.AddCompressed(Game_Events.Events_Json);
             Packet.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
         }
 
@@ -60,37 +62,7 @@ namespace CR.Servers.CoC.Logic
                 {"level", this.HomeJSON}
             };
 
-
             return Json;
-        }
-    }
-
-    internal class HomeConverter : JsonConverter
-    {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var Home = (Home)value;
-
-            if (Home != null)
-            {
-                Home.Save().WriteTo(writer);
-            }
-            else
-                LevelFile.StartingHome.WriteTo(writer);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            Home Home = (Home)existingValue;
-
-            Home?.Load(JToken.Load(reader));
-
-            return Home;
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(Home);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace CR.Servers.CoC.Logic
 
         internal GameObjectManager GameObjectManager;
         internal WorkerManager WorkerManager;
+        internal WorkerManagerV2 WorkerManagerV2;
         internal ComponentManager ComponentManager;
 
         internal int WidthInTiles => 50;
@@ -64,6 +65,7 @@ namespace CR.Servers.CoC.Logic
 
             this.GameObjectManager = new GameObjectManager(this);
             this.WorkerManager = new WorkerManager();
+            this.WorkerManagerV2 = new WorkerManagerV2();
             this.ComponentManager = new ComponentManager(this);
             /*
             this.CooldownManager = new CooldownManager();
@@ -97,15 +99,11 @@ namespace CR.Servers.CoC.Logic
             this.Home = Home;
             this.Home.Level = this;
 
-            Console.WriteLine(Home.HomeJSON);
-
-            var Token = Home.HomeJSON;
-            Console.WriteLine("Set Home: "+ Token);
+            var Token = Home.LastSave;
             this.GameObjectManager.Load(Token);
             //this.CooldownManager.Load(Token);
             //this.UnitProductionManager.Load(Home.HomeJSON["units"]?["unit_prod"]);
         }
-
 
         internal JObject Battle()
         {
@@ -119,12 +117,18 @@ namespace CR.Servers.CoC.Logic
             return Json;
         }
 
+        internal void Load(JObject Json)
+        {
+            this.GameObjectManager.Load(Json);
+            //this.CooldownManager.Load(Token);
+            //this.UnitProductionManager.Load(Home.HomeJSON["units"]?["unit_prod"]);
+        }
         internal JObject Save()
         {
             JObject Json = new JObject();
 
             Json.Add("exp_ver", 1);
-
+            
             this.GameObjectManager.Save(Json);
             //this.CooldownManager.Save(Json);
 
@@ -139,9 +143,6 @@ namespace CR.Servers.CoC.Logic
             return Json;
         }
 
-        /// <summary>
-        /// Ticks this instance.
-        /// </summary>
         internal void Tick()
         {
             this.GameObjectManager.Tick();

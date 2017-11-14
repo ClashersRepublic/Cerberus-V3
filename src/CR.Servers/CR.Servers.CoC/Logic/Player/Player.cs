@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.Extensions.List;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -39,6 +42,8 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal int Loses;
         [JsonProperty] internal int Games;
 
+
+        [JsonProperty] internal List<int> Tutorials = new List<int>();
 
         [JsonProperty] internal bool Locked;
 
@@ -117,6 +122,128 @@ namespace CR.Servers.CoC.Logic
             this.Alliance = Alliance;
             this.AllianceMember = Member;
         }*/
+        internal void Encode(List<byte> _Packet)
+        {
+            _Packet.AddLong(this.UserId);
+            _Packet.AddLong(this.UserId);
+
+            _Packet.AddBool(false); //Clan
+            _Packet.AddInt(0); //Legendary_Trophies
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+
+
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0); //Builder base Versus Battle Win
+            _Packet.AddInt(0); //5
+            _Packet.AddInt(0); //8
+
+            _Packet.AddInt(this.League);
+            _Packet.AddInt(this.CastleLevel);
+            _Packet.AddInt(this.CastleTotalCapacity);
+            _Packet.AddInt(this.CastleUsedCapacity);
+            _Packet.AddInt(this.CastleTotalSpellCapacity);
+            _Packet.AddInt(this.CastleUsedSpellCapacity);
+
+            _Packet.AddInt(this.TownHallLevel);
+            _Packet.AddInt(this.TownHallLevel2);
+
+
+            _Packet.AddString(this.Name);
+            _Packet.AddString(null);
+
+            _Packet.AddInt(this.ExpLevel);
+            _Packet.AddInt(this.ExpPoints);
+            _Packet.AddInt(this.Diamonds);
+            _Packet.AddInt(this.FreeDiamonds);
+
+            _Packet.AddInt(0); // 1200
+            _Packet.AddInt(0); // 60
+
+            _Packet.AddInt(this.Score);
+            _Packet.AddInt(this.DuelScore);
+
+            _Packet.AddInt(this.Wins);
+            _Packet.AddInt(this.Loses);
+            _Packet.AddInt(0); // Def Wins
+            _Packet.AddInt(0); // Def Loses
+
+            _Packet.AddInt(0); //WarGold
+            _Packet.AddInt(0); //WarElixir
+            _Packet.AddInt(0); //WarDarkElixir
+
+            _Packet.AddByte(this.ChangeNameCount); //Name changed count
+
+            _Packet.AddInt(this.ChangeNameCount > 1 ? 1 : 0); //Name Changed
+
+            _Packet.AddInt(6900); //6900
+            _Packet.AddInt(0);
+            _Packet.AddInt(this.ClanWarPreference);
+
+            _Packet.AddInt(0);
+            _Packet.AddInt(0); // Total Attack with shield
+
+            _Packet.AddBool(false); //0
+
+            this.ResourceCaps.Encode(_Packet);
+            this.Resources.Encode(_Packet);
+            this.Units.Encode(_Packet);
+            this.Spells.Encode(_Packet);
+
+            this.UnitUpgrades.Encode(_Packet);
+            this.SpellUpgrades.Encode(_Packet);
+            this.HeroUpgrades.Encode(_Packet);
+
+            this.HeroHealth.Encode(_Packet);
+            this.HeroStates.Encode(_Packet);
+
+            this.AllianceUnits.Encode(_Packet);
+
+            _Packet.AddInt(0);
+            /* _Packet.AddInt(Tutorials.Count);
+             foreach (var Tutorial in Tutorials)
+                 _Packet.AddInt(Tutorial);*/
+
+            _Packet.AddInt(0); //Achievements
+            _Packet.AddInt(0); //AchievementProgress
+
+            this.NpcMapProgress.Encode(_Packet);
+            this.NpcLootedGold.Encode(_Packet);
+            this.NpcLootedElixir.Encode(_Packet);
+
+            this.Variables.Encode(_Packet);
+
+            _Packet.AddInt(0); // Hero Modes
+            _Packet.AddInt(0); // UnitPreset1
+            _Packet.AddInt(0); // UnitPreset2
+            _Packet.AddInt(0); // UnitPreset3
+            _Packet.AddInt(0); // PreviousArmySize
+            _Packet.AddInt(0); // UnitCounterForEvent
+            _Packet.AddInt(0); // Units Village2
+            _Packet.AddInt(0); // Units Village2 new
+            //_Packet.AddInt(0);
+
+
+        }
 
         internal void Save(JObject Json)
         {
@@ -183,6 +310,17 @@ namespace CR.Servers.CoC.Logic
                 this.FreeDiamonds = 0;
             }
         }
+
+        internal void Add_Unit(int Data, int Count)
+        {
+            var _Index = Units.FindIndex(U => U.Data == Data);
+
+            if (_Index > -1)
+                Units[_Index].Count += Count;
+            else
+                Units.Add(new Item(Data, Count));
+        }
+
 
         public override string ToString()
         {

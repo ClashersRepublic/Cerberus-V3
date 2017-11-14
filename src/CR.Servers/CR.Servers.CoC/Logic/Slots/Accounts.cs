@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Logic.Slots
             TypeNameHandling            = TypeNameHandling.Auto,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,
             /*PreserveReferencesHandling  = PreserveReferencesHandling.All,*/   ReferenceLoopHandling   = ReferenceLoopHandling.Ignore,
-            Converters                  = new List<JsonConverter> { new DataConverter() },
+            Converters                  = new List<JsonConverter> { new DataConverter(),  },
             Formatting                  = Formatting.None
         };
 
@@ -104,9 +104,10 @@ namespace CR.Servers.CoC.Logic.Slots
             return new Account(Constants.ServerId, LowID, Player, Home);
         }
 
-        internal Account LoadAccount(int HighID, int LowID, DBMS Database = Constants.Database)
+        internal Account LoadAccount(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
         {
-            if (!this.TryGetValue((long)HighID << 32 | (uint)LowID, out Account Account))
+            long ID = (long)HighID << 32 | (uint)LowID;
+            if (!this.TryGetValue(ID, out Account Account))
             {
                 switch (Database)
                 {
@@ -116,8 +117,25 @@ namespace CR.Servers.CoC.Logic.Slots
 
                         if (Data != null)
                         {
-                            var Player = this.LoadPlayerFromSave(Data.Player.ToJson());
-                            var Home = this.LoadHomeFromSave(Data.Home.ToJson());
+                            if (!this.Players.TryGetValue(ID, out Player Player))
+                            {
+                                Player = this.LoadPlayerFromSave(Data.Player.ToJson());
+
+                                if (Store)
+                                {
+                                    this.Add(Player);
+                                }
+                            }
+
+                            if (!this.Homes.TryGetValue(ID, out Home Home))
+                            {
+                                Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                                if (Store)
+                                {
+                                    this.Add(Home);
+                                }
+                            }
 
                             if (Player == null || Home == null)
                             {
@@ -126,7 +144,8 @@ namespace CR.Servers.CoC.Logic.Slots
                             }
 
                             Account = new Account(HighID, LowID, Player, Home);
-                        }
+                            this.TryAdd(ID, Account);
+                            }
 
                         break;
                     }
@@ -136,10 +155,9 @@ namespace CR.Servers.CoC.Logic.Slots
             return Account;
         }
 
-        internal async Task<Account> LoadAccountAsync(int HighID, int LowID, string PassToken, DBMS Database = Constants.Database, bool Store = true)
+        internal async Task<Account> LoadAccountAsync(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
         {
             long ID = (long)HighID << 32 | (uint)LowID;
-
             if (!this.TryGetValue((long)HighID << 32 | (uint)LowID, out Account Account))
             {
                 switch (Database)
@@ -170,17 +188,15 @@ namespace CR.Servers.CoC.Logic.Slots
                                 }
                             }
 
-                            Account.HighId = Data.HighId;
-                            Account.LowId = Data.LowId;
-                            Account.Player = Player;
-                            Account.Home = Home;
 
                             if (Player == null || Home == null)
                             {
-                                Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
+                                Logging.Error(this.GetType(),
+                                    "Unable to load account id:" + HighID + "-" + LowID + ".");
                                 return Account;
                             }
 
+                            Account = new Account(HighID, LowID, Player, Home);
                             this.TryAdd(ID, Account);
                         }
 

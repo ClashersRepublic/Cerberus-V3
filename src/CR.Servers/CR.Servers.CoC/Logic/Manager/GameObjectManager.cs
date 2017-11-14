@@ -36,8 +36,6 @@ namespace CR.Servers.CoC.Logic
 
                 for (var i = 0; i < 9; i++)
                 {
-                    Console.WriteLine($"Object {i} of Village 0 Count : {this.GameObjects[i][0].Count}");
-                    Console.WriteLine($"Object {i} of Village 1 Count : {this.GameObjects[i][1].Count}");
                     Checksum += this.GameObjects[i][0].Count;
                     Checksum += this.GameObjects[i][1].Count;
                 }
@@ -47,13 +45,11 @@ namespace CR.Servers.CoC.Logic
                 {
                     for (var j = 0; j < gameObject[0].Count; j++)
                     {
-                        Console.WriteLine($"Item {j} of object {c} at village 0 Count : {gameObject[0][j].Checksum}");
                         Checksum += gameObject[0][j].Checksum;
                     }
 
                     for (var j = 0; j < gameObject[1].Count; j++)
                     {
-                        Console.WriteLine($"Item {j} of object {c} at village 1 Count : {gameObject[1][j].Checksum}");
                         Checksum += gameObject[1][j].Checksum;
                     }
                     c++;
@@ -92,9 +88,25 @@ namespace CR.Servers.CoC.Logic
         {
             int GType = GameObject.Type;
 
-            if (GType > 0)
+            if (GType == 0)
             {
+                Building Building = (Building)GameObject;
+                BuildingData Data = Building.BuildingData;
 
+                if (Data.IsTownHall)
+                {
+                    this.TownHall = Building;
+                }
+
+                if (Data.IsTownHall2)
+                {
+                    this.TownHall2 = Building;
+                }
+
+                if (Data.IsWorker)
+                {
+                    this.Level.WorkerManager.WorkerCount++;
+                }
             }
             else
             {

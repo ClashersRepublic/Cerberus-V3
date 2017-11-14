@@ -139,6 +139,7 @@
     <Compile Include="Files\CSV_Logic\Logic\ExperienceLevelData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\GlobalData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\LocaleData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\MissionData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\NpcData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ObstacleData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ResourceData.cs" />
@@ -146,9 +147,11 @@
     <Compile Include="Files\CSV_Logic\Logic\TrapData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\VariableData.cs" />
     <Compile Include="Files\CSV_Reader\Gamefiles.cs" />
+    <Compile Include="Files\Game_Events.cs" />
     <Compile Include="Files\LevelFile.cs" />
     <Compile Include="Logic\Device.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
+    <Compile Include="Logic\Enums\Resource.cs" />
     <Compile Include="Logic\Enums\Role.cs" />
     <Compile Include="Logic\Enums\Variable.cs" />
     <Compile Include="Logic\GameObject\Building.cs" />
@@ -175,11 +178,14 @@
     <Compile Include="Logic\Math\Vector2.cs" />
     <Compile Include="Logic\Mode\Enums\State.cs" />
     <Compile Include="Logic\Mode\GameMode.cs" />
+    <Compile Include="Logic\Player\Items\Event.cs" />
+    <Compile Include="Logic\Player\Items\Functions.cs" />
     <Compile Include="Logic\Player\Items\Item.cs" />
     <Compile Include="Logic\Player\Items\UnitItem.cs" />
     <Compile Include="Logic\Player\Player.cs" />
     <Compile Include="Logic\Player\PlayerBase.cs" />
     <Compile Include="Logic\Player\Slots\AllianceUnitSlots.cs" />
+    <Compile Include="Logic\Player\Slots\Calendar.cs" />
     <Compile Include="Logic\Player\Slots\DataSlots.cs" />
     <Compile Include="Logic\Player\Slots\NpcMapSlots.cs" />
     <Compile Include="Logic\Player\Slots\ResourceSlots.cs" />
@@ -190,6 +196,10 @@
     <Compile Include="Logic\Slots\Accounts.cs" />
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
+    <Compile Include="Packets\Command.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
+    <Compile Include="Packets\Commands\Client\New_Seen.cs" />
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
     <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
@@ -199,10 +209,14 @@
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
+    <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_OK.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_OK.cs" />
+    <Compile Include="Packets\Messages\Client\Home\Keep_Alive.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Keep_Alive_Ok.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Own_Home_Data.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -631,6 +645,7 @@
     <None Include="Gamefiles\logic\war.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Logic\Manager\WorkerManagerV2.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

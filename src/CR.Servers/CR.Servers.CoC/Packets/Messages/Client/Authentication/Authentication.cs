@@ -1,10 +1,12 @@
-﻿using CR.Servers.CoC.Core;
+﻿using System.Threading.Tasks;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 
@@ -108,7 +110,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             {
                 var Account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
 
-                if (Account.Player != null && Account.Home != null)
+                if (Account?.Player != null && Account?.Home != null)
                 {
                     if (string.Equals(this.Token, Account.Player.Token))
                     {
@@ -187,11 +189,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             Device.Account = account;
             Device.GameMode.LoadHomeState(account.Home, account.Player);
 
-
             if (Device.ReceiveDecrypter.IsRC4)
                 new SessionKey(this.Device).Send();
 
             new Authentication_OK(this.Device).Send();
+            new Own_Home_Data(this.Device).Send();
         }
     }
 }

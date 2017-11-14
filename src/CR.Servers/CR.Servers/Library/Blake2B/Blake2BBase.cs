@@ -1,4 +1,4 @@
-﻿namespace GL.Servers.Library.Blake2B
+﻿namespace CR.Servers.Library.Blake2B
 {
     using System.Security.Cryptography;
 

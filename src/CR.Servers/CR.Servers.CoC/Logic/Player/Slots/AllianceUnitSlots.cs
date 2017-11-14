@@ -31,6 +31,16 @@ namespace CR.Servers.CoC.Logic
 
         internal void Add(Data Data, int Count, int Level)
         {
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
+            {
+                Current.Count += Count;
+            }
+            else
+                base.Add(new UnitItem(Data.GlobalId, Count, Level));
+        }
+
+        internal void Add(int Data, int Count, int Level)
+        {
             if (this.TryGet(T => T.Data == Data && T.Level == Level, out UnitItem Current))
             {
                 Current.Count += Count;
@@ -51,27 +61,27 @@ namespace CR.Servers.CoC.Logic
 
         internal Item GetByData(Data Data, int Level)
         {
-            return this.Find(T => T.Data == Data && T.Level == Level);
+            return this.Find(T => T.Data == Data.GlobalId && T.Level == Level);
         }
 
         internal Item GetByGlobalId(int Id, int Level)
         {
-            return this.Find(T => T.Data.GlobalId == Id && T.Level == Level);
+            return this.Find(T => T.Data == Id && T.Level == Level);
         }
 
         internal int GetCountByData(Data Data, int Level)
         {
-            return this.Find(T => T.Data == Data && T.Level == Level)?.Count ?? 0;
+            return this.Find(T => T.Data == Data.GlobalId && T.Level == Level)?.Count ?? 0;
         }
 
         internal int GetCountByGlobalId(int Id, int Level)
         {
-            return this.Find(T => T.Data.GlobalId == Id && T.Level == Level)?.Count ?? 0;
+            return this.Find(T => T.Data == Id && T.Level == Level)?.Count ?? 0;
         }
 
         internal void Remove(Data Data, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Data && T.Level == Level, out UnitItem Current))
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
             {
                 Current.Count -= Count;
             }
@@ -95,17 +105,22 @@ namespace CR.Servers.CoC.Logic
 
         internal void Set(int Id, int Count, int Level)
         {
-            this.Set(CSV.Tables.GetWithGlobalId(Id), Count, Level);
-        }
-
-        internal void Set(Data Data, int Count, int Level)
-        {
-            if (this.TryGet(T => T.Data == Data && T.Level == Level, out UnitItem Current))
+            if (this.TryGet(T => T.Data == Id && T.Level == Level, out UnitItem Current))
             {
                 Current.Count = Count;
             }
             else
-                this.Add(new UnitItem(Data, Count, Level));
+                this.Add(new UnitItem(Id, Count, Level));
+        }
+
+        internal void Set(Data Data, int Count, int Level)
+        {
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
+            {
+                Current.Count = Count;
+            }
+            else
+                this.Add(new UnitItem(Data.GlobalId, Count, Level));
         }
 
         internal void Set(UnitItem Item)

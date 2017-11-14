@@ -16,12 +16,12 @@ using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Mode;
+using CR.Servers.CoC.Logic.Slots;
 using CR.Servers.Core.Consoles;
 using CR.Servers.Extensions;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Bson.IO;
-using MongoDB.Driver;
+using Newtonsoft.Json;
+
 
 namespace CR.Servers.CoC
 {

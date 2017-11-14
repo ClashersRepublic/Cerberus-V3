@@ -28,7 +28,7 @@ namespace CR.Servers.CoC.Logic
                 {
                     if (this.Units[i].Count > 0)
                     {
-                        Data Data = this.Units[i].Data;
+                        Data Data = CSV.Tables.GetWithGlobalId(this.Units[i].Data);
 
                         if (Data.GetDataType() == 4)
                         {
@@ -55,14 +55,14 @@ namespace CR.Servers.CoC.Logic
             {
                 if (this.CanAddUnit(Data))
                 {
-                    Item Unit = this.Units.Find(T => T.Data == Data);
+                    Item Unit = this.Units.Find(T => T.Data == Data.GlobalId);
 
                     if (Unit != null)
                     {
                         ++Unit.Count;
                     }
                     else
-                        this.Units.Add(new Item(Data, 1));
+                        this.Units.Add(new Item(Data.GlobalId, 1));
                 }
                // else
                     //Logging.Info(this.GetType(), "AddUnit called and storage is full.");
@@ -117,7 +117,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (ID != 0)
                     {
-                        this.Units.Add(new Item(CSV.Tables.GetWithGlobalId(ID), Count));
+                        this.Units.Add(new Item(ID, Count));
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace CR.Servers.CoC.Logic
             {
                 Units.Add(new JArray
                 {
-                    unit.Data?.GlobalId ?? 0,
+                    unit.Data,
                     unit.Count
                 });
             }

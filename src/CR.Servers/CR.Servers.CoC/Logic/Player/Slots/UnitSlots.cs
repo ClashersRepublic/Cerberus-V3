@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Files.CSV_Logic.Logic;
+﻿using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -27,7 +28,8 @@ namespace CR.Servers.CoC.Logic
 
             this.ForEach(Slot =>
             {
-                Total += Slot.Count * ((CharacterData)Slot.Data).HousingSpace;
+                var Data = CSV.Tables.GetWithGlobalId(Slot.Data);
+                Total += Slot.Count * (Data.GetDataType() == 4 ? ((CharacterData)Data).HousingSpace : 0);
             });
 
             return Total;
