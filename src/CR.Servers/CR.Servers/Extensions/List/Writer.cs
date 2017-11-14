@@ -41,10 +41,10 @@ namespace CR.Servers.Extensions.List
             _Packet.AddRange(BitConverter.GetBytes(_Value));
         }
 
-        public static void AddLong(this List<byte> _Packet, long _Value, int _Skip)
+        /*public static void AddLong(this List<byte> _Packet, long _Value, int _Skip)
         {
             _Packet.AddRange(BitConverter.GetBytes(_Value).Reverse().Skip(_Skip));
-        }
+        }*/
 
         public static void AddBool(this List<byte> _Packet, bool _Value)
         {
@@ -187,12 +187,17 @@ namespace CR.Servers.Extensions.List
             _Packet.AddRange(BitConverter.GetBytes(_Value).Reverse());
         }
 
+        public static void AddShort(this List<byte> _Packet, short _Value)
+        {
+            _Packet.AddRange(BitConverter.GetBytes(_Value).Reverse());
+        }
+
         public static void AddUInt24(this List<byte> _Packet, uint _Value)
         {
             _Packet.AddRange(BitConverter.GetBytes(_Value).Reverse().Skip(1));
         }
 
-       /*public static void AddCompressed(this List<byte> _Packet, string _Value, bool addbool = true)
+       public static void AddCompressed(this List<byte> _Packet, string _Value, bool addbool = true)
         {
             if (addbool)
                 _Packet.AddBool(true);
@@ -201,13 +206,13 @@ namespace CR.Servers.Extensions.List
                 _Packet.AddInt(-1);
             else
             {
-                byte[] Compressed = ZlibStream.CompressString(_Value);
+                byte[] Compressed = /*ZlibStream.CompressString(_Value)*/ new byte[2];
 
                 _Packet.AddInt(Compressed.Length + 4);
                 _Packet.AddIntEndian(_Value.Length);
                 _Packet.AddRange(Compressed);
             }
-        }*/
+        }
 
         public static void AddHexa(this List<byte> _Packet, string _Value)
         {
@@ -239,7 +244,7 @@ namespace CR.Servers.Extensions.List
             }
         }*/
 
-        internal static void AddByteArray(this List<byte> _Packet, byte[] data)
+        public static void AddByteArray(this List<byte> _Packet, byte[] data)
         {
             if (data == null)
                 _Packet.AddInt(-1);

@@ -17,5 +17,6 @@ namespace CR.Servers.Files.CSV_Reader
         public Table Table { get; }
 
         public string Name { get; }
+
     }
 }

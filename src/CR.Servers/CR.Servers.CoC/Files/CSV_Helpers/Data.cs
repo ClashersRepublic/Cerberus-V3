@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CR.Servers.Files.CSV_Data;
 using CR.Servers.Files.CSV_Reader;
+using Newtonsoft.Json;
 
 namespace CR.Servers.CoC.Files.CSV_Helpers
 {
@@ -13,29 +14,11 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         internal Row Row;
         internal DataTable DataTable;
 
-        public int GlobalId
-        {
-            get;
-            set;
-        }
+        public int GlobalId { get; set; }
 
-        public int InstanceId
-        {
-            get;
-            set;
-        }
+        public int InstanceId { get; set; }
 
-        public int Type
-        {
-            get;
-            set;
-        }
-
-        public string Name
-        {
-            get;
-            set;
-        }
+        public int Type { get; set; }
 
         internal Data()
         {
@@ -79,7 +62,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                     // Array instance we're going to set the property value to.
                     var array = Array.CreateInstance(arrayType, lvls);
 
-                    var prevStrValue = (string)null;
+                    var prevStrValue = (string) null;
                     for (int j = 0; j < lvls; j++)
                     {
                         var strValue = column.Data[row.Start + j];
@@ -152,6 +135,41 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
 
         internal virtual void Process()
         {
+        }
+    }
+
+    internal class DataConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            Data Data = (Data) value;
+
+            writer.WriteValue(Data?.GlobalId ?? 0);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            int Id = (int) (long) reader.Value;
+
+            if (Id != 0)
+            {
+                Data Data = CSV.Tables.GetWithGlobalId(Id);
+
+                if (objectType == typeof(Data) || Data.GetType() == objectType)
+                {
+                    return Data;
+                }
+#if DEBUG
+                //Logging.Error(this.GetType(), "Data is not equals with objectType. Data:" + Data.GetType() + " objectType:" + objectType + ".");
+#endif
+            }
+
+            return null;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType.BaseType == typeof(Data) || objectType == typeof(Data);
         }
     }
 }

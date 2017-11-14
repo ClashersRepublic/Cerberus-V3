@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Files.CSV_Reader
             return this.DataTables[(int)_Index];
         }
 
-        internal Data GetWithGlobaId(int GlobalId)
+        internal Data GetWithGlobalId(int GlobalId)
         {
             int Class = GlobalId / 1000000;
             int Instance = GlobalId % 1000000;

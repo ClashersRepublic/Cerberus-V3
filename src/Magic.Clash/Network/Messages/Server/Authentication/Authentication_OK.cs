@@ -49,8 +49,7 @@ namespace Magic.ClashOfClans.Network.Messages.Server.Authentication
             Data.AddString(null);
             Data.AddInt(1); //Unknown
             Data.AddString("https://www.clashersrepublic.com/events/");
-            Data.AddString(
-                "http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/"); //Patch server?
+            Data.AddString("http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/"); //Patch server?
             Data.AddString(null);
         }
     }

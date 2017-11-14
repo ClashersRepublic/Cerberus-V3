@@ -10,7 +10,6 @@ namespace Magic.ClashOfClans.Logic
     {
         internal Level Player;
         internal string Json;
-        internal DateTime Timestamp = DateTime.UtcNow;
 
         internal Objects(Level player, string Village)
         {

@@ -17,24 +17,91 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>Build\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Build\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>Build\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>Build\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.FileExtensions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.Json.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.FileProviders.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.FileProviders.Physical.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.FileSystemGlobbing.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Bson.2.4.4\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.2.4.4\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.Core.2.4.4\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,20 +110,107 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\Database\Models\Mongo\Clans.cs" />
+    <Compile Include="Core\Database\Models\Mongo\Players.cs" />
+    <Compile Include="Core\Database\Mongo.cs" />
+    <Compile Include="Core\Logging.cs" />
+    <Compile Include="Core\Network\Gateway.cs" />
+    <Compile Include="Core\Network\Pool.cs" />
+    <Compile Include="Core\Network\Processor.cs" />
+    <Compile Include="Core\Network\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="Core\Network\Token.cs" />
+    <Compile Include="Core\Resources.cs" />
+    <Compile Include="Core\Settings.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\Game\GamePlayUtil.cs" />
+    <Compile Include="Extensions\Game\Globals.cs" />
+    <Compile Include="Extensions\Helper\JsonHelper.cs" />
+    <Compile Include="Extensions\Helper\ListHelper.cs" />
+    <Compile Include="Extensions\Helper\ReaderHelper.cs" />
+    <Compile Include="Extensions\TimeUtils.cs" />
     <Compile Include="Files\CSV.cs" />
     <Compile Include="Files\CSV_Helpers\Data.cs" />
     <Compile Include="Files\CSV_Helpers\DataTable.cs" />
     <Compile Include="Files\CSV_Helpers\GlobalId.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingClassData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\CharacterData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\ExperienceLevelData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\GlobalData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\LocaleData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\NpcData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\ObstacleData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ResourceData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\TownhallLevelData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\TrapData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\VariableData.cs" />
     <Compile Include="Files\CSV_Reader\Gamefiles.cs" />
+    <Compile Include="Files\LevelFile.cs" />
+    <Compile Include="Logic\Device.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
+    <Compile Include="Logic\Enums\Role.cs" />
+    <Compile Include="Logic\Enums\Variable.cs" />
+    <Compile Include="Logic\GameObject\Building.cs" />
+    <Compile Include="Logic\GameObject\Component\Component.cs" />
+    <Compile Include="Logic\GameObject\Component\ResourceProductionComponent.cs" />
+    <Compile Include="Logic\GameObject\Component\ResourceStorageComponent.cs" />
+    <Compile Include="Logic\GameObject\Component\UnitStorageComponent.cs" />
+    <Compile Include="Logic\GameObject\Deco.cs" />
+    <Compile Include="Logic\GameObject\Filter.cs" />
+    <Compile Include="Logic\GameObject\GameObject.cs" />
+    <Compile Include="Logic\GameObject\GameObjectFactory.cs" />
+    <Compile Include="Logic\GameObject\Trap.cs" />
+    <Compile Include="Logic\GameObject\VillageObject.cs" />
+    <Compile Include="Logic\Manager\ComponentManager.cs" />
+    <Compile Include="Logic\Manager\GameObjectManager.cs" />
+    <Compile Include="Logic\GameObject\Obstacle.cs" />
+    <Compile Include="Logic\Home.cs" />
+    <Compile Include="Logic\Level.cs" />
+    <Compile Include="Logic\Manager\WorkerManager.cs" />
+    <Compile Include="Logic\Map\Tile.cs" />
+    <Compile Include="Logic\Map\TileMap.cs" />
+    <Compile Include="Logic\Math\ELOMath.cs" />
+    <Compile Include="Logic\Math\Math.cs" />
+    <Compile Include="Logic\Math\Vector2.cs" />
+    <Compile Include="Logic\Mode\Enums\State.cs" />
+    <Compile Include="Logic\Mode\GameMode.cs" />
+    <Compile Include="Logic\Player\Items\Item.cs" />
+    <Compile Include="Logic\Player\Items\UnitItem.cs" />
+    <Compile Include="Logic\Player\Player.cs" />
+    <Compile Include="Logic\Player\PlayerBase.cs" />
+    <Compile Include="Logic\Player\Slots\AllianceUnitSlots.cs" />
+    <Compile Include="Logic\Player\Slots\DataSlots.cs" />
+    <Compile Include="Logic\Player\Slots\NpcMapSlots.cs" />
+    <Compile Include="Logic\Player\Slots\ResourceSlots.cs" />
+    <Compile Include="Logic\Player\Slots\UnitSlots.cs" />
+    <Compile Include="Logic\Player\Slots\VariableSlots.cs" />
+    <Compile Include="Logic\Random.cs" />
+    <Compile Include="Logic\Slots\Account.cs" />
+    <Compile Include="Logic\Slots\Accounts.cs" />
+    <Compile Include="Logic\Time.cs" />
+    <Compile Include="Logic\Timer.cs" />
+    <Compile Include="Packets\Cryptography\IEncrypter.cs" />
+    <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
+    <Compile Include="Packets\Enums\LoginFailedReason.cs" />
+    <Compile Include="Packets\Enums\UnlockAccountReason.cs" />
+    <Compile Include="Packets\Factory.cs" />
+    <Compile Include="Packets\Message.cs" />
+    <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
+    <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
+    <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
+    <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
+    <Compile Include="Packets\Messages\Server\Authentication\Authentication_OK.cs" />
+    <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_Failed.cs" />
+    <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_OK.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Gamefiles\csv\animations.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -477,6 +631,7 @@
     <None Include="Gamefiles\logic\war.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CR.Servers\CR.Servers.csproj">

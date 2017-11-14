@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -79,9 +81,14 @@
     <Compile Include="Core\Consoles\Colorful\TextFormatter.cs" />
     <Compile Include="Core\Consoles\Colorful\TextPattern.cs" />
     <Compile Include="Core\Consoles\Colorful\TextPatternCollection.cs" />
+    <Compile Include="Core\Consoles\Prefixed.cs" />
+    <Compile Include="Core\Keys.cs" />
+    <Compile Include="Core\Logging.cs" />
+    <Compile Include="Core\XorShift.cs" />
     <Compile Include="DataStream\ByteStream.cs" />
     <Compile Include="DataStream\ChecksumEncoder.cs" />
     <Compile Include="Extensions\Binary\Reader.cs" />
+    <Compile Include="Extensions\ConsolePad.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\List\Writer.cs" />
     <Compile Include="Extensions\Tags.cs" />
@@ -99,6 +106,9 @@
     <Compile Include="Library\Blake2B\Blake2BCore.cs" />
     <Compile Include="Library\Blake2B\Blake2BHasher.cs" />
     <Compile Include="Library\Blake2B\Blake2BTreeConfig.cs" />
+    <Compile Include="Library\Rjindael.cs" />
+    <Compile Include="Logic\Enums\DBMS.cs" />
+    <Compile Include="Logic\Enums\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

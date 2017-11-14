@@ -54,8 +54,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public int[] BuildCost { get; set; }
         public int[] TownHallLevel { get; set; }
         public int[] TownHallLevel2 { get; set; }
-        public int[] Width { get; set; }
-        public int[] Height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public string Icon { get; set; }
         public string[] ExportNameBuildAnim { get; set; }
         public string[] ExportNameUpgradeAnim { get; set; }

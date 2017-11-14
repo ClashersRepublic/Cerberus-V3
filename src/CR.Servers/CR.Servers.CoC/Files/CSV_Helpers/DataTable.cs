@@ -33,18 +33,38 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         {
             Data _Data;
 
-            switch ((Gamefile)Index)
+            switch ((Gamefile) Index)
             {
                 case Gamefile.Buildings:
                     _Data = new BuildingData(_Row, this);
                     break;
+                case Gamefile.Locales:
+                    _Data = new LocaleData(_Row, this);
+                    break;
                 case Gamefile.Resources:
                     _Data = new ResourceData(_Row, this);
+                    break;
+                case Gamefile.Characters:
+                    _Data = new CharacterData(_Row, this);
                     break;
                 case Gamefile.Building_Classes:
                     _Data = new BuildingClassData(_Row, this);
                     break;
-
+                case Gamefile.Obstacles:
+                    _Data = new ObstacleData(_Row, this);
+                    break;
+                case Gamefile.Traps:
+                    _Data = new TrapData(_Row, this);
+                    break;
+                case Gamefile.Globals:
+                    _Data = new GlobalData(_Row, this);
+                    break;
+                case Gamefile.Townhall_Levels:
+                    _Data = new TownhallLevelData(_Row, this);
+                    break;
+                case Gamefile.Variables:
+                    _Data = new VariableData(_Row, this);
+                    break;
                 default:
                     _Data = new Data(_Row, this);
                     break;

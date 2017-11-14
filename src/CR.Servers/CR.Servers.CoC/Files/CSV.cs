@@ -19,8 +19,15 @@ namespace CR.Servers.CoC.Files
             Tables = new Gamefiles();
 
             Gamefiles.Add((int)Gamefile.Buildings, @"Gamefiles/logic/buildings.csv");
+            Gamefiles.Add((int)Gamefile.Locales, @"Gamefiles/logic/locales.csv");
             Gamefiles.Add((int)Gamefile.Resources, @"Gamefiles/logic/resources.csv");
+            Gamefiles.Add((int)Gamefile.Characters, @"Gamefiles/logic/characters.csv");
+            Gamefiles.Add((int)Gamefile.Obstacles, @"Gamefiles/logic/obstacles.csv");
+            Gamefiles.Add((int)Gamefile.Traps, @"Gamefiles/logic/traps.csv");
             Gamefiles.Add((int)Gamefile.Building_Classes, @"Gamefiles/logic/building_classes.csv");
+            Gamefiles.Add((int)Gamefile.Globals, @"Gamefiles/logic/globals.csv");
+            Gamefiles.Add((int)Gamefile.Townhall_Levels, @"Gamefiles/logic/townhall_levels.csv");
+            Gamefiles.Add((int)Gamefile.Variables, @"Gamefiles/logic/variables.csv");
 
             foreach (var File in Gamefiles)
             {
