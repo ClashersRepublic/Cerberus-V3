@@ -20,6 +20,8 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
 
         public int Type { get; set; }
 
+        public virtual string Name { get; set; }
+
         internal Data()
         {
             // Data.

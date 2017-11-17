@@ -1,11 +1,12 @@
-﻿using System.Runtime.InteropServices.ComTypes;
+﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Logic.Map;
 using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.CoC.Logic.Mode.Enums;
 using CR.Servers.Core.Consoles.Colorful;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 using Console = System.Console;
 
@@ -30,7 +31,7 @@ namespace CR.Servers.CoC.Logic
         internal int HeightInTiles => 50;
 
         internal Time Time => this.GameMode.Time;
-        internal State State => this.GameMode.State;
+        internal State State => this.GameMode.Device.State;
 
         internal int TombStoneCount
         {
@@ -54,8 +55,11 @@ namespace CR.Servers.CoC.Logic
 
         internal bool IsBuildingCapReached(BuildingData Data)
         {
-            var LevelData = (TownhallLevelData)CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.GameObjectManager.TownHall.GetUpgradeLevel());
-
+            var TownHallLevel = GameObjectManager.Map == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
+            var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel);
+            Console.WriteLine(LevelData.Name);
+            Console.WriteLine(TownHallLevel);
+            Console.WriteLine(LevelData?.Caps[Data]);
             return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
 
@@ -145,6 +149,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void Tick()
         {
+            Player.LastTick = DateTime.Now;
             this.GameObjectManager.Tick();
            // this.MissionManager.Tick();
 

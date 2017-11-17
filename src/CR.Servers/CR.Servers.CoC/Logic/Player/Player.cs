@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -53,6 +54,7 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal Google Google;
         [JsonProperty] internal Gamecenter Gamecenter;*/
 
+        [JsonProperty] internal DateTime LastTick = DateTime.UtcNow;
         [JsonProperty] internal DateTime Update = DateTime.UtcNow;
         [JsonProperty] internal DateTime Created = DateTime.UtcNow;
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
@@ -89,10 +91,19 @@ namespace CR.Servers.CoC.Logic
             this.HighID = HighID;
             this.LowID = LowID;
 
-            this.Diamonds = Globals.StartingDiamonds;
-            this.FreeDiamonds = Globals.StartingDiamonds;
+            if (Extension.ParseConfigBoolean("Game:StartingResources:FetchFromCSV"))
+            {
+                this.Diamonds = Globals.StartingDiamonds;
+                this.FreeDiamonds = Globals.StartingDiamonds;
+            }
+            else
+            {
+                this.Diamonds = Extension.ParseConfigInt("Game:StartingResources:Diamonds");
+                this.FreeDiamonds = Extension.ParseConfigInt("Game:StartingResources:Diamonds");
+            }
 
             this.Resources.Initialize();
+            this.Variables.Initialize();
         }
 
         internal void AddDiamonds(int Diamonds)
@@ -191,9 +202,15 @@ namespace CR.Servers.CoC.Logic
             _Packet.AddInt(0); //WarElixir
             _Packet.AddInt(0); //WarDarkElixir
 
-            _Packet.AddByte(this.ChangeNameCount); //Name changed count
+            _Packet.AddInt(0);
 
-            _Packet.AddInt(this.ChangeNameCount > 1 ? 1 : 0); //Name Changed
+            _Packet.AddBool(true);
+            _Packet.AddInt(220);
+            _Packet.AddInt(1828055880);
+
+            _Packet.AddBool(this.NameSetByUser); //Name changed count
+
+            _Packet.AddInt(this.ChangeNameCount); //Name Changed
 
             _Packet.AddInt(6900); //6900
             _Packet.AddInt(0);
@@ -218,10 +235,9 @@ namespace CR.Servers.CoC.Logic
 
             this.AllianceUnits.Encode(_Packet);
 
-            _Packet.AddInt(0);
-            /* _Packet.AddInt(Tutorials.Count);
+             _Packet.AddInt(Tutorials.Count);
              foreach (var Tutorial in Tutorials)
-                 _Packet.AddInt(Tutorial);*/
+                 _Packet.AddInt(Tutorial);
 
             _Packet.AddInt(0); //Achievements
             _Packet.AddInt(0); //AchievementProgress
@@ -229,6 +245,10 @@ namespace CR.Servers.CoC.Logic
             this.NpcMapProgress.Encode(_Packet);
             this.NpcLootedGold.Encode(_Packet);
             this.NpcLootedElixir.Encode(_Packet);
+
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
 
             this.Variables.Encode(_Packet);
 
@@ -310,17 +330,6 @@ namespace CR.Servers.CoC.Logic
                 this.FreeDiamonds = 0;
             }
         }
-
-        internal void Add_Unit(int Data, int Count)
-        {
-            var _Index = Units.FindIndex(U => U.Data == Data);
-
-            if (_Index > -1)
-                Units[_Index].Count += Count;
-            else
-                Units.Add(new Item(Data, Count));
-        }
-
 
         public override string ToString()
         {

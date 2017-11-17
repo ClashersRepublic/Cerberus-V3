@@ -10,13 +10,14 @@ namespace CR.Servers.CoC.Logic
             {
                 case 1:
                     return new Building(Data, Level);
+                case 3:
+                    return new Obstacle(Data, Level);
                 /*case 4:
                     return new Trap(Data, Level);
                 case 6:
                     return new Deco(Data, Level);*/
-                case 8:
-                    return new Obstacle(Data, Level);
-
+                case 39:
+                    return new VillageObject(Data, Level); //ClassID 8  but csv id 39
                 default:
                     return null;
             }

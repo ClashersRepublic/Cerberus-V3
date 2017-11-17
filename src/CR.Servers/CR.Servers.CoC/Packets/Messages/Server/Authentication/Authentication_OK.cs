@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.List;
 using CR.Servers.Logic.Enums;
@@ -25,10 +22,11 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
 
         internal override void Encode()
         {
-            this.Data.AddLong(2);
-            this.Data.AddLong(2);
+            var Player = this.Device.Account.Player;
+            this.Data.AddLong(Player.UserId);
+            this.Data.AddLong(Player.UserId);
 
-            this.Data.AddString("2");
+            this.Data.AddString(Player.Token);
 
             this.Data.AddString(string.Empty); // Facebook ID
             this.Data.AddString(string.Empty); // Gamecenter ID
@@ -67,8 +65,12 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
 
             this.Data.AddInt(1);
             {
-                this.Data.AddString("https://event-assets.clashofclans.com");
+                this.Data.AddString(Settings.EventServer);
             }
+
+            /*Data.AddString("h");
+            Data.AddString("http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/"); //Patch server?
+            Data.AddString(null);*/
         }
     }
 }

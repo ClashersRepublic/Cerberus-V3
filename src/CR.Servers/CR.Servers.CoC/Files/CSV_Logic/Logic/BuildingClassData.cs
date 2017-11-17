@@ -9,7 +9,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
         }
 
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string TID { get; set; }
         public bool CanBuy { get; set; }
         public bool ShopCategoryResource { get; set; }

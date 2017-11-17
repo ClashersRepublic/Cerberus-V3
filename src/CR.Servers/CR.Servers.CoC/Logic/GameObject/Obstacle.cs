@@ -1,7 +1,7 @@
 ﻿using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Mode.Enums;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
@@ -24,7 +24,7 @@ namespace CR.Servers.CoC.Logic
 
         internal override int VillageType => this.ObstacleData.VillageType;
 
-        internal int RemainingClearingTime => ClearTimer?.GetRemainingSeconds(this.Level.Time) ?? 0;
+        internal int RemainingClearingTime => ClearTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool ClearingOnGoing => this.ClearTimer != null;
 
@@ -32,6 +32,7 @@ namespace CR.Servers.CoC.Logic
         {
 
         }
+
         internal bool CanClearing()
         {
             if (!this.ClearingOnGoing)
@@ -49,7 +50,7 @@ namespace CR.Servers.CoC.Logic
         {
             Player Player = this.Level.Player;
 
-            if (Player?.Level.GameMode.State == State.Home)
+            if (Player?.Level.State == State.LOGGED)
             {
                 // LogicAchievementManager::obstacleCleared();
                 this.Level.WorkerManager.DeallocateWorker(this);
@@ -85,7 +86,7 @@ namespace CR.Servers.CoC.Logic
         {
             if (this.ClearingOnGoing)
             {
-                if (this.ClearTimer.GetRemainingSeconds(this.Level.Time) <= 0)
+                if (this.ClearTimer.GetRemainingSeconds(this.Level.Player.LastTick) <= 0)
                 {
                     this.ClearingFinished();
                 }
@@ -103,7 +104,7 @@ namespace CR.Servers.CoC.Logic
                 if (ClearTime > -1)
                 {
                     this.ClearTimer = new Timer();
-                    this.ClearTimer.StartTimer(this.Level.Time, ClearTime);
+                    this.ClearTimer.StartTimer(this.Level.Player.LastTick, ClearTime);
                 }
             }
         }
@@ -114,7 +115,7 @@ namespace CR.Servers.CoC.Logic
 
             if (this.ClearingOnGoing)
             {
-                Json.Add("clear_t", this.ClearTimer.GetRemainingSeconds(this.Level.Time));
+                Json.Add("clear_t", this.ClearTimer.GetRemainingSeconds(this.Level.Player.LastTick));
             }
         }
     }

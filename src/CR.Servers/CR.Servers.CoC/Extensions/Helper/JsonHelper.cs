@@ -57,7 +57,7 @@ namespace CR.Servers.CoC.Extensions.Helper
                 return true;
             }
             else
-                Int = 0;
+                Int = -1;
 
             return false;
         }

@@ -9,7 +9,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
 
         }
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public int NumberValue { get; set; }
         public bool BooleanValue { get; set; }
         public string TextValue { get; set; }

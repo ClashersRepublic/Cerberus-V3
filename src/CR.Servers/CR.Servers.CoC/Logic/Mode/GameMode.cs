@@ -1,6 +1,4 @@
-﻿using CR.Servers.CoC.Logic.Mode.Enums;
-
-namespace CR.Servers.CoC.Logic.Mode
+﻿namespace CR.Servers.CoC.Logic.Mode
 {
     internal class GameMode
     {
@@ -8,7 +6,7 @@ namespace CR.Servers.CoC.Logic.Mode
         internal Level Level;
 
         internal Time Time;
-        internal State State;
+        //internal State State;
 
         /*internal CommandManager CommandManager;
         internal GameLogManager GameLogManager;*/
@@ -28,7 +26,7 @@ namespace CR.Servers.CoC.Logic.Mode
         internal void LoadHomeState(Home Home, Player Player)
         {
             this.Time = new Time();
-            this.State = State.Home;
+            //this.State = State.Home;
 
             this.Level.SetPlayer(Player);
             this.Level.SetHome(Home);

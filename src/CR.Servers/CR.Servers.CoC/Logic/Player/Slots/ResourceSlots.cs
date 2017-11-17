@@ -1,5 +1,5 @@
-﻿using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files;
+﻿using CR.Servers.CoC.Extensions;
+using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Logic.Enums;
 
 namespace CR.Servers.CoC.Logic
@@ -13,11 +13,21 @@ namespace CR.Servers.CoC.Logic
 
         internal void Initialize()
         {
-            this.Set(3000001, Globals.StartingGold);
-            this.Set(3000002, Globals.StartingElixir);
-
-            this.Set(3000007, Globals.StartingGold2);
-            this.Set(3000008, Globals.StartingElixir2);
+            if (Extension.ParseConfigBoolean("Game:StartingResources:FetchFromCSV"))
+            {
+                this.Set(Resource.Gold, Globals.StartingGold);
+                this.Set(Resource.Elixir, Globals.StartingElixir);
+                this.Set(Resource.Builder_Gold, Globals.StartingGold2);
+                this.Set(Resource.Builder_Elixir, Globals.StartingElixir2);
+            }
+            else
+            {
+                this.Set(Resource.Gold, Extension.ParseConfigInt("Game:StartingResources:Gold"));
+                this.Set(Resource.Elixir, Extension.ParseConfigInt("Game:StartingResources:Elixir"));
+                this.Set(Resource.DarkElixir, Extension.ParseConfigInt("Game:StartingResources:DarkElixir"));
+                this.Set(Resource.Builder_Gold, Extension.ParseConfigInt("Game:StartingResources:GoldV2"));
+                this.Set(Resource.Builder_Elixir, Extension.ParseConfigInt("Game:StartingResources:ElixirV2"));
+            }
         }
 
         internal void Set(Resource Resource, int Count)

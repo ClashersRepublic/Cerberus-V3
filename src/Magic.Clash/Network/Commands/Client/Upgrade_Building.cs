@@ -27,18 +27,14 @@ namespace Magic.ClashOfClans.Network.Commands.Client
         public override void Process()
         {
             var ca = Device.Player.Avatar;
-            var go = Device.Player.GameObjectManager.GetGameObjectByID(BuildingId,
-                Device.Player.Avatar.Variables.IsBuilderVillage);
+            var go = Device.Player.GameObjectManager.GetGameObjectByID(BuildingId,  Device.Player.Avatar.Variables.IsBuilderVillage);
             if (go != null)
             {
                 var b = (Construction_Item) go;
                 if (b.CanUpgrade)
                 {
                     var bd = b.GetConstructionItemData;
-                    var resource = b.ClassId == 0 || b.ClassId == 7
-                        ? IsAltResource
-                            ? (bd as Buildings)?.GetAltBuildResource(b.GetUpgradeLevel + 1)
-                            : bd.GetBuildResource(b.GetUpgradeLevel + 1)
+                    var resource = b.ClassId == 0 || b.ClassId == 7 ? IsAltResource  ? (bd as Buildings)?.GetAltBuildResource(b.GetUpgradeLevel + 1) : bd.GetBuildResource(b.GetUpgradeLevel + 1)
                         : bd.GetBuildResource(b.GetUpgradeLevel + 1);
 
                     if (resource != null)

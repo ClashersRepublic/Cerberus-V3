@@ -38,11 +38,13 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal int TownHallLevel;
         [JsonProperty] internal int TownHallLevel2;
 
-        [JsonProperty] internal int CastleLevel;
+        [JsonProperty] internal int CastleLevel = -1;
         [JsonProperty] internal int CastleTotalCapacity;
         [JsonProperty] internal int CastleUsedCapacity;
         [JsonProperty] internal int CastleTotalSpellCapacity;
         [JsonProperty] internal int CastleUsedSpellCapacity;
+
+        [JsonProperty] internal int WallGroupId;
 
         internal long AllianceId=> (long)this.AllianceHighId << 32 | (uint)this.AllianceLowId;
 

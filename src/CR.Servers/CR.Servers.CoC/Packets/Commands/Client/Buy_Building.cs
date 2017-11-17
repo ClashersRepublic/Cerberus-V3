@@ -39,17 +39,17 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            if (this.Data != null)
+            if (this.BuildingData != null)
             {
                 var Level = Device.GameMode.Level;
-                if (!Level.IsBuildingCapReached(this.BuildingData))
+                //if (!Level.IsBuildingCapReached(this.BuildingData))
                 {
                     BuildingClassData BuildingClassData = (BuildingClassData)CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
                     ResourceData ResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildingData.BuildResource);
 
                     if (BuildingClassData.CanBuy)
                     {
-                        if (Level.GameObjectManager.Map == 0)
+                        if (Level.Player.Map == 0)
                         {
                             if (this.BuildingData.TownHallLevel[0] <=
                                 Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
@@ -85,10 +85,25 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     }
                                 }
 
-                                if (Level.Player.Resources.GetCountByData(ResourceData) >=
-                                    this.BuildingData.BuildCost[0])
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
                                 {
                                     if (Level.WorkerManager.FreeWorkers > 0)
+                                    {
+                                        Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
+                                        this.StartConstruction(Level);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (this.BuildingData.TownHallLevel2[0] <=  Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1)
+                            {
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
+                                {
+                                    //Handle buy workerv2
+                                    
+                                    if (Level.WorkerManagerV2.FreeWorkers > 0)
                                     {
                                         Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                         this.StartConstruction(Level);
@@ -110,7 +125,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.X = this.X << 9;
             GameObject.Position.Y = this.Y << 9;
 
-            Level.WorkerManager.AllocateWorker(GameObject);
+            if (Level.Player.Map == 0)
+                Level.WorkerManager.AllocateWorker(GameObject);
+            else
+                Level.WorkerManagerV2.AllocateWorker(GameObject);
 
             if (this.BuildingData.GetBuildTime(0) <= 0)
             {
@@ -119,7 +137,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             else
             {
                 GameObject.ConstructionTimer = new Timer();
-                GameObject.ConstructionTimer.StartTimer(Level.GameMode.Time, this.BuildingData.GetBuildTime(0));
+                GameObject.ConstructionTimer.StartTimer(Level.Player.LastTick, this.BuildingData.GetBuildTime(0));
             }
 
             Level.GameObjectManager.AddGameObject(GameObject, Level.Player.Map);

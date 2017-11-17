@@ -9,7 +9,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
         }
 
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string Dependencies { get; set; }
         public int MissionCategory { get; set; }
         public int VillageType { get; set; }

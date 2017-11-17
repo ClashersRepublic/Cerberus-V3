@@ -11,7 +11,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
             // CharacterData.
         }
 
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string TID { get; set; }
         public string InfoTID { get; set; }
         public string SWF { get; set; }
@@ -56,7 +56,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public string[] DieEffect { get; set; }
         public string DieEffect2 { get; set; }
         public string[] Animation { get; set; }
-        public int[] UnitOfType { get; set; }
+        public int UnitOfType { get; set; }
         public bool IsJumper { get; set; }
         public int MovementOffsetAmount { get; set; }
         public int MovementOffsetSpeed { get; set; }

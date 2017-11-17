@@ -46,12 +46,7 @@ namespace CR.Servers.CoC.Logic
 
         internal virtual JObject Save()
         {
-            JObject Json = new JObject();
-
-            Json.Add("id", this.Data);
-
-            Json.Add("cnt", this.Count);
-
+            JObject Json = new JObject {{"id", this.Data}, {"cnt", this.Count}};
             return Json;
         }
 

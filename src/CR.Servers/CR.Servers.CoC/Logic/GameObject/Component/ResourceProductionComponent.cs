@@ -1,7 +1,8 @@
-﻿using CR.Servers.CoC.Extensions;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Mode.Enums;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
@@ -25,7 +26,7 @@ namespace CR.Servers.CoC.Logic
 
                      if (MaxTime > 0)
                      {
-                         int RemainingSeconds = this.Timer.GetRemainingSeconds(this.Parent.Level.Time);
+                         int RemainingSeconds = this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick);
 
                          if (RemainingSeconds > 0)
                          {
@@ -50,7 +51,7 @@ namespace CR.Servers.CoC.Logic
              }
          }
 
-         internal override int Checksum => this.Timer.GetRemainingSeconds(this.Parent.Level.Time) + this.ResourceMax + this.ResourcePer100Hours;
+         internal override int Checksum => this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) + this.ResourceMax + this.ResourcePer100Hours;
 
          internal override int Type => 5;
 
@@ -64,7 +65,7 @@ namespace CR.Servers.CoC.Logic
          {
              int AvailableResources = this.AvailableResources;
 
-             if (this.Parent.Level.State == State.Home)
+             if (this.Parent.Level.State == State.LOGGED)
              {
                  if (AvailableResources > 0)
                  {
@@ -82,8 +83,8 @@ namespace CR.Servers.CoC.Logic
                      }
                  }
              }
-             //else
-                 //Logging.Error(this.GetType(), "Unable to collect the resources while the player is not in home.");
+             else
+                 Logging.Error(this.GetType(), "Unable to collect the resources while the player is not in home.");
          }
 
          internal void DecreaseResources(int Decrease)
@@ -96,7 +97,7 @@ namespace CR.Servers.CoC.Logic
 
              if (this.ResourcePer100Hours > 0L)
              {
-                 this.Timer.StartTimer(this.Parent.Level.Time, this.MaxTime - (int)(v4 / this.ResourcePer100Hours));
+                 this.Timer.StartTimer(this.Parent.Level.Player.LastTick, this.MaxTime - (int)(v4 / this.ResourcePer100Hours));
              }
          }
 
@@ -113,7 +114,7 @@ namespace CR.Servers.CoC.Logic
                  this.ResourcePer100Hours = BuildingData.ResourcePer100Hours[Level];
                  this.ResourceMax = BuildingData.ResourceMax[Level];
 
-                 this.Timer.StartTimer(this.Parent.Level.Time, this.MaxTime);
+                 this.Timer.StartTimer(this.Parent.Level.Player.LastTick, this.MaxTime);
              }
              else
              {
@@ -133,19 +134,19 @@ namespace CR.Servers.CoC.Logic
              if (JsonHelper.GetJsonNumber(Json, "res_time", out int Time))
              {
                  if (Time <= this.MaxTime && Time > -1)
-                     this.Timer.StartTimer(this.Parent.Level.Time, Time);
+                     this.Timer.StartTimer(this.Parent.Level.Player.LastTick, Time);
                  else
-                     this.Timer.StartTimer(this.Parent.Level.Time, this.MaxTime);
+                     this.Timer.StartTimer(this.Parent.Level.Player.LastTick, this.MaxTime);
              }
              else
-                 this.Timer.StartTimer(this.Parent.Level.Time, this.MaxTime);
+                 this.Timer.StartTimer(this.Parent.Level.Player.LastTick, this.MaxTime);
 
              base.Load(Json);
          }
 
          internal override void Save(JObject Json)
          {
-             Json.Add("res_time", this.Timer.GetRemainingSeconds(this.Parent.Level.Time));
+             Json.Add("res_time", this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick));
 
              base.Save(Json);
          }

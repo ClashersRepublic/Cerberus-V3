@@ -10,7 +10,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
             // LocaleData.
         }
 
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string Description { get; set; }
         public bool HasEvenSpaceCharacters { get; set; }
         public bool isRTL { get; set; }

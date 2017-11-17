@@ -15,12 +15,15 @@ namespace CR.Servers.Files.CSV_Reader
 
             _rows = new RowCollection();
             _columns = new ColumnCollection();
+            this.Headers = new List<string>();
             using (var file = new FileStream(path, FileMode.Open))
                 ParseTable(file);
         }
 
         internal readonly RowCollection _rows;
         internal readonly ColumnCollection _columns;
+
+        internal List<string> Headers;
 
         public RowCollection Rows => _rows;
         public ColumnCollection Columns => _columns;
@@ -48,6 +51,7 @@ namespace CR.Servers.Files.CSV_Reader
                     throw new CsvException("CSV table does not contain a row representing the column types.");
 
                 var names = ParseLine(namesRow);
+
                 var types = ParseLine(typesRow);
                 var tableWidth = names.Length;
 
@@ -55,7 +59,10 @@ namespace CR.Servers.Files.CSV_Reader
                     throw new CsvException("CSV table has inconsistent table width.");
 
                 for (int i = 0; i < types.Length; i++)
+                {
                     new Column(this, names[i]);
+                    this.Headers.Add(names[i]);
+                }
 
                 var rowCount = 0;
                 var prev = default(Row);
@@ -122,6 +129,21 @@ namespace CR.Servers.Files.CSV_Reader
             columns.Add(token);
 
             return columns.ToArray();
+        }
+        public string GetValue(string _Name, int _Level)
+        {
+            int _Index = this.Headers.IndexOf(_Name);
+            return this.GetValueAt(_Index, _Level);
+        }
+
+        public string GetValueAt(int _Column, int _Row)
+        {
+            if (_Column > -1 && _Row > -1)
+            {
+                return this.Columns[_Column].Get(_Row);
+            }
+
+            return null;
         }
     }
 }

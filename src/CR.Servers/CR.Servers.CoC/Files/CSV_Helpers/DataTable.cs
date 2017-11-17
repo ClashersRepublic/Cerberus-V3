@@ -74,6 +74,9 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Variables:
                     _Data = new VariableData(_Row, this);
                     break;
+                case Gamefile.Village_Objects:
+                    _Data = new VillageObjectData(_Row, this);
+                    break;
                 default:
                     _Data = new Data(_Row, this);
                     break;

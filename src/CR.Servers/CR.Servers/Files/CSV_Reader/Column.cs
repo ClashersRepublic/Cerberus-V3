@@ -21,5 +21,11 @@ namespace CR.Servers.Files.CSV_Reader
         public Table Table { get; }
 
         public string Name { get; }
+
+        internal string Get(int _Row)
+        {
+            return this.Data.Count > _Row ? this.Data[_Row] : null;
+        }
+
     }
 }

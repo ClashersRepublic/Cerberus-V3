@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Commands.Client;
+using CR.Servers.CoC.Packets.Commands.Client.Battle;
+using CR.Servers.CoC.Packets.Commands.Server;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
+using CR.Servers.CoC.Packets.Messages.Client.Battle;
 using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.Extensions.Binary;
 
@@ -29,14 +32,29 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(10101, typeof(Authentication));
             Factory.Messages.Add(10108, typeof(Keep_Alive));
             Factory.Messages.Add(10121, typeof(Unlock_Account));
+            Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
+            Factory.Messages.Add(14134, typeof(Attack_Npc));
         }
 
         private static void LoadCommands()
         {
+            Factory.Commands.Add(3, typeof(Name_Change_Callback));
+            Factory.Commands.Add(7, typeof(Diamonds_Added));
+
             Factory.Commands.Add(500, typeof(Buy_Building));
+            Factory.Commands.Add(501, typeof(Move_Building));
+            Factory.Commands.Add(502, typeof(Upgrade_Building));
+            Factory.Commands.Add(504, typeof(Speed_Up_Construction));
+            Factory.Commands.Add(506, typeof(Collect_Resource));
             Factory.Commands.Add(519, typeof(Mission_Progress));
+            Factory.Commands.Add(520, typeof(Unlock_Building));
+            Factory.Commands.Add(524, typeof(Change_Weapon_Mode));
+            Factory.Commands.Add(532, typeof(New_Shop_Seen));
             Factory.Commands.Add(539, typeof(New_Seen));
+            Factory.Commands.Add(591, typeof(Change_Village_Mode));
+            Factory.Commands.Add(600, typeof(Gear_Up));
+            Factory.Commands.Add(601, typeof(Search_Opponent_V2));
         }
 
 

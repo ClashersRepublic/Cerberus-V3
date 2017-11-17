@@ -33,9 +33,9 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
                 throw new Exception("Buildings.csv: Build Resource is invalid!.");
             }
         }
-            
 
-        public string Name { get; set; }
+
+        public override string Name { get; set; }
         public string TID { get; set; }
         public string InfoTID { get; set; }
         public string BuildingClass { get; set; }
@@ -231,6 +231,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         internal bool IsTownHall2 => this.BuildingClass == "Town Hall2";
 
         internal bool IsWorker => this.BuildingClass == "Worker";
+
         internal bool IsWorker2 => this.BuildingClass == "Worker2";
 
         internal bool IsLaboratory => this.UpgradesUnits;
@@ -240,6 +241,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         internal bool IsDarkBarrack => this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 2 && !this.ForgesSpells;
 
         internal bool IsTrainingHousing => this.HousingSpace[0] > 0 && !this.Bunker;
+
+        internal bool IsAllianceCastle => this.Name == "Alliance Castle";
 
         internal bool CanStoreResources => this.MaxStoredGold[0] > 0
                                            || this.MaxStoredElixir[0] > 0

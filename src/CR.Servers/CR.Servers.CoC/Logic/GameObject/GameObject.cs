@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using Newtonsoft.Json.Linq;
@@ -55,12 +56,12 @@ namespace CR.Servers.CoC.Logic
         {
             if (this.Components.Contains(Component))
             {
-                //Logging.Error(this.GetType(), "AddComponent() : Trying to add a component already added. Type : " + Component.Type + ".");
+                Logging.Error(this.GetType(), "AddComponent() : Trying to add a component already added. Type : " + Component.Type + ".");
                 return;
             }
 
             this.Components.Add(Component);
-            //this.Level.ComponentManager.AddComponent(Component);
+            this.Level.ComponentManager.AddComponent(Component);
         }
 
         internal void SetPositionXY(int TileX, int TileY)
@@ -112,8 +113,8 @@ namespace CR.Servers.CoC.Logic
                 this.Position.X = X << 9;
                 this.Position.Y = Y << 9;
             }
-           // else
-                //Logging.Error(this.GetType(), "An error has been throwed when the load of game object. Position X or Y is null!");
+            else
+                Logging.Error(this.GetType(), "An error has been throwed when the load of game object. Position X or Y is null!");
 
             this.Components.ForEach(Component =>
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
@@ -19,6 +20,14 @@ namespace CR.Servers.CoC.Logic
         internal Level Level;
         internal DateTime Timestamp = DateTime.UtcNow;
         internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
+
+
+        [OnSerializing]
+        internal void OnSerializingMethod(StreamingContext context)
+        {
+            if (this.Level != null)
+                LastSave = this.Level.Save();
+        }
 
         public Home()
         {

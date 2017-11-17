@@ -1,4 +1,5 @@
 ﻿using CR.Servers.CoC.Core.Database;
+using CR.Servers.CoC.Core.Events;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
@@ -23,7 +24,6 @@ namespace CR.Servers.CoC.Core
             LevelFile.Initialize();
             Game_Events.Initialize();
 
-
             Globals.Initialize();
             Settings.Initialize();
 
@@ -36,6 +36,8 @@ namespace CR.Servers.CoC.Core
             Resources.Random = new XorShift();
             Resources.Gateway = new Gateway();
             Resources.Started = true;
+
+            EventsHandler.Initialize();
 
         }
 

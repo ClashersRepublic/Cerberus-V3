@@ -12,13 +12,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Database;
+using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Logic.Mode;
 using CR.Servers.CoC.Logic.Slots;
+using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles;
 using CR.Servers.Extensions;
+using CR.Servers.Extensions.Binary;
+using CR.Servers.Extensions.List;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -34,8 +41,10 @@ namespace CR.Servers.CoC
         private static void Main()
         {
 
-            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("Config.json").Build();
-            Console.Title = $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} ©";
+            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("Config.json").Build();
+            Console.Title =
+                $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} ©";
 
             Console.SetOut(new Prefixed());
             Console.SetWindowSize(Width, Height);
@@ -52,14 +61,29 @@ namespace CR.Servers.CoC
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Environment.NewLine);
-            Console.WriteLine(@"Clashers Republic's programs are protected by our policies, available only to our partner.");
+            Console.WriteLine( @"Clashers Republic's programs are protected by our policies, available only to our partner.");
             Console.WriteLine(@"Clashers Republic's programs are under the 'Proprietary' license.");
             Console.WriteLine(@"Clashers Republic is NOT affiliated to 'Supercell Oy'.");
             Console.WriteLine(@"Clashers Republic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'.");
             Console.WriteLine();
-            Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." + Environment.NewLine);
+            Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +
+                              Environment.NewLine);
 
             Resources.Initialize();
+
+            Console.ReadKey();
+            foreach (Player Player in Resources.Accounts.Players.Values.ToArray())
+            {
+                if (Player.Connected)
+                {
+                    new Available_Server_Command(Player.Level.GameMode.Device)
+                    {
+                        //Command = new Name_Change_Callback(Player.Level.GameMode.Device) {AvatarName = "Aidid", ChangeNameCount = Player.ChangeNameCount}
+                        Command = new Diamonds_Added(Player.Level.GameMode.Device) {Count = 100000}
+                    }.Send();
+
+                }
+            }
             Thread.Sleep(-1);
         }
     }

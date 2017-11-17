@@ -18,5 +18,9 @@ namespace CR.Servers.Files.CSV_Reader
 
         public string Name { get; }
 
+        public string GetValue(string Name, int Level)
+        {
+            return this.Table.GetValue(Name, Level + this.Start);
+        }
     }
 }

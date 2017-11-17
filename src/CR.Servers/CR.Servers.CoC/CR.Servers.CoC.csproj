@@ -114,6 +114,7 @@
     <Compile Include="Core\Database\Models\Mongo\Clans.cs" />
     <Compile Include="Core\Database\Models\Mongo\Players.cs" />
     <Compile Include="Core\Database\Mongo.cs" />
+    <Compile Include="Core\Events\EventsHandler.cs" />
     <Compile Include="Core\Logging.cs" />
     <Compile Include="Core\Network\Gateway.cs" />
     <Compile Include="Core\Network\Pool.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Files\CSV_Logic\Logic\TownhallLevelData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\TrapData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\VariableData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\VillageObjectData.cs" />
     <Compile Include="Files\CSV_Reader\Gamefiles.cs" />
     <Compile Include="Files\Game_Events.cs" />
     <Compile Include="Files\LevelFile.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="Logic\Enums\Role.cs" />
     <Compile Include="Logic\Enums\Variable.cs" />
     <Compile Include="Logic\GameObject\Building.cs" />
+    <Compile Include="Logic\GameObject\Component\CombatComponent.cs" />
     <Compile Include="Logic\GameObject\Component\Component.cs" />
     <Compile Include="Logic\GameObject\Component\ResourceProductionComponent.cs" />
     <Compile Include="Logic\GameObject\Component\ResourceStorageComponent.cs" />
@@ -176,7 +179,6 @@
     <Compile Include="Logic\Math\ELOMath.cs" />
     <Compile Include="Logic\Math\Math.cs" />
     <Compile Include="Logic\Math\Vector2.cs" />
-    <Compile Include="Logic\Mode\Enums\State.cs" />
     <Compile Include="Logic\Mode\GameMode.cs" />
     <Compile Include="Logic\Player\Items\Event.cs" />
     <Compile Include="Logic\Player\Items\Functions.cs" />
@@ -197,9 +199,21 @@
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Packets\Command.cs" />
+    <Compile Include="Packets\Commands\Client\Battle\Search_Opponent_V2.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Change_Village_Mode.cs" />
+    <Compile Include="Packets\Commands\Client\Change_Weapon_Mode.cs" />
+    <Compile Include="Packets\Commands\Client\Collect_Resource.cs" />
+    <Compile Include="Packets\Commands\Client\Gear_Up.cs" />
     <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
+    <Compile Include="Packets\Commands\Client\Move_Building.cs" />
     <Compile Include="Packets\Commands\Client\New_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
+    <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />
+    <Compile Include="Packets\Commands\Server\Diamonds_Added.cs" />
+    <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
     <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
@@ -209,12 +223,17 @@
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
+    <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
+    <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_OK.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_OK.cs" />
     <Compile Include="Packets\Messages\Client\Home\Keep_Alive.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\Npc_Data.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\Pc_Battle_Data_V2.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Available_Server_Command.cs" />
     <Compile Include="Packets\Messages\Server\Home\Keep_Alive_Ok.cs" />
     <Compile Include="Packets\Messages\Server\Home\Own_Home_Data.cs" />
     <Compile Include="Program.cs" />
@@ -656,4 +675,18 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>RMDIR /S /Q "$(TargetDir)Library\"
+
+MKDIR "$(TargetDir)Library\"
+if not exist "$(TargetDir)Logs" MKDIR "$(TargetDir)Logs\"
+
+</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>cd "$(TargetDir)"
+del /F /Q *.xml
+del /F /Q *.pdb
+move /Y *.dll "Library\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

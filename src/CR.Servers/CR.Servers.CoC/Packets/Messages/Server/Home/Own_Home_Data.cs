@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Logic;
+﻿using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.List;
 
 namespace CR.Servers.CoC.Packets.Messages.Server.Home
@@ -14,6 +9,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Home
 
         public Own_Home_Data(Device Device) : base(Device)
         {
+            Device.GameMode.Level.Tick();
         }
 
         internal override void Encode()

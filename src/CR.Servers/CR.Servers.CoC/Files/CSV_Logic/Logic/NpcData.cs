@@ -10,7 +10,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
             // NpcData.
         }
 
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string MapInstanceName { get; set; }
         public string[] MapDependencies { get; set; }
         public string TID { get; set; }

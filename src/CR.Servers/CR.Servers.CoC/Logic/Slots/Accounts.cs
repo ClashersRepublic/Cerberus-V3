@@ -55,7 +55,7 @@ namespace CR.Servers.CoC.Logic.Slots
             }
         }
 
-        internal Account CreateAccount(DBMS Database = Constants.Database)
+        internal Account CreateAccount()
         {
             int LowID = Interlocked.Increment(ref this.Seed);
 
@@ -64,12 +64,12 @@ namespace CR.Servers.CoC.Logic.Slots
 
             for (int i = 0; i < 40; i++)
             {
-                Token += (char)Resources.Random.Next('A', 'Z');
+                Token += (char) Resources.Random.Next('A', 'Z');
             }
 
             for (int i = 0; i < 12; i++)
             {
-                Password += (char)Resources.Random.Next('A', 'Z');
+                Password += (char) Resources.Random.Next('A', 'Z');
             }
 
             var Player = new Player(null, Constants.ServerId, LowID)
@@ -81,22 +81,15 @@ namespace CR.Servers.CoC.Logic.Slots
             var Home = new Home(Constants.ServerId, LowID) {LastSave = LevelFile.StartingHome};
 
 
-            switch (Database)
+
+            Mongo.Players.InsertOneAsync(new Core.Database.Models.Mongo.Players
             {
-                case DBMS.Mongo:
-                {
-                    Mongo.Players.InsertOneAsync(new Core.Database.Models.Mongo.Players
-                    {
-                        HighId = Constants.ServerId,
-                        LowId = LowID,
+                HighId = Constants.ServerId,
+                LowId = LowID,
 
-                        Player = BsonDocument.Parse(JsonConvert.SerializeObject(Player, this.Settings)),
-                        Home = BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))
-                    });
-
-                    break;
-                }
-            }
+                Player = BsonDocument.Parse(JsonConvert.SerializeObject(Player, this.Settings)),
+                Home = BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))
+            });
 
             this.Add(Player);
             this.Add(Home);
@@ -104,199 +97,169 @@ namespace CR.Servers.CoC.Logic.Slots
             return new Account(Constants.ServerId, LowID, Player, Home);
         }
 
-        internal Account LoadAccount(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
+        internal Account LoadAccount(int HighID, int LowID, bool Store = true)
         {
-            long ID = (long)HighID << 32 | (uint)LowID;
+            long ID = (long) HighID << 32 | (uint) LowID;
             if (!this.TryGetValue(ID, out Account Account))
             {
-                switch (Database)
+
+                var Data = Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefault();
+
+                if (Data != null)
                 {
-                    case DBMS.Mongo:
+                    if (!this.Players.TryGetValue(ID, out Player Player))
                     {
-                        var Data = Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefault();
+                        Player = this.LoadPlayerFromSave(Data.Player.ToJson());
 
-                        if (Data != null)
+                        if (Store)
                         {
-                            if (!this.Players.TryGetValue(ID, out Player Player))
-                            {
-                                Player = this.LoadPlayerFromSave(Data.Player.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Player);
-                                }
-                            }
-
-                            if (!this.Homes.TryGetValue(ID, out Home Home))
-                            {
-                                Home = this.LoadHomeFromSave(Data.Home.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Home);
-                                }
-                            }
-
-                            if (Player == null || Home == null)
-                            {
-                                Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
-                                return new Account(-1, -1, null, null);
-                            }
-
-                            Account = new Account(HighID, LowID, Player, Home);
-                            this.TryAdd(ID, Account);
-                            }
-
-                        break;
-                    }
-                }
-            }
-
-            return Account;
-        }
-
-        internal async Task<Account> LoadAccountAsync(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
-        {
-            long ID = (long)HighID << 32 | (uint)LowID;
-            if (!this.TryGetValue((long)HighID << 32 | (uint)LowID, out Account Account))
-            {
-                switch (Database)
-                {
-                    case DBMS.Mongo:
-                    {
-                        var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
-
-                        if (Data != null)
-                        {
-                            if (!this.Players.TryGetValue(ID, out Player Player))
-                            {
-                                Player = this.LoadPlayerFromSave(Data.Player.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Player);
-                                }
-                            }
-
-                            if (!this.Homes.TryGetValue(ID, out Home Home))
-                            {
-                                Home = this.LoadHomeFromSave(Data.Home.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Home);
-                                }
-                            }
-
-
-                            if (Player == null || Home == null)
-                            {
-                                Logging.Error(this.GetType(),
-                                    "Unable to load account id:" + HighID + "-" + LowID + ".");
-                                return Account;
-                            }
-
-                            Account = new Account(HighID, LowID, Player, Home);
-                            this.TryAdd(ID, Account);
+                            this.Add(Player);
                         }
-
-                        break;
                     }
+
+                    if (!this.Homes.TryGetValue(ID, out Home Home))
+                    {
+                        Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                        if (Store)
+                        {
+                            this.Add(Home);
+                        }
+                    }
+
+                    if (Player == null || Home == null)
+                    {
+                        Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
+                        return new Account(-1, -1, null, null);
+                    }
+
+                    Account = new Account(HighID, LowID, Player, Home);
+                    this.TryAdd(ID, Account);
+                }
+
+            }
+
+            return Account;
+        }
+
+        internal async Task<Account> LoadAccountAsync(int HighID, int LowID, bool Store = true)
+        {
+            long ID = (long) HighID << 32 | (uint) LowID;
+            if (!this.TryGetValue((long) HighID << 32 | (uint) LowID, out Account Account))
+            {
+                var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
+
+                if (Data != null)
+                {
+                    if (!this.Players.TryGetValue(ID, out Player Player))
+                    {
+                        Player = this.LoadPlayerFromSave(Data.Player.ToJson());
+
+                        if (Store)
+                        {
+                            this.Add(Player);
+                        }
+                    }
+
+                    if (!this.Homes.TryGetValue(ID, out Home Home))
+                    {
+                        Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                        if (Store)
+                        {
+                            this.Add(Home);
+                        }
+                    }
+
+
+                    if (Player == null || Home == null)
+                    {
+                        Logging.Error(this.GetType(),
+                            "Unable to load account id:" + HighID + "-" + LowID + ".");
+                        return Account;
+                    }
+
+                    Account = new Account(HighID, LowID, Player, Home);
+                    this.TryAdd(ID, Account);
                 }
             }
 
             return Account;
         }
 
-        internal async Task<Player> LoadPlayerAsync(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
+        internal async Task<Player> LoadPlayerAsync(int HighID, int LowID, bool Store = true)
         {
-            long ID = (long)HighID << 32 | (uint)LowID;
+            long ID = (long) HighID << 32 | (uint) LowID;
 
             if (!this.Players.TryGetValue(ID, out Player Player))
             {
-                switch (Database)
+
+                var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
+
+                if (Data != null)
                 {
-                    case DBMS.Mongo:
+                    Player = this.LoadPlayerFromSave(Data.Player.ToJson());
+
+                    if (Store)
                     {
-                        var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
+                        this.Add(Player);
+                    }
 
-                        if (Data != null)
+                    if (!this.Homes.TryGetValue(ID, out Home Home))
+                    {
+                        Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                        if (Store)
                         {
-                            Player = this.LoadPlayerFromSave(Data.Player.ToJson());
-
-                            if (Store)
-                            {
-                                this.Add(Player);
-                            }
-
-                            if (!this.Homes.TryGetValue(ID, out Home Home))
-                            {
-                                Home = this.LoadHomeFromSave(Data.Home.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Home);
-                                }
-                            }
-
-                            if (Player == null)
-                            {
-                                Logging.Error(this.GetType(), "Unable to load player id:" + HighID + "-" + LowID + ".");
-                                return null;
-                            }
+                            this.Add(Home);
                         }
+                    }
 
-                        break;
+                    if (Player == null)
+                    {
+                        Logging.Error(this.GetType(), "Unable to load player id:" + HighID + "-" + LowID + ".");
+                        return null;
                     }
                 }
             }
-
             return Player;
         }
 
-        internal async Task<Home> LoadHomeAsync(int HighID, int LowID, DBMS Database = Constants.Database, bool Store = true)
+        internal async Task<Home> LoadHomeAsync(int HighID, int LowID, bool Store = true)
         {
-            long ID = (long)HighID << 32 | (uint)LowID;
+            long ID = (long) HighID << 32 | (uint) LowID;
 
             if (!this.Homes.TryGetValue(ID, out Home Home))
             {
-                switch (Database)
+
+                var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
+
+                if (Data != null)
                 {
-                    case DBMS.Mongo:
+                    Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                    if (Store)
                     {
-                        var Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
+                        this.Add(Home);
+                    }
 
-                        if (Data != null)
+                    if (!this.Players.TryGetValue(ID, out Player Player))
+                    {
+                        Player = this.LoadPlayerFromSave(Data.Player.ToJson());
+
+                        if (Store)
                         {
-                            Home = this.LoadHomeFromSave(Data.Home.ToJson());
-
-                            if (Store)
-                            {
-                                this.Add(Home);
-                            }
-
-                            if (!this.Players.TryGetValue(ID, out Player Player))
-                            {
-                                Player = this.LoadPlayerFromSave(Data.Player.ToJson());
-
-                                if (Store)
-                                {
-                                    this.Add(Player);
-                                }
-                            }
-
-                            if (Home == null)
-                            {
-                                Logging.Error(this.GetType(), "Unable to load home id:" + HighID + "-" + LowID + ".");
-                                return null;
-                            }
+                            this.Add(Player);
                         }
+                    }
 
-                        break;
+                    if (Home == null)
+                    {
+                        Logging.Error(this.GetType(), "Unable to load home id:" + HighID + "-" + LowID + ".");
+                        return null;
                     }
                 }
             }
-
             return Home;
         }
 
@@ -314,61 +277,79 @@ namespace CR.Servers.CoC.Logic.Slots
             return Home;
         }
 
-        internal void SavePlayer(Player Player, DBMS Database = Constants.Database)
+        internal async Task SavePlayer(Player Player)
         {
-            switch (Database)
-            {
-                case DBMS.Mongo:
-                {
-                    Mongo.Players.UpdateOneAsync(Save => Save.HighId == Player.HighID && Save.LowId == Player.LowID, Builders<Core.Database.Models.Mongo.Players>
-                        .Update.Set(Save => Save.Player, BsonDocument.Parse(JsonConvert.SerializeObject(Player, this.Settings))));
-
-                    break;
-                }
-            }
+           await Mongo.Players.UpdateOneAsync(Save => Save.HighId == Player.HighID && Save.LowId == Player.LowID,
+                Builders<Core.Database.Models.Mongo.Players>
+                    .Update.Set(Save => Save.Player,
+                        BsonDocument.Parse(JsonConvert.SerializeObject(Player, this.Settings))));
         }
 
-        internal void SaveHome(Home Home, DBMS Database = Constants.Database)
+        internal async Task SaveHome(Home Home)
         {
-            switch (Database)
-            {
-                case DBMS.Mongo:
-                {
-                    Mongo.Players.UpdateOneAsync(Save => Save.HighId == Home.HighID && Save.LowId == Home.LowID, Builders<Core.Database.Models.Mongo.Players>.Update.Set(Save => Save.Home, BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))));
 
-                    break;
-                }
-            }
+            await Mongo.Players.UpdateOneAsync(Save => Save.HighId == Home.HighID && Save.LowId == Home.LowID,
+                Builders<Core.Database.Models.Mongo.Players>.Update.Set(Save => Save.Home,
+                    BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))));
+
         }
 
-        internal void Saves(DBMS Database = Constants.Database)
+        internal async Task Saves()
         {
             Player[] Players = this.Players.Values.ToArray();
             Home[] Homes = this.Homes.Values.ToArray();
 
-            Parallel.ForEach(Players, Player =>
+
+            foreach (var Player in Players)
             {
                 try
                 {
-                    this.SavePlayer(Player, Database);
+                    await this.SavePlayer(Player);
                 }
                 catch (Exception Exception)
                 {
                     Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + ".");
                 }
-            });
 
-            Parallel.ForEach(Homes, Home =>
+            }
+
+            foreach (var Home in Homes)
             {
                 try
                 {
-                    this.SaveHome(Home, Database);
+                    await this.SaveHome(Home);
                 }
                 catch (Exception Exception)
                 {
                     Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + ".");
                 }
-            });
+
+            }
+
+
+            /* Parallel.ForEach(Players, async Player =>
+             {
+                 try
+                 {
+                     await this.SavePlayer(Player);
+                 }
+                 catch (Exception Exception)
+                 {
+                     Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + ".");
+                 }
+             });
+
+             Parallel.ForEach(Homes, async Home =>
+             {
+                 try
+                 {
+                     await this.SaveHome(Home);
+                 }
+                 catch (Exception Exception)
+                 {
+                     Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + ".");
+                 }
+             });*/
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Enums;
@@ -92,8 +93,8 @@ namespace CR.Servers.CoC.Logic
                     }
                 });
             }
-            //else
-                //Logging.Info(this.GetType(), "Unable to refresh resource caps. Player is NULL.");
+             else
+                Logging.Info(this.GetType(), "Unable to refresh resource caps. Player is NULL.");
         }
 
         internal static Component GetClosestComponent(int X, int Y, List<Component> Components)

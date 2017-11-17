@@ -1,71 +1,73 @@
-﻿namespace CR.Servers.CoC.Logic
+﻿using CR.Servers.CoC.Extensions;
+using System;
+
+namespace CR.Servers.CoC.Logic
 {
     internal class Timer
     {
-        internal int EndSubTick;
+        internal int Seconds;
+        internal DateTime StartTime;
+        internal int EndTime;
 
-        internal bool Started => this.EndSubTick != -1;
+        internal DateTime GetStartTime => StartTime;
+        internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(EndTime);
 
-        internal void StartTimer(Time Time, int Seconds)
+        internal Timer()
         {
-            this.EndSubTick = Time.SubTick + Time.GetSecondsInTicks(Seconds);
+            StartTime = new DateTime();
+            EndTime = 0;
+            Seconds = 0;
         }
         
-        internal void IncreaseTimer(int Seconds)
+
+        internal void StartTimer(DateTime time, int durationSeconds)
         {
-            this.EndSubTick += Time.GetSecondsInTicks(Seconds);
+            StartTime = time;
+            EndTime = (int)TimeUtils.ToUnixTimestamp(time) + durationSeconds;
+            Seconds = durationSeconds;
         }
-        
-        internal void StopTimer()
+     
+        internal void FastForward(int seconds) => Seconds -= seconds;
+
+        internal void IncreaseTime(int seconds)
         {
-            this.EndSubTick = -1;
+            Seconds += seconds;
+            EndTime += seconds;
         }
-  
-        internal void FastForward(int Seconds)
+
+        internal int GetRemainingSeconds(DateTime time)
         {
-            this.EndSubTick -= Time.GetSecondsInTicks(Seconds);
-        }
-        
-        internal void FastForwardSubTicks(int SubTick)
-        {
-            if (this.EndSubTick > 0)
+            int result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
+            if (result <= 0)
             {
-                this.EndSubTick -= SubTick;
+                result = 0;
             }
+            return result;
         }
 
-        internal int GetRemainingSeconds(Time Time)
+
+        internal int GetRemainingSeconds(DateTime time, bool boost, DateTime boostEndTime = default(DateTime), float multiplier = 0f)
         {
-            int SubTicks = this.EndSubTick - Time.SubTick;
-
-            if (SubTicks > 0)
+            int result;
+            if (!boost)
             {
-                return Math.Max((int)(16L * SubTicks / 1000) + 1, 1);
+                result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
             }
-
-            return 0;
-        }
-
-        internal int GetRemainingMs(Time Time)
-        {
-            int SubTicks = this.EndSubTick - Time.SubTick;
-
-            if (SubTicks > 0)
+            else
             {
-                return 16 * SubTicks;
+                if (boostEndTime >= time)
+                    result = Seconds - (int)(time.Subtract(StartTime).TotalSeconds * multiplier);
+                else
+                {
+                    var boostedTime = (float)time.Subtract(StartTime).TotalSeconds - (float)(time - boostEndTime).TotalSeconds;
+                    var notBoostedTime = (float)time.Subtract(StartTime).TotalSeconds - boostedTime;
+
+                    result = Seconds - (int)(boostedTime * multiplier + notBoostedTime);
+                }
             }
-
-            return 0;
-        }
-
-        internal void AdjustSubTick(Time Time)
-        {
-            this.EndSubTick -= Time.SubTick;
-
-            if (this.EndSubTick < 0)
-            {
-                this.EndSubTick = 0;
-            }
+            if (result <= 0)
+                result = 0;
+            return result;
         }
     }
 }

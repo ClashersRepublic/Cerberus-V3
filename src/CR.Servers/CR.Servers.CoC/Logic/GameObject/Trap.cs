@@ -24,7 +24,7 @@ namespace CR.Servers.CoC.Logic
 
         internal override int VillageType => this.TrapData.VillageType;
 
-        internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Time) ?? 0;
+        internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool Constructing => this.ConstructionTimer != null;
 

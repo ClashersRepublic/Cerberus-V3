@@ -240,7 +240,7 @@ namespace CR.Servers.CoC.Extensions.Game
 #if DEBUG
                     Console.WriteLine($"Player received {CSV_Characters.Name} as mission rewards");
 #endif
-                    Player.Add_Unit(CSV_Characters.GlobalId, Mission.RewardTroopCount);
+                    Player.Units.Add(CSV_Characters.GlobalId, Mission.RewardTroopCount);
                 }
 
                 if (!string.IsNullOrEmpty(Mission.Dependencies))

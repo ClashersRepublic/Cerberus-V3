@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files.CSV_Helpers;
 
 namespace CR.Servers.CoC.Logic
@@ -39,7 +36,7 @@ namespace CR.Servers.CoC.Logic
                 if (this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Count > Index)
                     return this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map][Index];
 
-                //Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
+                Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
             }
 
             return null;
@@ -51,7 +48,7 @@ namespace CR.Servers.CoC.Logic
             {
                 int Count = 0;
 
-                /*foreach (Building GameObject in this.GameObjectManager.GameObjects[0][0])
+                foreach (Building GameObject in this.GameObjectManager.GameObjects[0][0])
                 {
                     if (GameObject.Data == Data && GameObject.GetUpgradeLevel() >= Level)
                     {
@@ -65,7 +62,7 @@ namespace CR.Servers.CoC.Logic
                     {
                         ++Count;
                     }
-                }*/
+                }
 
                 return Count;
             }
