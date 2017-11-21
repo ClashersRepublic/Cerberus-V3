@@ -146,7 +146,7 @@ namespace CR.Servers.CoC.Logic.Manager
                 var AvailableStorage = this.Level.ComponentManager.TotalMaxHousing -
                                        this.Level.Player.Units.GetUnitsTotalCapacity();
                 var CanAddProductionInPlayer = true;
-
+                
                 for (var i = 0; i < this.Productions.Count; i++)
                 {
                     var Production = this.Productions[i];
@@ -162,7 +162,7 @@ namespace CR.Servers.CoC.Logic.Manager
                                 {
                                     this.Level.Player.Units.Add(Character, 1);
 
-                                    AvailableStorage += Character.HousingSpace;
+                                    AvailableStorage -= Character.HousingSpace; //Before +=
 
                                     Production.Count--;
                                 }
@@ -186,7 +186,7 @@ namespace CR.Servers.CoC.Logic.Manager
                                 {
                                     this.Level.Player.Units.Add(Character, 1);
 
-                                    AvailableStorage += Character.HousingSpace;
+                                    AvailableStorage -= Character.HousingSpace;//Before +=
                                 }
                                 else
                                 {

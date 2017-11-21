@@ -75,7 +75,7 @@ namespace CR.Servers.CoC.Logic.Manager
             {
                 if ((Spell.UnitOfType == 1 ? this.Level.ComponentManager.MaxSpellForgeLevel : this.Level.ComponentManager.MaxDarkSpellForgeLevel) >= Spell.SpellForgeLevel - 1)
                 {
-                    if (this.Level.ComponentManager.TotalMaxHousing >= this.InProductionCapacity + Spell.HousingSpace * Count)
+                    if (this.Level.ComponentManager.TotalMaxSpellHousing >= this.InProductionCapacity + Spell.HousingSpace * Count)
                     {
                         return true;
                     }
@@ -141,8 +141,6 @@ namespace CR.Servers.CoC.Logic.Manager
 
         internal void Tick()
         {
-            Console.WriteLine(this.Level.ComponentManager.TotalMaxHousing);
-            Console.WriteLine(this.Level.ComponentManager.TotalMaxSpellHousing);
             if (this.Productions.Count > 0)
             {
                 var AvailableStorage = this.Level.ComponentManager.TotalMaxSpellHousing - this.Level.Player.Spells.GetUnitsTotalCapacity();
@@ -151,7 +149,7 @@ namespace CR.Servers.CoC.Logic.Manager
                 for (var i = 0; i < this.Productions.Count; i++)
                 {
                     var Production = this.Productions[i];
-                    var Character = (SpellData)Production.ItemData;
+                    var Spell = (SpellData)Production.ItemData;
 
                     if (Production.Terminate)
                     {
@@ -159,11 +157,11 @@ namespace CR.Servers.CoC.Logic.Manager
                         {
                             while (Production.Count > 0)
                             {
-                                if (AvailableStorage >= Character.HousingSpace)
+                                if (AvailableStorage >= Spell.HousingSpace)
                                 {
-                                    this.Level.Player.Spells.Add(Character, 1);
+                                    this.Level.Player.Spells.Add(Spell, 1);
 
-                                    AvailableStorage += Character.HousingSpace;
+                                    AvailableStorage -= Spell.HousingSpace;//Before +=
 
                                     Production.Count--;
                                 }
@@ -183,11 +181,11 @@ namespace CR.Servers.CoC.Logic.Manager
                         {
                             if (this.Timer.GetRemainingSeconds(this.Level.Player.LastTick) <= 0)
                             {
-                                if (AvailableStorage >= Character.HousingSpace && CanAddProductionInPlayer)
+                                if (AvailableStorage >= Spell.HousingSpace && CanAddProductionInPlayer)
                                 {
-                                    this.Level.Player.Spells.Add(Character, 1);
+                                    this.Level.Player.Spells.Add(Spell, 1);
 
-                                    AvailableStorage += Character.HousingSpace;
+                                    AvailableStorage -= Spell.HousingSpace;//Before +=
                                 }
                                 else
                                 {
@@ -222,7 +220,7 @@ namespace CR.Servers.CoC.Logic.Manager
 
                                 Production.Count--;
 
-                                this.Timer.IncreaseTimer(this.GetTrainingTime(Character));
+                                this.Timer.IncreaseTimer(this.GetTrainingTime(Spell));
                             }
                             else
                                 break;

@@ -219,6 +219,7 @@
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
     <Compile Include="Packets\Commands\Client\SpeedUp_Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
+    <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />

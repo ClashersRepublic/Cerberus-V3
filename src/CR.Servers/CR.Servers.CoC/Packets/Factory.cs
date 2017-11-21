@@ -59,6 +59,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(524, typeof(Change_Weapon_Mode));
             Factory.Commands.Add(532, typeof(New_Shop_Seen));
             Factory.Commands.Add(539, typeof(New_Seen));
+            Factory.Commands.Add(577, typeof(Swap_GameObject));
             Factory.Commands.Add(591, typeof(Change_Village_Mode));
             Factory.Commands.Add(600, typeof(Gear_Up));
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));
