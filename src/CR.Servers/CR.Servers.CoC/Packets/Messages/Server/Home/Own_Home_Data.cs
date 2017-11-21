@@ -20,7 +20,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Home
             this.Device.Account.Home.Encode(this.Data);
             this.Device.Account.Player.Encode(this.Data);
             this.Data.AddInt(0);
-            this.Data.AddInt(0);
+            this.Data.AddInt(1);
             // Data.AddInt(Device.State == State.WAR_EMODE ? 1 : 0);
             this.Data.AddInt(0);
 

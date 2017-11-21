@@ -40,6 +40,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     for (int i = 0; i < this.CommandCount; i++)
                     {
                         var CommandID = Reader.ReadInt32();
+
                         if (Factory.Commands.ContainsKey(CommandID))
                         {
                             var Command = Factory.CreateCommand(CommandID, Device, Reader);
@@ -59,7 +60,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         else
                         {
                             this.CommandCount = this.Commands.Count;
+                             this.Reader.BaseStream.Position = 0;
+                             Log();
                             //Dowhatitsupposedtodo
+                            
                             Logging.Error(this.GetType(), "Command is not handled! (" + CommandID + ")");
                             break;
                         }
@@ -77,9 +81,30 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             {
                 do
                 {
-
                     //TODO: Tick stuff
                     Command Command = this.Commands[0];
+
+                    if (Command.IsServerCommand)
+                    {
+                        ServerCommand ServerCommand = (ServerCommand)Command;
+
+                        if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
+                        {
+                            /*if (OriginalCommand.Checksum != ServerCommand.Checksum)
+                            {
+                                return;
+                            }*/
+
+                            this.Device.GameMode.CommandManager.ServerCommands.Remove(ServerCommand.Id);
+                        }
+                        else
+                        {
+                            this.Reader.BaseStream.Position = 0;
+                            Log();
+                            Logging.Error(this.GetType(), this.Device, "Execute command failed! Command " + Command.Type + " is not available.");
+                            return;
+                        }
+                    }
 
                     Command.Execute();
 

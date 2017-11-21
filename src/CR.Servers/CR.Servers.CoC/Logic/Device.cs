@@ -171,6 +171,18 @@ namespace CR.Servers.CoC.Logic
                 this.Disposed = true;
                 this.State = State.DISCONNECTED;
 
+                if (this.Account != null)
+                {
+                    if (this.Account.Player != null)
+                    {
+                        Resources.Accounts.SavePlayer(this.Account.Player);
+                    }
+                    if (this.Account.Home != null)
+                    {
+                        Resources.Accounts.SaveHome(this.Account.Home);
+                    }
+                }
+
                 this.Token = null;
 
                 this.Socket.Dispose();

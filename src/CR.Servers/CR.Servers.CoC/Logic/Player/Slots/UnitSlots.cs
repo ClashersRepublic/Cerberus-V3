@@ -29,7 +29,7 @@ namespace CR.Servers.CoC.Logic
             this.ForEach(Slot =>
             {
                 var Data = CSV.Tables.GetWithGlobalId(Slot.Data);
-                Total += Slot.Count * (Data.GetDataType() == 4 ? ((CharacterData)Data).HousingSpace : 0);
+                Total += Slot.Count * (Data.GetDataType() == 4 ? ((CharacterData)Data).HousingSpace : ((SpellData)Data).HousingSpace);
             });
 
             return Total;

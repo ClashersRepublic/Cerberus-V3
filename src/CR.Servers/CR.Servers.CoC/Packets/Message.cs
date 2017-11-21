@@ -97,7 +97,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void Log()
         {
-            File.AppendAllText(Directory.GetCurrentDirectory() + "\\Logs\\" + this.GetType().Name + ".log", BitConverter.ToString(this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))) + Environment.NewLine);
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin",this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

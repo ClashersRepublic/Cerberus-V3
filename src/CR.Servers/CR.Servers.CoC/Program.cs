@@ -66,25 +66,31 @@ namespace CR.Servers.CoC
             Console.WriteLine(@"Clashers Republic is NOT affiliated to 'Supercell Oy'.");
             Console.WriteLine(@"Clashers Republic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'.");
             Console.WriteLine();
-            Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +
-                              Environment.NewLine);
+            Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." + Environment.NewLine);
 
             Resources.Initialize();
 
-            Console.ReadKey();
-            foreach (Player Player in Resources.Accounts.Players.Values.ToArray())
-            {
-                if (Player.Connected)
-                {
-                    new Available_Server_Command(Player.Level.GameMode.Device)
-                    {
-                        //Command = new Name_Change_Callback(Player.Level.GameMode.Device) {AvatarName = "Aidid", ChangeNameCount = Player.ChangeNameCount}
-                        Command = new Diamonds_Added(Player.Level.GameMode.Device) {Count = 100000}
-                    }.Send();
 
+            while (true)
+            {
+                Console.ReadKey();
+                foreach (Player Player in Resources.Accounts.Players.Values.ToArray())
+                {
+                    if (Player.Connected)
+                    {
+                        Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) { Count = 1000000 });
+                        /*new Available_Server_Command(Player.Level.GameMode.Device)
+                        {
+                            //Command = new Name_Change_Callback(Player.Level.GameMode.Device) {AvatarName = "Aidid", ChangeNameCount = Player.ChangeNameCount}
+                            Command = new Diamonds_Added(Player.Level.GameMode.Device) {Count = 100000}
+                        }.Send();*/
+
+                    }
                 }
             }
             Thread.Sleep(-1);
         }
+        
+
     }
 }

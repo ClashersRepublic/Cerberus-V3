@@ -16,7 +16,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         internal override void Decode()
         {
             Mission_ID = Reader.ReadInt32();
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()

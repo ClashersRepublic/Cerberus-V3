@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using CR.Servers.Library.ZLib;
 
 namespace CR.Servers.Extensions.Binary
 {
@@ -210,7 +211,7 @@ namespace CR.Servers.Extensions.Binary
                 }
             }
             return null;
-        }
+        }*/
 
         public string ReadZlibStream()
         {
@@ -226,6 +227,6 @@ namespace CR.Servers.Extensions.Binary
                 }
             }
             return null;
-        }*/
+        }
     }
     }

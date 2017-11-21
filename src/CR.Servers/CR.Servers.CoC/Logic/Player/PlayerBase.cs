@@ -20,7 +20,7 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal DataSlots AchievementProgress;
         [JsonProperty] internal UnitSlots Units;
         [JsonProperty] internal UnitSlots Units2;
-        [JsonProperty] internal DataSlots Spells;
+        [JsonProperty] internal UnitSlots Spells;
         [JsonProperty] internal DataSlots UnitUpgrades;
         [JsonProperty] internal AllianceUnitSlots AllianceUnits;
         [JsonProperty] internal DataSlots SpellUpgrades;
@@ -119,7 +119,7 @@ namespace CR.Servers.CoC.Logic
             this.Resources = new ResourceSlots();
             this.Units = new UnitSlots();
             this.Units2 = new UnitSlots();
-            this.Spells = new DataSlots();
+            this.Spells = new UnitSlots();
             this.UnitUpgrades = new DataSlots();
             this.SpellUpgrades = new DataSlots();
             this.HeroUpgrades = new DataSlots();

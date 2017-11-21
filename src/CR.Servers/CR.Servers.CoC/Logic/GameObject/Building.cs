@@ -86,21 +86,27 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
+        internal UnitStorageComponent UnitStorageComponent => this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent)Component : null;
         internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent)Component : null;
         internal ResourceProductionComponent ResourceProductionComponent => this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent)Component : null;
-
         internal ResourceStorageComponent ResourceStorageComponent => this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent)Component : null;
+        internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent)Component : null;
+        internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent)Component : null;
 
-        /*internal UnitStorageComponent UnitStorageComponent => this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent)Component : null;
 
-        internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent)Component : null;*/
         internal int GetUpgradeLevel() => this.UpgradeLevel;
 
         public Building(Data Data, Level Level) : base(Data, Level)
         {
             BuildingData BuildingData = this.BuildingData;
 
-            if (BuildingData.BuildingClass == "Defense")
+
+            if (BuildingData.IsTrainingHousing)
+            {
+                this.AddComponent(new UnitStorageComponent(this));
+            }
+
+            if (BuildingData.IsDefense)
             {
                 AddComponent(new CombatComponent(this));
             }
@@ -117,22 +123,21 @@ namespace CR.Servers.CoC.Logic
                     MaxArray = BuildingData.GetResourceMaxArray(0)
                 });
             }
-            /*
 
-            if (BuildingData.IsTrainingHousing)
+            if (BuildingData.UnitProduction[0] > 0)
             {
-                this.AddComponent(new UnitStorageComponent(this));
+                this.AddComponent(new UnitProductionComponent(this));
+            }       
+
+            if (BuildingData.Bunker)
+            {
+                this.AddComponent(new BunkerComponent(this));
             }
 
             if (BuildingData.UpgradesUnits)
             {
                 this.AddComponent(new UnitUpgradeComponent(this));
             }
-
-            if (BuildingData.Bunker)
-            {
-                this.AddComponent(new BunkerComponent(this));
-            }*/
         }
 
         internal void FinishConstruction()
@@ -226,13 +231,16 @@ namespace CR.Servers.CoC.Logic
                     this.Level.ComponentManager.RefreshResourceCaps();
                 }
             }
-            /*
+            
             UnitStorageComponent UnitStorageComponent = this.UnitStorageComponent;
 
             if (UnitStorageComponent != null)
             {
-                UnitStorageComponent.SetStorage();
-            }*/
+                if (UpgradeLevel > -1)
+                {
+                    UnitStorageComponent.SetStorage();
+                }
+            }
         }
 
         internal override void FastForwardTime(int Seconds)
@@ -287,7 +295,8 @@ namespace CR.Servers.CoC.Logic
                 {
                     var startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
                     var duration = ConstructionTimeEnd - startTime;
-
+                    if (duration < 0)
+                        duration = 0;
                     //ConstructionTime = Math.Min(ConstructionTime, Data.GetBuildTime(this.UpgradeLevel + 1));
 
                     this.ConstructionTimer = new Timer();
@@ -309,7 +318,8 @@ namespace CR.Servers.CoC.Logic
                 {
                     var startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
                     var duration = BoostTimeEnd - startTime;
-
+                    if (duration < 0)
+                        duration = 0;
                     this.BoostTimer = new Timer();
                     this.BoostTimer.StartTimer(this.Level.Player.LastTick, duration);
                 }

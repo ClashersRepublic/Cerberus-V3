@@ -1,4 +1,4 @@
-﻿using CR.Servers.CoC.Files.CSV_Logic.Logic;
+﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
 
@@ -17,32 +17,52 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         internal override void Decode()
         {
             this.BuildingId = this.Reader.ReadInt32();
-            ExecuteSubTick = this.Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            var level = this.Device.GameMode.Level;
 
-            Building Building = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId) as Building;
-
-            if (Building != null)
+            var gameObject = level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            if (gameObject != null)
             {
-                if (Building.Locked)
+                if (gameObject.Type == 0)
                 {
-                    BuildingData Data = Building.BuildingData;
+                    var building = gameObject as Building;
 
-                    if (Data.BuildCost[0] > 0)
+                    if (building != null)
                     {
-                        ResourceData ResourceData = Data.BuildResourceData;
-                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[0])
-                            Level.Player.Resources.Remove(ResourceData, Data.BuildCost[0]);
-                    }
+                        if (building.Locked)
+                        {
+                            var data = building.BuildingData;
 
-                    Building.Locked = false;
-                    //Building.SetUpgradeLevel(Building.GetUpgradeLevel());
+                            if (data.BuildCost[0] > 0)
+                            {
+                                var resourceData = data.BuildResourceData;
+                                if (level.Player.Resources.GetCountByData(resourceData) >= data.BuildCost[0])
+                                {
+                                    level.Player.Resources.Remove(resourceData, data.BuildCost[0]);
+                                    building.Locked = false;
+                                }
+                                else
+                                    Logging.Error(this.GetType(), "Unable to unlock the building. The player doesn't have enough resources.");
+                            }
+                            else
+                                building.Locked = false;
+                            //Building.SetUpgradeLevel(Building.GetUpgradeLevel());
+                        }
+                        else
+                            Logging.Error(this.GetType(), "Unable to unlock the building. The building is already unlocked");
+                    }
+                    else
+                        Logging.Error(this.GetType(), "Unable to unlock the building. The game object is not valid or not exist.");
                 }
+                else
+                    Logging.Error(this.GetType(), "Unable to unlock the building. The game object is not a building");
             }
+            else
+                Logging.Error(this.GetType(), "Unable to unlock the building. The game object is null");
         }
     }
 }

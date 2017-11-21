@@ -22,124 +22,132 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             this.Id = Reader.ReadInt32();
             this.UseAltResource = Reader.ReadBoolean();
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()
         {
             var Level = Device.GameMode.Level;
             var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
-
-            if (GameObject.Type == 0)
+            if (GameObject != null)
             {
-                var Building = GameObject as Building;
-                if (Building != null)
+                if (GameObject.Type == 0)
                 {
-                    if (Building.UpgradeAvailable)
+                    var Building = GameObject as Building;
+                    if (Building != null)
                     {
-                        BuildingData Data = (BuildingData) Building.Data;
-                        ResourceData ResourceData = this.UseAltResource  ? Data.AltBuildResourceData : Data.BuildResourceData;
-
-                        if (ResourceData != null)
+                        if (Building.UpgradeAvailable)
                         {
-                            if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[Building.GetUpgradeLevel() + 1])
+                            BuildingData Data = (BuildingData) Building.Data;
+                            ResourceData ResourceData = this.UseAltResource
+                                ? Data.AltBuildResourceData
+                                : Data.BuildResourceData;
+
+                            if (ResourceData != null)
                             {
-                                if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
+                                Console.WriteLine(Data.BuildCost[Building.GetUpgradeLevel() + 1]);
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >=
+                                    Data.BuildCost[Building.GetUpgradeLevel() + 1])
                                 {
-                                    Level.Player.Resources.Remove(ResourceData, Data.BuildCost[Building.GetUpgradeLevel() + 1]);
-                                    Building.StartUpgrade();
-
-                                    if (Data.IsTownHall2)
+                                    if (Level.GameObjectManager.Map == 0
+                                        ? Level.WorkerManager.FreeWorkers > 0
+                                        : Level.WorkerManagerV2.FreeWorkers > 0)
                                     {
-                                        Console.WriteLine(Level.Player.TownHallLevel2);
-                                        if (Level.Player.TownHallLevel2 == 0)
-                                            Parallel.ForEach(Level.GameObjectManager.GameObjects[0][1].ToArray(),
-                                                Object =>
-                                                {
-                                                    var b2 = (Building) Object;
-                                                    var bd2 = b2.BuildingData;
-                                                    if (b2.Locked)
+                                        Level.Player.Resources.Remove(ResourceData,
+                                            Data.BuildCost[Building.GetUpgradeLevel() + 1]);
+                                        Building.StartUpgrade();
+
+                                        if (Data.IsTownHall2)
+                                        {
+                                            if (Level.Player.TownHallLevel2 == 0)
+                                                Parallel.ForEach(Level.GameObjectManager.GameObjects[0][1].ToArray(),
+                                                    Object =>
                                                     {
-                                                        if (bd2.Locked)
-                                                            return;
+                                                        var b2 = (Building) Object;
+                                                        var bd2 = b2.BuildingData;
+                                                        if (b2.Locked)
+                                                        {
+                                                            if (bd2.Locked)
+                                                                return;
 #if DEBUG
-                                                        Logging.Info(this.GetType(),   $"Builder Building: Unlocking {bd2.Name} with ID {Object.Id}");
+                                                            Logging.Info(this.GetType(),
+                                                                $"Builder Building: Unlocking {bd2.Name} with ID {Object.Id}");
 #endif
-                                                        b2.Locked = false;
-                                                    }
-                                                });
+                                                            b2.Locked = false;
+                                                        }
+                                                    });
 
-                                        Level.Player.TownHallLevel2++;
-                                    }
-                                    else if (Data.IsAllianceCastle)
-                                    {
+                                            Level.Player.TownHallLevel2++;
+                                        }
+                                        else if (Data.IsAllianceCastle)
+                                        {
 
-                                        Level.Player.CastleLevel++;
-                                        Level.Player.CastleTotalCapacity = Data.HousingSpace[Level.Player.CastleLevel];
-                                        Level.Player.CastleTotalSpellCapacity =
-                                            Data.HousingSpaceAlt[Level.Player.CastleLevel];
-                                    }
-                                    else if (Data.IsTownHall)
-                                    {
-                                        Level.Player.TownHallLevel++;
+                                            Level.Player.CastleLevel++;
+                                            Level.Player.CastleTotalCapacity =
+                                                Data.HousingSpace[Level.Player.CastleLevel];
+                                            Level.Player.CastleTotalSpellCapacity =
+                                                Data.HousingSpaceAlt[Level.Player.CastleLevel];
+                                        }
+                                        else if (Data.IsTownHall)
+                                        {
+                                            Level.Player.TownHallLevel++;
+                                        }
                                     }
                                 }
+                                else
+                                    Logging.Error(this.GetType(),
+                                        "Unable to upgrade the building. You doesn't have enough resources.");
                             }
-#if DEBUG
-                            else
-                                Logging.Error(this.GetType(), "Unable to upgrade the building. You doesn't have enough resources.");
-#endif
                         }
+                        else
+                            Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
                     }
-#if DEBUG
                     else
-                        Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
-#endif
+                        Logging.Error(this.GetType(), "Unable to upgrade the building. GameObject is not valid or not exist.");
                 }
-#if DEBUG
-                else
-                    Logging.Error(this.GetType(),
-                        "Unable to upgrade the building. GameObject is not valid or not exist.");
-#endif
-            }
-            else if (GameObject.Type == 4)
-            {
-                //Trap
-            }
-            else if (GameObject.Type == 8)
-            {
-                var Object = GameObject as VillageObject;
-                if (Object != null)
+                else if (GameObject.Type == 4)
                 {
-                        VillageObjectData Data = (VillageObjectData)Object.Data;
-                        ResourceData ResourceData =  Data.BuildResourceData;
+                    //Trap
+                }
+                else if (GameObject.Type == 8)
+                {
+                    var Object = GameObject as VillageObject;
+                    if (Object != null)
+                    {
+                        VillageObjectData Data = (VillageObjectData) Object.Data;
+                        ResourceData ResourceData = Data.BuildResourceData;
 
                         if (ResourceData != null)
                         {
-                            if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[Object.GetUpgradeLevel() + 1])
-                        {
-                                if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
+                            if (Level.Player.Resources.GetCountByData(ResourceData) >=
+                                Data.BuildCost[Object.GetUpgradeLevel() + 1])
+                            {
+                                if (Level.GameObjectManager.Map == 0
+                                    ? Level.WorkerManager.FreeWorkers > 0
+                                    : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {
-                                    Level.Player.Resources.Remove(ResourceData, Data.BuildCost[Object.GetUpgradeLevel() + 1]);
+                                    Level.Player.Resources.Remove(ResourceData,
+                                        Data.BuildCost[Object.GetUpgradeLevel() + 1]);
                                     Object.StartUpgrade();
                                 }
                             }
-#if DEBUG
                             else
                                 Logging.Error(this.GetType(),
                                     "Unable to upgrade the VillageObject. You doesn't have enough resources.");
-#endif
                         }
-                    
+                    }
+                    else
+                        Logging.Error(this.GetType(),
+                            "Unable to upgrade the VillageObject. GameObject is not valid or not exist.");
                 }
-#if DEBUG
                 else
                     Logging.Error(this.GetType(),
-                        "Unable to upgrade the VillageObject. GameObject is not valid or not exist.");
-#endif
+                        $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
             }
             else
-                Logging.Error(this.GetType(), $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
-        } 
+                Logging.Error(this.GetType(),
+                    "Unable to upgrade the gameObject. GameObject is null");
+        }
+        
     }
 }

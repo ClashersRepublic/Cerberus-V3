@@ -18,7 +18,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             this.BuildingID = this.Reader.ReadInt32();
             this.Reader.ReadByte();
             this.Reader.ReadInt32();
-            this.ExecuteSubTick = this.Reader.ReadInt32();
+            base.Decode();
         }
         internal int BuildingID;
 

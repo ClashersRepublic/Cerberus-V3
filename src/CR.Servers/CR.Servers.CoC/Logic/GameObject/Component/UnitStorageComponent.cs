@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -10,11 +12,11 @@ using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
 {
-    [Obsolete]
     internal class UnitStorageComponent : Component
     {
         internal int HousingSpace;
         internal int HousingSpaceAlt;
+        internal bool IsSpellForge;
 
         internal List<Item> Units;
 
@@ -24,15 +26,19 @@ namespace CR.Servers.CoC.Logic
             {
                 int Housing = 0;
 
-                for (int i = 0; i < this.Units.Count; i++)
+                foreach (Item Unit in this.Units)
                 {
-                    if (this.Units[i].Count > 0)
+                    if (Unit.Count > 0)
                     {
-                        Data Data = CSV.Tables.GetWithGlobalId(this.Units[i].Data);
+                        Data Data = Unit.ItemData;
 
-                        if (Data.GetDataType() == 4)
+                        if (Data.GetDataType() == 4 && !this.IsSpellForge) 
                         {
-                            Housing += ((CharacterData)Data).HousingSpace * this.Units[i].Count;
+                            Housing += ((CharacterData) Data).HousingSpace * Unit.Count;
+                        }
+                        else
+                        {
+                            Housing += ((SpellData)Data).HousingSpace * Unit.Count;
                         }
                     }
                 }
@@ -45,7 +51,7 @@ namespace CR.Servers.CoC.Logic
 
         public UnitStorageComponent(GameObject GameObject) : base(GameObject)
         {
-            this.Units = new List<Item>(20);
+            this.Units = new List<Item>();
             this.SetStorage();
         }
 
@@ -64,20 +70,29 @@ namespace CR.Servers.CoC.Logic
                     else
                         this.Units.Add(new Item(Data.GlobalId, 1));
                 }
-               // else
-                    //Logging.Info(this.GetType(), "AddUnit called and storage is full.");
+                else
+                    Logging.Info(this.GetType(), "AddUnit called and storage is full.");
             }
-            //else
-                //Logging.Info(this.GetType(), "AddUnit called with CharacterData NULL.");
+                else
+                Logging.Info(this.GetType(), "AddUnit called with CharacterData NULL.");
         }
 
         internal bool CanAddUnit(Data Data)
         {
-            if (Data.GetDataType() == 4)
+            if (Data.GetDataType() == 4 && this.IsSpellForge)
             {
-                CharacterData Character = (CharacterData)Data;
+                CharacterData Character = (CharacterData) Data;
 
                 if (this.HousingSpace >= this.TotalUsedHousing + Character.HousingSpace)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                SpellData Spell = (SpellData)Data;
+
+                if (this.HousingSpace >= this.TotalUsedHousing + Spell.HousingSpace)
                 {
                     return true;
                 }
@@ -100,6 +115,8 @@ namespace CR.Servers.CoC.Logic
                     this.HousingSpaceAlt = Building.BuildingData.HousingSpaceAlt[Level];
                 }
             }
+
+            IsSpellForge = Building.BuildingData.IsSpellForge;
         }
 
         internal override void Load(JToken Json)
@@ -121,6 +138,12 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
             }
+
+            if (JsonHelper.GetJsonBoolean(Json, "storage_type", out bool IsSpellForge))
+            {
+                this.IsSpellForge = IsSpellForge;
+            }
+            base.Load(Json);
         }
 
         internal override void Save(JObject Json)
@@ -137,7 +160,9 @@ namespace CR.Servers.CoC.Logic
             }
 
             Json.Add("units", Units);
-            Json.Add("storage_type", 0);
+            Json.Add("storage_type", IsSpellForge ? 1 : 0);
+            base.Save(Json);
         }
+        
     }
 }

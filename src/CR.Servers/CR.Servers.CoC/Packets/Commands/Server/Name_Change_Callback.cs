@@ -5,7 +5,7 @@ using CR.Servers.Extensions.List;
 
 namespace CR.Servers.CoC.Packets.Commands.Server
 {
-    internal class Name_Change_Callback : Command
+    internal class Name_Change_Callback : ServerCommand
     {
 
 
@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Packets.Commands.Server
         {
             this.AvatarName = Reader.ReadString();
             this.ChangeNameCount = Reader.ReadInt32();
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
 
         }
 
@@ -34,7 +34,7 @@ namespace CR.Servers.CoC.Packets.Commands.Server
         {
             Data.AddString(this.AvatarName);
             Data.AddInt(this.ChangeNameCount);
-            Data.AddInt(ExecuteSubTick);
+            base.Encode(Data);
         }
 
         internal override void Execute()

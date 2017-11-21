@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Core.Database;
+﻿using System.Text.RegularExpressions;
+using CR.Servers.CoC.Core.Database;
 using CR.Servers.CoC.Core.Events;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
@@ -15,6 +16,7 @@ namespace CR.Servers.CoC.Core
         internal static Accounts Accounts;
         internal static XorShift Random;
         internal static Gateway Gateway;
+        internal static Regex Regex;
         internal static bool Started;
 
         internal static void Initialize()
@@ -31,6 +33,8 @@ namespace CR.Servers.CoC.Core
             {
                 Mongo.Initialize();
             }
+
+            Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
 
             Resources.Accounts = new Accounts();
             Resources.Random = new XorShift();

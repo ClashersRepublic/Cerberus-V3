@@ -71,6 +71,9 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Missions:
                     _Data = new MissionData(_Row, this);
                     break;
+                case Gamefile.Spells:
+                    _Data = new SpellData(_Row, this);
+                    break;
                 case Gamefile.Variables:
                     _Data = new VariableData(_Row, this);
                     break;

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.CoC.Logic.Manager;
 using CR.Servers.CoC.Logic.Map;
 using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
-using Console = System.Console;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -25,6 +23,8 @@ namespace CR.Servers.CoC.Logic
         internal WorkerManager WorkerManager;
         internal WorkerManagerV2 WorkerManagerV2;
         internal ComponentManager ComponentManager;
+        internal UnitProductionManager UnitProductionManager;
+        internal SpellProductionManager SpellProductionManager;
 
         internal int WidthInTiles => 50;
 
@@ -57,9 +57,6 @@ namespace CR.Servers.CoC.Logic
         {
             var TownHallLevel = GameObjectManager.Map == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
             var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel);
-            Console.WriteLine(LevelData.Name);
-            Console.WriteLine(TownHallLevel);
-            Console.WriteLine(LevelData?.Caps[Data]);
             return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
 
@@ -71,9 +68,10 @@ namespace CR.Servers.CoC.Logic
             this.WorkerManager = new WorkerManager();
             this.WorkerManagerV2 = new WorkerManagerV2();
             this.ComponentManager = new ComponentManager(this);
+            this.UnitProductionManager = new UnitProductionManager(this);
+            this.SpellProductionManager = new SpellProductionManager(this);
             /*
             this.CooldownManager = new CooldownManager();
-            this.UnitProductionManager = new UnitProductionManager(this);
 
             this.MissionManager = new MissionManager(this);*/
 
@@ -82,6 +80,8 @@ namespace CR.Servers.CoC.Logic
         internal void FastForwardTime(int Seconds)
         {
             this.GameObjectManager.FastForwardTime(Seconds);
+            this.UnitProductionManager.FastForwardTime(Seconds);
+            this.SpellProductionManager.FastForwardTime(Seconds);
             //this.CooldownManager.FastForwardTime(Seconds);
         }
         
@@ -105,8 +105,9 @@ namespace CR.Servers.CoC.Logic
 
             var Token = Home.LastSave;
             this.GameObjectManager.Load(Token);
+            this.UnitProductionManager.Load(Token["units"]?["unit_prod"]);
+            this.SpellProductionManager.Load(Token["spells"]?["unit_prod"]);
             //this.CooldownManager.Load(Token);
-            //this.UnitProductionManager.Load(Home.HomeJSON["units"]?["unit_prod"]);
         }
 
         internal JObject Battle()
@@ -125,7 +126,8 @@ namespace CR.Servers.CoC.Logic
         {
             this.GameObjectManager.Load(Json);
             //this.CooldownManager.Load(Token);
-            //this.UnitProductionManager.Load(Home.HomeJSON["units"]?["unit_prod"]);
+            this.UnitProductionManager.Load(Json["units"]?["unit_prod"]);
+            this.SpellProductionManager.Load(Json["spells"]?["unit_prod"]);
         }
         internal JObject Save()
         {
@@ -136,14 +138,21 @@ namespace CR.Servers.CoC.Logic
             this.GameObjectManager.Save(Json);
             //this.CooldownManager.Save(Json);
 
-            /*Json.Add("units", new JObject
+            Json.Add("units", new JObject
             {
                 {
                     "unit_prod",
                     this.UnitProductionManager.Save()
                 }
-            });*/
+            });
 
+            Json.Add("spells", new JObject
+            {
+                {
+                    "unit_prod",
+                    this.SpellProductionManager.Save()
+                }
+            });
             return Json;
         }
 
@@ -151,7 +160,9 @@ namespace CR.Servers.CoC.Logic
         {
             Player.LastTick = DateTime.Now;
             this.GameObjectManager.Tick();
-           // this.MissionManager.Tick();
+            this.UnitProductionManager.Tick();
+            this.SpellProductionManager.Tick();
+            // this.MissionManager.Tick();
 
             //this.CooldownManager.Update(this.Time);
         }

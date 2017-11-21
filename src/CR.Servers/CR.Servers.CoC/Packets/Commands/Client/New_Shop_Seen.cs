@@ -16,7 +16,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             Reader.ReadInt32();
             Reader.ReadInt32();
             Reader.ReadInt32();
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
     }
 }

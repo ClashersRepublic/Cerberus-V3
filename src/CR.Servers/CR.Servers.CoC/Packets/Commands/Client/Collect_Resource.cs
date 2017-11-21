@@ -21,7 +21,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         internal override void Decode()
         {
             this.BuildingId = this.Reader.ReadInt32();
-            ExecuteSubTick = this.Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()

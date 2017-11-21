@@ -23,7 +23,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             this.Y = Reader.ReadInt32();
             this.Id = Reader.ReadInt32();
 
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()

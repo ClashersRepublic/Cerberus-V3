@@ -7,6 +7,7 @@ using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.Extensions.List;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -48,9 +49,9 @@ namespace CR.Servers.CoC.Logic
 
         [JsonProperty] internal bool Locked;
 
-        /*[JsonProperty] internal Rank Rank = Rank.Administrator;
+        [JsonProperty] internal Rank Rank = Rank.Player;
 
-        [JsonProperty] internal Facebook Facebook;
+        /*[JsonProperty] internal Facebook Facebook;
         [JsonProperty] internal Google Google;
         [JsonProperty] internal Gamecenter Gamecenter;*/
 

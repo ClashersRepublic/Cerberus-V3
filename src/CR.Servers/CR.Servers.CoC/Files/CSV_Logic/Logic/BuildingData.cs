@@ -234,6 +234,12 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 
         internal bool IsWorker2 => this.BuildingClass == "Worker2";
 
+        internal bool IsDefense => this.BuildingClass == "Defense";
+
+        internal bool IsSpellForge => this.ForgesSpells;
+
+        internal bool IsMiniSpellForge => this.ForgesMiniSpells;
+
         internal bool IsLaboratory => this.UpgradesUnits;
 
         internal bool IsBarrack => this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 1 && !this.ForgesSpells;

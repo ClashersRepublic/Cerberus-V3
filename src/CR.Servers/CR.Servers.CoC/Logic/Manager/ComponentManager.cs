@@ -54,6 +54,123 @@ namespace CR.Servers.CoC.Logic
             });
         }
 
+
+        internal List<Building> TroopHousings
+        {
+            get
+            {
+                List<Building> TroopHousings = new List<Building>(8);
+
+                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                {
+                    Building Building = (Building)GameObject;
+
+                    if (Building.BuildingData.IsTrainingHousing)
+                    {
+                        if (Building.GetUpgradeLevel() > -1)
+                        {
+                            TroopHousings.Add(Building);
+                        }
+                    }
+                });
+
+                return TroopHousings;
+            }
+        }
+
+        internal List<Building> DarkSpellForge
+        {
+            get
+            {
+                List<Building> DarkSpellForge = new List<Building>();
+
+                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                {
+                    Building Building = (Building)GameObject;
+
+                    if (Building.BuildingData.IsSpellForge && Building.BuildingData.IsMiniSpellForge)
+                    {
+                        if (Building.GetUpgradeLevel() > -1)
+                        {
+                            DarkSpellForge.Add(Building);
+                        }
+                    }
+                });
+
+                return DarkSpellForge;
+            }
+        }
+
+
+        internal List<Building> DarkBarracks
+        {
+            get
+            {
+                List<Building> DarkBarracks = new List<Building>();
+
+                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                {
+                    Building Building = (Building)GameObject;
+
+                    if (Building.BuildingData.IsDarkBarrack)
+                    {
+                        if (Building.GetUpgradeLevel() > -1)
+                        {
+                            DarkBarracks.Add(Building);
+                        }
+                    }
+                });
+
+                return DarkBarracks;
+            }
+        }
+
+        internal List<Building> SpellForge
+        {
+            get
+            {
+                List<Building> SpellForge = new List<Building>();
+
+                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                {
+                    Building Building = (Building)GameObject;
+
+                    if (Building.BuildingData.IsSpellForge && !Building.BuildingData.IsMiniSpellForge)
+                    {
+                        if (Building.GetUpgradeLevel() > -1)
+                        {
+                            SpellForge.Add(Building);
+                        }
+                    }
+                });
+
+                return SpellForge;
+            }
+        }
+
+        internal List<Building> Barracks
+        {
+            get
+            {
+                List<Building> Barracks = new List<Building>();
+
+                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                {
+                    Building Building = (Building)GameObject;
+
+                    if (Building.BuildingData.IsBarrack)
+                    {
+                        if (Building.GetUpgradeLevel() > -1)
+                        {
+                            Barracks.Add(Building);
+                        }
+                    }
+                });
+
+                return Barracks;
+            }
+        }
+
         internal List<Component> FindAll(int GameObjectType, Predicate<Component> Match)
         {
             List<Component> Components = new List<Component>(16);
@@ -113,7 +230,29 @@ namespace CR.Servers.CoC.Logic
             return Closest;
         }
 
-        /*
+        internal int TotalMaxSpellHousing
+        {
+            get
+            {
+                int Count = 0;
+
+                this.Components[0].ForEach(Component =>
+                {
+                    if (Component.Type == 0)
+                    {
+                        var Storage = (UnitStorageComponent)Component;
+                        if (Storage.IsSpellForge)
+                        {
+                            Count += ((UnitStorageComponent)Component).HousingSpace;
+                        }
+                    }
+                });
+
+                return Count;
+            }
+        }
+
+
         internal int TotalMaxHousing
         {
             get
@@ -124,13 +263,17 @@ namespace CR.Servers.CoC.Logic
                 {
                     if (Component.Type == 0)
                     {
-                        Count += ((UnitStorageComponent)Component).HousingSpace;
+                        var Storage = (UnitStorageComponent) Component;
+                        if (!Storage.IsSpellForge)
+                        {
+                            Count += ((UnitStorageComponent) Component).HousingSpace;
+                        }
                     }
                 });
 
                 return Count;
             }
-        }*/
+        }
 
         internal int MaxBarrackLevel
         {
@@ -145,6 +288,75 @@ namespace CR.Servers.CoC.Logic
                     if (Building.BuildingData.IsBarrack)
                     {
                         if (Building.BuildingData.ProducesUnitsOfType == 1)
+                        {
+                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
+                        }
+                    }
+                });
+
+                return MaxLevel;
+            }
+        }
+
+        internal int MaxSpellForgeLevel
+        {
+            get
+            {
+                int MaxLevel = -1;
+
+                this.Components[0].ForEach(Component =>
+                {
+                    Building Building = (Building)Component.Parent;
+
+                    if (Building.BuildingData.IsSpellForge && !Building.BuildingData.IsMiniSpellForge)
+                    {
+                        if (Building.BuildingData.ProducesUnitsOfType == 1)
+                        {
+                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
+                        }
+                    }
+                });
+
+                return MaxLevel;
+            }
+        }
+
+        internal int MaxDarkBarrackLevel
+        {
+            get
+            {
+                int MaxLevel = -1;
+
+                this.Components[0].ForEach(Component =>
+                {
+                    Building Building = (Building)Component.Parent;
+
+                    if (Building.BuildingData.IsDarkBarrack)
+                    {
+                        if (Building.BuildingData.ProducesUnitsOfType == 2)
+                        {
+                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
+                        }
+                    }
+                });
+
+                return MaxLevel;
+            }
+        }
+
+        internal int MaxDarkSpellForgeLevel
+        {
+            get
+            {
+                int MaxLevel = -1;
+
+                this.Components[0].ForEach(Component =>
+                {
+                    Building Building = (Building)Component.Parent;
+
+                    if (Building.BuildingData.IsSpellForge && Building.BuildingData.IsMiniSpellForge)
+                    {
+                        if (Building.BuildingData.ProducesUnitsOfType == 2)
                         {
                             MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                         }

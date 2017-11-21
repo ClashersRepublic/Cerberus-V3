@@ -5,6 +5,7 @@ using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
+using CR.Servers.Extensions.List;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Packets
@@ -13,7 +14,7 @@ namespace CR.Servers.CoC.Packets
     {
         internal int ExecuteSubTick = -1;
         internal virtual int Type => 0;
-        internal bool IsServerCommand => false;
+        internal virtual bool IsServerCommand => false;
 
         internal Reader Reader;
         internal Device Device;
@@ -32,10 +33,12 @@ namespace CR.Servers.CoC.Packets
 
         internal virtual void Decode()
         {
+            ExecuteSubTick = this.Reader.ReadInt32();
         }
 
         internal virtual void Encode(List<byte> Data)
         {
+            Data.AddInt(ExecuteSubTick);
         }
 
         internal virtual void Execute()

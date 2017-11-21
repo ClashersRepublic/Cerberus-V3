@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Logic.Mode
+﻿using CR.Servers.CoC.Logic.Manager;
+
+namespace CR.Servers.CoC.Logic.Mode
 {
     internal class GameMode
     {
@@ -6,9 +8,10 @@
         internal Level Level;
 
         internal Time Time;
+        internal CommandManager CommandManager;
         //internal State State;
 
-        /*internal CommandManager CommandManager;
+        /*
         internal GameLogManager GameLogManager;*/
 
         internal bool Connected => this.Device != null && this.Device.Connected;
@@ -18,9 +21,8 @@
             this.Device = Device;
             this.Time = new Time();
             this.Level = new Level(this);
-
-           /* this.CommandManager = new CommandManager(this.Level);
-            this.GameLogManager = new GameLogManager(this);*/
+            this.CommandManager = new CommandManager(this.Level);
+            /*this.GameLogManager = new GameLogManager(this);*/
         }
 
         internal void LoadHomeState(Home Home, Player Player)
@@ -30,7 +32,7 @@
 
             this.Level.SetPlayer(Player);
             this.Level.SetHome(Home);
-            //this.Level.FastForwardTime(Player.s);
+            //this.Level.FastForwardTime(Player.la);
             this.Level.Process();
         }
       

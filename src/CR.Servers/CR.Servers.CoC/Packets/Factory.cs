@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
+using CR.Servers.CoC.Packets.Messages.Client.Avatar;
 using CR.Servers.CoC.Packets.Messages.Client.Battle;
 using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.Extensions.Binary;
@@ -32,9 +34,11 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(10101, typeof(Authentication));
             Factory.Messages.Add(10108, typeof(Keep_Alive));
             Factory.Messages.Add(10121, typeof(Unlock_Account));
+            Factory.Messages.Add(10212, typeof(Change_Avatar_Name));
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
+            Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
         }
 
         private static void LoadCommands()
@@ -47,6 +51,9 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(502, typeof(Upgrade_Building));
             Factory.Commands.Add(504, typeof(Speed_Up_Construction));
             Factory.Commands.Add(506, typeof(Collect_Resource));
+            Factory.Commands.Add(508, typeof(Train_Unit));
+            Factory.Commands.Add(516, typeof(Upgrade_Unit));
+            Factory.Commands.Add(517, typeof(SpeedUp_Upgrade_Unit));
             Factory.Commands.Add(519, typeof(Mission_Progress));
             Factory.Commands.Add(520, typeof(Unlock_Building));
             Factory.Commands.Add(524, typeof(Change_Weapon_Mode));
@@ -78,6 +85,29 @@ namespace CR.Servers.CoC.Packets
             }
 
             Logging.Info(typeof(Factory), "Command " + Type + " not exist.");
+
+            return null;
+        }
+
+
+        internal static Debug CreateDebug(string Message, Device Device)
+        {
+            string[] Parameters = Message.Remove(0, 1).Split(' ');
+
+            if (Factory.Debugs.TryGetValue(Parameters[0], out Type DType))
+            {
+                var args = Parameters.Skip(1).ToArray();
+                Debug Debug = (Debug)Activator.CreateInstance(DType, Device, args);
+
+                if (Device.GameMode.Level.Player.Rank >= Debug.RequiredRank)
+                {
+                    return Debug;
+                }
+                else
+                {
+                    Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
+                }
+            }
 
             return null;
         }

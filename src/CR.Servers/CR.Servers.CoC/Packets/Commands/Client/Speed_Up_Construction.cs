@@ -12,17 +12,18 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
         }
 
-        internal int Id;
+        internal int BuildingId;
 
         internal override void Decode()
         {
-            this.Id = Reader.ReadInt32();
-            ExecuteSubTick = Reader.ReadInt32();
+            this.BuildingId = Reader.ReadInt32();
+            Reader.ReadInt32();
+            base.Decode();
         }
         
         internal override void Execute()
         {
-            GameObject GameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
+            GameObject GameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
 
             if (GameObject != null)
             {

@@ -9,6 +9,9 @@ namespace CR.Servers.CoC.Logic
         internal DateTime StartTime;
         internal int EndTime;
 
+        internal bool Started => this.EndTime != 0;
+
+
         internal DateTime GetStartTime => StartTime;
         internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(EndTime);
 
@@ -26,10 +29,20 @@ namespace CR.Servers.CoC.Logic
             EndTime = (int)TimeUtils.ToUnixTimestamp(time) + durationSeconds;
             Seconds = durationSeconds;
         }
-     
-        internal void FastForward(int seconds) => Seconds -= seconds;
 
-        internal void IncreaseTime(int seconds)
+        internal void StopTimer()
+        {
+            this.EndTime = 0;
+            this.Seconds = 0;
+        }
+
+        internal void FastForward(int seconds)
+        {
+            Seconds -= seconds;
+            EndTime -= seconds;
+        }
+
+        internal void IncreaseTimer(int seconds)
         {
             Seconds += seconds;
             EndTime += seconds;

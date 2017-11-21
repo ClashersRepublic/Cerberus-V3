@@ -34,7 +34,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             this.BuildingData = Reader.ReadData<BuildingData>();
 
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Execute()

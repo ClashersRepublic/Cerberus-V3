@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
 
 namespace CR.Servers.CoC.Packets.Commands.Server
 {
-    internal class Diamonds_Added : Command
+    internal class Diamonds_Added : ServerCommand
     {
         internal override int Type => 7;
 
@@ -36,11 +37,11 @@ namespace CR.Servers.CoC.Packets.Commands.Server
             /*this.BillingPackageData = Reader.ReadData<BillingPackageData>();
             this.GemBundleData = Reader.ReadData<GemBundleData>();*/
 
-            Reader.ReadInt32();
+            Reader.ReadBoolean();
 
-            Reader.ReadString();
+            Reader.ReadString(); //TransactionID
 
-            ExecuteSubTick = Reader.ReadInt32();
+            base.Decode();
         }
 
         internal override void Encode(List<byte> Data)
@@ -52,15 +53,16 @@ namespace CR.Servers.CoC.Packets.Commands.Server
             Data.AddInt(0);
             /*this.Data.AddData(this.BillingPackageData);
             this.Data.AddData(this.GemBundleData);*/
-            Data.AddInt(this.AlliangeGift ? 1 : 0);
+            Data.AddBool(this.AlliangeGift);
 
             Data.AddString(null); // TransactionID
 
-            Data.AddInt(ExecuteSubTick);
+            base.Encode(Data);
         }
 
         internal override void Execute()
         {
+            ShowValues();
             this.Device.GameMode.Level.Player.AddDiamonds(this.Count);
         }
 
