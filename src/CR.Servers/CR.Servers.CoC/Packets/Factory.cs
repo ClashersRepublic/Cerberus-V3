@@ -31,6 +31,7 @@ namespace CR.Servers.CoC.Packets
 
         private static void LoadMessages()
         {
+            Factory.Messages.Add(10100, typeof(Client_Hello));
             Factory.Messages.Add(10101, typeof(Authentication));
             Factory.Messages.Add(10108, typeof(Keep_Alive));
             Factory.Messages.Add(10121, typeof(Unlock_Account));

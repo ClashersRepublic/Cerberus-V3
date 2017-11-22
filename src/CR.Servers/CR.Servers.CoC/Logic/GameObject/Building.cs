@@ -145,7 +145,7 @@ namespace CR.Servers.CoC.Logic
 
             BuildingData Data = this.BuildingData;
             if (this.Gearing)
-            {           
+            {
                 this.Gearing = false;
 
                 this.CombatComponent.GearUp = 1;
@@ -155,26 +155,28 @@ namespace CR.Servers.CoC.Logic
                     CombatComponent.AttackMode = true;
                     CombatComponent.AttackModeDraft = true;
                 }
+
+                this.Level.WorkerManagerV2.DeallocateWorker(this);
             }
             else
             {
                 if (this.UpgradeLevel + 1 > Data.MaxLevel)
                 {
-                    Logging.Error(this.GetType(),
-                        "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
+                    Logging.Error(this.GetType(), "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else
                     this.SetUpgradeLevel(this.UpgradeLevel + 1);
-            }
 
-            if (this.VillageType == 0)
-            {
-                this.Level.WorkerManager.DeallocateWorker(this);
-            }
-            else
-            {
-                this.Level.WorkerManagerV2.DeallocateWorker(this);
+
+                if (this.VillageType == 0)
+                {
+                    this.Level.WorkerManager.DeallocateWorker(this);
+                }
+                else
+                {
+                    this.Level.WorkerManagerV2.DeallocateWorker(this);
+                }
             }
 
             if (!Data.IsTroopHousingV2)
@@ -231,20 +233,12 @@ namespace CR.Servers.CoC.Logic
 
         internal void StartGearing()
         {
-            int Time = this.BuildingData.GetGearUpTime(1);
+            int Time = this.BuildingData.GetGearUpTime(this.UpgradeLevel);
             if (this.CombatComponent.GearUp != 1)
             {
                 if (!this.Constructing)
                 {
-                    if (this.VillageType == 0)
-                    {
-                        this.Level.WorkerManager.AllocateWorker(this);
-                    }
-                    else
-                    {
-                        this.Level.WorkerManagerV2.AllocateWorker(this);
-                    }
-
+                    this.Level.WorkerManagerV2.AllocateWorker(this);
                     this.Gearing = true;
 
                     if (Time <= 0)
@@ -253,8 +247,6 @@ namespace CR.Servers.CoC.Logic
                     }
                     else
                     {
-                        this.ResourceProductionComponent?.CollectResources();
-
                         this.ConstructionTimer = new Timer();
                         this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, Time);
                     }
@@ -372,10 +364,20 @@ namespace CR.Servers.CoC.Logic
                     this.ConstructionTimer = new Timer();
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, duration);
 
-                    if (this.VillageType == 0)
-                        this.Level.WorkerManager.AllocateWorker(this);
-                    else
+
+                    if (JsonHelper.GetJsonBoolean(Json, "gearing", out bool Gearing))
+                    {
+                        this.Gearing = Gearing;
                         this.Level.WorkerManagerV2.AllocateWorker(this);
+                    }
+                    else
+                    {
+                        if (this.VillageType == 0)
+                            this.Level.WorkerManager.AllocateWorker(this);
+                        else
+                            this.Level.WorkerManagerV2.AllocateWorker(this);
+                    }
+
                 }
             }
 
@@ -391,10 +393,6 @@ namespace CR.Servers.CoC.Logic
                     this.BoostTimer.StartTimer(this.Level.Player.LastTick, duration);
                 }
             }
-
-            if (JsonHelper.GetJsonBoolean(Json, "gearing", out bool Gearing))
-                this.Gearing = Gearing;
-
 
             JsonHelper.GetJsonBoolean(Json, "boost_pause", out this.BoostPause);
 

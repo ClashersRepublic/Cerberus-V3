@@ -241,6 +241,7 @@
     <Compile Include="Packets\Factory.cs" />
     <Compile Include="Packets\Message.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
+    <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\Ask_For_Avatar_Profile.cs" />

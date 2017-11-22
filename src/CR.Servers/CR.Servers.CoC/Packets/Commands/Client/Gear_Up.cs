@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Core;
+﻿using System;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
@@ -38,10 +39,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     ResourceData ResourceData = Data.GearUpResourceData;
                     if (ResourceData != null)
                     {
-                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.GearUpCost[Building.GetUpgradeLevel() + 1])
+                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.GearUpCost[Building.GetUpgradeLevel()])
                         {
-                            Level.Player.Resources.Remove(ResourceData, Data.GearUpCost[Building.GetUpgradeLevel() + 1]);
-                            Building.StartUpgrade();
+                            if (Level.WorkerManagerV2.FreeWorkers > 0)
+                            {
+                                Level.Player.Resources.Remove(ResourceData,  Data.GearUpCost[Building.GetUpgradeLevel()]);
+                                Building.StartGearing();
+                            }
                         }
                         else
                             Logging.Error(this.GetType(),

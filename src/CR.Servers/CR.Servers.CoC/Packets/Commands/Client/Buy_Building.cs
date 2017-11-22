@@ -83,6 +83,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                         Level.Player.UseDiamonds(Cost);
                                         this.StartConstruction(Level);
                                     }
+                                    return;
                                 }
 
                                 if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
@@ -116,18 +117,49 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                             this.StartConstruction(Level, Time);
                                         }
                                     }
+                                    return;
                                 }
-                                else
-                                {
-                                    if (Level.Player.Resources.GetCountByData(ResourceData) >=  this.BuildingData.BuildCost[0])
-                                    {
-                                        //Handle buy workerv2
 
-                                        if (Level.WorkerManagerV2.FreeWorkers > 0)
-                                        {
-                                            Level.Player.Resources.Remove(ResourceData,  this.BuildingData.BuildCost[0]);
-                                            this.StartConstruction(Level);
-                                        }
+                                if (this.BuildingData.IsWorker2)
+                                {
+                                    int Cost;
+
+                                    switch (Level.WorkerManagerV2.WorkerCount)
+                                    {
+                                        case 1:
+                                            Cost = Globals.WorkerCost2Nd;
+                                            break;
+                                        case 2:
+                                            Cost = Globals.WorkerCost3Rd;
+                                            break;
+                                        case 3:
+                                            Cost = Globals.WorkerCost4Th;
+                                            break;
+                                        case 4:
+                                            Cost = Globals.WorkerCost5Th;
+                                            break;
+
+                                        default:
+                                            Cost = this.BuildingData.BuildCost[0];
+                                            break;
+
+                                    }
+
+                                    if (Level.Player.HasEnoughDiamonds(Cost))
+                                    {
+                                        Level.Player.UseDiamonds(Cost);
+                                        this.StartConstruction(Level);
+                                    }
+                                    return;
+                                }
+
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >=  this.BuildingData.BuildCost[0])
+                                {
+
+                                    if (Level.WorkerManagerV2.FreeWorkers > 0)
+                                    {
+                                        Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
+                                        this.StartConstruction(Level);
                                     }
                                 }
                             }

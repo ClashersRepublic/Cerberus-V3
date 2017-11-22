@@ -8,6 +8,7 @@ using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
+using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets
 {
@@ -69,13 +70,14 @@ namespace CR.Servers.CoC.Packets
 
         internal virtual void Encrypt()
         {
-            byte[] Packet = this.Data.ToArray();
+            if (this.Device.State > State.SESSION_OK)
+            {
+                byte[] Packet = this.Data.ToArray();
+                Packet = this.Device.SendEncrypter.Encrypt(Packet);
 
-            Packet =  this.Device.SendEncrypter.Encrypt(Packet);
-
-            this.Data.Clear();
-            this.Data.AddRange(Packet);
-
+                this.Data.Clear();
+                this.Data.AddRange(Packet);
+            }
             this.Length = this.Data.Count;
         }
 

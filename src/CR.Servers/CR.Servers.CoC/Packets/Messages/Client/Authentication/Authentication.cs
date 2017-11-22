@@ -10,6 +10,7 @@ using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
+using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
@@ -26,6 +27,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         public Authentication(Device device, Reader reader) : base(device, reader)
         {
+            Device.State = State.LOGIN;
         }
 
         internal override void Decode()

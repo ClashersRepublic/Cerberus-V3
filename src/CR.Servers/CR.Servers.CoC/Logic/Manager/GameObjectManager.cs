@@ -117,6 +117,11 @@ namespace CR.Servers.CoC.Logic
                     this.Level.WorkerManager.WorkerCount++;
                 }
 
+                if (Data.IsWorker2)
+                {
+                    this.Level.WorkerManagerV2.WorkerCount++;
+                }
+
                 if (Data.IsAllianceCastle)
                 {
                     this.Bunker = Building;
