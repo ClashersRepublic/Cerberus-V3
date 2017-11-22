@@ -71,7 +71,7 @@
 "Jump spell Upgrade","TID_HINT_SPELL_JUMP_DURATION",8,999,,,
 "Freeze spell","TID_HINT_SPELL_FREEZE",9,999,,,
 "Freeze spell Upgrade","TID_HINT_SPELL_FREEZE_DURATION",9,999,,,
-"Forums","TID_HINT_FORUMS",4,999,-1,,
+"Forums","TID_HINT_FORUMS",999,999,-1,,
 "Laboratory","TID_HINT_LABORATORY",3,4,-1,,
 "DPS","TID_HINT_DPS",6,999,-1,,
 "Cancel upgrades","TID_HINT_LABORATORY_UPGRADES",4,7,,,

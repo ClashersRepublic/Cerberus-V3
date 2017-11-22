@@ -42,10 +42,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             ResourceData ResourceData = this.UseAltResource
                                 ? Data.AltBuildResourceData
                                 : Data.BuildResourceData;
-
                             if (ResourceData != null)
                             {
-                                Console.WriteLine(Data.BuildCost[Building.GetUpgradeLevel() + 1]);
                                 if (Level.Player.Resources.GetCountByData(ResourceData) >=
                                     Data.BuildCost[Building.GetUpgradeLevel() + 1])
                                 {
@@ -114,7 +112,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     var Object = GameObject as VillageObject;
                     if (Object != null)
                     {
-                        VillageObjectData Data = (VillageObjectData) Object.Data;
+                        VillageObjectData Data = Object.VillageObjectData;
                         ResourceData ResourceData = Data.BuildResourceData;
 
                         if (ResourceData != null)
@@ -133,8 +131,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             }
                             else
                                 Logging.Error(this.GetType(),
-                                    "Unable to upgrade the VillageObject. You doesn't have enough resources.");
+                                    "Unable to upgrade the VillageObject. The player doesn't have enough resources.");
                         }
+                        else
+                            Logging.Error(this.GetType(),
+                                "Unable to start upgrade the VillageObject. The resources data is null.");
                     }
                     else
                         Logging.Error(this.GetType(),

@@ -4,8 +4,6 @@ using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
@@ -61,6 +59,8 @@ namespace CR.Servers.CoC.Logic
         internal bool Boosted => this.BoostTimer != null;
 
         internal bool Constructing => this.ConstructionTimer != null;
+
+        internal bool Gearing;
 
         internal bool UpgradeAvailable
         {
@@ -144,14 +144,29 @@ namespace CR.Servers.CoC.Logic
         {
 
             BuildingData Data = this.BuildingData;
+            if (this.Gearing)
+            {           
+                this.Gearing = false;
 
-            if (this.UpgradeLevel + 1 > Data.MaxLevel)
-            {
-                Logging.Error(this.GetType(), "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
-                this.SetUpgradeLevel(Data.MaxLevel);
+                this.CombatComponent.GearUp = 1;
+
+                if (CombatComponent.AltAttackMode)
+                {
+                    CombatComponent.AttackMode = true;
+                    CombatComponent.AttackModeDraft = true;
+                }
             }
             else
-                this.SetUpgradeLevel(this.UpgradeLevel + 1);
+            {
+                if (this.UpgradeLevel + 1 > Data.MaxLevel)
+                {
+                    Logging.Error(this.GetType(),
+                        "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
+                    this.SetUpgradeLevel(Data.MaxLevel);
+                }
+                else
+                    this.SetUpgradeLevel(this.UpgradeLevel + 1);
+            }
 
             if (this.VillageType == 0)
             {
@@ -162,9 +177,27 @@ namespace CR.Servers.CoC.Logic
                 this.Level.WorkerManagerV2.DeallocateWorker(this);
             }
 
-            this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Data.GetBuildTime(this.UpgradeLevel)));
+            if (!Data.IsTroopHousingV2)
+            {
+                this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Data.GetBuildTime(this.UpgradeLevel)));
+            }
+            else
+            {
+                var troopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
+
+                if (troopHousing >= 0)
+                {
+                    int Time = Globals.TroopHousingV2BuildTimeSeconds.Length == troopHousing ? Globals.TroopHousingV2BuildTimeSeconds[troopHousing - 1] : Globals.TroopHousingV2BuildTimeSeconds[troopHousing];
+                    this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Time));
+                }
+                else
+                {
+                    Logging.Error(this.GetType(), "TroopHousingV2 count is below zero when trying to get build time");
+                }
+            }
 
             this.ConstructionTimer = null;
+
         }
 
         internal void StartUpgrade()
@@ -193,6 +226,43 @@ namespace CR.Servers.CoC.Logic
                     this.ConstructionTimer = new Timer();
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, Time);
                 }
+            }
+        }
+
+        internal void StartGearing()
+        {
+            int Time = this.BuildingData.GetGearUpTime(1);
+            if (this.CombatComponent.GearUp != 1)
+            {
+                if (!this.Constructing)
+                {
+                    if (this.VillageType == 0)
+                    {
+                        this.Level.WorkerManager.AllocateWorker(this);
+                    }
+                    else
+                    {
+                        this.Level.WorkerManagerV2.AllocateWorker(this);
+                    }
+
+                    this.Gearing = true;
+
+                    if (Time <= 0)
+                    {
+                        this.FinishConstruction();
+                    }
+                    else
+                    {
+                        this.ResourceProductionComponent?.CollectResources();
+
+                        this.ConstructionTimer = new Timer();
+                        this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, Time);
+                    }
+                }
+            }
+            else
+            {
+                Logging.Error(this.GetType(),  "Unable to gear up the building because the buidling is already geared up! - " + Data.Name + ".");
             }
         }
 
@@ -301,14 +371,11 @@ namespace CR.Servers.CoC.Logic
 
                     this.ConstructionTimer = new Timer();
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, duration);
+
                     if (this.VillageType == 0)
-                    {
                         this.Level.WorkerManager.AllocateWorker(this);
-                    }
                     else
-                    {
                         this.Level.WorkerManagerV2.AllocateWorker(this);
-                    }
                 }
             }
 
@@ -324,6 +391,10 @@ namespace CR.Servers.CoC.Logic
                     this.BoostTimer.StartTimer(this.Level.Player.LastTick, duration);
                 }
             }
+
+            if (JsonHelper.GetJsonBoolean(Json, "gearing", out bool Gearing))
+                this.Gearing = Gearing;
+
 
             JsonHelper.GetJsonBoolean(Json, "boost_pause", out this.BoostPause);
 
@@ -356,6 +427,11 @@ namespace CR.Servers.CoC.Logic
             if (this.Locked)
                 Json.Add("locked", this.Locked);
 
+            if (Gearing)
+            {
+                Json.Add("gearing", this.Gearing);
+            }
+
             if (this.ConstructionTimer != null)
             {
                 Json.Add("const_t", this.ConstructionTimer.GetRemainingSeconds(this.Level.Player.LastTick));
@@ -367,6 +443,7 @@ namespace CR.Servers.CoC.Logic
                 Json.Add("boost_t", this.BoostTimer.GetRemainingSeconds(this.Level.Player.LastTick));
                 Json.Add("boost_t_end", this.BoostTimer.EndTime);
             }
+
 
             if (this.BoostPause)
                 Json.Add("boost_pause", this.BoostPause);

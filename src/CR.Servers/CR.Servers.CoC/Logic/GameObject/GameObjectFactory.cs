@@ -10,8 +10,8 @@ namespace CR.Servers.CoC.Logic
             {
                 case 1:
                     return new Building(Data, Level);
-                case 3:
-                    return new Obstacle(Data, Level);
+                case 8:
+                    return new Obstacle(Data, Level); //ClassID 3  but csv id 8
                 /*case 4:
                     return new Trap(Data, Level);
                 case 6:

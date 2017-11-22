@@ -25,6 +25,22 @@ namespace CR.Servers.CoC.Logic
             return null;
         }
 
+        internal GameObject GetObstacleById(int Id)
+        {
+            int Class = Id / 1000000 - 500;
+
+            if (this.GameObjectManager.GameObjects.Length > Class)
+            {
+                var Obstacle = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
+
+                if (Obstacle != null)
+                    return Obstacle;
+
+                Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
+            }
+            return null;
+        }
+
         internal GameObject GetGameObjectById(int Id)
         {
             int Class = Id / 1000000 - 500;

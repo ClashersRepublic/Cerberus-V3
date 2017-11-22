@@ -75,6 +75,9 @@ namespace CR.Servers.CoC.Extensions.Game
 
         internal static ResourceData AllianceCreateResourceData;
 
+        internal static int[] TroopHousingV2Cost;
+        internal static int[] TroopHousingV2BuildTimeSeconds;
+
         internal static void Initialize()
         {
             Globals.AllianceCreateResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_RESOURCE")).TextValue);
@@ -141,6 +144,9 @@ namespace CR.Servers.CoC.Extensions.Game
             Globals.ObstacleRespawnSeconds = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("OBSTACLE_RESPAWN_SECONDS")).NumberValue;
 
             Globals.CollectAllResourcesAtOnce = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("COLLECT_ALL_RESOURCES_AT_ONCE")).BooleanValue;
+
+            Globals.TroopHousingV2Cost = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("TROOP_HOUSING_V2_COST")).NumberArray;
+            Globals.TroopHousingV2BuildTimeSeconds = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("TROOP_HOUSING_V2_BUILD_TIME_SECONDS")).NumberArray;
         }
     }
 }

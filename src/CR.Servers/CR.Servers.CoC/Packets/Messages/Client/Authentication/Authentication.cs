@@ -2,6 +2,7 @@
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Helper;
+using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
@@ -150,12 +151,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                 {
                     //TODO: Maintenance
 
-                    /*if (!string.IsNullOrEmpty(Settings.PatchServer))
+                    if (!string.IsNullOrEmpty(Settings.PatchServer))
+                    {
                         if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(MasterHash, Fingerprint.Sha))
                         {
                             new Authentication_Failed(Device, LoginFailedReason.Patch).Send();
-                            return;
-                        }*/
+                            return false;
+                        }
+                    }
                     return true;
                 }
                 else

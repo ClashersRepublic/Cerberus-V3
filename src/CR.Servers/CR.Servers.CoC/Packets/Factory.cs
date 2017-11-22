@@ -51,9 +51,10 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(502, typeof(Upgrade_Building));
             Factory.Commands.Add(504, typeof(Speed_Up_Construction));
             Factory.Commands.Add(506, typeof(Collect_Resource));
+            Factory.Commands.Add(507, typeof(Clear_Obstacle));
             Factory.Commands.Add(508, typeof(Train_Unit));
             Factory.Commands.Add(516, typeof(Upgrade_Unit));
-            Factory.Commands.Add(517, typeof(SpeedUp_Upgrade_Unit));
+            Factory.Commands.Add(517, typeof(Speed_Up_Upgrade_Unit));
             Factory.Commands.Add(519, typeof(Mission_Progress));
             Factory.Commands.Add(520, typeof(Unlock_Building));
             Factory.Commands.Add(524, typeof(Change_Weapon_Mode));

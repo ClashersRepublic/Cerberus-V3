@@ -140,14 +140,14 @@
                     var sc = new byte[2];
                     input.Read(sc, 0, 2);
 
-                        var version = new byte[4];
-                        input.Read(version, 0, 4);
+                    var version = new byte[4];
+                    input.Read(version, 0, 4);
 
-                        var md5Length = new byte[4];
-                        input.Read(md5Length, 0, 4);
+                    var md5Length = new byte[4];
+                    input.Read(md5Length, 0, 4);
 
-                        var md5 = new byte[16];
-                        input.Read(md5, 0, 16);
+                    var md5 = new byte[16];
+                    input.Read(md5, 0, 16);
 
                     var properties = new byte[5];
                     input.Read(properties, 0, 5);

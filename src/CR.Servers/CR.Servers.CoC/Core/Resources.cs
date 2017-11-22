@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using CR.Servers.CoC.Core.Consoles;
 using CR.Servers.CoC.Core.Database;
 using CR.Servers.CoC.Core.Events;
 using CR.Servers.CoC.Core.Network;
@@ -25,9 +26,9 @@ namespace CR.Servers.CoC.Core
             CSV.Initialize();
             LevelFile.Initialize();
             Game_Events.Initialize();
-
             Globals.Initialize();
             Settings.Initialize();
+            Fingerprint.Initialize();
 
             if (Constants.Database == DBMS.Mongo)
             {
@@ -41,6 +42,7 @@ namespace CR.Servers.CoC.Core
             Resources.Gateway = new Gateway();
             Resources.Started = true;
 
+            Parser.Initialize();
             EventsHandler.Initialize();
 
         }

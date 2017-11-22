@@ -1,6 +1,9 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
+﻿using CR.Servers.CoC.Extensions;
+using CR.Servers.CoC.Extensions.Game;
+using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
@@ -28,6 +31,12 @@ namespace CR.Servers.CoC.Logic
 
         internal bool ClearingOnGoing => this.ClearTimer != null;
 
+        internal int[] GemDrops =
+        {
+            3, 0, 1, 2, 0, 1, 1, 0, 0, 3,
+            1, 0, 2, 2, 0, 0, 3, 0, 1, 0
+        };
+
         public Obstacle(Data Data, Level Level) : base(Data, Level)
         {
 
@@ -46,28 +55,68 @@ namespace CR.Servers.CoC.Logic
             return false;
         }
 
+        internal void SpeedUpConstruction()
+        {
+            if (this.Level.Player != null)
+            {
+                if (this.ClearingOnGoing)
+                {
+                    int Cost = GamePlayUtil.GetSpeedUpCost(this.RemainingClearingTime, this.ObstacleData.VillageType, 100);
+
+                    if (this.Level.Player.HasEnoughDiamonds(Cost))
+                    {
+                        this.Level.Player.UseDiamonds(Cost);
+                        this.ClearingFinished();
+                    }
+                }
+            }
+        }
+
         internal void ClearingFinished()
         {
             Player Player = this.Level.Player;
-
-            if (Player?.Level.State == State.LOGGED)
+            
+            if (this.VillageType == 0)
             {
-                // LogicAchievementManager::obstacleCleared();
                 this.Level.WorkerManager.DeallocateWorker(this);
-
-                this.Destructed = true;
             }
+            else
+            {
+                this.Level.WorkerManagerV2.DeallocateWorker(this);
+            }
+
+            // LogicAchievementManager::obstacleCleared();
+
+            this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(ObstacleData.ClearTimeSeconds));
+
+            this.ClearTimer = null;
+            this.Destructed = true;
+            this.Level.GameObjectManager.RemoveGameObject(this, VillageType);
         }
 
         internal void StartClearing()
         {
             ObstacleData Data = this.ObstacleData;
 
-            if (this.ClearingOnGoing)
+            if (!this.ClearingOnGoing)
             {
+                if (this.VillageType == 0)
+                {
+                    this.Level.WorkerManager.AllocateWorker(this);
+                }
+                else
+                {
+                    this.Level.WorkerManagerV2.AllocateWorker(this);
+                }
+
                 if (Data.ClearTimeSeconds <= 0)
                 {
                     this.ClearingFinished();
+                }
+                else
+                {
+                    this.ClearTimer = new Timer();
+                    this.ClearTimer.StartTimer(this.Level.Player.LastTick, Data.ClearTimeSeconds);
                 }
             }
         }
@@ -97,26 +146,37 @@ namespace CR.Servers.CoC.Logic
 
         internal override void Load(JToken Json)
         {
-            base.Load(Json);
-
-            if (JsonHelper.GetJsonNumber(Json, "clear_t", out int ClearTime))
+            if (JsonHelper.GetJsonNumber(Json, "clear_t", out int ClearTime) && JsonHelper.GetJsonNumber(Json, "clear_t_end", out int ClearTimeEnd))
             {
                 if (ClearTime > -1)
                 {
+                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    var duration = ClearTimeEnd - startTime;
+                    if (duration < 0)
+                        duration = 0;
+
                     this.ClearTimer = new Timer();
-                    this.ClearTimer.StartTimer(this.Level.Player.LastTick, ClearTime);
+                    this.ClearTimer.StartTimer(this.Level.Player.LastTick, duration);
+
+                    if (this.VillageType == 0)
+                        this.Level.WorkerManager.AllocateWorker(this);
+                    else
+                        this.Level.WorkerManagerV2.AllocateWorker(this);
                 }
             }
+
+            base.Load(Json);
         }
 
         internal override void Save(JObject Json)
         {
-            base.Save(Json);
-
             if (this.ClearingOnGoing)
             {
                 Json.Add("clear_t", this.ClearTimer.GetRemainingSeconds(this.Level.Player.LastTick));
+                Json.Add("clear_t_end", this.ClearTimer.EndTime);
             }
+
+            base.Save(Json);
         }
     }
 }

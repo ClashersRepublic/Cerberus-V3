@@ -275,6 +275,31 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
+
+        
+        internal int MaxBarrackV2Level
+        {
+            get
+            {
+                int MaxLevel = -1;
+
+                this.Components[0].ForEach(Component =>
+                {
+                    Building Building = (Building)Component.Parent;
+
+                    if (Building.BuildingData.VillageType == 1)
+                    {
+                        if (Building.BuildingData.IsBarrack)
+                        {
+                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
+                        }
+                    }
+                });
+
+                return MaxLevel;
+            }
+        }
+
         internal int MaxBarrackLevel
         {
             get
@@ -287,10 +312,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Building.BuildingData.IsBarrack)
                     {
-                        if (Building.BuildingData.ProducesUnitsOfType == 1)
-                        {
-                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
-                        }
+                        MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
                 });
 
@@ -310,10 +332,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Building.BuildingData.IsSpellForge && !Building.BuildingData.IsMiniSpellForge)
                     {
-                        if (Building.BuildingData.ProducesUnitsOfType == 1)
-                        {
-                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
-                        }
+                        MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
                 });
 
@@ -333,10 +352,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Building.BuildingData.IsDarkBarrack)
                     {
-                        if (Building.BuildingData.ProducesUnitsOfType == 2)
-                        {
-                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
-                        }
+                        MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
                 });
 
@@ -356,10 +372,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Building.BuildingData.IsSpellForge && Building.BuildingData.IsMiniSpellForge)
                     {
-                        if (Building.BuildingData.ProducesUnitsOfType == 2)
-                        {
-                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
-                        }
+                        MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
                 });
 

@@ -62,7 +62,6 @@ namespace CR.Servers.CoC.Packets.Commands.Server
 
         internal override void Execute()
         {
-            ShowValues();
             this.Device.GameMode.Level.Player.AddDiamonds(this.Count);
         }
 

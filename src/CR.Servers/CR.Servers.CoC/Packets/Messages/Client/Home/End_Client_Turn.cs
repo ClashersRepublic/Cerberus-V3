@@ -1,8 +1,6 @@
-﻿using System;
+﻿#define Extra
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
@@ -107,16 +105,18 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     }
 
                     Command.Execute();
-
-                    Logging.Error(this.GetType(), "Command is handled! (" + Command.Type+ ")");
+#if Extra
+                    Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
+#endif
                     this.Commands.Remove(Command);
                     continue;
                 } while (this.Commands.Count > 0);
             }
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
-
-             Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+#if Extra
+            Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+#endif
         }
     }
 }

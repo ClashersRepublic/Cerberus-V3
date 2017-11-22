@@ -11,7 +11,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         }
 
         public override string Name { get; set; }
-        public string Description { get; set; }
+        public string FileName { get; set; }
+        public string LocalizedName { get; set; }
         public bool HasEvenSpaceCharacters { get; set; }
         public bool isRTL { get; set; }
         public string UsedSystemFont { get; set; }

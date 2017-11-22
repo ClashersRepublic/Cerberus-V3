@@ -39,7 +39,6 @@ namespace CR.Servers.CoC.Packets.Commands.Server
 
         internal override void Execute()
         {
-            ShowValues();
             var Level = this.Device.GameMode.Level;
             if (this.AvatarName != null)
             {

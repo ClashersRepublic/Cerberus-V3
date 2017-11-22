@@ -1,4 +1,5 @@
 ﻿using System;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
@@ -90,41 +91,65 @@ namespace CR.Servers.CoC.Logic
 
                             if (Character.UnitOfType == 1)
                             {
-                                if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxBarrackLevel))
+                                if (Character.VillageType == 0)
+                                {
+                                    if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxBarrackLevel))
+                                    {
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxBarrackV2Level))
+                                    {
+                                        return false;
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                if (Character.VillageType == 0)
+                                {
+                                    if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxDarkBarrackLevel))
+                                    {
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    Logging.Error(this.GetType(), "Unable to approve the upgrade. Builder village doesn't have UnitOfType 2");
+                                    return false;
+                                }
+                            }
+                            
+                            return Building.GetUpgradeLevel() + 1 >=  Character.LaboratoryLevel[Player.GetUnitUpgradeLevel(Character)] && !Building.Constructing;
+                        }
+
+                        SpellData Spell = (SpellData) Data;
+
+                        if (Spell.VillageType == 0)
+                        {
+                            if (Spell.UnitOfType == 1)
+                            {
+                                if (!Spell.IsUnlockedForSpellForgeLevel(this.Parent.Level.ComponentManager.MaxBarrackLevel))
                                 {
                                     return false;
                                 }
                             }
                             else
                             {
-                                if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxDarkBarrackLevel))
+                                if (!Spell.IsUnlockedForSpellForgeLevel(this.Parent.Level.ComponentManager.MaxDarkBarrackLevel))
                                 {
                                     return false;
                                 }
                             }
 
-                            return Building.GetUpgradeLevel() >= Character.LaboratoryLevel[Player.GetUnitUpgradeLevel(Character)] && !Building.Constructing;
+                            return Building.GetUpgradeLevel() + 1 >=  Spell.LaboratoryLevel[Player.GetUnitUpgradeLevel(Spell)] && !Building.Constructing;
                         }
 
-                        SpellData Spell = (SpellData) Data;
-
-                        if (Spell.UnitOfType == 1)
-                        {
-                            if (!Spell.IsUnlockedForSpellForgeLevel(this.Parent.Level.ComponentManager.MaxBarrackLevel))
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            if (!Spell.IsUnlockedForSpellForgeLevel(this.Parent.Level.ComponentManager
-                                .MaxDarkBarrackLevel))
-                            {
-                                return false;
-                            }
-                        }
-
-                        return Building.GetUpgradeLevel() >= Spell.LaboratoryLevel[Player.GetUnitUpgradeLevel(Spell)] &&  !Building.Constructing;
+                        Logging.Error(this.GetType(),  "Unable to approve the upgrade. Builder village doesn't have spell");
+                        return false;
                     }
                 }
             }

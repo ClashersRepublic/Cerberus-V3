@@ -16,6 +16,7 @@ namespace CR.Servers.CoC.Logic
         internal Level Level;
 
         internal List<GameObject>[][] GameObjects;
+        internal int[] ObstaclesIndex;
 
         internal Building Bunker;
         internal Building TownHall;
@@ -64,6 +65,14 @@ namespace CR.Servers.CoC.Logic
         public GameObjectManager()
         {
             this.GameObjects = new List<GameObject>[10][];
+            this.ObstaclesIndex = new int[2];
+
+            for (var i = 0; i < this.ObstaclesIndex.Length; i++)
+            {
+                this.ObstaclesIndex[0] = 0;
+                this.ObstaclesIndex[1] = 0;
+            }
+
 
             for (var i = 0; i < this.GameObjects.Length; i++)
             {
@@ -118,9 +127,17 @@ namespace CR.Servers.CoC.Logic
                 //Some shit
             }
 
-            GameObject.Id = GlobalId.Create(500 + GType, this.GameObjects[GType][Map].Count);
+
+
+            GameObject.Id = GlobalId.Create(500 + GType, GType == 3 ? this.ObstaclesIndex[Map]++ : this.GameObjects[GType][Map].Count);
+
             this.GameObjects[GType][Map].Add(GameObject);
             this.Level.TileMap.AddGameObject(GameObject);
+        }
+
+        public void RemoveGameObject(GameObject go, int Map)
+        {
+            GameObjects[go.Type][Map].Remove(go);
         }
 
         internal void CreateObstacle()
@@ -357,6 +374,11 @@ namespace CR.Servers.CoC.Logic
             {
                 foreach (JToken Token in Obstacles)
                 {
+                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    {
+                        this.ObstaclesIndex[0] = Math.Max(this.ObstaclesIndex[0], Id % 1000000);
+                    }
+
                     this.LoadGameObject(Token, 0);
                 }
             }
@@ -411,6 +433,11 @@ namespace CR.Servers.CoC.Logic
             {
                 foreach (JToken Token in Obstacles2)
                 {
+                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    {
+                        this.ObstaclesIndex[1] = Math.Max(this.ObstaclesIndex[1], Id % 1000000);
+                    }
+
                     this.LoadGameObject(Token, 1);
                 }
             }
@@ -442,6 +469,7 @@ namespace CR.Servers.CoC.Logic
                 foreach (JToken Token in VillageObjects2)
                 {
                     this.LoadGameObject(Token, 1);
+                        
                 }
             }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;

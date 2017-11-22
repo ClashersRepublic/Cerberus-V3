@@ -48,7 +48,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
             this.Data.AddInt(0); // StartupCooldownSeconds
 
             this.Data.AddString(null); // Google Service ID
-            this.Data.AddString("fr");
+            this.Data.AddString("My");
             this.Data.AddString(null);
 
             this.Data.AddInt(1);
@@ -58,15 +58,11 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
             this.Data.AddString(null);
 
             this.Data.AddInt(2);
-            {
-                this.Data.AddString("https://game-assets.clashofclans.com/");
-                this.Data.AddString("http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/");
-            }
-
+            this.Data.AddString(Settings.GameAssetsServer);
+            this.Data.AddString(Settings.PatchServer);
             this.Data.AddInt(1);
-            {
-                this.Data.AddString(Settings.EventServer);
-            }
+            this.Data.AddString(Settings.EventServer);
+
 
             /*Data.AddString("h");
             Data.AddString("http://b46f744d64acd2191eda-3720c0374d47e9a0dd52be4d281c260f.r11.cf2.rackcdn.com/"); //Patch server?

@@ -10,7 +10,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 {
     internal class Swap_GameObject : Command
     {
-        internal override int Type => 577;
+        internal override int Type => i;
 
         public Swap_GameObject(Device device, Reader reader) : base(device, reader)
         {

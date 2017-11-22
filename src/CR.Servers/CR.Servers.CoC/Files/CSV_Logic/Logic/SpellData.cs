@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Files.CSV_Helpers;
+﻿using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.Files.CSV_Reader;
 
@@ -15,7 +10,17 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
         }
 
-        public string Name { get; set; }
+        internal ResourceData TrainingResourceData;
+        internal ResourceData UpgradeResourceData;
+
+        internal override void Process()
+        {
+            TrainingResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
+            UpgradeResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
+        }
+
+
+        public override string Name { get; set; }
         public string TID { get; set; }
         public string InfoTID { get; set; }
         public bool DisableProduction { get; set; }
@@ -97,10 +102,6 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool ScaleByTH { get; set; }
         public bool EnabledByCalendar { get; set; }
         public int VillageType { get; set; }
-
-        internal ResourceData TrainingResourceData => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
-
-        internal ResourceData UpgradeResourceData => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
 
         internal int GetUpgradeTime(int Level)
         {

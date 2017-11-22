@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
 
@@ -22,25 +19,45 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             this.BuildingID = this.Reader.ReadInt32();
             base.Decode();
         }
+
         internal int BuildingID;
 
         internal override void Execute()
         {
             var Level = this.Device.GameMode.Level;
 
-            Building Building = (Building)Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingID);
+            var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingID);
 
-            CombatComponent CombatComponent = Building?.CombatComponent;
-
-            if (CombatComponent != null)
+            if (GameObject != null)
             {
-                CombatComponent.GearUp = 1;
-                if (CombatComponent.AltAttackMode)
+                var Building = GameObject as Building;
+
+                if (Building != null)
                 {
-                    CombatComponent.AttackMode = true;
-                    CombatComponent.AttackModeDraft = true;
+                    BuildingData Data = (BuildingData) Building.Data;
+                    ResourceData ResourceData = Data.GearUpResourceData;
+                    if (ResourceData != null)
+                    {
+                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.GearUpCost[Building.GetUpgradeLevel() + 1])
+                        {
+                            Level.Player.Resources.Remove(ResourceData, Data.GearUpCost[Building.GetUpgradeLevel() + 1]);
+                            Building.StartUpgrade();
+                        }
+                        else
+                            Logging.Error(this.GetType(),
+                                "Unable to upstart the gear up. The player doesn't have enough resources.");
+                    }
+                    else
+                        Logging.Error(this.GetType(),
+                            "Unable to start the gear up. The resources data is null.");
                 }
+                else
+                    Logging.Error(this.GetType(),
+                        "Unable to start the gear up. GameObject is not valid or not exist.");
             }
+            else
+                Logging.Error(this.GetType(),
+                    "Unable to start the gear up. GameObject is null");
         }
     }
 }

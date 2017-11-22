@@ -236,9 +236,9 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 
         internal bool IsDefense => this.BuildingClass == "Defense";
 
-        internal bool IsSpellForge => this.ForgesSpells;
+        internal bool IsSpellForge => this.ForgesSpells && this.ProducesUnitsOfType == 1;
 
-        internal bool IsMiniSpellForge => this.ForgesMiniSpells;
+        internal bool IsMiniSpellForge => this.ForgesMiniSpells && this.ProducesUnitsOfType == 2;
 
         internal bool IsLaboratory => this.UpgradesUnits;
 
@@ -250,6 +250,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 
         internal bool IsAllianceCastle => this.Name == "Alliance Castle";
 
+        internal bool IsTroopHousingV2 => this.Name == "Troop Housing2";
+
         internal bool CanStoreResources => this.MaxStoredGold[0] > 0
                                            || this.MaxStoredElixir[0] > 0
                                            || this.MaxStoredDarkElixir[0] > 0
@@ -260,9 +262,10 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
                                            || this.MaxStoredElixir2[0] > 0;
 
         internal int GetBuildTime(int Level) => this.BuildTimeD[Level] * 86400 + this.BuildTimeH[Level] * 3600 + this.BuildTimeM[Level] * 60 + this.BuildTimeS[Level];
-  
 
-        internal int GetGearUpTime(int Level) => GearUpTime[Level] * 60;
+        internal int GetGearUpTime(int Level) => this.GearUpTime[Level] * 60;
+
+        internal ResourceData GearUpResourceData => (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.GearUpResource);
 
         internal int[] GetResourceMaxArray(int Level)
         {

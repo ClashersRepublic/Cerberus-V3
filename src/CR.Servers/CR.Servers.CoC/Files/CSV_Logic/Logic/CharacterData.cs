@@ -11,6 +11,15 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
             // CharacterData.
         }
 
+        internal ResourceData TrainingResourceData;
+        internal ResourceData UpgradeResourceData;
+
+        internal override void Process()
+        {
+            TrainingResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
+            UpgradeResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
+        }
+
         public override string Name { get; set; }
         public string TID { get; set; }
         public string InfoTID { get; set; }
@@ -142,10 +151,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool ScaleByTH { get; set; }
         public bool EnabledByCalendar { get; set; }
         public int LoseHpPerTick { get; set; }
-
-        internal ResourceData TrainingResourceData => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
-
-        internal ResourceData UpgradeResourceData => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
+        
 
         internal int GetUpgradeTime(int Level)
         {

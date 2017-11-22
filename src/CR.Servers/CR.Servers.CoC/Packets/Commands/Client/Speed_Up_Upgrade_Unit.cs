@@ -4,11 +4,11 @@ using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client
 {
-    internal class SpeedUp_Upgrade_Unit : Command
+    internal class Speed_Up_Upgrade_Unit : Command
     {
         internal override int Type => 504;
 
-        public SpeedUp_Upgrade_Unit(Device Client, Reader Reader) : base(Client, Reader)
+        public Speed_Up_Upgrade_Unit(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 

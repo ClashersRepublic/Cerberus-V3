@@ -110,6 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Consoles\Parser.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\Database\Models\Mongo\Clans.cs" />
     <Compile Include="Core\Database\Models\Mongo\Players.cs" />
@@ -150,8 +151,11 @@
     <Compile Include="Files\CSV_Logic\Logic\VariableData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\VillageObjectData.cs" />
     <Compile Include="Files\CSV_Reader\Gamefiles.cs" />
+    <Compile Include="Files\Fingerprint.cs" />
     <Compile Include="Files\Game_Events.cs" />
     <Compile Include="Files\LevelFile.cs" />
+    <Compile Include="Logic\Clan\Alliance.cs" />
+    <Compile Include="Logic\Clan\Items\AllianceHeader.cs" />
     <Compile Include="Logic\Device.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
     <Compile Include="Logic\Enums\Resource.cs" />
@@ -172,6 +176,7 @@
     <Compile Include="Logic\GameObject\GameObjectFactory.cs" />
     <Compile Include="Logic\GameObject\Trap.cs" />
     <Compile Include="Logic\GameObject\VillageObject.cs" />
+    <Compile Include="Logic\LogicDebug.cs" />
     <Compile Include="Logic\Manager\CommandManager.cs" />
     <Compile Include="Logic\Manager\ComponentManager.cs" />
     <Compile Include="Logic\Manager\GameObjectManager.cs" />
@@ -211,13 +216,15 @@
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
     <Compile Include="Packets\Commands\Client\Change_Village_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Change_Weapon_Mode.cs" />
+    <Compile Include="Packets\Commands\Client\Clear_Obstacle.cs" />
     <Compile Include="Packets\Commands\Client\Collect_Resource.cs" />
+    <Compile Include="Packets\Commands\Client\Free_Worker.cs" />
     <Compile Include="Packets\Commands\Client\Gear_Up.cs" />
     <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Packets\Commands\Client\Move_Building.cs" />
     <Compile Include="Packets\Commands\Client\New_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
-    <Compile Include="Packets\Commands\Client\SpeedUp_Upgrade_Unit.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
     <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit.cs" />
@@ -685,6 +692,9 @@
     </None>
     <Compile Include="Logic\Manager\WorkerManagerV2.cs" />
     <None Include="packages.config" />
+    <None Include="Tools\Patch.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CR.Servers\CR.Servers.csproj">
@@ -692,7 +702,15 @@
       <Name>CR.Servers</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Tools\Clashers%27 Republic Hasher.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tools\Clashers%27 Republic LZMA Manager.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tools\gen_csv_definitions.py" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>RMDIR /S /Q "$(TargetDir)Library\"

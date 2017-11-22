@@ -92,6 +92,7 @@ namespace Magic.ClashOfClans.Logic.Structure
             Level.VillageWorkerManager.DeallocateWorker(this);
             IsClearing = false;
             Timer = null;
+
             var constructionTime = GetObstacleData().ClearTimeSeconds;
             var exp = (int) Math.Pow(constructionTime, 0.5f);
 

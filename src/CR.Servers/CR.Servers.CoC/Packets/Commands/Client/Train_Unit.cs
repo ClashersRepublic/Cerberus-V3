@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Extensions.Helper;
+﻿using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
@@ -38,7 +33,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            ShowValues();
             var Level = this.Device.GameMode.Level;
             if (this.Unit != null)
             {
@@ -50,9 +44,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (Level.Player.Resources.GetCountByData(TrainingResource) >= Character?.TrainingCost[0] * Count)
                     {
-                        if (Level.UnitProductionManager.CanProduce(Character, this.Count))
+                        //if (Level.UnitProductionManager.CanProduce(Character, this.Count))
                         {
-                            Level.UnitProductionManager.AddUnit(Character, this.Count);
+                            Level.Player.Units.Add(Character, this.Count);
+                           //Level.UnitProductionManager.AddUnit(Character, this.Count);
                             Level.Player.Resources.Remove(TrainingResource, Character.TrainingCost[0] * this.Count);
                         }
                     }
@@ -65,9 +60,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (Level.Player.Resources.GetCountByData(TrainingResource) >= Spell?.TrainingCost[0] * Count)
                     {
-                        if (Level.SpellProductionManager.CanProduce(Spell, this.Count))
+                        //if (Level.SpellProductionManager.CanProduce(Spell, this.Count))
                         {
-                            Level.SpellProductionManager.AddUnit(Spell, this.Count);
+                            //Level.SpellProductionManager.AddUnit(Spell, this.Count);
+
+                            Level.Player.Spells.Add(Spell, this.Count);
                             Level.Player.Resources.Remove(TrainingResource, Spell.TrainingCost[0] * this.Count);
                         }
                     }

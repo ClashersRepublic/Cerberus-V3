@@ -117,7 +117,7 @@ namespace CR.Servers.CoC.Core.Network
                     ReadEvent.DisconnectReuseSocket = false;
                 }
 
-                Console.WriteLine("A nigger just connected to the emulator");
+                Logging.Info(this.GetType(), $"Accepted connection at {Socket.RemoteEndPoint}.");
                 Device Device = new Device(Socket);
                 Token Token = new Token(ReadEvent, Device);
 
