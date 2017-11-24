@@ -249,7 +249,7 @@ namespace CR.Servers.CoC.Logic
 
             _Packet.AddInt(0);
             _Packet.AddInt(0);
-            _Packet.AddInt(0);
+            this.HeroModes.Encode(_Packet);
 
             this.Variables.Encode(_Packet);
 

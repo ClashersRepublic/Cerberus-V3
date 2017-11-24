@@ -10,7 +10,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
     {
         internal override int Type => 600;
 
-
         public Gear_Up(Device device, Reader reader) : base(device, reader)
         {
         }

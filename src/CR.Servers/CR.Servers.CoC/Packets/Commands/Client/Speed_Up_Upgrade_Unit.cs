@@ -22,32 +22,28 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var gameObject =  this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            var gameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
 
             if (gameObject != null)
             {
-                if (gameObject.Type == 0)
+                if (gameObject is Building building)
                 {
-                    var building = gameObject as Building;
-                    if (building != null)
-                    {
-                        var unitUpgradeComponent = building.UnitUpgradeComponent;
+                    var unitUpgradeComponent = building.UnitUpgradeComponent;
 
-                        if (unitUpgradeComponent != null)
-                        {
-                            unitUpgradeComponent.SpeedUp();
-                        }
-                        else
-                            Logging.Error(this.GetType(), "Unable to speed up the upgrade. The game object doesn't contain a UnitUpgradeComponent.");
+                    if (unitUpgradeComponent != null)
+                    {
+                        unitUpgradeComponent.SpeedUp();
                     }
                     else
-                        Logging.Error(this.GetType(), "Unable to speed up the upgrade. The game object is not valid or not exist.");
+                        Logging.Error(this.GetType(),
+                            "Unable to speed up the unit upgrade. The game object doesn't contain a UnitUpgradeComponent.");
                 }
                 else
-                    Logging.Error(this.GetType(), "Unable to speed up the upgrade. The game object is not a building");
+                    Logging.Error(this.GetType(),
+                        "Unable to speed up the unit upgrade. The game object is not a building.");
             }
             else
-                Logging.Error(this.GetType(), "Unable to speed up the upgrade. The game object is null");
+                Logging.Error(this.GetType(), "Unable to speed up the unit upgrade. The game object is null");
         }
     }
 }

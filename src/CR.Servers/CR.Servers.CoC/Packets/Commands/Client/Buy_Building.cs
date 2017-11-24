@@ -45,14 +45,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 //if (!Level.IsBuildingCapReached(this.BuildingData))
                 {
                     BuildingClassData BuildingClassData = (BuildingClassData)CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
-                    ResourceData ResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildingData.BuildResource);
+                    ResourceData ResourceData = this.BuildingData.BuildResourceData;
 
                     if (BuildingClassData.CanBuy)
                     {
                         if (Level.Player.Map == 0)
                         {
-                            if (this.BuildingData.TownHallLevel[0] <=
-                                Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
+                            if (this.BuildingData.TownHallLevel[0] <= Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
                             {
                                 if (this.BuildingData.IsWorker)
                                 {
@@ -106,9 +105,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                                     int Cost = Globals.TroopHousingV2Cost[TroopHousing];
                                     int Time = Globals.TroopHousingV2BuildTimeSeconds[TroopHousing];
-                                    Console.WriteLine(TroopHousing);
-                                    Console.WriteLine(Cost);
-                                    Console.WriteLine(Time);
                                     if (Level.Player.Resources.GetCountByData(ResourceData) >= Cost)
                                     {
                                         if (Level.WorkerManagerV2.FreeWorkers > 0)

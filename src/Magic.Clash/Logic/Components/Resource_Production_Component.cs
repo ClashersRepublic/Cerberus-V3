@@ -67,12 +67,9 @@ namespace Magic.ClashOfClans.Logic.Components
                 if (ca.Resources_Cap.Get(ProductionResourceData.GetGlobalId()) >= ca.Resources.Get(ProductionResourceData.GetGlobalId()) || ProductionResourceData.GetGlobalId() == 3000000)
                 {
                     if (ProductionResourceData.GetGlobalId() != 3000000)
-                        if (ca.Resources_Cap.Get(ProductionResourceData.GetGlobalId()) -
-                            ca.Resources.Get(ProductionResourceData.GetGlobalId()) < currentResources)
+                        if (ca.Resources_Cap.Get(ProductionResourceData.GetGlobalId()) - ca.Resources.Get(ProductionResourceData.GetGlobalId()) < currentResources)
                         {
-                            var newCurrentResources =
-                                ca.Resources_Cap.Get(ProductionResourceData.GetGlobalId() -
-                                                     ca.Resources.Get(ProductionResourceData.GetGlobalId()));
+                            var newCurrentResources =  ca.Resources_Cap.Get(ProductionResourceData.GetGlobalId()) - ca.Resources.Get(ProductionResourceData.GetGlobalId());
                             TimeSinceLastClick =
                                 ci.Level.Avatar.LastTick.AddSeconds(-((currentResources - newCurrentResources) /
                                                                       ((float) (ResourcesPerHour[ci.UpgradeLevel] /

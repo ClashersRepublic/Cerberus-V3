@@ -55,7 +55,7 @@ namespace CR.Servers.CoC.Logic
             return false;
         }
 
-        internal void SpeedUpConstruction()
+        internal void SpeedUpClearing()
         {
             if (this.Level.Player != null)
             {
@@ -85,9 +85,14 @@ namespace CR.Servers.CoC.Logic
                 this.Level.WorkerManagerV2.DeallocateWorker(this);
             }
 
+            Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounter++]);
+
+            if (Level.GameObjectManager.ObstacleClearCounter >= GemDrops.Length)
+                Level.GameObjectManager.ObstacleClearCounter = 0;
+
             // LogicAchievementManager::obstacleCleared();
 
-            this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(ObstacleData.ClearTimeSeconds));
+            Player.AddExperience(GamePlayUtil.TimeToXp(ObstacleData.ClearTimeSeconds));
 
             this.ClearTimer = null;
             this.Destructed = true;
@@ -118,6 +123,25 @@ namespace CR.Servers.CoC.Logic
                     this.ClearTimer = new Timer();
                     this.ClearTimer.StartTimer(this.Level.Player.LastTick, Data.ClearTimeSeconds);
                 }
+            }
+        }
+
+        internal void CancelClearing()
+        {
+            if (this.ClearingOnGoing)
+            {
+                this.Level.Player.Resources.Plus(this.ObstacleData.ClearResourceData.GlobalId, this.ObstacleData.ClearCost);
+                
+                if (this.VillageType == 0)
+                {
+                    this.Level.WorkerManager.DeallocateWorker(this);
+                }
+                else
+                {
+                    this.Level.WorkerManagerV2.DeallocateWorker(this);
+                }
+
+                this.ClearTimer = null;
             }
         }
 

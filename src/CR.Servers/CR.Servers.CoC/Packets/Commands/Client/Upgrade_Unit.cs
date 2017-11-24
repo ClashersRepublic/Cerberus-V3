@@ -35,46 +35,49 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 var gameObject = level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
                 if (gameObject != null)
                 {
-                    if (gameObject.Type == 0)
+                    if (gameObject is Building building)
                     {
-                        var building = gameObject as Building;
-                        if (building != null)
+                        var unitUpgradeComponent = building.UnitUpgradeComponent;
+
+                        if (unitUpgradeComponent != null)
                         {
-                            var unitUpgradeComponent = building.UnitUpgradeComponent;
+                            var unitLevel = level.Player.GetUnitUpgradeLevel(this.Unit);
 
-                            if (unitUpgradeComponent != null)
+                            var resourceData = this.UnitType == 1
+                                ? ((SpellData)Unit).UpgradeResourceData
+                                : ((CharacterData)Unit).UpgradeResourceData;
+                            var upgradeCost = this.UnitType == 1
+                                ? ((SpellData)Unit).UpgradeCost[unitLevel]
+                                : ((CharacterData)Unit).UpgradeCost[unitLevel];
+
+                            if (resourceData != null)
                             {
-                                var unitLevel = level.Player.GetUnitUpgradeLevel(this.Unit);
-
-                                var resourceData = this.UnitType == 1 ? ((SpellData) Unit).UpgradeResourceData : ((CharacterData) Unit).UpgradeResourceData;
-                                var upgradeCost = this.UnitType == 1  ? ((SpellData) Unit).UpgradeCost[unitLevel]  : ((CharacterData) Unit).UpgradeCost[unitLevel];
-
-                                if (resourceData != null)
+                                if (level.Player.Resources.GetCountByData(resourceData) >= upgradeCost)
                                 {
-                                    if (level.Player.Resources.GetCountByData(resourceData) >= upgradeCost)
+                                    if (unitUpgradeComponent.CanStartUpgrading(this.Unit))
                                     {
-                                        if (unitUpgradeComponent.CanStartUpgrading(this.Unit))
-                                        {
-                                            level.Player.Resources.Remove(resourceData, upgradeCost);
-                                            unitUpgradeComponent.StartUpgrading(this.Unit);
-                                        }
-                                        else
-                                            Logging.Error(this.GetType(), "Unable to upgrade the unit. The UnitUpgradeComponent probably training other unit.");
+                                        level.Player.Resources.Remove(resourceData, upgradeCost);
+                                        unitUpgradeComponent.StartUpgrading(this.Unit);
                                     }
                                     else
-                                        Logging.Error(this.GetType(), "Unable to upgrade the unit. The player doesn't have enough resources.");
+                                        Logging.Error(this.GetType(),
+                                            "Unable to upgrade the unit. The UnitUpgradeComponent probably training other unit.");
                                 }
                                 else
-                                    Logging.Error(this.GetType(), "Unable to upgrade the unit. The resources data is null.");
+                                    Logging.Error(this.GetType(),
+                                        "Unable to upgrade the unit. The player doesn't have enough resources.");
                             }
                             else
-                                Logging.Error(this.GetType(),"Unable to upgrade the unit. The game object doesn't contain a UnitUpgradeComponent.");
+                                Logging.Error(this.GetType(),
+                                    "Unable to upgrade the unit. The resources data is null.");
                         }
                         else
-                            Logging.Error(this.GetType(), "Unable to upgrade the unit. The game object is not valid or not exist");
+                            Logging.Error(this.GetType(),
+                                "Unable to upgrade the unit. The game object doesn't contain a UnitUpgradeComponent.");
                     }
                     else
-                        Logging.Error(this.GetType(), "Unable to upgrade the unit. The game object is not a building");
+                        Logging.Error(this.GetType(),
+                            "Unable to upgrade the unit. The game object is not valid or not exist");
                 }
                 else
                     Logging.Error(this.GetType(), "Unable to upgrade the unit. The game object is null");

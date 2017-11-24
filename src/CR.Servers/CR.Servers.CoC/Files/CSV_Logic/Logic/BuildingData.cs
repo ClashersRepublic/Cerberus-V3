@@ -252,6 +252,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 
         internal bool IsTroopHousingV2 => this.Name == "Troop Housing2";
 
+        internal bool IsWallStraight => this.Name == "WallStraight";
+
         internal bool CanStoreResources => this.MaxStoredGold[0] > 0
                                            || this.MaxStoredElixir[0] > 0
                                            || this.MaxStoredDarkElixir[0] > 0

@@ -2,8 +2,11 @@
 using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
+using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.Core.Consoles.Colorful;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
@@ -54,6 +57,7 @@ namespace CR.Servers.CoC.Logic
                 return Checksum;
             }
         }
+
         internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool Boosted => this.BoostTimer != null;
@@ -72,7 +76,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
-                        if (this.Level.Player.Village2)
+                        if (this.Level.Player.Village2) //Shall we check item village type?
                         {
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >=
                                    Data.TownHallLevel2[this.UpgradeLevel + 1];
@@ -81,7 +85,6 @@ namespace CR.Servers.CoC.Logic
                                Data.TownHallLevel[this.UpgradeLevel + 1];
                     }
                 }
-
                 return false;
             }
         }
@@ -92,6 +95,7 @@ namespace CR.Servers.CoC.Logic
         internal ResourceStorageComponent ResourceStorageComponent => this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent)Component : null;
         internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent)Component : null;
         internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent)Component : null;
+        internal HeroBaseComponent HeroBaseComponent => this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent)Component : null;
 
 
         internal int GetUpgradeLevel() => this.UpgradeLevel;
@@ -106,7 +110,7 @@ namespace CR.Servers.CoC.Logic
                 this.AddComponent(new UnitStorageComponent(this));
             }
 
-            if (BuildingData.IsDefense)
+            if (BuildingData.IsDefense || BuildingData.IsWallStraight)
             {
                 AddComponent(new CombatComponent(this));
             }
@@ -138,12 +142,18 @@ namespace CR.Servers.CoC.Logic
             {
                 this.AddComponent(new UnitUpgradeComponent(this));
             }
+
+            if (BuildingData.IsHeroBarrack)
+            {
+                var hd = CSV.Tables.Get(Gamefile.Heroes).GetData(BuildingData.HeroType) as HeroData;
+                this.AddComponent(new HeroBaseComponent(this, hd));
+            }
         }
 
         internal void FinishConstruction()
         {
-
             BuildingData Data = this.BuildingData;
+
             if (this.Gearing)
             {
                 this.Gearing = false;
@@ -168,14 +178,22 @@ namespace CR.Servers.CoC.Logic
                 else
                     this.SetUpgradeLevel(this.UpgradeLevel + 1);
 
-
-                if (this.VillageType == 0)
+                if (this.Locked)
                 {
-                    this.Level.WorkerManager.DeallocateWorker(this);
+                    this.Locked = false;
+                    if(this.VillageType == 1)
+                        this.Level.WorkerManagerV2.DeallocateWorker(this);
                 }
                 else
                 {
-                    this.Level.WorkerManagerV2.DeallocateWorker(this);
+                    if (this.VillageType == 0)
+                    {
+                        this.Level.WorkerManager.DeallocateWorker(this);
+                    }
+                    else
+                    {
+                        this.Level.WorkerManagerV2.DeallocateWorker(this);
+                    }
                 }
             }
 
@@ -198,9 +216,50 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
+            if (this.HeroBaseComponent != null)
+            {
+                HeroData HeroData = CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType) as HeroData;
+
+                if (HeroData != null)
+                {
+                    this.Level.Player.HeroUpgrades.Set(HeroData, 0);
+                    this.Level.Player.HeroStates.Set(HeroData, 3);
+                    if (HeroData.HasAltMode)
+                        this.Level.Player.HeroModes.Set(HeroData, 0);
+                }
+
+            }
+
             this.ConstructionTimer = null;
 
         }
+
+        internal void CancelConstruction()
+        {
+            if (this.Constructing)
+            {
+                this.SetUpgradeLevel(UpgradeLevel);
+                //Alt resource not supported yet
+
+                var resourceCount = (int) ((this.BuildingData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long) 1374389535) >> 32);
+                resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
+
+                this.Level.Player.Resources.Plus(this.BuildingData.GlobalId, resourceCount);
+                if (this.VillageType == 0)
+                {
+                    this.Level.WorkerManager.DeallocateWorker(this);
+                }
+                else
+                {
+                    this.Level.WorkerManagerV2.DeallocateWorker(this);
+                }
+
+                this.ConstructionTimer = null;
+                if (UpgradeLevel == -1)
+                    this.Level.GameObjectManager.RemoveGameObject(this, this.VillageType); //Should never happend since supercell disable this
+            }
+        }
+
 
         internal void StartUpgrade()
         {
@@ -264,7 +323,7 @@ namespace CR.Servers.CoC.Logic
             {
                 if (this.Constructing)
                 {
-                    int Cost = GamePlayUtil.GetSpeedUpCost(this.RemainingConstructionTime, this.BuildingData.VillageType, 100);
+                    int Cost = GamePlayUtil.GetSpeedUpCost(this.RemainingConstructionTime, this.VillageType, 100);
 
                     if (this.Level.Player.HasEnoughDiamonds(Cost))
                     {
@@ -319,7 +378,6 @@ namespace CR.Servers.CoC.Logic
 
             base.FastForwardTime(Seconds);
         }
-
 
         internal override void Tick()
         {
@@ -400,15 +458,18 @@ namespace CR.Servers.CoC.Logic
             {
                 if (Level < -1)
                 {
-                    Logging.Error(this.GetType(),
-                        "An error has been throwed when the loading of building - Load an illegal upgrade level. Level : " +
-                        Level);
-                    this.SetUpgradeLevel(0);
+                    if (this.VillageType != 1)
+                    {
+                        if (!Data.Locked)
+                        {
+                            Logging.Error(this.GetType(), "An error has been throwed when the loading of building - Load an illegal upgrade level. Level : " + Level);
+                            this.SetUpgradeLevel(0);
+                        }
+                    }
                 }
                 else if (Level > Data.MaxLevel)
                 {
-                    Logging.Error(this.GetType(),
-                        $"An error has been throwed when the loading of building - Loaded upgrade level {Level + 1} is over max! (max = {Data.MaxLevel + 1}) id {this.Id} data id {Data.GlobalId}");
+                    Logging.Error(this.GetType(), $"An error has been throwed when the loading of building - Loaded upgrade level {Level + 1} is over max! (max = {Data.MaxLevel + 1}) id {this.Id} data id {Data.GlobalId}");
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else

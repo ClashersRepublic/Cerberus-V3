@@ -8,10 +8,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
     {
         internal override int Type => 524;
 
-
         public Change_Weapon_Mode(Device device, Reader reader) : base(device, reader)
         {
         }
+
+        internal int BuildingID;
 
         internal override void Decode()
         {
@@ -20,7 +21,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             this.Reader.ReadInt32();
             base.Decode();
         }
-        internal int BuildingID;
 
         internal override void Execute()
         {
@@ -30,10 +30,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             if (GameObject != null)
             {
-                if (GameObject.Type == 0)
+                if (GameObject is Building Building)
                 {
-                    var Building = GameObject as Building;
-                    var CombatComponent = Building?.CombatComponent;
+                    var CombatComponent = Building.CombatComponent;
 
                     if (CombatComponent != null)
                     {
@@ -43,12 +42,32 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             CombatComponent.AttackModeDraft = !CombatComponent.AttackModeDraft;
                         }
                     }
+                    else
+                        Logging.Error(this.GetType(),
+                            "Unable to change the weapon mode. The CombatComponent for the game object is null.");
                 }
+
+                else if (GameObject is Trap Trap)
+                {
+                    var CombatComponent = Trap.CombatComponent;
+
+                    if (CombatComponent != null)
+                    {
+                        if (CombatComponent.AltTrapAttackMode)
+                        {
+                            CombatComponent.AirMode = !CombatComponent.AirMode;
+                            CombatComponent.AirModeDraft = !CombatComponent.AirModeDraft;
+                        }
+                    }
+                    else
+                        Logging.Error(this.GetType(), "Unable to change the trap mode. The CombatComponent for the game object is null.");
+
+                }
+                else
+                    Logging.Error(this.GetType(), "Unable to change the weapon mode. Unable to determine game object");
             }
             else
-            {
-                Logging.Error(this.GetType(),  "Unable to change the weapon mode. GameObject is not valid or not exist.");
-            }
+                Logging.Error(this.GetType(), "Unable to change the weapon mode. The game object is null.");
         }
     }
 }

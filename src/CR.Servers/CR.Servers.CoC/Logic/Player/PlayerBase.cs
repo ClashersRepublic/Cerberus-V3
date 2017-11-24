@@ -151,6 +151,16 @@ namespace CR.Servers.CoC.Logic
                 this.SpellUpgrades.Add(Data, 1);
         }
 
+        internal int GetHeroUpgradeLevel(Data Data)
+        {
+            return this.HeroUpgrades.GetCountByData(Data);
+        }
+
+        internal void IncreaseHeroUpgradeLevel(Data Data)
+        {
+            this.HeroUpgrades.Add(Data, 1);
+        }
+
         internal int GetAvailableResourceStorage(Data Resource)
         {
             return this.ResourceCaps.GetCountByData(Resource) - this.Resources.GetCountByData(Resource);

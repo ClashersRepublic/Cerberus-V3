@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.Extensions.Binary;
+using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
@@ -12,20 +14,20 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
     {
         internal override short Type => 10121;
 
-        internal long UserID;
+        internal int HighId;
+        internal int LowId;
         internal string UserToken;
         internal string UnlockCode;
-        internal string UserPassword;
-
 
         public Unlock_Account(Device device, Reader reader) : base(device, reader)
         {
-            this.UserPassword = this.Device.Account?.Player != null ? this.Device.Account.Player.Password : string.Empty;
+            Device.State = State.UNLOCK_ACC;
         }
 
         internal override void Decode()
         {
-            this.UserID = this.Reader.ReadInt64();
+            this.HighId = this.Reader.ReadInt32();
+            this.LowId = this.Reader.ReadInt32();
             this.UserToken = this.Reader.ReadString();
 
             this.UnlockCode = this.Reader.ReadString();
@@ -47,40 +49,58 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                     if (n == 0)
                     {
                         //Send new player
-                        new Unlock_Account_OK(this.Device) { Account = Resources.Accounts.CreateAccount().Player }.Send();
+                        new Unlock_Account_OK(this.Device) {Account = Resources.Accounts.CreateAccount().Player}.Send();
                         return;
                     }
 
-                    int HighId = Convert.ToInt32(n >> 32);
-                    int LowId = (int) n;
+                    int HighId = 0;
+                    int LowId = 0;
 
+                    this.ToHighAndLow(n, ref HighId, ref LowId);
                     var Account = Resources.Accounts.LoadAccount(HighId, LowId);
                     if (Account != null)
                     {
                         Account.Player.Locked = true;
-                        new Unlock_Account_OK(this.Device) { Account = Account.Player }.Send();
+                        new Unlock_Account_OK(this.Device) {Account = Account.Player}.Send();
                     }
                     else
                     {
-                        new Unlock_Account_Failed(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
+                        new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
                     }
 
                 }
                 else
                 {
-                    new Unlock_Account_Failed(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
+                    new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
                 }
-            }
-            if (string.Equals(this.UnlockCode, this.UserPassword, StringComparison.CurrentCultureIgnoreCase))
-            {
-                this.Device.Account.Player.Locked = false;
-                new Unlock_Account_OK(this.Device) { Account = this.Device.Account.Player }.Send();
             }
             else
             {
-                new Unlock_Account_Failed(this.Device) { Reason = UnlockAccountReason.Default }.Send();
+                var Account = Resources.Accounts.LoadPlayerAsync(this.HighId, this.LowId).Result;
+                if (Account != null)
+                {
+                    if (string.Equals(this.UnlockCode, Account.Password, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Account.Locked = false;
+                        new Unlock_Account_OK(this.Device) {Account = Account}.Send();
+                    }
+                    else
+                    {
+                        new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.Default}.Send();
 
+                    }
+                }
+                else
+                    new Unlock_Account_Failed(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
             }
+        }
+
+        internal void ToHighAndLow(long l, ref int High, ref int Low)
+        {
+            var bytes = new Reader(BitConverter.GetBytes(l).Reverse().ToArray());
+
+            High = bytes.ReadInt32();
+            Low = bytes.ReadInt32();
         }
     }
 }

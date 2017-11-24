@@ -115,7 +115,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
 #if Extra
-            Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
 #endif
         }
     }

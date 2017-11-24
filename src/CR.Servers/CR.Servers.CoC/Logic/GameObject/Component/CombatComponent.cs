@@ -12,9 +12,9 @@ namespace CR.Servers.CoC.Logic
 
         public CombatComponent(GameObject GameObject) : base(GameObject)
         {
-            if (GameObject.Type == 0)
+            if (GameObject is Building Building)
             {
-                var bd = (BuildingData) GameObject.Data;
+                var bd = Building.BuildingData;
 
                 if (bd.AmmoCount > 0)
                     Ammo = bd.AmmoCount;
@@ -25,16 +25,15 @@ namespace CR.Servers.CoC.Logic
                 if (bd.AimRotateStep > 0)
                     AimRotateStep = true;
             }
-
-            /*if (GameObject.Type == 4)
+            else if (GameObject is Trap Trap)
             {
-                var td = (tra) ci.Data;
+                var td = Trap.TrapData;
                 if (td.HasAltMode)
                     AltTrapAttackMode = true;
 
                 if (td.DirectionCount > 0)
                     AltDirectionMode = true;
-            }*/
+            }
 
         }
 

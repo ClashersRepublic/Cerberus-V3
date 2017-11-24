@@ -46,42 +46,59 @@ namespace CR.Servers.CoC.Logic
                 {
                     int RemainingTime = -1;
 
-                    switch (Construction.Type)
+                    if (Construction is Building Building)
                     {
-                        case 0:
+                        var HeroBaseComponent = Building.HeroBaseComponent;
+                        if (HeroBaseComponent != null)
                         {
-                            Building Building = (Building)Construction;
-
-                            if (!Building.Constructing)
+                            if (HeroBaseComponent.Upgrading)
                             {
-                                Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to building with remaining construction time 0");
-                                break;
+                                RemainingTime = HeroBaseComponent.RemainingUpgradeTime;
                             }
-
+                        }
+                        else if (!Building.Constructing)
+                        {
+                            Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to building with remaining construction time 0");
+                        }
+                        else
                             RemainingTime = Building.RemainingConstructionTime;
-
-                            break;
-                        }
-
-                        case 3:
+                    }
+                    else if (Construction is Obstacle Obstacle)
+                    {
+                        if (!Obstacle.ClearingOnGoing)
                         {
-                            Obstacle Obstacle = (Obstacle)Construction;
-
-                            if (!Obstacle.ClearingOnGoing)
-                            {
-                                Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
-                                break;
-                            }
-
-                            RemainingTime = Obstacle.RemainingClearingTime;
-
-                            break;
+                            Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
                         }
+                        else
+                            RemainingTime = Obstacle.RemainingClearingTime;
+                    }
+                    else if (Construction is Trap Trap)
+                    {
+                        if (!Trap.Constructing)
+                        {
+                            Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to Trap with remaining construction time 0");
+                        }
+                        else
+                            RemainingTime = Trap.RemainingConstructionTime;
+                    }
+                    else if (Construction is VillageObject VillageObject)
+                    {
+                        if (!VillageObject.Constructing)
+                        {
+                            Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to village object with remaining clearing time 0");
+                        }
+                        else
+                            RemainingTime = VillageObject.RemainingConstructionTime;
                     }
 
                     if (RemainingTime != -1)
                     {
-                        if (Task.RemainingSeconds > RemainingTime)
+                        if (Task.GameObject == null)
+                        {
+                            Task.GameObject = Construction;
+                            Task.RemainingSeconds = RemainingTime;
+                        }
+                        else if (Task.RemainingSeconds > RemainingTime)
                         {
                             Task.GameObject = Construction;
                             Task.RemainingSeconds = RemainingTime;
@@ -93,6 +110,50 @@ namespace CR.Servers.CoC.Logic
             }
 
             return null;
+        }
+
+        internal void FinishTaskOfOneWorker()
+        {
+            var GameObject = this.GetShortestTaskGO();
+            if (GameObject != null)
+            {
+                if (GameObject is Building Building)
+                {
+                    var HeroBaseComponent = Building.HeroBaseComponent;
+                    if (Building.Constructing)
+                    {
+                        Building.SpeedUpConstruction();
+                    }
+                    else if (HeroBaseComponent != null)
+                    {
+                        if (HeroBaseComponent.Upgrading)
+                        {
+                            HeroBaseComponent.SpeedUpUpgrade();
+                        }
+                    }
+                }
+                else if (GameObject is Obstacle Obstacle)
+                {
+                    if (Obstacle.ClearingOnGoing)
+                    {
+                        Obstacle.SpeedUpClearing();
+                    }
+                }
+                else if (GameObject is Trap Trap)
+                {
+                    if (Trap.Constructing)
+                    {
+                        Trap.SpeedUpConstruction();
+                    }
+                }
+                else if (GameObject is VillageObject VillageObject)
+                {
+                    if (VillageObject.Constructing)
+                    {
+                        VillageObject.SpeedUpConstruction();
+                    }
+                }
+            }
         }
 
         private struct Task

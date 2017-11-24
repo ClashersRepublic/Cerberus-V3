@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Logic
             return null;
         }
 
-        internal GameObject GetObstacleById(int Id)
+        internal GameObject GetGameObjectByPreciseId(int Id)
         {
             int Class = Id / 1000000 - 500;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
@@ -78,6 +79,10 @@ namespace CR.Servers.CoC.Packets
                     Logging.Info(this.GetType(), ConsolePad.Padding(Field.Name) + " : " + ConsolePad.Padding(!string.IsNullOrEmpty(Field.Name) ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)") : "(null)", 40));
                 }
             }
+        }
+        internal void Log()
+        {
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

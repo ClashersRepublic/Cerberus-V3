@@ -25,12 +25,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             var Level = this.Device.GameMode.Level;
 
-            var GameObject = Level.GameObjectManager.Filter.GetObstacleById(this.ObstacleId);
+            var GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.ObstacleId);
 
             if (GameObject != null)
             {
-                var Obstacle = GameObject as Obstacle;
-                if (Obstacle != null)
+                if (GameObject is Obstacle Obstacle)
                 {
                     ObstacleData Data = Obstacle.ObstacleData;
                     ResourceData ResourceData = Data.ClearResourceData;
@@ -54,7 +53,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. The resources data is null.");
                 }
                 else
-                    Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. GameObject is not valid or not exist.");
+                    Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. GameObject is not an obstacle.");
             }
             else
                 Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. GameObject is null");

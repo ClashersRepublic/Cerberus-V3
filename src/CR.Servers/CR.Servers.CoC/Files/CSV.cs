@@ -31,6 +31,7 @@ namespace CR.Servers.CoC.Files
             Gamefiles.Add((int)Gamefile.Npcs, @"Gamefiles/logic/npcs.csv");
             Gamefiles.Add((int)Gamefile.Missions, @"Gamefiles/logic/missions.csv");
             Gamefiles.Add((int)Gamefile.Spells, @"Gamefiles/logic/spells.csv");
+            Gamefiles.Add((int)Gamefile.Heroes, @"Gamefiles/logic/heroes.csv");
             Gamefiles.Add((int)Gamefile.Variables, @"Gamefiles/logic/variables.csv");
             Gamefiles.Add((int)Gamefile.Village_Objects, @"Gamefiles/logic/village_objects.csv");
 

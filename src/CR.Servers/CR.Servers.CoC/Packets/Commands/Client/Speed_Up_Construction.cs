@@ -27,23 +27,21 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             if (GameObject != null)
             {
-                switch (GameObject.Type)
+                if (GameObject is Building Building)
                 {
-                    case 0:
-                    {
-                        ((Building)GameObject).SpeedUpConstruction();
-                        break;
-                    }
-                    case 8:
-                    {
-                        ((VillageObject)GameObject).SpeedUpConstruction();
-                        break;
-                    }
-                    default:
-                    {
-                        Logging.Error(this.GetType(), "Unable to speed up the construction. GameObject Type : " + GameObject.Type + ".");
-                        break;
-                    }
+                    Building.SpeedUpConstruction();
+                }
+                else if (GameObject is Trap Trap)
+                {
+                    Trap.SpeedUpConstruction();
+                }
+                else if (GameObject is VillageObject VillageObject)
+                {
+                    VillageObject.SpeedUpConstruction();
+                }
+                else
+                {
+                    Logging.Error(this.GetType(), "Unable to speed up the construction. GameObject Type : " + GameObject.Type + ".");
                 }
             }
             else

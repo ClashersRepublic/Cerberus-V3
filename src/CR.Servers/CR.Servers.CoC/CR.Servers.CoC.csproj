@@ -140,6 +140,7 @@
     <Compile Include="Files\CSV_Logic\Logic\CharacterData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ExperienceLevelData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\GlobalData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\HeroData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\LocaleData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\MissionData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\NpcData.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Logic\GameObject\Component\BunkerComponent.cs" />
     <Compile Include="Logic\GameObject\Component\CombatComponent.cs" />
     <Compile Include="Logic\GameObject\Component\Component.cs" />
+    <Compile Include="Logic\GameObject\Component\HeroBaseComponent.cs" />
     <Compile Include="Logic\GameObject\Component\ResourceProductionComponent.cs" />
     <Compile Include="Logic\GameObject\Component\ResourceStorageComponent.cs" />
     <Compile Include="Logic\GameObject\Component\UnitProductionComponent.cs" />
@@ -212,9 +214,14 @@
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Packets\Command.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent_V2.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Cancel_Consturction.cs" />
+    <Compile Include="Packets\Commands\Client\Change_Hero_Mode.cs" />
+    <Compile Include="Packets\Commands\Client\Change_Hero_State.cs" />
     <Compile Include="Packets\Commands\Client\Change_Village_Mode.cs" />
+    <Compile Include="Packets\Commands\Client\Change_Weapon_Heading.cs" />
     <Compile Include="Packets\Commands\Client\Change_Weapon_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Clear_Obstacle.cs" />
     <Compile Include="Packets\Commands\Client\Collect_Resource.cs" />
@@ -224,6 +231,7 @@
     <Compile Include="Packets\Commands\Client\Move_Building.cs" />
     <Compile Include="Packets\Commands\Client\New_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
     <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
@@ -233,6 +241,7 @@
     <Compile Include="Packets\Commands\Client\Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Server\Diamonds_Added.cs" />
     <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
+    <Compile Include="Packets\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
     <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Debug.cs" />

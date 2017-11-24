@@ -27,7 +27,7 @@ namespace CR.Servers.CoC.Logic
             JObject UnitProd = (JObject) Json["unit_prod"];
             if (UnitProd != null)
             {
-                if (JsonHelper.GetJsonBoolean(Json, "unit_type", out bool IsSpellForge))
+                if (JsonHelper.GetJsonBoolean(UnitProd, "unit_type", out bool IsSpellForge))
                 {
                     this.IsSpellForge = IsSpellForge;
                 }

@@ -2,6 +2,7 @@
 using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
@@ -69,17 +70,26 @@ namespace CR.Servers.CoC.Logic
              {
                  if (AvailableResources > 0)
                  {
-                     int AvailableStorage = this.Parent.Level.Player.GetAvailableResourceStorage(this.ProducesResource);
-
-                     if (AvailableStorage > 0)
+                     if (this.ProducesResource.GlobalId != 3000000)
                      {
-                         if (AvailableResources > AvailableStorage)
+                         int AvailableStorage = this.Parent.Level.Player.GetAvailableResourceStorage(this.ProducesResource);
+
+                         if (AvailableStorage > 0)
                          {
-                             AvailableResources = AvailableStorage;
+                             if (AvailableResources > AvailableStorage)
+                             {
+                                 AvailableResources = AvailableStorage;
+                             }
+
+                             this.DecreaseResources(AvailableResources);
+                             this.Parent.Level.Player.Resources.Add(this.ProducesResource, AvailableResources);
                          }
+                     }
+                     else
+                     {
 
                          this.DecreaseResources(AvailableResources);
-                         this.Parent.Level.Player.Resources.Add(this.ProducesResource, AvailableResources);
+                         this.Parent.Level.Player.AddDiamonds(AvailableResources);
                      }
                  }
              }
@@ -131,10 +141,16 @@ namespace CR.Servers.CoC.Logic
 
          internal override void Load(JToken Json)
          {
-             if (JsonHelper.GetJsonNumber(Json, "res_time", out int Time))
-             {
-                 if (Time <= this.MaxTime && Time > -1)
-                     this.Timer.StartTimer(this.Parent.Level.Player.LastTick, Time);
+             if (JsonHelper.GetJsonNumber(Json, "res_time", out int Time) && JsonHelper.GetJsonNumber(Json, "res_time_end", out int TimeEnd))
+            {
+
+                var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                var duration = TimeEnd - startTime;
+                if (duration < 0)
+                    duration = 0;
+
+                if (duration <= this.MaxTime && duration > -1)
+                     this.Timer.StartTimer(this.Parent.Level.Player.LastTick, duration);
                  else
                      this.Timer.StartTimer(this.Parent.Level.Player.LastTick, this.MaxTime);
              }
@@ -147,8 +163,9 @@ namespace CR.Servers.CoC.Logic
          internal override void Save(JObject Json)
          {
              Json.Add("res_time", this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick));
+             Json.Add("res_time_end", this.Timer.EndTime);
 
-             base.Save(Json);
+            base.Save(Json);
          }
     }
 }

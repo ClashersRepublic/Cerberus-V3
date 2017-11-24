@@ -1,9 +1,9 @@
 ﻿{
   "Game": {
-    "UpdateURL": "http://192.168.0.5/",
-    "PatchURL": "http://192.168.0.5/",
-    "EventURL": "http://192.168.0.5/events",
-    "GameAssetsURL": "http://192.168.0.5",
+    "UpdateURL": "http://219.92.44.149/",
+    "PatchURL": "http://219.92.44.149/",
+    "EventURL": "http://219.92.44.149/events/",
+    "GameAssetsURL": "http://219.92.44.149/",
     "ClientMajorVersion": "9",
     "ClientMinorVersion": "256",
     "StartingResources": {
