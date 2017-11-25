@@ -33,6 +33,8 @@ namespace CR.Servers.CoC.Files
             Gamefiles.Add((int)Gamefile.Spells, @"Gamefiles/logic/spells.csv");
             Gamefiles.Add((int)Gamefile.Heroes, @"Gamefiles/logic/heroes.csv");
             Gamefiles.Add((int)Gamefile.Variables, @"Gamefiles/logic/variables.csv");
+            Gamefiles.Add((int)Gamefile.Regions, @"Gamefiles/logic/regions.csv");
+            Gamefiles.Add((int)Gamefile.AllianceBadgeLayer, @"Gamefiles/logic/alliance_badge_layers.csv");
             Gamefiles.Add((int)Gamefile.Village_Objects, @"Gamefiles/logic/village_objects.csv");
 
             foreach (var File in Gamefiles)

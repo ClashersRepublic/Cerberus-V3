@@ -17,7 +17,7 @@ namespace Magic.ClashOfClans.Logic.Structure.Slots.Items
 
         internal bool Connected => ResourcesManager.IsPlayerOnline(Player);
         internal Level Player => ResourcesManager.GetPlayer(UserID, true);
-        internal bool New => Joined >= DateTime.UtcNow.AddDays(-3);
+        internal int New => Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
 
         internal Member()
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Extensions.Game;
+﻿using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -151,7 +146,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                                 if (Level.Player.Resources.GetCountByData(ResourceData) >=  this.BuildingData.BuildCost[0])
                                 {
-
                                     if (Level.WorkerManagerV2.FreeWorkers > 0)
                                     {
                                         Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);

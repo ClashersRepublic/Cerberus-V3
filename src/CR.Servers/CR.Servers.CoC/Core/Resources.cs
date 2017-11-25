@@ -15,6 +15,7 @@ namespace CR.Servers.CoC.Core
     internal class Resources
     {
         internal static Accounts Accounts;
+        internal static Clans Clans;
         internal static XorShift Random;
         internal static Gateway Gateway;
         internal static Regex Regex;
@@ -38,6 +39,7 @@ namespace CR.Servers.CoC.Core
             Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
 
             Resources.Accounts = new Accounts();
+            Resources.Clans = new Clans();
             Resources.Random = new XorShift();
             Resources.Gateway = new Gateway();
             Resources.Started = true;

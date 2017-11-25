@@ -122,6 +122,7 @@
     <Compile Include="Library\Zlib\ZlibConstants.cs" />
     <Compile Include="Library\Zlib\ZlibStream.cs" />
     <Compile Include="Logic\Enums\DBMS.cs" />
+    <Compile Include="Logic\Enums\Hiring.cs" />
     <Compile Include="Logic\Enums\Rank.cs" />
     <Compile Include="Logic\Enums\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

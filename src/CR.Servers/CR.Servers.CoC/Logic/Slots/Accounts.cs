@@ -308,7 +308,7 @@ namespace CR.Servers.CoC.Logic.Slots
                 }
                 catch (Exception Exception)
                 {
-                    Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + ".");
+                    Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + " due to " + Exception + ".");
                 }
 
             }
@@ -321,7 +321,7 @@ namespace CR.Servers.CoC.Logic.Slots
                 }
                 catch (Exception Exception)
                 {
-                    Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + ".");
+                    Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + " due to " + Exception + ".");
                 }
 
             }

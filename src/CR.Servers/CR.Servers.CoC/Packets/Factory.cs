@@ -6,6 +6,7 @@ using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Messages.Client.Alliances;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
 using CR.Servers.CoC.Packets.Messages.Client.Avatar;
 using CR.Servers.CoC.Packets.Messages.Client.Battle;
@@ -39,12 +40,17 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
+            Factory.Messages.Add(14301, typeof(Create_Alliance));
+            Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));
+            Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
         }
 
         private static void LoadCommands()
         {
+            Factory.Commands.Add(1, typeof(Joined_Alliance));
             Factory.Commands.Add(3, typeof(Name_Change_Callback));
+            Factory.Commands.Add(6, typeof(Changed_Alliance_Settings));
             Factory.Commands.Add(7, typeof(Diamonds_Added));
 
             Factory.Commands.Add(500, typeof(Buy_Building));
@@ -58,6 +64,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(510, typeof(Buy_Trap));
             Factory.Commands.Add(516, typeof(Upgrade_Unit));
             Factory.Commands.Add(517, typeof(Speed_Up_Upgrade_Unit));
+            Factory.Commands.Add(518, typeof(Buy_Resources));
             Factory.Commands.Add(519, typeof(Mission_Progress));
             Factory.Commands.Add(520, typeof(Unlock_Building));
             Factory.Commands.Add(521, typeof(Free_Worker));
@@ -66,7 +73,9 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(528, typeof(SpeedUp_Hero_Upgrade));
             Factory.Commands.Add(529, typeof(Change_Hero_State));
             Factory.Commands.Add(532, typeof(New_Shop_Seen));
+            Factory.Commands.Add(533, typeof(Move_Multiple_Buildings));
             Factory.Commands.Add(539, typeof(New_Seen));
+            Factory.Commands.Add(553, typeof(Unknown_553));
             Factory.Commands.Add(554, typeof(Change_Weapon_Heading));
             Factory.Commands.Add(572, typeof(Change_Hero_Mode));
             Factory.Commands.Add(577, typeof(Swap_GameObject));

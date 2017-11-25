@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Logic;
+﻿using CR.Servers.CoC.Extensions.Game;
+using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client

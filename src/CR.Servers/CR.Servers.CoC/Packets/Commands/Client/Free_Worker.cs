@@ -82,8 +82,15 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             {
                 try
                 {
-                    this.Command.Execute();
-                    Logging.Error(this.GetType(), "Embded Command is handled! (" + Command.Type + ")");
+                    if (!this.Command.IsServerCommand)
+                    {
+                        this.Command.Execute();
+                        Logging.Info(this.GetType(), "Embedded Command is handled! (" + Command.Type + ")");
+                    }
+                    else
+                    {
+                        Logging.Error(this.GetType(), "Unable to execute server command as embedded command! (" + Command.Type + ")");
+                    }
                 }
                 catch (Exception Exception)
                 {

@@ -5,6 +5,8 @@ using CR.Servers.CoC.Extensions;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.CoC.Logic.Clan;
+using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.Extensions.List;
 using CR.Servers.Logic.Enums;
@@ -15,6 +17,9 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Player : PlayerBase
     {
+        internal Alliance Alliance;
+        internal Member AllianceMember;
+
         [JsonProperty] internal int HighID;
         [JsonProperty] internal int LowID;
 
@@ -127,19 +132,58 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        /*internal void SetAlliance(Alliance Alliance, Member Member)
+        internal void VerifyAlliance()
         {
-            this.AllianceHighID = Alliance.HighID;
-            this.AllianceLowID = Alliance.LowID;
+            if (this.Alliance == null)
+            {
+                var Clan = Core.Resources.Clans.Get(this.AllianceHighId, this.AllianceLowId);
+                if (Clan != null)
+                {
+                    var Member = Clan.Members.Get(this.UserId);
+                    if (Member != null)
+                    {
+                        this.SetAlliance(Clan, Member);
+                    }
+                    else
+                    {
+                        this.AllianceHighId = 0;
+                        this.AllianceLowId = 0;
+                    }
+                }
+                else
+                {
+                    this.AllianceHighId = 0;
+                    this.AllianceLowId = 0;
+                }
+            }
+        }
+
+        internal void SetAlliance(Alliance Alliance, Member Member)
+        {
             this.Alliance = Alliance;
             this.AllianceMember = Member;
-        }*/
+        }
+
         internal void Encode(List<byte> _Packet)
         {
             _Packet.AddLong(this.UserId);
             _Packet.AddLong(this.UserId);
 
-            _Packet.AddBool(false); //Clan
+            if (this.InAlliance)
+            {
+                _Packet.AddBool(true);
+                _Packet.AddLong(this.AllianceId);
+                _Packet.AddString(this.Alliance.Header.Name);
+
+                _Packet.AddInt(this.Alliance.Header.Badge);
+                _Packet.AddInt((int) this.AllianceMember.Role);
+                _Packet.AddInt(this.Alliance.Header.ExpLevel);
+
+                _Packet.AddBool(false); //War Id or league id?
+            }
+            else
+                _Packet.AddBool(false); 
+
             _Packet.AddInt(0); //Legendary_Trophies
             _Packet.AddInt(0);
             _Packet.AddInt(0);
@@ -274,9 +318,9 @@ namespace CR.Servers.CoC.Logic
 
             if (this.InAlliance)
             {
-                //Json.Add("alliance_name", this.Alliance.Header.Name);
-                //Json.Add("badge_id", this.Alliance.Header.Badge);
-                //Json.Add("alliance_exp_level", this.Alliance.Header.ExpLevel);
+                Json.Add("alliance_name", this.Alliance.Header.Name);
+                Json.Add("badge_id", this.Alliance.Header.Badge);
+                Json.Add("alliance_exp_level", this.Alliance.Header.ExpLevel);
             }
             else
                 Json.Add("alliance_name", string.Empty);

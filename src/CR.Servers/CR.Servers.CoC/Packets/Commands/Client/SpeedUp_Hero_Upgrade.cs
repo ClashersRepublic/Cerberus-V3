@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Core;
+﻿using System;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
 
@@ -12,13 +13,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
         }
 
-
         internal int BuildingId;
+        internal int Village;
 
         internal override void Decode()
         {
             this.BuildingId = this.Reader.ReadInt32();
-            this.Reader.ReadInt32();
+            this.Village = this.Reader.ReadInt32();
             base.Decode();
         }
 

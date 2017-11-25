@@ -135,6 +135,7 @@
     <Compile Include="Files\CSV_Helpers\Data.cs" />
     <Compile Include="Files\CSV_Helpers\DataTable.cs" />
     <Compile Include="Files\CSV_Helpers\GlobalId.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\AllianceBadgeLayerData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingClassData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\CharacterData.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Files\CSV_Logic\Logic\MissionData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\NpcData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ObstacleData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\RegionData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ResourceData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\SpellData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\TownhallLevelData.cs" />
@@ -157,11 +159,14 @@
     <Compile Include="Files\LevelFile.cs" />
     <Compile Include="Logic\Clan\Alliance.cs" />
     <Compile Include="Logic\Clan\Items\AllianceHeader.cs" />
+    <Compile Include="Logic\Clan\Items\Member.cs" />
+    <Compile Include="Logic\Clan\Slots\Members.cs" />
     <Compile Include="Logic\Device.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
     <Compile Include="Logic\Enums\Resource.cs" />
     <Compile Include="Logic\Enums\Role.cs" />
     <Compile Include="Logic\Enums\Variable.cs" />
+    <Compile Include="Logic\Enums\WarState.cs" />
     <Compile Include="Logic\GameObject\Building.cs" />
     <Compile Include="Logic\GameObject\Component\BunkerComponent.cs" />
     <Compile Include="Logic\GameObject\Component\CombatComponent.cs" />
@@ -211,9 +216,12 @@
     <Compile Include="Logic\Random.cs" />
     <Compile Include="Logic\Slots\Account.cs" />
     <Compile Include="Logic\Slots\Accounts.cs" />
+    <Compile Include="Logic\Slots\Clans.cs" />
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Packets\Command.cs" />
+    <Compile Include="Packets\Commands\Client\BuildingToMove.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Resources.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent_V2.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
@@ -229,6 +237,7 @@
     <Compile Include="Packets\Commands\Client\Gear_Up.cs" />
     <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Packets\Commands\Client\Move_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Move_Multiple_Buildings.cs" />
     <Compile Include="Packets\Commands\Client\New_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
     <Compile Include="Packets\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
@@ -236,10 +245,13 @@
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
     <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown_553.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Unit.cs" />
+    <Compile Include="Packets\Commands\Server\Changed_Alliance_Settings.cs" />
     <Compile Include="Packets\Commands\Server\Diamonds_Added.cs" />
+    <Compile Include="Packets\Commands\Server\Joined_Alliance.cs" />
     <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
@@ -249,6 +261,9 @@
     <Compile Include="Packets\Enums\UnlockAccountReason.cs" />
     <Compile Include="Packets\Factory.cs" />
     <Compile Include="Packets\Message.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Alliance_Data.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Settings.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
@@ -258,6 +273,8 @@
     <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Data.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_OK.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_Failed.cs" />

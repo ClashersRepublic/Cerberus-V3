@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using CR.Servers.Extensions.List;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json;
 
 namespace CR.Servers.CoC.Logic.Clan.Items
@@ -31,8 +29,73 @@ namespace CR.Servers.CoC.Logic.Clan.Items
         [JsonProperty] internal bool PublicWarLog;
         [JsonProperty] internal bool AmicalWar;
 
-        //[JsonProperty] internal Hiring Type;
+        [JsonProperty] internal Hiring Type;
+
+        internal int DuelScore
+        {
+            get
+            {
+                int Score = 0;
+
+                foreach (Member Member in this.Alliance.Members.Slots.Values)
+                {
+                    Score += Member.Player.DuelScore;
+                }
+
+                return Score;
+            }
+        }
+
+        internal int Score
+        {
+            get
+            {
+                int Score = 0;
+
+                foreach (Member Member in this.Alliance.Members.Slots.Values)
+                {
+                    Score += Member.Player.Score;
+                }
+
+                return Score;
+            }
+        }
+
+        public AllianceHeader(Alliance Alliance)
+        {
+            this.Alliance = Alliance;
+        }
 
 
+        internal void Encode(List<byte> Packet)
+        {
+            Packet.AddLong(this.Alliance.AllianceId);
+
+            Packet.AddString(this.Name);
+
+            Packet.AddInt(this.Badge);
+            Packet.AddInt((int)this.Type);
+            Packet.AddInt(this.NumberOfMembers);
+            Packet.AddInt(this.Score);
+            Packet.AddInt(this.DuelScore);
+            
+            Packet.AddInt(this.RequiredScore);
+            Packet.AddInt(this.RequiredDuelScore);
+
+            Packet.AddInt(this.WonWarCount);
+            Packet.AddInt(this.LostWarCount);
+            Packet.AddInt(this.EqualWarCount);
+
+            Packet.AddInt(this.Locale);
+            Packet.AddInt(this.ConsecutiveWarWinsCount);
+            Packet.AddInt(this.Origin);
+
+            Packet.AddInt(this.ExpPoints);
+            Packet.AddInt(this.ExpLevel);
+            Packet.AddInt(this.ConsecutiveWarWinsCount);
+            Packet.AddBool(this.PublicWarLog);
+            Packet.AddInt(0);
+            Packet.AddBool(this.AmicalWar);
+        }
     }
 }

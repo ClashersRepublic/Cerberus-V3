@@ -170,7 +170,6 @@ namespace CR.Servers.CoC.Logic
             {
                 this.Disposed = true;
                 this.State = State.DISCONNECTED;
-
                 if (this.Account != null)
                 {
                     if (this.Account.Player != null)

@@ -40,10 +40,11 @@ namespace CR.Servers.CoC.Core.Events
             });*/
 
             Task.WaitAll(Resources.Accounts.Saves());
+            Task.WaitAll(Resources.Clans.Saves());
             //Task AllSave = Task.Run(() => Resources.Clans.Save());
 
             //AllSave.Wait();
-//Message.Wait();
+            //Message.Wait();
         }
     }
 }

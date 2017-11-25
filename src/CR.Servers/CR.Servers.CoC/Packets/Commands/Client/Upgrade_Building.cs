@@ -41,8 +41,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             : Data.BuildResourceData;
                         if (ResourceData != null)
                         {
-                            if (Level.Player.Resources.GetCountByData(ResourceData) >=
-                                Data.BuildCost[Building.GetUpgradeLevel() + 1])
+                            if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Building.GetUpgradeLevel() + 1])
                             {
                                 if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {

@@ -6,6 +6,7 @@ using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
+using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles.Colorful;
@@ -191,14 +192,22 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal void Login(Account account)
         {
-            Device.Account = account;
-            Device.GameMode.LoadHomeState(account.Home, account.Player);
+            this.Device.Account = account;
+            this.Device.GameMode.LoadHomeState(account.Home, account.Player);
+            var Player = account.Player;
+            Player.VerifyAlliance();
 
             if (Device.ReceiveDecrypter.IsRC4)
                 new SessionKey(this.Device).Send();
 
             new Authentication_OK(this.Device).Send();
             new Own_Home_Data(this.Device).Send();
+
+            if (Player.InAlliance)
+            {
+                new Alliance_Full_Entry(this.Device) {Alliance = Player.Alliance}.Send();
+                this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);
+            }
         }
     }
 }

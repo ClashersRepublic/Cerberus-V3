@@ -77,6 +77,12 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Heroes:
                     _Data = new HeroData(_Row, this);
                     break;
+                case Gamefile.Regions:
+                    _Data = new RegionData(_Row, this);
+                    break;
+                case Gamefile.AllianceBadgeLayer:
+                    _Data = new AllianceBadgeLayerData(_Row, this);
+                    break;
                 case Gamefile.Variables:
                     _Data = new VariableData(_Row, this);
                     break;
