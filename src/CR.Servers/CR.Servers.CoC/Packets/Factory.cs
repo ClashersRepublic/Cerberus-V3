@@ -42,7 +42,9 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14134, typeof(Attack_Npc));
             Factory.Messages.Add(14301, typeof(Create_Alliance));
             Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));
+            Factory.Messages.Add(14303, typeof(Ask_For_Joinable_Alliance_List));
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
+            Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
         }
 

@@ -4,7 +4,7 @@
     {
         Member,
         Leader = 2,
-        Admin,
+        Elder,
         CoLeader
     }
 }

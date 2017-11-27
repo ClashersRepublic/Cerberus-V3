@@ -17,6 +17,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
         [JsonProperty] internal int ExpLevel = 1;
         [JsonProperty] internal int ExpPoints;
         [JsonProperty] internal int Origin;
+        [JsonProperty] internal int WarFrequency;
         [JsonProperty] internal int RequiredScore;
         [JsonProperty] internal int RequiredDuelScore;
         [JsonProperty] internal int NumberOfMembers;
@@ -31,6 +32,8 @@ namespace CR.Servers.CoC.Logic.Clan.Items
 
         [JsonProperty] internal Hiring Type;
 
+        internal int TypeinInt => (int)this.Type;
+
         internal int DuelScore
         {
             get
@@ -39,7 +42,14 @@ namespace CR.Servers.CoC.Logic.Clan.Items
 
                 foreach (Member Member in this.Alliance.Members.Slots.Values)
                 {
-                    Score += Member.Player.DuelScore;
+                    if (Member.Player != null)
+                    {
+                        Score += Member.Player.DuelScore;
+                    }
+                    else
+                    {
+                        this.Alliance.Members.Quit(Member);
+                    }
                 }
 
                 return Score;
@@ -54,7 +64,14 @@ namespace CR.Servers.CoC.Logic.Clan.Items
 
                 foreach (Member Member in this.Alliance.Members.Slots.Values)
                 {
-                    Score += Member.Player.Score;
+                    if (Member.Player != null)
+                    {
+                        Score += Member.Player.Score;
+                    }
+                    else
+                    {
+                        this.Alliance.Members.Quit(Member);
+                    }
                 }
 
                 return Score;
@@ -87,7 +104,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
             Packet.AddInt(this.EqualWarCount);
 
             Packet.AddInt(this.Locale);
-            Packet.AddInt(this.ConsecutiveWarWinsCount);
+            Packet.AddInt(this.WarFrequency);
             Packet.AddInt(this.Origin);
 
             Packet.AddInt(this.ExpPoints);

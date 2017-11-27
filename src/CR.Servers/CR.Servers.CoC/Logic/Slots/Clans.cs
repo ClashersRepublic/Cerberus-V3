@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Database;
 using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.Logic.Enums;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -73,7 +72,7 @@ namespace CR.Servers.CoC.Logic.Slots
                 }
             }
 
-            this.Save(Clan);
+            this.Save(Clan).Wait();
         }
 
         internal async Task<Alliance> GetAsync(int HighID, int LowID, bool Store = true)

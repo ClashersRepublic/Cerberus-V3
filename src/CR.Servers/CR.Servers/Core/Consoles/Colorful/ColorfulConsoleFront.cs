@@ -20,7 +20,7 @@ namespace CR.Servers.Core.Consoles.Colorful
                 if (isWindows)
                     defaultColorMap = new ColorMapper().GetBufferColors();
             }
-            catch (ConsoleAccessException ex)
+            catch (ConsoleAccessException)
             {
                 isInCompatibilityMode = true;
             }

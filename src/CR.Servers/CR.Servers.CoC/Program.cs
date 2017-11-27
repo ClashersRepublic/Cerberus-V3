@@ -1,34 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Database;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.CoC.Logic.Slots;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles;
-using CR.Servers.Extensions;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 
 namespace CR.Servers.CoC

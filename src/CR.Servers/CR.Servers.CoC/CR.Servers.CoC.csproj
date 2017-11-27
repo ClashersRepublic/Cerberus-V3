@@ -80,6 +80,7 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MongoDB.Bson, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MongoDB.Bson.2.4.4\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
@@ -262,8 +263,10 @@
     <Compile Include="Packets\Factory.cs" />
     <Compile Include="Packets\Message.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Alliance_Data.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Joinable_Alliance_List.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Settings.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Search_Alliances.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
@@ -275,6 +278,8 @@
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Joinable_Alliance_List.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Search_Alliances_Response.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_OK.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_Failed.cs" />

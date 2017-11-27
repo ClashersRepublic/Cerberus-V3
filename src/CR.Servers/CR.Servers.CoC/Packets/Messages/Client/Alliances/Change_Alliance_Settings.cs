@@ -76,12 +76,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     {
                         //if (Foreground != null)
                         {
-
+                            ShowValues();
                             var Level = this.Device.GameMode.Level;
                             var Alliance = Resources.Clans.Get(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
                             Alliance.Description = this.Description;
                             Alliance.Header.Badge = this.AllianceBadge;
                             Alliance.Header.Type = this.AllianceType;
+                            Alliance.Header.WarFrequency = this.WarFrequency;
                             Alliance.Header.Origin = this.Origin?.GlobalId ?? 0;
                             Alliance.Header.PublicWarLog = this.PublicWarLog;
                             Alliance.Header.RequiredScore = this.RequiredScore;

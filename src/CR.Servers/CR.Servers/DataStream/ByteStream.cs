@@ -348,7 +348,7 @@ namespace CR.Servers.DataStream
         /// <summary>
         ///     Adds element to buffer.
         /// </summary>
-        public void AddRange(byte[] Buffer)
+        public override void AddRange(byte[] Buffer)
         {
             EnsureCapacity(Buffer.Length);
 

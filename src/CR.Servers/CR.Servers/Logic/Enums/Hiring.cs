@@ -2,8 +2,8 @@
 {
     public enum Hiring
     {
-        OPEN = 0,
-        CLOSED = 1,
-        INVITE = 2
+        OPEN = 1,
+        INVITE = 2,
+        CLOSED = 3
     }
 }

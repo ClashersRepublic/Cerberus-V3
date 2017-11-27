@@ -106,6 +106,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                             Alliance.Header.Locale = this.Device.Info.LocaleData.GlobalId;
                                             Alliance.Header.Badge = this.AllianceBadge;
                                             Alliance.Header.Type = this.AllianceType;
+                                            Alliance.Header.WarFrequency = this.WarFrequency;
 
                                             if (this.Origin != null)
                                             {

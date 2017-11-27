@@ -13,10 +13,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         }
 
         internal int BuildingId;
+        internal bool Sleeping;
 
         internal override void Decode()
         {
             this.BuildingId = this.Reader.ReadInt32();
+            this.Sleeping = this.Reader.ReadBoolean();
             base.Decode();
         }
 
@@ -34,19 +36,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         var HeroData = HeroBaseComponent.HeroData;
                         if (HeroData != null)
                         {
-                            var state = level.Player.HeroStates.GetCountByData(HeroData);
-                            switch (state)
-                            {
-                                case 3:
-                                    level.Player.HeroStates.Set(HeroData, 2);
-                                    break;
-                                case 2:
-                                    level.Player.HeroStates.Set(HeroData, 3);
-                                    break;
-                                default:
-                                    Logging.Error(this.GetType(), $"Unable to change hero state. Hero current state is {state}.");
-                                    break;
-                            }
+                            level.Player.HeroStates.Set(HeroData, this.Sleeping ? 2 : 3);
                         }
                         else
                             Logging.Error(this.GetType(), "Unable to change hero state. Hero data is null.");
