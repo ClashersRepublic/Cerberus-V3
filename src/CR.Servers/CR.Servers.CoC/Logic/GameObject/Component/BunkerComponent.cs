@@ -8,6 +8,7 @@ namespace CR.Servers.CoC.Logic
     internal class BunkerComponent : Component
     {
         internal override int Type => 7;
+
         public BunkerComponent(GameObject GameObject) : base(GameObject)
         {
             this.UnitRequestTimer = new Timer();
@@ -24,18 +25,84 @@ namespace CR.Servers.CoC.Logic
         internal Timer ElderKickTimer;
         internal Timer ChallengeTimer;
         internal Timer ArrangeWarTimer;
+       
+        internal bool CanSendUnitRequest
+        {
+            get
+            {
+                if (this.UnitRequestTimer != null)
+                {
+                    return this.UnitRequestTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
 
-        internal bool CanSendUnitRequest => this.UnitRequestTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                return true;
+            }
+        }
 
-        internal bool CanSendClanMail => this.ClanMailTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+        internal bool CanSendClanMail
+        {
+            get
+            {
+                if (this.ClanMailTimer != null)
+                {
+                    return this.ClanMailTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
 
-        internal bool CanShareReplay => this.ShareReplayTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                return true;
+            }
+        }
 
-        internal bool CanElderKick => this.ElderKickTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+        internal bool CanShareReplay
+        {
+            get
+            {
+                if (this.ShareReplayTimer != null)
+                {
+                    return this.ShareReplayTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
 
-        internal bool CanCreateChallenge => this.ChallengeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                return true;
+            }
+        }
 
-        internal bool CanArrangeWar => this.ChallengeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+        internal bool CanElderKick
+        {
+            get
+            {
+                if (this.ElderKickTimer != null)
+                {
+                    return this.ElderKickTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
+
+                return true;
+            }
+        }
+
+        internal bool CanCreateChallenge
+        {
+            get
+            {
+                if (this.ChallengeTimer != null)
+                {
+                    return this.ChallengeTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
+
+                return true;
+            }
+        }
+
+        internal bool CanArrangeWar
+        {
+            get
+            {
+                if (this.ArrangeWarTimer != null)
+                {
+                    return this.ArrangeWarTimer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0;
+                }
+
+                return true;
+            }
+        }
 
         internal override void FastForwardTime(int Secs)
         {

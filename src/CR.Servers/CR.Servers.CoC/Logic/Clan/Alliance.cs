@@ -13,7 +13,7 @@ namespace CR.Servers.CoC.Logic.Clan
         [JsonProperty] internal int LowId;
 
         [JsonProperty] internal Members Members;
-        //[JsonProperty] internal Streams Streams;
+        [JsonProperty] internal Streams Streams;
         [JsonProperty] internal AllianceHeader Header;
         [JsonProperty] internal WarState WarState;
 
@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Logic.Clan
         {
             this.Header = new AllianceHeader(this);
             this.Members = new Members(this);
-            //this.Streams = new Streams(this);
+            this.Streams = new Streams(this);
         }
 
         internal Alliance(int HighID, int LowID) : this()

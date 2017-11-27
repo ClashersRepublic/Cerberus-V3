@@ -162,10 +162,17 @@
     <Compile Include="Logic\Clan\Items\AllianceHeader.cs" />
     <Compile Include="Logic\Clan\Items\Member.cs" />
     <Compile Include="Logic\Clan\Slots\Members.cs" />
+    <Compile Include="Logic\Clan\Slots\Streams.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\ChatStreamEntry.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\EventStreamEntry.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\StreamEntry.cs" />
     <Compile Include="Logic\Device.cs" />
+    <Compile Include="Logic\Enums\AllianceEvent.cs" />
+    <Compile Include="Logic\Enums\AvatarStream.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
     <Compile Include="Logic\Enums\Resource.cs" />
     <Compile Include="Logic\Enums\Role.cs" />
+    <Compile Include="Logic\Enums\AllianceStream.cs" />
     <Compile Include="Logic\Enums\Variable.cs" />
     <Compile Include="Logic\Enums\WarState.cs" />
     <Compile Include="Logic\GameObject\Building.cs" />
@@ -200,9 +207,11 @@
     <Compile Include="Logic\Math\Math.cs" />
     <Compile Include="Logic\Math\Vector2.cs" />
     <Compile Include="Logic\Mode\GameMode.cs" />
+    <Compile Include="Logic\Player\AvatarStream\ClanMailEntry.cs" />
     <Compile Include="Logic\Player\Items\Event.cs" />
     <Compile Include="Logic\Player\Items\Functions.cs" />
     <Compile Include="Logic\Player\Items\Item.cs" />
+    <Compile Include="Logic\Player\AvatarStream\MailEntry.cs" />
     <Compile Include="Logic\Player\Items\UnitItem.cs" />
     <Compile Include="Logic\Player\Player.cs" />
     <Compile Include="Logic\Player\PlayerBase.cs" />
@@ -211,6 +220,7 @@
     <Compile Include="Logic\Player\Slots\DataSlots.cs" />
     <Compile Include="Logic\Player\Slots\NpcMapSlots.cs" />
     <Compile Include="Logic\Player\Slots\ResourceSlots.cs" />
+    <Compile Include="Logic\Player\Slots\Inbox.cs" />
     <Compile Include="Logic\Player\Slots\UnitSlots.cs" />
     <Compile Include="Logic\Player\Slots\VariableSlots.cs" />
     <Compile Include="Logic\Player\Items\ProductionItem.cs" />
@@ -241,6 +251,7 @@
     <Compile Include="Packets\Commands\Client\Move_Multiple_Buildings.cs" />
     <Compile Include="Packets\Commands\Client\New_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\Send_Alliance_Mail.cs" />
     <Compile Include="Packets\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
@@ -265,7 +276,9 @@
     <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Joinable_Alliance_List.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Settings.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Chat_To_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Join_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Search_Alliances.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
@@ -278,6 +291,8 @@
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Joinable_Alliance_List.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Search_Alliances_Response.cs" />
     <Compile Include="Packets\Messages\Server\Authentication\Authentication_Failed.cs" />
@@ -286,6 +301,8 @@
     <Compile Include="Packets\Messages\Server\Authentication\Unlock_Account_OK.cs" />
     <Compile Include="Packets\Messages\Client\Home\Keep_Alive.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Avatar_Profile_Data.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Avatar_Stream.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Avatar_Stream_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Npc_Data.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Pc_Battle_Data_V2.cs" />
     <Compile Include="Packets\Messages\Server\Home\Available_Server_Command.cs" />

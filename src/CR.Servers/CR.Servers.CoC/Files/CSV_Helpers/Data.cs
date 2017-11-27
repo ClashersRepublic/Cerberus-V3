@@ -140,7 +140,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         }
     }
 
-    internal class DataConverter : JsonConverter
+    /*internal class DataConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -173,5 +173,5 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         {
             return objectType.BaseType == typeof(Data) || objectType == typeof(Data);
         }
-    }
+    }*/
 }

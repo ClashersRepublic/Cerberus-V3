@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions.List;
 using Magic.ClashOfClans.Logic.Structure.Slots.Items;
@@ -18,11 +19,12 @@ namespace Magic.ClashOfClans.Logic.Structure.Slots
 
         internal Inbox()
         {
+            Console.WriteLine("Hi2");
             Slots = new List<Mail>(20);
         }
 
         internal Inbox(Avatar Player, int Limit = 20)
-        {
+        {Console.WriteLine("Hi");
             this.Player = Player;
             Slots = new List<Mail>(Limit);
         }

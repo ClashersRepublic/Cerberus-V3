@@ -55,6 +55,7 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal bool Locked;
 
         [JsonProperty] internal Rank Rank = Rank.Player;
+        [JsonProperty] internal Inbox Inbox;
 
         /*[JsonProperty] internal Facebook Facebook;
         [JsonProperty] internal Google Google;
@@ -82,6 +83,7 @@ namespace CR.Servers.CoC.Logic
 
         internal Player()
         {
+            this.Inbox = new Inbox(this);
             /*this.Achievements = new List<Data>(60);
             this.Missions = new List<Data>(30);
             this.Logs = new List<AvatarStreamEntry>(50);

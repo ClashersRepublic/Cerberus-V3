@@ -3,6 +3,8 @@ using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Clan;
+using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Packets.Commands.Server;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
@@ -88,6 +90,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                             Alliance.Header.RequiredScore = this.RequiredScore;
                             Alliance.Header.RequiredDuelScore = this.RequiredDuelScore;
                             Alliance.Header.AmicalWar = this.AmicalWar;
+
+                           Alliance.Streams.AddEntry(new EventStreamEntry(Level.Player.AllianceMember, Level.Player.AllianceMember, AllianceEvent.ChangedSettings));
 
                             foreach (Player Player in Alliance.Members.Connected.Values.ToArray())
                             {

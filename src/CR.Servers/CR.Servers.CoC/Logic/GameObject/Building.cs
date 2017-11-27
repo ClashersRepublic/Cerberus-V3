@@ -218,9 +218,8 @@ namespace CR.Servers.CoC.Logic
 
             if (this.HeroBaseComponent != null)
             {
-                HeroData HeroData = CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType) as HeroData;
 
-                if (HeroData != null)
+                if (CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType) is HeroData HeroData)
                 {
                     this.Level.Player.HeroUpgrades.Set(HeroData, 0);
                     this.Level.Player.HeroStates.Set(HeroData, 3);

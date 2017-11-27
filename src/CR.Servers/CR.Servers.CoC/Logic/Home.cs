@@ -25,10 +25,8 @@ namespace CR.Servers.CoC.Logic
         [OnSerializing]
         internal void OnSerializingMethod(StreamingContext context)
         {
-            Console.WriteLine("We are serializing");
             if (this.Level != null)
             {
-                Console.WriteLine("Hello");
                 LastSave = this.Level.Save();
             }
         }

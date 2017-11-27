@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
@@ -11,9 +13,16 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Item
     {
-        [JsonIgnore] internal Data ItemData;
-        [JsonProperty] internal int Data;
-        [JsonProperty] internal int Count;
+        [JsonProperty("id")] internal int Data;
+        [JsonProperty("cnt")] internal int Count;
+
+        internal Data ItemData
+        {
+            get => _data ?? (_data = CSV.Tables.GetWithGlobalId(this.Data));
+            set => _data = value;
+        }
+
+        private Data _data;
 
         internal virtual int Checksum => Data + this.Count;
 

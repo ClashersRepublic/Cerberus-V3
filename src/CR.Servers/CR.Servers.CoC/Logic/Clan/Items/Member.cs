@@ -27,6 +27,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
         {
             this.HighId = Player.HighID;
             this.LowId = Player.LowID;
+            this.Player = Player;
 
             Joined = DateTime.UtcNow;
             Role = Role.Member;
@@ -49,6 +50,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
 
                 return _Player;
             }
+            set => _Player = value;
         }
     }
 }

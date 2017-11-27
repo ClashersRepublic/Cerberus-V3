@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Logic.Slots
             TypeNameHandling            = TypeNameHandling.Auto,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,
             /*PreserveReferencesHandling  = PreserveReferencesHandling.All,*/   ReferenceLoopHandling   = ReferenceLoopHandling.Ignore,
-            Converters                  = new List<JsonConverter> { new DataConverter(),  },
+            //Converters                  = new List<JsonConverter> { new DataConverter(),  },
             Formatting                  = Formatting.None
         };
 

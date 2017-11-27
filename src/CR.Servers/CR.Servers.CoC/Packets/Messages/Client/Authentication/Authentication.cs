@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Helper;
@@ -8,6 +9,7 @@ using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
+using CR.Servers.CoC.Packets.Messages.Server.Avatar;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
@@ -197,15 +199,17 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             var Player = account.Player;
             Player.VerifyAlliance();
 
-            if (Device.ReceiveDecrypter.IsRC4)
+            if (this.Device.ReceiveDecrypter.IsRC4)
                 new SessionKey(this.Device).Send();
 
             new Authentication_OK(this.Device).Send();
             new Own_Home_Data(this.Device).Send();
+            new Avatar_Stream(this.Device).Send();
 
             if (Player.InAlliance)
             {
                 new Alliance_Full_Entry(this.Device) {Alliance = Player.Alliance}.Send();
+                new Alliance_Stream(this.Device) {Alliance = Player.Alliance}.Send();
                 this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);
             }
         }

@@ -104,28 +104,6 @@ namespace Magic.ClashOfClans.Logic.Structure.Slots.Items
                     case Avatar_Stream.REMOVED_CLAN:
                         _Packet.AddString(Message);
                         _Packet.AddLong(Alliance_ID);
-                        _Packet.AddString(Clan.Name);
-                        _Packet.AddInt(Clan.Badge);
-                        _Packet.AddBool(true);
-                        _Packet.AddLong(Sender_ID);
-                        break;
-
-                    case Avatar_Stream.CLAN_MAIL:
-                        _Packet.AddString(Message);
-                        _Packet.AddBool(true);
-                        _Packet.AddLong(Sender_ID);
-                        _Packet.AddLong(Alliance_ID);
-                        _Packet.AddString(Clan.Name);
-                        _Packet.AddInt(Clan.Badge);
-                        break;
-                    case Avatar_Stream.INVITATION:
-                        _Packet.AddLong(Alliance_ID);
-                        _Packet.AddString(Clan.Name);
-                        _Packet.AddInt(Clan.Badge);
-                        _Packet.AddBool(true);
-                        _Packet.AddLong(Sender_ID);
-                        _Packet.AddInt(1); //Invite id?
-                        _Packet.AddByte(0);
                         break;
                 }
                 return _Packet.ToArray();

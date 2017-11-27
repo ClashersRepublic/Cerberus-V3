@@ -43,6 +43,8 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14301, typeof(Create_Alliance));
             Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));
             Factory.Messages.Add(14303, typeof(Ask_For_Joinable_Alliance_List));
+            Factory.Messages.Add(14305, typeof(Join_Alliance));
+            Factory.Messages.Add(14315, typeof(Chat_To_Alliance));
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
@@ -76,6 +78,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(529, typeof(Change_Hero_State));
             Factory.Commands.Add(532, typeof(New_Shop_Seen));
             Factory.Commands.Add(533, typeof(Move_Multiple_Buildings));
+            Factory.Commands.Add(537, typeof(Send_Alliance_Mail));
             Factory.Commands.Add(539, typeof(New_Seen));
             Factory.Commands.Add(553, typeof(Unknown_553));
             Factory.Commands.Add(554, typeof(Change_Weapon_Heading));

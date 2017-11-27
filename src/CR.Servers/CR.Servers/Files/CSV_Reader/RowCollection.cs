@@ -19,14 +19,8 @@ namespace CR.Servers.Files.CSV_Reader
         bool ICollection<Row>.IsReadOnly => false;
         public int Count => _rows.Count;
         public Row this[int index] => _rows[index];
-        public Row this[string name]
-        {
-            get
-            {
-                var index = default(int);
-                return !_name2index.TryGetValue(name, out index) ? null : _rows[index];
-            }
-        }
+        public Row this[string name] => !_name2index.TryGetValue(name, out int index) ? null : _rows[index];
+
         public void Add(Row row)
         {
             if (row == null)

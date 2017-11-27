@@ -62,6 +62,21 @@ namespace CR.Servers.CoC.Extensions.Helper
             return false;
         }
 
+        internal static bool GetJsonByte(JToken Token, string Key, out byte Byte)
+        {
+            JToken KeyValue = Token[Key];
+
+            if (KeyValue != null)
+            {
+                Byte = (byte)KeyValue;
+                return true;
+            }
+            else
+                Byte = 0;
+
+            return false;
+        }
+
         internal static bool GetJsonDateTime(JToken Token, string Key, out DateTime Time)
         {
             JToken KeyValue = Token[Key];
