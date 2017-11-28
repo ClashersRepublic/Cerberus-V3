@@ -11,7 +11,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
         {
         }
 
-        internal Alliance StreamEntry;
+        internal StreamEntry StreamEntry;
 
         internal override void Encode()
         {

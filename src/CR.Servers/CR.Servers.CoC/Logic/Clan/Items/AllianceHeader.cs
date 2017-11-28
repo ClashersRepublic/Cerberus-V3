@@ -48,7 +48,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
                     }
                     else
                     {
-                        this.Alliance.Members.Quit(Member);
+                        this.Alliance.Members.Quit(Member.PlayerId, out var Player);
                     }
                 }
 
@@ -70,7 +70,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
                     }
                     else
                     {
-                        this.Alliance.Members.Quit(Member);
+                        this.Alliance.Members.Quit(Member.PlayerId, out var Player);
                     }
                 }
 

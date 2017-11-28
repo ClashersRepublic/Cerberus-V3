@@ -171,7 +171,7 @@ namespace Magic.ClashOfClans.Core
                     Parallel.ForEach(clans, c =>
                     {
                         Clan clan = default(Clan);
-                        clan = JsonConvert. <Clan>(c.Data, Settings2);
+                        clan = JsonConvert.DeserializeObject<Clan>(c.Data, Settings2);
                         alliances.Add(clan);
                     });
                 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Core.Consoles.Colorful;
@@ -36,9 +37,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     if (Building.UpgradeAvailable)
                     {
                         BuildingData Data = (BuildingData) Building.Data;
-                        ResourceData ResourceData = this.UseAltResource
-                            ? Data.AltBuildResourceData
-                            : Data.BuildResourceData;
+                        ResourceData ResourceData = this.UseAltResource ? Data.AltBuildResourceData(Building.GetUpgradeLevel() + 1) : Data.BuildResourceData;
                         if (ResourceData != null)
                         {
                             if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Building.GetUpgradeLevel() + 1])

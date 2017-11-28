@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
+﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
@@ -11,7 +9,6 @@ using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
 

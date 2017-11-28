@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
@@ -46,7 +44,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            ShowValues();
             new Search_Alliances_Response(this.Device)
             { 
                 TextSearch = this.TextSearch,

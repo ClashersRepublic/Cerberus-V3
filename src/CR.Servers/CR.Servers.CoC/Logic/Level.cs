@@ -112,9 +112,8 @@ namespace CR.Servers.CoC.Logic
 
         internal JObject Battle()
         {
-            var Json = new JObject();
+            var Json = new JObject {{"exp_ver", 1}};
 
-            Json.Add("exp_ver", 1);
 
             this.GameObjectManager.Save(Json);
             this.Player.Save(Json);
@@ -131,10 +130,9 @@ namespace CR.Servers.CoC.Logic
         }
         internal JObject Save()
         {
-            JObject Json = new JObject();
+            JObject Json = new JObject {{"exp_ver", 1}};
 
-            Json.Add("exp_ver", 1);
-            
+
             this.GameObjectManager.Save(Json);
             //this.CooldownManager.Save(Json);
 
@@ -158,10 +156,11 @@ namespace CR.Servers.CoC.Logic
 
         internal void Tick()
         {
-            Player.LastTick = DateTime.Now;
+            this.Player.LastTick = DateTime.Now;
             this.GameObjectManager.Tick();
             this.UnitProductionManager.Tick();
             this.SpellProductionManager.Tick();
+            this.Player.Inbox.Tick();
             // this.MissionManager.Tick();
 
             //this.CooldownManager.Update(this.Time);

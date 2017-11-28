@@ -16,10 +16,6 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
             this.Version = 1;
         }
 
-        internal int ServerBuild;
-        internal int ServerMajorVersion;
-        internal int ContentVersion;
-
         internal override void Encode()
         {
             var Player = this.Device.Account.Player;

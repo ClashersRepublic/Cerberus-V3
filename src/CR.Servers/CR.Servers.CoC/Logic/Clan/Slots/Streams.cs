@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             this.Alliance = Alliance;
         }
 
-        internal void AddEntry(StreamEntry StreamEntry)
+        internal bool AddEntry(StreamEntry StreamEntry)
         {
             StreamEntry.LowId = Interlocked.Increment(ref this.Seed);
 
@@ -49,7 +49,10 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
                     else
                         this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                 }
+                return true;
             }
+
+            return false;
         }
 
         internal void Remove(StreamEntry StreamEntry)

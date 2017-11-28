@@ -8,7 +8,6 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
     internal class BuildingData : Data
     {
         internal ResourceData BuildResourceData;
-        internal ResourceData AltBuildResourceData;
         internal ResourceData ProducesResourceData;
         internal BuildingClassData BuildingClassData;
 
@@ -16,11 +15,10 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
         }
 
-        internal override void Process()    
+        internal override void Process()
         {
             this.BuildingClassData = (BuildingClassData)CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingClass);
             this.BuildResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
-            this.AltBuildResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.AltBuildResource);
             this.ProducesResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.ProducesResource);
 
             if (this.BuildingClassData == null)
@@ -162,7 +160,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool PreventsHealing { get; set; }
         public int[] StrengthWeight { get; set; }
         public int AlternatePickNewTargetDelay { get; set; }
-        public string AltBuildResource { get; set; }
+        public string[] AltBuildResource { get; set; }
         public int SpeedMod { get; set; }
         public int StatusEffectTime { get; set; }
         public int[] ShockwavePushStrength { get; set; }
@@ -268,6 +266,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         internal int GetGearUpTime(int Level) => this.GearUpTime[Level] * 60;
 
         internal ResourceData GearUpResourceData => (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.GearUpResource);
+
+        internal ResourceData AltBuildResourceData(int Level) => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.AltBuildResource[Level]);
 
         internal int[] GetResourceMaxArray(int Level)
         {

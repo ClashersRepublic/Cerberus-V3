@@ -59,9 +59,9 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             return false;
         }
 
-        internal bool Quit(long Player)
+        internal bool Quit(long Player, out Member Member)
         {
-            if (this.Slots.TryRemove(Player, out _))
+            if (this.Slots.TryRemove(Player, out Member))
             {
                 this.Alliance.Header.NumberOfMembers--;
                 this.Connected.TryRemove(Player, out _);
@@ -71,9 +71,9 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             return false;
         }
 
-        internal bool Quit(Player Player) => this.Quit(Player.UserId);
+        internal bool Quit(Player Player, out Member Member) => this.Quit(Player.UserId, out Member);
 
-        internal bool Quit(Member Member) => this.Quit(Member.PlayerId);
+        internal bool Quit(Member Player, out Member Member) => this.Quit(Player.PlayerId, out Member);
 
         internal Member Get(long UserID) =>  this.Slots.ContainsKey(UserID) ? this.Slots[UserID] : null;
 

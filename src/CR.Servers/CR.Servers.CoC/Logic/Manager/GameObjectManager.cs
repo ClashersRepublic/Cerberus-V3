@@ -683,6 +683,8 @@ namespace CR.Servers.CoC.Logic
             Json.Add("traps2", Traps2);
             Json.Add("decos2", Decos2);
             Json.Add("vobjs2", VillageObjects2);
+            Json.Add("last_news_seen", 140);
+
         }
 
 

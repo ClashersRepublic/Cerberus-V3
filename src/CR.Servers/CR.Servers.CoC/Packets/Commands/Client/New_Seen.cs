@@ -12,10 +12,17 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
         }
 
+        internal int Unknown;
+
         internal override void Decode()
         {
-            Reader.ReadInt32();
+            this.Unknown = this.Reader.ReadInt32();
             base.Decode();
+        }
+
+        internal override void Execute()
+        {
+            ShowValues();
         }
     }
 }

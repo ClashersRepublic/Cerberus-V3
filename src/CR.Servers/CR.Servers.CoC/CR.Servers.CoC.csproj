@@ -236,6 +236,7 @@
     <Compile Include="Packets\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent_V2.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Walls.cs" />
     <Compile Include="Packets\Commands\Client\Cancel_Consturction.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_State.cs" />
@@ -257,13 +258,18 @@
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
     <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown_544.cs" />
     <Compile Include="Packets\Commands\Client\Unknown_553.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown_597.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Upgrade_Multiple_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Unit.cs" />
+    <Compile Include="Packets\Commands\Server\Changed_Alliance_Role.cs" />
     <Compile Include="Packets\Commands\Server\Changed_Alliance_Settings.cs" />
     <Compile Include="Packets\Commands\Server\Diamonds_Added.cs" />
     <Compile Include="Packets\Commands\Server\Joined_Alliance.cs" />
+    <Compile Include="Packets\Commands\Server\Leaved_Alliance.cs" />
     <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
@@ -275,11 +281,14 @@
     <Compile Include="Packets\Message.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Ask_For_Joinable_Alliance_List.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Member_Role.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Settings.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Chat_To_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Join_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Leave_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Search_Alliances.cs" />
+    <Compile Include="Packets\Messages\Client\API\Bind_GameCenter_Account.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
@@ -760,6 +769,7 @@
     </Content>
     <Content Include="Tools\gen_csv_definitions.py" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>RMDIR /S /Q "$(TargetDir)Library\"

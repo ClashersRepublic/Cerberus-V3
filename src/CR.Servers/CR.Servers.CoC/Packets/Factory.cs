@@ -7,6 +7,7 @@ using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
 using CR.Servers.CoC.Packets.Messages.Client.Alliances;
+using CR.Servers.CoC.Packets.Messages.Client.API;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
 using CR.Servers.CoC.Packets.Messages.Client.Avatar;
 using CR.Servers.CoC.Packets.Messages.Client.Battle;
@@ -40,10 +41,12 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
+            Factory.Messages.Add(14212, typeof(Bind_GameCenter_Account));
             Factory.Messages.Add(14301, typeof(Create_Alliance));
             Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));
             Factory.Messages.Add(14303, typeof(Ask_For_Joinable_Alliance_List));
             Factory.Messages.Add(14305, typeof(Join_Alliance));
+            Factory.Messages.Add(14308, typeof(Leave_Alliance));
             Factory.Messages.Add(14315, typeof(Chat_To_Alliance));
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14324, typeof(Search_Alliances));
@@ -53,9 +56,11 @@ namespace CR.Servers.CoC.Packets
         private static void LoadCommands()
         {
             Factory.Commands.Add(1, typeof(Joined_Alliance));
+            Factory.Commands.Add(2, typeof(Leaved_Alliance));
             Factory.Commands.Add(3, typeof(Name_Change_Callback));
             Factory.Commands.Add(6, typeof(Changed_Alliance_Settings));
             Factory.Commands.Add(7, typeof(Diamonds_Added));
+            Factory.Commands.Add(8, typeof(Changed_Alliance_Role));
 
             Factory.Commands.Add(500, typeof(Buy_Building));
             Factory.Commands.Add(501, typeof(Move_Building));
@@ -80,11 +85,15 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(533, typeof(Move_Multiple_Buildings));
             Factory.Commands.Add(537, typeof(Send_Alliance_Mail));
             Factory.Commands.Add(539, typeof(New_Seen));
+            Factory.Commands.Add(544, typeof(Unknown_544));
+            Factory.Commands.Add(549, typeof(Upgrade_Multiple_Building));
             Factory.Commands.Add(553, typeof(Unknown_553));
             Factory.Commands.Add(554, typeof(Change_Weapon_Heading));
             Factory.Commands.Add(572, typeof(Change_Hero_Mode));
             Factory.Commands.Add(577, typeof(Swap_GameObject));
+            Factory.Commands.Add(590, typeof(Buy_Walls));
             Factory.Commands.Add(591, typeof(Change_Village_Mode));
+            Factory.Commands.Add(597, typeof(Unknown_597));
             Factory.Commands.Add(600, typeof(Gear_Up));
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));
         }

@@ -1,5 +1,5 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
+﻿using System.Linq;
+using CR.Servers.CoC.Logic;
 
 namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
 {
@@ -15,6 +15,16 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
         internal override void Encode()
         {
             this.Device.GameMode.Level.Player.Inbox.Encode(this.Data);
+        }
+
+        internal override void Process()
+        {
+            var Streams = this.Device.GameMode.Level.Player.Inbox.Entries.Values.Where(T => T.New == 2).ToArray();
+
+            foreach (var Stream in Streams)
+            {
+                Stream.New = 0;
+            }
         }
     }
 }
