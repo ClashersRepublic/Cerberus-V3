@@ -158,6 +158,8 @@
     <Compile Include="Files\Fingerprint.cs" />
     <Compile Include="Files\Game_Events.cs" />
     <Compile Include="Files\LevelFile.cs" />
+    <Compile Include="Logic\Chat\Chat.cs" />
+    <Compile Include="Logic\Chat\Chats.cs" />
     <Compile Include="Logic\Clan\Alliance.cs" />
     <Compile Include="Logic\Clan\Items\AllianceHeader.cs" />
     <Compile Include="Logic\Clan\Items\Member.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
+    <Compile Include="Packets\Messages\Client\Home\Send_Global_Chat.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream.cs" />
@@ -316,6 +319,7 @@
     <Compile Include="Packets\Messages\Server\Battle\Pc_Battle_Data_V2.cs" />
     <Compile Include="Packets\Messages\Server\Home\Available_Server_Command.cs" />
     <Compile Include="Packets\Messages\Server\Home\Disconnected.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Global_Chat_Line.cs" />
     <Compile Include="Packets\Messages\Server\Home\Keep_Alive_Ok.cs" />
     <Compile Include="Packets\Messages\Server\Home\Out_Of_Sync.cs" />
     <Compile Include="Packets\Messages\Server\Home\Own_Home_Data.cs" />

@@ -209,6 +209,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                 new Alliance_Stream(this.Device) {Alliance = Player.Alliance}.Send();
                 this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);
             }
+
+            if (this.Device.Chat == null)
+            {
+                Resources.Chats.Join(this.Device);
+            }
         }
     }
 }

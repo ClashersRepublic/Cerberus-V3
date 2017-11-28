@@ -1,5 +1,7 @@
 ﻿using System;
+using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets
@@ -35,12 +37,14 @@ namespace CR.Servers.CoC.Packets
 
         internal void SendChatMessage(string message)
         {
-            /*new Global_Chat_Entry(Device)
+            new Global_Chat_Line(this.Device,this.Device.GameMode.Level.Player)
             {
                 Message = message,
-                Message_Sender = Device.Player.Avatar,
+                Name = "[System] Command Manager",
+                ExpLevel = 300,
+                League = 22,
                 Bot = true
-            }.Send();*/
+            }.Send();
         }
 
         public void Dispose()

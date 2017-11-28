@@ -21,7 +21,7 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Device : IDisposable
     {
-        //internal Chat Chat;
+        internal Chat.Chat Chat;
         internal Token Token;
         internal Socket Socket;
         internal DeviceInfo Info;

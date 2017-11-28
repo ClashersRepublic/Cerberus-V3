@@ -42,7 +42,6 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal int League;
         [JsonProperty] internal int Score;
         [JsonProperty] internal int DuelScore;
-        [JsonProperty] internal int Locale;
         [JsonProperty] internal int ClanWarPreference = 1;
 
         [JsonProperty] internal int Wins;

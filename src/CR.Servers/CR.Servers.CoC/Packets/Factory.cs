@@ -51,6 +51,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
+            Factory.Messages.Add(14715, typeof(Send_Global_Chat));
         }
 
         private static void LoadCommands()
@@ -124,9 +125,10 @@ namespace CR.Servers.CoC.Packets
         }
 
 
-        internal static Debug CreateDebug(string Message, Device Device)
+        internal static Debug CreateDebug(string Message, Device Device, out string CommandName)
         {
             string[] Parameters = Message.Remove(0, 1).Split(' ');
+            CommandName = Parameters[0];
 
             if (Factory.Debugs.TryGetValue(Parameters[0], out Type DType))
             {
@@ -142,7 +144,6 @@ namespace CR.Servers.CoC.Packets
                     Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
                 }
             }
-
             return null;
         }
     }

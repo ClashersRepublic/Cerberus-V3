@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
@@ -79,6 +81,18 @@ namespace CR.Servers.CoC.Packets
                 this.Data.AddRange(Packet);
             }
             this.Length = this.Data.Count;
+        }
+
+        internal void SendChatMessage(string message)
+        {
+            new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player)
+            {
+                Message = message,
+                Name = "[System] Command Manager",
+                ExpLevel = 300,
+                League = 22,
+                Bot = true
+            }.Send();
         }
 
         internal void ShowBuffer()
