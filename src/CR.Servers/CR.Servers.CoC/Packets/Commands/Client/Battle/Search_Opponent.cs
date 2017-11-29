@@ -23,7 +23,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            ShowValues();
             new Enemy_Home_Data(this.Device, this.Device.GameMode.Level).Send();
         }
     }

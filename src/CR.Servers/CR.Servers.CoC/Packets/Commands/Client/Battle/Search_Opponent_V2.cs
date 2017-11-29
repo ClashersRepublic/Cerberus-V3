@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
+﻿using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Messages.Server.Battle;
 using CR.Servers.Extensions.Binary;

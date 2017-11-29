@@ -20,6 +20,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             this.GlobalId = this.Reader.ReadInt32();
             base.Decode();
         }
+
         internal override JObject Save()
         {
             JObject Json = new JObject
@@ -27,7 +28,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                 {"base", this.SaveBase()},
                 { "d", this.GlobalId}
             };
-
 
             return Json;
         }

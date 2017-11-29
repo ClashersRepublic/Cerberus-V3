@@ -33,7 +33,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            ShowValues();
             if (this.Spell != null)
             {
                 var Level = this.Device.GameMode.Level;

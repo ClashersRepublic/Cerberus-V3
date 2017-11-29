@@ -31,7 +31,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            ShowValues();
             if (this.Character != null)
             {
                 var Level = this.Device.GameMode.Level;
@@ -47,7 +46,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                     }
                 }
             }
-            Console.WriteLine(this.Save());
         }
 
         internal override JObject Save()

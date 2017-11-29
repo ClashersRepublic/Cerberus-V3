@@ -13,11 +13,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             
         }
 
-        internal override void Execute()
-        {
-            ShowValues();
-        }
-
         internal override JObject Save()
         {
             JObject Json = new JObject
