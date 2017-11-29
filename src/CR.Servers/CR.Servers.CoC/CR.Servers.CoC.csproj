@@ -277,6 +277,8 @@
     <Compile Include="Packets\Cryptography\IEncrypter.cs" />
     <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Debug.cs" />
+    <Compile Include="Packets\Debugs\Clear_All_Obstacle.cs" />
+    <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
     <Compile Include="Packets\Enums\UnlockAccountReason.cs" />
     <Compile Include="Packets\Factory.cs" />
@@ -773,7 +775,10 @@
     </Content>
     <Content Include="Tools\gen_csv_definitions.py" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Packets\Debugs\Administrator\" />
+    <Folder Include="Packets\Debugs\Moderator\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>RMDIR /S /Q "$(TargetDir)Library\"

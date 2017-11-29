@@ -53,6 +53,26 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
+        internal int TombStoneV2Count
+        {
+            get
+            {
+                var Count = 0;
+
+                this.GameObjectManager.GameObjects[3][1].ForEach(GameObject =>
+                {
+                    var Obstacle = (Obstacle)GameObject;
+
+                    if (Obstacle.ObstacleData.IsTombstone)
+                    {
+                        ++Count;
+                    }
+                });
+
+                return Count;
+            }
+        }
+
         internal bool IsBuildingCapReached(BuildingData Data)
         {
             var TownHallLevel = GameObjectManager.Map == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();

@@ -1,4 +1,5 @@
 ﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
@@ -38,13 +39,28 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     {
                         if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.ClearCost)
                         {
-                            if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
+                            if (Level.GameObjectManager.Map == 0)
                             {
-                                Level.Player.Resources.Remove(ResourceData, Data.ClearCost);
-                                Obstacle.StartClearing();
+                                if (Level.WorkerManager.FreeWorkers > 0)
+                                {
+                                    Level.Player.Resources.Remove(ResourceData, Data.ClearCost);
+                                    Obstacle.StartClearing();
+                                }
                             }
                             else
-                                Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. The player doesn't have any free worker.");
+                            {
+                                if (Globals.Village2DoNotAllowClearObstacleTh <= Level.GameObjectManager.TownHall.GetUpgradeLevel())
+                                {
+                                    if (Level.WorkerManagerV2.FreeWorkers > 0 || Data.TallGrass)
+                                    {
+                                        Level.Player.Resources.Remove(ResourceData, Data.ClearCost);
+                                        Obstacle.StartClearing();
+                                    }
+                                }
+                                else
+                                    Logging.Error(this.GetType(),
+                                        "Unable to start clearing the Obstacle. The player doesn't reach THV2 level for clearing obstacle.");
+                            }
                         }
                         else
                             Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. The player doesn't have enough resources.");

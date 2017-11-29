@@ -2,6 +2,7 @@
 using System.Linq;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
+using CR.Servers.Core.Consoles.Colorful;
 
 namespace CR.Servers.CoC.Logic.Chat
 {
@@ -48,6 +49,7 @@ namespace CR.Servers.CoC.Logic.Chat
                 {
                     foreach (Device Device2 in Devices.SkipWhile(T=> T == Device))
                     {
+                        Console.WriteLine(Device2 == Device);
                         if (Device2.Connected)
                         {
                             new Global_Chat_Line(Device2, Device.GameMode.Level.Player){Message = Message}.Send();

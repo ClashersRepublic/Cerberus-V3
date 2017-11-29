@@ -25,11 +25,6 @@ namespace CR.Servers.CoC.Packets
             this.Parameters = Parameters;
         }
 
-        internal virtual void Decode()
-        {
-
-        }
-
         internal virtual void Process()
         {
             // Process.

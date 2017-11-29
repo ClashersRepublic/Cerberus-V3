@@ -31,7 +31,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         }
 
         internal override void Execute()
-        {ShowValues();
+        {
             if (this.TrapData != null)
             {
                 var Level = Device.GameMode.Level;

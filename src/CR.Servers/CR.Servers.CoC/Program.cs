@@ -1,22 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.CoC.Logic.Slots;
 using CR.Servers.Core.Consoles;
-using CR.Servers.Extensions.List;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 
 namespace CR.Servers.CoC
@@ -30,10 +19,8 @@ namespace CR.Servers.CoC
         private static void Main()
         {
 
-            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("Config.json").Build();
-            Console.Title =
-                $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} ©";
+            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("Config.json").Build();
+            Console.Title =  $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} ©";
 
             Console.SetOut(new Prefixed());
             Console.SetWindowSize(Width, Height);

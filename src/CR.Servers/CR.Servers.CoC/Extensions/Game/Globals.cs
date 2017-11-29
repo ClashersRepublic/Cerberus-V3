@@ -77,6 +77,10 @@ namespace CR.Servers.CoC.Extensions.Game
 
         internal static int[] TroopHousingV2Cost;
         internal static int[] TroopHousingV2BuildTimeSeconds;
+        
+
+        internal static int Village2DoNotAllowClearObstacleTh;
+        internal static int TallGrassRespawnSeconds;
 
         internal static void Initialize()
         {
@@ -147,6 +151,10 @@ namespace CR.Servers.CoC.Extensions.Game
 
             Globals.TroopHousingV2Cost = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("TROOP_HOUSING_V2_COST")).NumberArray;
             Globals.TroopHousingV2BuildTimeSeconds = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("TROOP_HOUSING_V2_BUILD_TIME_SECONDS")).NumberArray;
+
+
+            Globals.Village2DoNotAllowClearObstacleTh = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("VILLAGE2_DO_NOT_ALLOW_CLEAR_OBSTACLE_TH")).NumberValue;
+            Globals.TallGrassRespawnSeconds = ((GlobalData)CSV.Tables.Get(Gamefile.Globals).GetData("TALLGRASS_RESPAWN_SECONDS")).NumberValue;
         }
     }
 }

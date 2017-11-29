@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -121,6 +118,11 @@ namespace CR.Servers.CoC.Logic
                                     //Logging.Error(Exception.GetType(), Exception.Message + " [" + (this.Player != null ? this.Player.HighID + ":" + this.Player.LowID : "---") + ']' + Environment.NewLine + Exception.StackTrace);
                                 }
                             }
+                            else
+                            {
+                                File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"Unknown Message ({Identifier}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
+
+                            }
 
                             if (!this.Token.Aborting)
                             {
@@ -170,6 +172,9 @@ namespace CR.Servers.CoC.Logic
             {
                 this.Disposed = true;
                 this.State = State.DISCONNECTED;
+
+                this.Chat?.Quit(this);
+
                 if (this.Account != null)
                 {
                     if (this.Account.Player != null)

@@ -6,6 +6,8 @@ using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Debugs;
+using CR.Servers.CoC.Packets.Debugs.Elite;
 using CR.Servers.CoC.Packets.Messages.Client.Alliances;
 using CR.Servers.CoC.Packets.Messages.Client.API;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
@@ -23,12 +25,13 @@ namespace CR.Servers.CoC.Packets
 
         internal static readonly Dictionary<short, Type> Messages = new Dictionary<short, Type>();
         internal static readonly Dictionary<int, Type> Commands = new Dictionary<int, Type>();
-        internal static readonly Dictionary<string, Type> Debugs = new Dictionary<string, Type>();
+        internal static readonly Dictionary<string, Type> Debugs = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
         internal static void Initialize()
         {
             Factory.LoadMessages();
             Factory.LoadCommands();
+            Factory.LoadDebugs();
         }
 
         private static void LoadMessages()
@@ -99,6 +102,12 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));
         }
 
+        private static void LoadDebugs()
+        {
+            Factory.Debugs.Add("fastforward", typeof(Fast_Forward));
+            Factory.Debugs.Add("clearobstacle", typeof(Clear_All_Obstacle));
+        }
+
 
         internal static Message CreateMessage(short Type, Device Device, Reader Reader)
         {
@@ -107,7 +116,7 @@ namespace CR.Servers.CoC.Packets
                 return (Message)Activator.CreateInstance(MType, Device, Reader);
             }
 
-            Logging.Info(typeof(Factory), "Can't handle the following message : ID " + Type + ".");
+            Logging.Error(typeof(Factory), "Can't handle the following message : ID " + Type + ".");
 
             return null;
         }
@@ -119,7 +128,7 @@ namespace CR.Servers.CoC.Packets
                 return (Command)Activator.CreateInstance(CType, Device, Reader);
             }
 
-            Logging.Info(typeof(Factory), "Command " + Type + " not exist.");
+            Logging.Error(typeof(Factory), "Command " + Type + " not exist.");
 
             return null;
         }
@@ -133,16 +142,9 @@ namespace CR.Servers.CoC.Packets
             if (Factory.Debugs.TryGetValue(Parameters[0], out Type DType))
             {
                 var args = Parameters.Skip(1).ToArray();
-                Debug Debug = (Debug)Activator.CreateInstance(DType, Device, args);
+                Debug Debug = (Debug) Activator.CreateInstance(DType, Device, args);
 
-                if (Device.GameMode.Level.Player.Rank >= Debug.RequiredRank)
-                {
-                    return Debug;
-                }
-                else
-                {
-                    Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
-                }
+                return Debug;
             }
             return null;
         }

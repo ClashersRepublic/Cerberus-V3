@@ -58,11 +58,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         else
                         {
                             this.CommandCount = this.Commands.Count;
-                             this.Reader.BaseStream.Position = 0;
-                             Log();
-                            //Dowhatitsupposedtodo
-                            
-                            Logging.Error(this.GetType(), "Command is not handled! (" + CommandID + ")");
+                            this.Reader.BaseStream.Position = 0;
+                            Log();
                             break;
                         }
                     }
@@ -99,7 +96,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         {
                             this.Reader.BaseStream.Position = 0;
                             Log();
-                            Logging.Error(this.GetType(), this.Device, "Execute command failed! Command " + Command.Type + " is not available.");
+                            Logging.Error(this.GetType(), this.Device, "Execute command failed! Server Command " + Command.Type + " is not available.");
                             return;
                         }
                     }

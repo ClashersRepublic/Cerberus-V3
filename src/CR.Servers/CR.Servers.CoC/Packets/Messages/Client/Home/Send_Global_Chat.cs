@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
@@ -37,14 +33,21 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     {
                         if (this.Message.StartsWith(Factory.Delimiter.ToString()))
                         {
-                            Debug Debug = Factory.CreateDebug(this.Message, this.Device, out string CommandName);
+                            var Debug = Factory.CreateDebug(this.Message, this.Device, out string CommandName);
 
                             new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player) { Message = this.Message}.Send();
 
                             if (Debug != null)
                             {
-                                Debug.Decode();
-                                Debug.Process();
+                                if (Device.GameMode.Level.Player.Rank >= Debug.RequiredRank)
+                                {
+                                    Debug.Process();
+                                }
+                                else
+                                {
+                                    Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
+                                    return;
+                                }
                             }
                             else
                                 this.SendChatMessage($"Unknown command '{CommandName}'. Type '/help' for more information.");

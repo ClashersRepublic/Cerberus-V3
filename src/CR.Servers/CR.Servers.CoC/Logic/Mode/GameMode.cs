@@ -32,7 +32,7 @@ namespace CR.Servers.CoC.Logic.Mode
 
             this.Level.SetPlayer(Player);
             this.Level.SetHome(Home);
-            //this.Level.FastForwardTime(Player.la);
+            this.Level.FastForwardTime(0);
             this.Level.Process();
         }
       

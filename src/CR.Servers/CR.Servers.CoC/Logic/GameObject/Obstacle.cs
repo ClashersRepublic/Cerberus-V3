@@ -78,17 +78,24 @@ namespace CR.Servers.CoC.Logic
             
             if (this.VillageType == 0)
             {
+                Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounter++]);
+
+                if (Level.GameObjectManager.ObstacleClearCounter >= GemDrops.Length)
+                    Level.GameObjectManager.ObstacleClearCounter = 0;
                 this.Level.WorkerManager.DeallocateWorker(this);
             }
             else
             {
-                this.Level.WorkerManagerV2.DeallocateWorker(this);
+                if (!this.ObstacleData.TallGrass)
+                {
+                    Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounterV2++]);
+
+                    if (Level.GameObjectManager.ObstacleClearCounterV2 >= GemDrops.Length)
+                        Level.GameObjectManager.ObstacleClearCounterV2 = 0;
+
+                    this.Level.WorkerManagerV2.DeallocateWorker(this);
+                }
             }
-
-            Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounter++]);
-
-            if (Level.GameObjectManager.ObstacleClearCounter >= GemDrops.Length)
-                Level.GameObjectManager.ObstacleClearCounter = 0;
 
             // LogicAchievementManager::obstacleCleared();
 
@@ -111,7 +118,10 @@ namespace CR.Servers.CoC.Logic
                 }
                 else
                 {
-                    this.Level.WorkerManagerV2.AllocateWorker(this);
+                    if (!this.ObstacleData.TallGrass)
+                    {
+                        this.Level.WorkerManagerV2.AllocateWorker(this);
+                    }
                 }
 
                 if (Data.ClearTimeSeconds <= 0)

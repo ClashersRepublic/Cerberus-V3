@@ -63,8 +63,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            ShowValues();
-
             if (this.Data != null)
             {
                 if (!this.Data.PremiumCurrency)

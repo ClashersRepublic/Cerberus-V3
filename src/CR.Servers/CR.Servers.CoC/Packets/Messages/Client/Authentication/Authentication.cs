@@ -77,15 +77,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             Device.Info.ClientVersion = Reader.ReadString().Split('.');
         }
 
-        internal void Process2()
-        {
-            ShowValues();
-            Device.Info.ShowValues();
-            new SessionKey(Device).Send();
-            new Authentication_Failed(Device, LoginFailedReason.Locked).Send();
-            
-        }
-
         internal override void Process()
         {
             if (!this.CheckClient())
