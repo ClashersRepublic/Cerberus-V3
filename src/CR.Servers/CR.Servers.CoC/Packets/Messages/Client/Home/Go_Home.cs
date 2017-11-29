@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
+﻿using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Extensions.Binary;
@@ -36,6 +31,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             else
             {
                 if (Device.State == State.IN_PC_BATTLE) //Replay
+                    Device.State = State.LOGGED;
+                else if (Device.State == State.IN_NPC_BATTLE) //Stream
                     Device.State = State.LOGGED;
                 else if (Device.State == State.IN_AMICAL_BATTLE) //Stream
                     Device.State = State.LOGGED;
