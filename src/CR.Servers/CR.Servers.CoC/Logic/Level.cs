@@ -80,10 +80,8 @@ namespace CR.Servers.CoC.Logic
             return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
 
-        public Level(GameMode GameMode)
+        public Level()
         {
-            this.GameMode = GameMode;
-
             this.GameObjectManager = new GameObjectManager(this);
             this.WorkerManager = new WorkerManager();
             this.WorkerManagerV2 = new WorkerManagerV2();
@@ -97,6 +95,12 @@ namespace CR.Servers.CoC.Logic
 
             this.TileMap = new TileMap(50, 50);
         }
+
+        public Level(GameMode GameMode) : this()
+        {
+            this.GameMode = GameMode;
+        }
+
         internal void FastForwardTime(int Seconds)
         {
             this.GameObjectManager.FastForwardTime(Seconds);
@@ -148,6 +152,7 @@ namespace CR.Servers.CoC.Logic
             this.UnitProductionManager.Load(Json["units"]?["unit_prod"]);
             this.SpellProductionManager.Load(Json["spells"]?["unit_prod"]);
         }
+
         internal JObject Save()
         {
             JObject Json = new JObject {{"exp_ver", 1}};

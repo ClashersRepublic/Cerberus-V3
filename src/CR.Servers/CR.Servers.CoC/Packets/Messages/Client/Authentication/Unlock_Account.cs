@@ -43,8 +43,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
             if (this.UnlockCode[0] == '/')
             {
-                int n = 0;
-                if (int.TryParse(this.UnlockCode.Substring(1), out n))
+                if (int.TryParse(this.UnlockCode.Substring(1), out var n))
                 {
                     if (n == 0)
                     {

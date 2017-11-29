@@ -100,6 +100,12 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(597, typeof(Unknown_597));
             Factory.Commands.Add(600, typeof(Gear_Up));
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));
+            Factory.Commands.Add(700, typeof(Place_Attacker));  
+            Factory.Commands.Add(703, typeof(Surrender_Attack));
+            Factory.Commands.Add(704, typeof(Place_Spell));
+            Factory.Commands.Add(705, typeof(Place_Hero));
+            Factory.Commands.Add(706, typeof(Hero_Rage));
+            Factory.Commands.Add(800, typeof(Search_Opponent));
         }
 
         private static void LoadDebugs()
