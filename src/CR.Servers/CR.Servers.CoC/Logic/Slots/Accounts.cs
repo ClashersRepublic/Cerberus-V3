@@ -139,6 +139,18 @@ namespace CR.Servers.CoC.Logic.Slots
 
             }
 
+            if (Account != null)
+            {
+                if (Account.Player.Level == null && Account.Home.Level == null)
+                {
+                    var Level = new Level();
+                    Level.SetPlayer(Account.Player);
+                    Level.SetHome(Account.Home);
+                    Level.FastForwardTime(0);
+                    Level.Process();
+                }
+            }
+
             return Account;
         }
 
@@ -180,7 +192,20 @@ namespace CR.Servers.CoC.Logic.Slots
                     }
 
                     Account = new Account(HighID, LowID, Player, Home);
+
                     this.TryAdd(ID, Account);
+                }
+            }
+
+            if (Account != null)
+            {
+                if (Account.Player.Level == null && Account.Home.Level == null)
+                {
+                    var Level = new Level();
+                    Level.SetPlayer(Account.Player);
+                    Level.SetHome(Account.Home);
+                    Level.FastForwardTime(0);
+                    Level.Process();
                 }
             }
 

@@ -103,7 +103,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                             Alliance.Header.Name = this.Name;
                                             Alliance.Description = this.Description;
-                                            Alliance.Header.Locale = this.Device.Info.LocaleData.GlobalId;
+                                            Alliance.Header.Locale = this.Device.Info.Locale;
                                             Alliance.Header.Badge = this.AllianceBadge;
                                             Alliance.Header.Type = this.AllianceType;
                                             Alliance.Header.WarFrequency = this.WarFrequency;

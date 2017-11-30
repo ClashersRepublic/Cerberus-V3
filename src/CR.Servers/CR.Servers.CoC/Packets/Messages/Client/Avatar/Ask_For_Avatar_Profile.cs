@@ -2,6 +2,7 @@
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
@@ -32,16 +33,15 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
             this.Reader.ReadBoolean();
         }
 
-        internal override async void Process()
+        internal override void Process()
         {
             if (this.AvatarHighId >= 0 && this.AvatarLowId > 0)
             {
-                var Player = await Resources.Accounts.LoadPlayerAsync(this.AvatarHighId, this.AvatarLowId);
-                var Home = await Resources.Accounts.LoadHomeAsync(this.AvatarHighId, this.AvatarLowId);
-
-                if (Player != null)
+                var Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId).Player;
+                
+                if (Player?.Level != null)
                 {
-                    new Avatar_Profile_Data(this.Device, Player, Home).Send();
+                    new Avatar_Profile_Data(this.Device, Player.Level).Send();
                 }
             }
         }

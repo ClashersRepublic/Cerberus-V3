@@ -5,6 +5,7 @@ using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Enums;
+using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
@@ -25,6 +26,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal int Major, Minor, Revision;
 
+        internal LocaleData LocaleData;
+
+
         public Authentication(Device device, Reader reader) : base(device, reader)
         {
             Device.State = State.LOGIN;
@@ -32,49 +36,49 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Decode()
         {
-            HighId = Reader.ReadInt32();
-            LowId = Reader.ReadInt32();
+            this.HighId = Reader.ReadInt32();
+            this.LowId = Reader.ReadInt32();
 
-            Token = Reader.ReadString();
+            this.Token = this.Reader.ReadString();
 
-            Major = Reader.ReadInt32();
-            Minor = Reader.ReadInt32();
-            Revision = Reader.ReadInt32();
+            this.Major = this.Reader.ReadInt32();
+            this.Minor = this.Reader.ReadInt32();
+            this.Revision = this.Reader.ReadInt32();
 
-            MasterHash = Reader.ReadString();
+            this.MasterHash = Reader.ReadString();
 
-            Reader.ReadString();
+            this.Reader.ReadString();
 
 
-            Device.Info.UDID = Reader.ReadString();
-            Device.Info.OpenUDID = Reader.ReadString();
-            Device.Info.DeviceModel = Reader.ReadString();
+            this.Device.Info.UDID = this.Reader.ReadString();
+            this.Device.Info.OpenUDID = this.Reader.ReadString();
+            this.Device.Info.DeviceModel = this.Reader.ReadString();
 
-            Device.Info.LocaleData = Reader.ReadData<LocaleData>(); 
+            this.LocaleData = this.Reader.ReadData<LocaleData>();
 
-            Device.Info.PreferredLanguage = Reader.ReadString();
-            Device.Info.ADID = Reader.ReadString();
-            Device.Info.OSVersion = Reader.ReadString();
+            this.Device.Info.PreferredLanguage = this.Reader.ReadString();
+            this.Device.Info.ADID = this.Reader.ReadString();
+            this.Device.Info.OSVersion = this.Reader.ReadString();
 
-            Device.Info.Android = Reader.ReadBoolean();
+            this.Device.Info.Android = this.Reader.ReadBoolean();
 
-            Reader.ReadString();
+            this.Reader.ReadString();
 
-            Device.Info.AndroidID = Reader.ReadString();
+            this.Device.Info.AndroidID = this.Reader.ReadString();
 
-            Reader.ReadString();
+            this.Reader.ReadString();
 
-            Device.Info.Advertising = Reader.ReadBoolean();
+            this.Device.Info.Advertising = this.Reader.ReadBoolean();
 
-            Reader.ReadString();
+            this.Reader.ReadString();
 
-            Device.Seed = Reader.ReadUInt32();
+            this.Device.Seed = this.Reader.ReadUInt32();
 
-            Reader.ReadByte();
-            Reader.ReadString();
-            Reader.ReadString();
+            this.Reader.ReadByte();
+            this.Reader.ReadString();
+            this.Reader.ReadString();
 
-            Device.Info.ClientVersion = Reader.ReadString().Split('.');
+            this.Device.Info.ClientVersion = this.Reader.ReadString().Split('.');
         }
 
         internal override void Process()
@@ -183,9 +187,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
         internal void Login(Account account)
         {
             this.Device.Account = account;
-            this.Device.GameMode.LoadHomeState(account.Home, account.Player);
+            this.Device.GameMode.LoadLevel(account.Player.Level);
+
+            if (this.LocaleData != null)
+            {
+                this.Device.Info.Locale = this.LocaleData.GlobalId;
+            }
+
             var Player = account.Player;
-            Player.VerifyAlliance();
 
             if (this.Device.ReceiveDecrypter.IsRC4)
                 new SessionKey(this.Device).Send();

@@ -32,9 +32,9 @@ namespace CR.Servers.CoC.Logic.Chat
             {
                 if (Device.Chat == null && Device.GameMode.Level.Player != null)
                 {
-                    if (Device.Info.LocaleData.GlobalId != 0)
+                    if (Device.Info.Locale!= 0)
                     {
-                        if (this.TryGetValue(Device.Info.LocaleData.GlobalId, out ConcurrentStack<Chat> Chats))
+                        if (this.TryGetValue(Device.Info.Locale, out ConcurrentStack<Chat> Chats))
                         {
                             if (!Chats.TryPop(out Chat Chat))
                             {

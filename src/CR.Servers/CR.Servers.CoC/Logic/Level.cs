@@ -116,6 +116,11 @@ namespace CR.Servers.CoC.Logic
             this.ComponentManager.RefreshResourceCaps();
         }
 
+        internal void SetGameMode(GameMode GameMode)
+        {
+            this.GameMode = GameMode;
+        }
+
         internal void SetPlayer(Player Player)
         {
             this.Player = Player;

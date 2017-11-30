@@ -29,8 +29,8 @@ namespace CR.Servers.CoC.Logic.Clan.Items
             this.LowId = Player.LowID;
             this.Player = Player;
 
-            Joined = DateTime.UtcNow;
-            Role = Role.Member;
+            this.Joined = DateTime.UtcNow;
+            this.Role = Role.Member;
         }
 
         internal long PlayerId => (long) this.HighId << 32 | (uint) this.LowId;
@@ -43,10 +43,10 @@ namespace CR.Servers.CoC.Logic.Clan.Items
                 if (_Player != null)
                     return _Player;
 
-                _Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
+                _Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
 
                 if (_Player == null)
-                    Logging.Error(this.GetType(), $"LoadAccount returned null for Player with account id {HighId} - {LowId}");
+                    Logging.Error(this.GetType(), $"LoadLevel returned null for Player with account id {HighId} - {LowId}");
 
                 return _Player;
             }

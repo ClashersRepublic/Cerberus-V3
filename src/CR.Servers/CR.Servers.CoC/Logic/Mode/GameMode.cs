@@ -20,20 +20,14 @@ namespace CR.Servers.CoC.Logic.Mode
         {
             this.Device = Device;
             this.Time = new Time();
-            this.Level = new Level(this);
             this.CommandManager = new CommandManager(this.Level);
             /*this.GameLogManager = new GameLogManager(this);*/
         }
 
-        internal void LoadHomeState(Home Home, Player Player)
+        internal void LoadLevel(Level Level)
         {
-            this.Time = new Time();
-            //this.State = State.Home;
-
-            this.Level.SetPlayer(Player);
-            this.Level.SetHome(Home);
-            this.Level.FastForwardTime(0);
-            this.Level.Process();
+            this.Level = Level;
+            this.Level.SetGameMode(this);
         }
       
     }

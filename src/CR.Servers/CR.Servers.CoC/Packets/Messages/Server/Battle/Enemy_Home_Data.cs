@@ -13,21 +13,11 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
     {
         internal override short Type => 24107;
 
-        public Enemy_Home_Data(Device Device, Player Player, Logic.Home Home) : base(Device)
-        {
-            this.Enemy = new Level();
-            this.Enemy.SetPlayer(Player);
-            this.Enemy.SetHome(Home);
-            this.Enemy.FastForwardTime(0);
-            this.Enemy.Process();
-
-            this.Enemy.Tick();
-        }
-
         public Enemy_Home_Data(Device Device, Level Enemy) : base(Device)
         {
             this.Enemy = Enemy;
             this.Enemy.Tick();
+            this.Device.GameMode.Level.Tick();
         }
 
 

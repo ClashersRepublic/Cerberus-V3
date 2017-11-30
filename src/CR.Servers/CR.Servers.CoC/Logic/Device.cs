@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using CR.Servers.CoC.Core;
@@ -37,6 +38,33 @@ namespace CR.Servers.CoC.Logic
         internal bool Disposed;
 
         internal uint Seed;
+
+        internal int Checksum
+        {
+            get
+            {
+                int Checksum = 0;
+
+                Checksum += this.GameMode.Time.SubTick; 
+                Checksum += this.GameMode.Time.TotalSecs; 
+
+                if (this.GameMode.Level.Player != null)
+                {
+                    Checksum += this.GameMode.Level.Player.Checksum;
+
+                    if (this.GameMode.Level.GameObjectManager != null)
+                    {
+                        Checksum += this.GameMode.Level.GameObjectManager.Checksum;
+                    }
+                }
+
+                // Visitor
+
+                Checksum += Checksum;
+
+                return Checksum;
+            }
+        }
 
 
         internal Device(Socket Socket)
@@ -187,6 +215,11 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                /*foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                {
+                    Command.Execute();
+                }*/
+
                 this.Token = null;
 
                 this.Socket.Dispose();
@@ -207,7 +240,7 @@ namespace CR.Servers.CoC.Logic
             internal string PreferredLanguage;
             internal string[] ClientVersion;
 
-            internal LocaleData LocaleData;
+            internal int Locale;
 
             internal void ShowValues()
             {

@@ -48,6 +48,7 @@ namespace CR.Servers.CoC
             Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +  Environment.NewLine);
 
             Resources.Initialize();
+
             Thread.Sleep(-1);
         }
     }

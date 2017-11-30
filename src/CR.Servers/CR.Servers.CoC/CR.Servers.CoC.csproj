@@ -308,6 +308,7 @@
     <Compile Include="Packets\Messages\Client\Avatar\Ask_For_Avatar_Profile.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\Change_Avatar_Name.cs" />
     <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
+    <Compile Include="Packets\Messages\Client\Home\Ask_Visit_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\Send_Global_Chat.cs" />
@@ -334,6 +335,7 @@
     <Compile Include="Packets\Messages\Server\Home\Keep_Alive_Ok.cs" />
     <Compile Include="Packets\Messages\Server\Home\Out_Of_Sync.cs" />
     <Compile Include="Packets\Messages\Server\Home\Own_Home_Data.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Visit_Home_Data.cs" />
     <Compile Include="Packets\ServerCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,24 +7,19 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
     {
         internal override short Type => 24334;
 
-        public Avatar_Profile_Data(Device Device, Player Player, Logic.Home Home) : base(Device)
+        public Avatar_Profile_Data(Device Device, Level Level) : base(Device)
         {
-            this.Player = Player;
-            this.Home = Home;
+            this.Player = Level;
+            this.Player.Tick();
         }
 
-        public Avatar_Profile_Data(Device Device) : base(Device)
-        {
-        }
-
-        internal Player Player;
-        internal Logic.Home Home;
+        internal Level Player;
 
         internal override void Encode()
         {
-            this.Player.Encode(this.Data);
+            this.Player.Player.Encode(this.Data);
 
-            this.Data.AddCompressed(this.Home.HomeJSON.ToString(), false);
+            this.Data.AddCompressed(this.Player.Home.HomeJSON.ToString(), false);
 
             this.Data.AddInt(0); // Troop Received
             this.Data.AddInt(0); // Troop Sended

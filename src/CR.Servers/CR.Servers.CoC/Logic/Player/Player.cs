@@ -113,6 +113,13 @@ namespace CR.Servers.CoC.Logic
             this.Variables.Initialize();
         }
 
+
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
+            this.VerifyAlliance();
+        }
+
         internal void AddDiamonds(int Diamonds)
         {
             this.Diamonds += Diamonds;

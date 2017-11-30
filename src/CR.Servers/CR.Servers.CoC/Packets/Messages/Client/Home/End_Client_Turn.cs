@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Home
@@ -28,7 +29,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             this.SubTick = this.Reader.ReadInt32();
             this.Checksum = this.Reader.ReadInt32();
             this.CommandCount = this.Reader.ReadInt32();
-
             if (this.CommandCount <= 512)
             {
                 if (this.CommandCount > 0)

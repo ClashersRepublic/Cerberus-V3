@@ -43,6 +43,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(10212, typeof(Change_Avatar_Name));
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
+            Factory.Messages.Add(14113, typeof(Ask_Visit_Home));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
             Factory.Messages.Add(14212, typeof(Bind_GameCenter_Account));
             Factory.Messages.Add(14301, typeof(Create_Alliance));
