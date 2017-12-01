@@ -1,7 +1,6 @@
 ﻿using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 using Newtonsoft.Json.Linq;
 
@@ -34,15 +33,19 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             if (this.Character != null)
             {
                 var Level = this.Device.GameMode.Level;
-                Item Unit = Level.Player.Units.GetByData(this.Character);
-
-                if (Unit != null)
+                if (Level.GameObjectManager.Map == 0)
                 {
-                    if (Unit.Count > 0)
-                    {
-                        //Do some logging shit for replay and etc
+                    this.Device.GameMode.Level.BattleManager.Battle.Add(this);
+                    Item Unit = Level.Player.Units.GetByData(this.Character);
 
-                        Unit.Count--;
+                    if (Unit != null)
+                    {
+                        if (Unit.Count > 0)
+                        {
+                            //Do some logging shit for replay and etc
+
+                            Unit.Count--;
+                        }
                     }
                 }
             }

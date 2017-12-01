@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Clan;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
 
@@ -66,6 +68,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     {
                         this.Description = this.Description.Substring(0, 128);
                     }
+                }
+                else
+                {
+                    new Change_Alliance_Settings_Fail(this.Device).Send();
+                    return;
                 }
 
                 //AllianceBadgeLayerData Background = (AllianceBadgeLayerData)CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge % 0x100);

@@ -46,9 +46,7 @@ namespace CR.Servers.CoC.Logic
 
         public override bool Equals(object obj)
         {
-            var Item = obj as UnitItem;
-
-            if (Item != null)
+            if (obj is UnitItem Item)
             {
                 return Item.Data == this.Data && Item.Level == this.Level;
             }

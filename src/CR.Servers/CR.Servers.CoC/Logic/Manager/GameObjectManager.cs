@@ -564,12 +564,12 @@ namespace CR.Servers.CoC.Logic
                 Logging.Info(this.GetType(), "Load() - Can't find respawn variables.");
                 this.VRandom.Seed = 112;
             }
-
-            JsonHelper.GetJsonNumber(Json, "v2rs", out this.SecondsFromLastRespawnV2);
+            
+            this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out int SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
             this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out int V2RandomSeed) ? V2RandomSeed : 112;
-            JsonHelper.GetJsonNumber(Json, "v2ccounter", out this.ObstacleClearCounterV2);
+            this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out int ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
 
-            JsonHelper.GetJsonNumber(Json, "tgsec", out this.SecondsFromLastTGRespawn);
+            this.SecondsFromLastTGRespawn = JsonHelper.GetJsonNumber(Json, "tgsec", out int SecondsFromLastTGRespawn) ? SecondsFromLastTGRespawn : 0;
             this.TGRandom.Seed = JsonHelper.GetJsonNumber(Json, "tgseed", out int TGRandomSed) ? TGRandomSed : 112;
 
         }
@@ -768,10 +768,9 @@ namespace CR.Servers.CoC.Logic
             Json.Add("v2ccounter", this.ObstacleClearCounterV2);
             Json.Add("tgsec", this.SecondsFromLastTGRespawn);
             Json.Add("tgseed", this.TGRandom.Seed);
-            Json.Add("last_news_seen", 140);
+            Json.Add("last_news_seen", 999999999);
 
         }
-
 
         internal void LoadGameObject(JToken Token, int Map)
         {

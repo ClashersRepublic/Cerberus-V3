@@ -4,6 +4,7 @@ using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Battle.Manager;
 using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
@@ -200,6 +201,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                 new SessionKey(this.Device).Send();
 
             new Authentication_OK(this.Device).Send();
+
             new Own_Home_Data(this.Device).Send();
             new Avatar_Stream(this.Device).Send();
 

@@ -19,7 +19,7 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < 20; i++)
             {
-                this.Components[i] = new List<Component>(32);
+                this.Components[i] = new List<Component>();
             }
         }
 

@@ -31,6 +31,9 @@ namespace CR.Servers.CoC.Logic
             // DataSlots.
         }
 
+        public DataSlots() 
+        {
+        }
 
         internal void Add(Data Data, int Count)
         {

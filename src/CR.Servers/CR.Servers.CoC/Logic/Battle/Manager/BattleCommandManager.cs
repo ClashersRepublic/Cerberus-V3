@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CR.Servers.CoC.Packets;
 
 namespace CR.Servers.CoC.Logic.Battle.Manager
@@ -12,6 +8,8 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
         internal List<Command> Commands;
         internal List<Command> BufferedCommands;
 
+        internal BattleManager BattleManager;
+
         public BattleCommandManager()
         {
             this.Commands = new List<Command>(512);
@@ -20,7 +18,7 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
 
         public BattleCommandManager(BattleManager BattleManager) : this()
         {
-            //this.BattleManager = BattleManager;
+            this.BattleManager = BattleManager;
         }
 
         internal void StoreCommands(List<Command> Commands)

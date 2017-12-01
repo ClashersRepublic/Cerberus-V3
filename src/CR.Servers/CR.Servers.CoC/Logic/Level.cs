@@ -1,6 +1,7 @@
 ﻿using System;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.CoC.Logic.Battle.Manager;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Logic.Manager;
 using CR.Servers.CoC.Logic.Map;
@@ -25,6 +26,8 @@ namespace CR.Servers.CoC.Logic
         internal ComponentManager ComponentManager;
         internal UnitProductionManager UnitProductionManager;
         internal SpellProductionManager SpellProductionManager;
+
+        internal BattleManager BattleManager;
 
         internal int WidthInTiles => 50;
 
@@ -145,7 +148,7 @@ namespace CR.Servers.CoC.Logic
 
 
             this.GameObjectManager.Save(Json);
-            this.Player.Save(Json);
+            this.Player.Battle(Json);
 
             return Json;
         }

@@ -29,6 +29,11 @@ namespace CR.Servers.CoC.Logic
             // AllianceUnitSlots.
         }
 
+        public AllianceUnitSlots()
+        {
+            // AllianceUnitSlots.
+        }
+
         internal void Add(Data Data, int Count, int Level)
         {
             if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))

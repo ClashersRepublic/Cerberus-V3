@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Commands;
 using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
@@ -43,6 +44,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(10212, typeof(Change_Avatar_Name));
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
+            Factory.Messages.Add(14103, typeof(Cancel_V2_Battle));
             Factory.Messages.Add(14113, typeof(Ask_Visit_Home));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
             Factory.Messages.Add(14212, typeof(Bind_GameCenter_Account));
@@ -55,6 +57,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
+            Factory.Messages.Add(14510, typeof(Execute_Battle_Command));
             Factory.Messages.Add(14715, typeof(Send_Global_Chat));
         }
 
@@ -98,6 +101,9 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(577, typeof(Swap_GameObject));
             Factory.Commands.Add(590, typeof(Buy_Walls));
             Factory.Commands.Add(591, typeof(Change_Village_Mode));
+            Factory.Commands.Add(592, typeof(Train_Unit_V2));
+            Factory.Commands.Add(593, typeof(Speed_Up_All_Training_V2));
+            Factory.Commands.Add(596, typeof(Speed_Up_Training_V2));
             Factory.Commands.Add(597, typeof(Unknown_597));
             Factory.Commands.Add(600, typeof(Gear_Up));
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));

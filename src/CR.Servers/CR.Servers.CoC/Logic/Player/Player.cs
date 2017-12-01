@@ -305,33 +305,38 @@ namespace CR.Servers.CoC.Logic
 
             this.Variables.Encode(_Packet);
 
-            _Packet.AddInt(0); // Hero Modes
             _Packet.AddInt(0); // UnitPreset1
             _Packet.AddInt(0); // UnitPreset2
             _Packet.AddInt(0); // UnitPreset3
             _Packet.AddInt(0); // PreviousArmySize
             _Packet.AddInt(0); // UnitCounterForEvent
-            _Packet.AddInt(0); // Units Village2
-            _Packet.AddInt(0); // Units Village2 new
+            this.Units2.Encode(_Packet);
+            _Packet.AddInt(0);
+            _Packet.AddInt(0);
             //_Packet.AddInt(0);
 
 
         }
 
-        internal void Save(JObject Json)
+        internal JObject Save()
         {
+            var Json = new JObject();
             Json.Add("avatar_id_high", this.HighID);
             Json.Add("avatar_id_low", this.LowID);
             Json.Add("name", this.Name);
+            Json.Add("alliance_name", this.InAlliance ? this.Alliance.Header.Name : string.Empty);
+            Json.Add("xp_level", this.ExpLevel);
 
             if (this.InAlliance)
             {
-                Json.Add("alliance_name", this.Alliance.Header.Name);
+                Json.Add("alliance_id_high", this.AllianceHighId);
+                Json.Add("alliance_id_low", this.AllianceLowId);
                 Json.Add("badge_id", this.Alliance.Header.Badge);
                 Json.Add("alliance_exp_level", this.Alliance.Header.ExpLevel);
             }
-            else
-                Json.Add("alliance_name", string.Empty);
+
+            Json.Add("alliance_unit_visit_capacity", 0);
+            Json.Add("alliance_unit_spell_visit_capacity", 0);
 
             Json.Add("league_type", this.League);
 
@@ -339,15 +344,70 @@ namespace CR.Servers.CoC.Logic
             Json.Add("spells", this.Spells.Save());
             Json.Add("unit_upgrades", this.UnitUpgrades.Save());
             Json.Add("spell_upgrades", this.SpellUpgrades.Save());
+
             Json.Add("resources", this.Resources.Save());
 
             Json.Add("alliance_units", this.AllianceUnits.Save());
 
             Json.Add("hero_states", this.HeroStates.Save());
             Json.Add("hero_health", this.HeroHealth.Save());
+            Json.Add("hero_upgrade", this.HeroUpgrades.Save());
             Json.Add("hero_modes", this.HeroModes.Save());
+
             Json.Add("variables", this.Variables.Save());
             Json.Add("units2", this.Units2.Save());
+
+            Json.Add("castle_lvl", this.CastleLevel);
+
+            Json.Add("castle_total", this.CastleTotalCapacity);
+            Json.Add("castle_used", this.CastleUsedCapacity);
+            Json.Add("castle_total_sp", this.CastleTotalSpellCapacity);
+            Json.Add("castle_used_sp", this.CastleUsedSpellCapacity);
+
+            Json.Add("town_hall_lvl", this.TownHallLevel);
+            Json.Add("th_v2_lvl", this.TownHallLevel2);
+
+            Json.Add("score", this.Score);
+            Json.Add("duel_score", this.DuelScore);
+
+            if (this.RedPackageState)
+            {
+                Json.Add("red_package_state", this.RedPackageState);
+            }
+            return Json;
+        }
+
+        internal void Battle(JObject Json)
+        {
+            Json.Add("avatar_id_high", this.HighID);
+            Json.Add("avatar_id_low", this.LowID);
+            Json.Add("name", this.Name);
+            Json.Add("alliance_name", this.InAlliance ? this.Alliance.Header.Name : string.Empty);
+            Json.Add("xp_level", this.ExpLevel);
+
+            if (this.InAlliance)
+            {
+                Json.Add("alliance_id_high", this.AllianceHighId);
+                Json.Add("alliance_id_low", this.AllianceLowId);
+                Json.Add("badge_id", this.Alliance.Header.Badge);
+                Json.Add("alliance_exp_level", this.Alliance.Header.ExpLevel);
+            }
+
+            Json.Add("alliance_unit_visit_capacity", 0);
+            Json.Add("alliance_unit_spell_visit_capacity", 0);
+
+            Json.Add("league_type", this.League);
+
+            Json.Add("resources", this.Resources.Save());
+
+            Json.Add("alliance_units", this.AllianceUnits.Save());
+
+            Json.Add("hero_states", this.HeroStates.Save());
+            Json.Add("hero_health", this.HeroHealth.Save());
+            Json.Add("hero_upgrade", this.HeroUpgrades.Save());
+            Json.Add("hero_modes", this.HeroModes.Save());
+
+            Json.Add("variables", this.Variables.Save());
 
             Json.Add("castle_lvl", this.CastleLevel);
 
@@ -382,6 +442,17 @@ namespace CR.Servers.CoC.Logic
             {
                 this.FreeDiamonds = 0;
             }
+        }
+
+        internal Player Copy()
+        {
+            Player Copy = this.MemberwiseClone() as Player;
+
+            Copy.Units = new UnitSlots();
+            Copy.Spells = new UnitSlots();
+            Copy.HeroHealth = new DataSlots();
+
+            return Copy;
         }
 
         public override string ToString()

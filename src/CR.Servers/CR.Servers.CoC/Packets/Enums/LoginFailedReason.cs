@@ -1,6 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Enums
 {
-    public enum LoginFailedReason
+    internal enum LoginFailedReason
     {
         Default             = 0,
         Reset               = 1,

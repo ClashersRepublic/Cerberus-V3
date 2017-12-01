@@ -1,5 +1,6 @@
 ﻿using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Battle.Manager;
 using CR.Servers.CoC.Packets.Messages.Server.Battle;
 using CR.Servers.Extensions.Binary;
 

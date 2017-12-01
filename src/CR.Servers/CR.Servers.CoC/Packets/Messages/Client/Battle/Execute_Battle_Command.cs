@@ -3,13 +3,11 @@
 using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
 
-namespace CR.Servers.CoC.Packets.Messages.Client.Home
+namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
-    internal class End_Client_Turn : Message
+    internal class Execute_Battle_Command : Message
     {
         internal int SubTick;
         internal int Checksum;
@@ -17,20 +15,19 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
         internal List<Command> Commands;
 
-        internal override short Type => 14102;
+        internal override short Type => 14510;
 
-        public End_Client_Turn(Device Device, Reader Reader) : base(Device, Reader)
+        public Execute_Battle_Command(Device Device, Reader Reader) : base(Device, Reader)
         {
-            // End_Client_Turn.
+            // Execute_Battle_Command.
         }
-
 
         internal override void Decode()
         {
             this.SubTick = this.Reader.ReadInt32();
             this.Checksum = this.Reader.ReadInt32();
             this.CommandCount = this.Reader.ReadInt32();
-            if (this.CommandCount <= 512)
+            if (this.CommandCount <= 1048)
             {
                 if (this.CommandCount > 0)
                 {
@@ -75,7 +72,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
         internal override void Process()
         {
-
             if (this.CommandCount > 0)
             {
                 do
@@ -100,14 +96,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         {
                             this.Reader.BaseStream.Position = 0;
                             Log();
-                            Logging.Error(this.GetType(), this.Device, "Execute command failed! Server Command " + Command.Type + " is not available.");
+                            Logging.Error(this.GetType(), this.Device, "Execute battle command failed! Server Command " + Command.Type + " is not available.");
                             return;
                         }
                     }
 
                     Command.Execute();
 #if Extra
-                    Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
+                    Logging.Info(this.GetType(), "Battle Command is handled! (" + Command.Type + ")");
 #endif
                     this.Commands.Remove(Command);
                     continue;
@@ -115,10 +111,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             }
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
-            
 #if Extra
-            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
-            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
+            Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
 #endif
         }
     }

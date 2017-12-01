@@ -1,5 +1,4 @@
-﻿using System;
-using CR.Servers.CoC.Core;
+﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
@@ -9,6 +8,7 @@ using CR.Servers.CoC.Logic.Clan;
 using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
@@ -63,89 +63,103 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                 {
                     if (!string.IsNullOrWhiteSpace(this.Name))
                     {
-                        if (this.Name.Length <= 16)
+                        if (Resources.Name.IsMatch(this.Name))
                         {
-                            this.Name = Resources.Regex.Replace(this.Name, " ");
-
-                            if (this.Name.StartsWith(" "))
+                            if (this.Name.Length <= 16)
                             {
-                                this.Name = this.Name.Remove(0, 1);
-                            }
+                                this.Name = Resources.Regex.Replace(this.Name, " ");
 
-                            if (this.Name.Length >= 2)
-                            {
-                                if (this.Description != null)
+                                if (this.Name.StartsWith(" "))
                                 {
-                                    this.Description = Resources.Regex.Replace(this.Description, " ");
-
-                                    if (this.Description.StartsWith(" "))
-                                    {
-                                        this.Description = this.Description.Remove(0, 1);
-                                    }
-
-                                    if (this.Description.Length > 128)
-                                    {
-                                        this.Description = this.Description.Substring(0, 128);
-                                    }
+                                    this.Name = this.Name.Remove(0, 1);
                                 }
 
-                                //var Background =  (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge % 0x100);
-                                //var Middle =  (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge % 0x1000000 / 0x100);
-                                //var Foreground = (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge / 0x1000000);
-
-                                //if (Background != null)
+                                if (this.Name.Length >= 2)
                                 {
-                                    //if (Middle != null)
+                                    if (this.Description != null)
                                     {
-                                        //Z`if (Foreground != null)
+                                        this.Description = Resources.Regex.Replace(this.Description, " ");
+
+                                        if (this.Description.StartsWith(" "))
                                         {
-                                            Alliance Alliance = new Alliance();
+                                            this.Description = this.Description.Remove(0, 1);
+                                        }
 
-                                            Alliance.Header.Name = this.Name;
-                                            Alliance.Description = this.Description;
-                                            Alliance.Header.Locale = this.Device.Info.Locale;
-                                            Alliance.Header.Badge = this.AllianceBadge;
-                                            Alliance.Header.Type = this.AllianceType;
-                                            Alliance.Header.WarFrequency = this.WarFrequency;
+                                        if (this.Description.Length > 128)
+                                        {
+                                            this.Description = this.Description.Substring(0, 128);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        new Alliance_Create_Fail(this.Device){Error = AllianceErrorReason.InvalidDescription}.Send();
+                                        return;
+                                    }
 
-                                            if (this.Origin != null)
+                                    //var Background =  (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge % 0x100);
+                                    //var Middle =  (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge % 0x1000000 / 0x100);
+                                    //var Foreground = (AllianceBadgeLayerData) CSV.Tables.Get(Gamefile.AllianceBadgeLayer).GetDataWithInstanceID(this.AllianceBadge / 0x1000000);
+
+                                    //if (Background != null)
+                                    {
+                                        //if (Middle != null)
+                                        {
+                                            //Z`if (Foreground != null)
                                             {
-                                                Alliance.Header.Origin = this.Origin.GlobalId;
-                                            }
+                                                Alliance Alliance = new Alliance();
 
-                                            Alliance.Header.PublicWarLog = this.PublicWarLog;
-                                            Alliance.Header.RequiredScore = this.RequiredScore;
-                                            Alliance.Header.RequiredDuelScore = this.RequiredDuelScore;
-                                            Alliance.Header.AmicalWar = this.AmicalWar;
+                                                Alliance.Header.Name = this.Name;
+                                                Alliance.Description = this.Description;
+                                                Alliance.Header.Locale = this.Device.Info.Locale;
+                                                Alliance.Header.Badge = this.AllianceBadge;
+                                                Alliance.Header.Type = this.AllianceType;
+                                                Alliance.Header.WarFrequency = this.WarFrequency;
 
-                                            if (Alliance.Members.Join(Level.Player, out Member Member))
-                                            {
-                                                Member.Role = Role.Leader;
-                                                Resources.Clans.New(Alliance);
+                                                if (this.Origin != null)
+                                                {
+                                                    Alliance.Header.Origin = this.Origin.GlobalId;
+                                                }
 
-                                                Level.Player.SetAlliance(Alliance, Member);
-                                                Level.Player.AllianceHighId = Alliance.HighId;
-                                                Level.Player.AllianceLowId = Alliance.LowId;
+                                                Alliance.Header.PublicWarLog = this.PublicWarLog;
+                                                Alliance.Header.RequiredScore = this.RequiredScore;
+                                                Alliance.Header.RequiredDuelScore = this.RequiredDuelScore;
+                                                Alliance.Header.AmicalWar = this.AmicalWar;
 
-                                                Level.Player.Resources.Remove(Globals.AllianceCreateResourceData,  Globals.AllianceCreateCost);
+                                                if (Alliance.Members.Join(Level.Player, out Member Member))
+                                                {
+                                                    Member.Role = Role.Leader;
+                                                    Resources.Clans.New(Alliance);
 
-                                                new Alliance_Full_Entry(this.Device) {Alliance = Alliance}.Send();
-                                                this.Device.GameMode.CommandManager.AddCommand(
-                                                    new Joined_Alliance(this.Device)
-                                                    {
-                                                        AllianceId = Alliance.AllianceId,
-                                                        AllianceName = Alliance.Header.Name,
-                                                        AllianceBadge = Alliance.Header.Badge,
-                                                        AllianceLevel = Alliance.Header.ExpLevel,
-                                                        CreateAlliance = true
-                                                    }
-                                                );
+                                                    Level.Player.SetAlliance(Alliance, Member);
+                                                    Level.Player.AllianceHighId = Alliance.HighId;
+                                                    Level.Player.AllianceLowId = Alliance.LowId;
+
+                                                    Level.Player.Resources.Remove(Globals.AllianceCreateResourceData, Globals.AllianceCreateCost);
+
+                                                    new Alliance_Full_Entry(this.Device) {Alliance = Alliance}.Send();
+                                                    this.Device.GameMode.CommandManager.AddCommand(
+                                                        new Joined_Alliance(this.Device)
+                                                        {
+                                                            AllianceId = Alliance.AllianceId,
+                                                            AllianceName = Alliance.Header.Name,
+                                                            AllianceBadge = Alliance.Header.Badge,
+                                                            AllianceLevel = Alliance.Header.ExpLevel,
+                                                            CreateAlliance = true
+                                                        }
+                                                    );
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                else
+                                    new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.NameTooShort }.Send();
                             }
+                            else
+                                new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName }.Send();
                         }
+                        else
+                            new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName}.Send();
                     }
                 }
             }

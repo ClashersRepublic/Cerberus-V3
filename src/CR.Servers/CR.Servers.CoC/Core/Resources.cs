@@ -21,6 +21,7 @@ namespace CR.Servers.CoC.Core
         internal static XorShift Random;
         internal static Gateway Gateway;
         internal static Regex Regex;
+        internal static Regex Name;
         internal static bool Started;
 
         internal static void Initialize()
@@ -39,6 +40,7 @@ namespace CR.Servers.CoC.Core
             }
 
             Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
+            Resources.Name = new Regex("^[a-zA-Z0-9]*$");
 
             Resources.Accounts = new Accounts();
             Resources.Clans = new Clans();

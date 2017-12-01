@@ -96,6 +96,7 @@ namespace CR.Servers.CoC.Logic
         internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent)Component : null;
         internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent)Component : null;
         internal HeroBaseComponent HeroBaseComponent => this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent)Component : null;
+        internal UnitStorageV2Component UnitStorageV2Component => this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component)Component : null;
 
 
         internal int GetUpgradeLevel() => this.UpgradeLevel;
@@ -147,6 +148,11 @@ namespace CR.Servers.CoC.Logic
             {
                 var hd = CSV.Tables.Get(Gamefile.Heroes).GetData(BuildingData.HeroType) as HeroData;
                 this.AddComponent(new HeroBaseComponent(this, hd));
+            }
+
+            if (BuildingData.Village2Housing > 0)
+            {
+                this.AddComponent(new UnitStorageV2Component(this));
             }
         }
 

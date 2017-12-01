@@ -20,7 +20,7 @@ namespace CR.Servers.CoC.Logic.Mode
         {
             this.Device = Device;
             this.Time = new Time();
-            this.CommandManager = new CommandManager(this.Level);
+            this.CommandManager = new CommandManager();
             /*this.GameLogManager = new GameLogManager(this);*/
         }
 
@@ -28,6 +28,7 @@ namespace CR.Servers.CoC.Logic.Mode
         {
             this.Level = Level;
             this.Level.SetGameMode(this);
+            this.CommandManager.SetLevel(Level);
         }
       
     }

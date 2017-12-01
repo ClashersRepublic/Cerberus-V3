@@ -15,10 +15,14 @@ namespace CR.Servers.CoC.Logic.Manager
         internal Level Level;
         internal Dictionary<int, ServerCommand> ServerCommands;
 
-        public CommandManager(Level Level)
+        public CommandManager()
+        {
+            this.ServerCommands = new Dictionary<int, ServerCommand>();
+        }
+
+        internal void SetLevel(Level Level)
         {
             this.Level = Level;
-            this.ServerCommands = new Dictionary<int, ServerCommand>();
         }
 
         internal void AddCommand(ServerCommand Command)

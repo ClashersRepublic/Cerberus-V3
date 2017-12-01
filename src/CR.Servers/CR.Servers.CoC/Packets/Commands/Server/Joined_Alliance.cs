@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
 

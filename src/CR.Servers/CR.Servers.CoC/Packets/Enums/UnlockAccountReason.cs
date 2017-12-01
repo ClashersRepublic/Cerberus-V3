@@ -1,6 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Enums
 {
-    public enum UnlockAccountReason
+    internal enum UnlockAccountReason
     {
         Default = 4,
         UnlockError = 5,

@@ -5,7 +5,12 @@ namespace CR.Servers.CoC.Logic
 {
     internal class UnitSlots : DataSlots
     {
-        internal UnitSlots(int Capacity = 10) : base(Capacity)
+        internal UnitSlots(int Capacity ) : base(Capacity)
+        {
+            // UnitSlots.
+        }
+
+        internal UnitSlots()
         {
             // UnitSlots.
         }

@@ -11,6 +11,9 @@ namespace CR.Servers.CoC.Logic
         internal NpcMapSlots(int Capacity = 50) : base(Capacity)
         {
         }
+        internal NpcMapSlots()
+        {
+        }
 
         internal bool CanAttackNPC(Data Data)
         {
