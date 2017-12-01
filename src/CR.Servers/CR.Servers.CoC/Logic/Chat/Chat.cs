@@ -58,12 +58,12 @@ namespace CR.Servers.CoC.Logic.Chat
                             this.Quit(Device2);
                     }
 
-                    if (Device.Connected)
+                    /*if (Device.Connected)
                     {
                         new Global_Chat_Line(Device, Device.GameMode.Level.Player) { Message = Message, Name = "You"}.Send();
                     }
                     else
-                        this.Quit(Device);
+                        this.Quit(Device);*/
                 }
             }
         }
