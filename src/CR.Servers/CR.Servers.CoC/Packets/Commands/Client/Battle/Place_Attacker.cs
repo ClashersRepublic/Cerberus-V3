@@ -35,7 +35,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                 var Level = this.Device.GameMode.Level;
                 if (Level.GameObjectManager.Map == 0)
                 {
-                    this.Device.GameMode.Level.BattleManager.Battle.Add(this);
                     Item Unit = Level.Player.Units.GetByData(this.Character);
 
                     if (Unit != null)
