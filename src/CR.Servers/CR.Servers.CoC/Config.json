@@ -1,9 +1,9 @@
 ﻿{
   "Game": {
-    "UpdateURL": "http://219.92.44.149/",
-    "PatchURL": "http://219.92.44.149/",
-    "EventURL": "http://219.92.44.149/events/",
-    "GameAssetsURL": "http://219.92.44.149/",
+    "UpdateURL": "http://cocbetatest1.ddns.net/",
+    "PatchURL": "http://cocbetatest1.ddns.net",
+    "EventURL": "http://cocbetatest1.ddns.net/events/",
+    "GameAssetsURL": "http://cocbetatest1.ddns.net/",
     "ClientMajorVersion": "9",
     "ClientMinorVersion": "256",
     "StartingResources": {

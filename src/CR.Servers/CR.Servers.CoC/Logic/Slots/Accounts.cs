@@ -94,6 +94,12 @@ namespace CR.Servers.CoC.Logic.Slots
             this.Add(Player);
             this.Add(Home);
 
+            var Level = new Level();
+            Level.SetPlayer(Player);
+            Level.SetHome(Home);
+            Level.FastForwardTime(0);
+            Level.Process();
+
             return new Account(Constants.ServerId, LowID, Player, Home);
         }
 
