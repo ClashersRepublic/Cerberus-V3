@@ -67,9 +67,19 @@ namespace CR.Servers.CoC.Logic
 
         internal long BattleIdV2;
 
-        internal bool Connected => this.Level != null && this.Level.GameMode.Connected;
+        internal bool Connected
+        {
+            get
+            {
+                if (this.Level?.GameMode != null)
+                {
+                    return this.Level.GameMode.Connected;
+                }
+                return false;
+            }
+        }
 
-        internal long UserId => (((long)this.HighID << 32) | (uint) this.LowID);
+    internal long UserId => (((long)this.HighID << 32) | (uint) this.LowID);
 
         internal bool Banned => this.BanTime > DateTime.UtcNow;
 

@@ -166,7 +166,7 @@
     <Compile Include="Logic\Battle\Slots\Battle.cs" />
     <Compile Include="Logic\Battle\Manager\BattleCommandManager.cs" />
     <Compile Include="Logic\Battle\Manager\BattleManager.cs" />
-    <Compile Include="Logic\Battle\Slots\Battle_Command.cs" />
+    <Compile Include="Logic\Battle\Slots\Battle_Commands.cs" />
     <Compile Include="Logic\Battle\Slots\Battles_V2.cs" />
     <Compile Include="Logic\Battle\Slots\Items\IBattle.cs" />
     <Compile Include="Logic\Battle\Slots\Items\Replay_Info.cs" />

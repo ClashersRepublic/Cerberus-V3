@@ -16,6 +16,7 @@ namespace CR.Servers.CoC.Logic.Battle
         internal double PreparationTime = 60;
         internal double AttackTime = 180;
 
+        [JsonIgnore]
         public double BattleTick
         {
             get => this.PreparationTime > 0 ? this.PreparationTime + this.AttackTime : this.AttackTime;
@@ -53,17 +54,16 @@ namespace CR.Servers.CoC.Logic.Battle
 
         [JsonProperty] internal int PreparationSkip;
 
-        internal Battle_V2(Level Attacker, Level Enemy)
+        internal Battle_V2(Level Attacker, Level Enemy) : this()
         {
             this.Attacker = Attacker.Player.Copy();
             this.Defender = Enemy.Player.Copy();
             this.Level = Enemy.BattleV2();
-
-            this.Commands = new Battle_Command();
         }
 
         internal Battle_V2()
         {
+            this.Commands = new Battle_Command();
         }
 
         public void Add(Command Command)

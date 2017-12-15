@@ -20,7 +20,7 @@ namespace CR.Servers.CoC.Logic.Slots
         internal ConcurrentDictionary<long, Player> Players;
         internal ConcurrentDictionary<long, Home> Homes;
 
-        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        internal readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             TypeNameHandling            = TypeNameHandling.Auto,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,

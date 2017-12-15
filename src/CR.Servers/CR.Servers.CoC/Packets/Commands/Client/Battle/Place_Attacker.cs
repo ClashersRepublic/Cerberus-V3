@@ -4,6 +4,7 @@ using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Battle.Slots;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
 using CR.Servers.Logic.Enums;
@@ -14,6 +15,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
     internal class Place_Attacker : Command
     {
         internal override int Type => 700;
+
+        public Place_Attacker()
+        {
+
+        }
 
         public Place_Attacker(Device Device, Reader Reader) : base(Device, Reader)
         {
@@ -53,6 +59,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                     {
                         if (Unit.Count > 0)
                         {
+                            Console.WriteLine(this.Save());
                             //Do some logging shit for replay and etc
 
                             Unit.Count--;
@@ -78,14 +85,38 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             }
         }
 
+        internal override void Load(JToken Token)
+        {
+            JObject Command = (JObject) Token["c"];
+
+            if (Command != null)
+            {
+                JObject TickBase = (JObject) Command["base"];
+
+                if (TickBase != null)
+                {
+                    JsonHelper.GetJsonNumber(TickBase, "t", out this.ExecuteSubTick);
+                }
+
+                JsonHelper.GetJsonData(Command, "d", out this.Character);
+                JsonHelper.GetJsonNumber(Command, "x", out this.X);
+                JsonHelper.GetJsonNumber(Command, "y", out this.Y);
+            }
+        }
+
         internal override JObject Save()
         {
             JObject Json = new JObject
             {
-                {"base", this.SaveBase()},
-                {"x", this.X},
-                {"y", this.Y},
-                {"d", this.Character.GlobalId}
+                {"ct", this.Type},
+                {"c", new JObject
+                    {
+                        {"base", this.SaveBase()},
+                        {"d", this.Character.GlobalId},
+                        {"x", this.X},
+                        {"y", this.Y}
+                    }               
+                }
             };
 
             return Json;

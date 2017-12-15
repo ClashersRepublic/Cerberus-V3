@@ -15,6 +15,7 @@ namespace CR.Servers.CoC.Logic.Battle
         internal double PreparationTime = 30;
         internal double AttackTime = 180;
 
+        [JsonIgnore]
         public double BattleTick
         {
             get => this.PreparationTime > 0 ? this.PreparationTime : this.AttackTime;
@@ -54,26 +55,24 @@ namespace CR.Servers.CoC.Logic.Battle
 
         [JsonProperty] internal long BattleId;
 
-        internal Battle(long battle, Level attacker, Level enemy)
+        internal Battle(long battle, Level attacker, Level enemy) : this()
         {
             this.BattleId = battle;
 
             this.Attacker = attacker.Player.Copy();
             this.Defender = enemy.Player.Copy();
             this.Level = enemy.Battle();
-
-            this.Commands = new Battle_Command();
         }
 
         internal Battle()
         {
+            this.Commands = new Battle_Command();
         }
 
         public void Add(Command Command)
         {
             if (this.PreparationTime > 0)
                 PreparationSkip = (int)System.Math.Round(this.PreparationTime);
-            Console.WriteLine(Command.Save());
             this.Commands.Add(Command); 
         }
 
@@ -92,6 +91,7 @@ namespace CR.Servers.CoC.Logic.Battle
                 }},
                 {"KillSwitches", new JObject() }
             };
+
             var Json = new JObject
             {
                 {"level", this.Level},

@@ -17,8 +17,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
         {
             JObject Json = new JObject
             {
-                {"t", this.ExecuteSubTick}
-                
+                {"t", this.ExecuteSubTick}               
             };
             return Json;
         }

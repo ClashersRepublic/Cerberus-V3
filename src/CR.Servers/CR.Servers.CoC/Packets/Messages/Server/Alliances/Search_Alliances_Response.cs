@@ -23,8 +23,9 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 
             foreach (var Alliance in this.Alliances)
             {
-                Alliance.Encode(this.Data);
+                Alliance.Header.Encode(this.Data);
             }
+            this.Data.AddInt(0); //Another list but no one know what is it for
         }
     }
 }

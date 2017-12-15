@@ -28,7 +28,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
             this.ClanLowId = this.Reader.ReadInt32();
         }
 
-        internal override void Encode()
+        internal override void Process()
         {
             var Alliance = Resources.Clans.Get(this.ClanHighId, this.ClanLowId);
 

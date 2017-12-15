@@ -22,10 +22,10 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
         internal override void Encode()
         {
             this.Data.AddVInt(this.EndSubTick);
-            this.Data.AddVInt(this.Spectator1);//Spectator count
+            this.Data.AddVInt(this.Spectator1); //Spectator count
             this.Data.AddVInt(this.Spectator); //Spectator on opposite ssite
 
-            this.Data.AddInt(513);
+            this.Data.AddInt(this.Commands.Count);
 
             this.Commands.ForEach(Command =>
             {

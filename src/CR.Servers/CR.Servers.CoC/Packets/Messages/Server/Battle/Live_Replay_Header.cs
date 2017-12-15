@@ -21,7 +21,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 
         internal override void Encode()
         {
-            Console.WriteLine(this.ReplayHeaderJson);
+            //Console.WriteLine(this.ReplayHeaderJson);
 
             this.Data.AddString(null);
             this.Data.AddCompressed(this.ReplayHeaderJson, false);

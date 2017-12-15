@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Clan;
+using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Extensions.List;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Packets
 {
+    [JsonConverter(typeof(CommandConverter))]
     public class Command
     {
         internal int ExecuteSubTick = -1;
@@ -19,7 +24,10 @@ namespace CR.Servers.CoC.Packets
 
         internal Reader Reader;
         internal Device Device;
-        
+
+        public Command()
+        {
+        }
 
         public Command(Device Device)
         {
@@ -45,7 +53,7 @@ namespace CR.Servers.CoC.Packets
         internal virtual void Execute()
         {
         }
-        
+
         internal virtual void Load(JToken Token)
         {
         }
@@ -84,6 +92,56 @@ namespace CR.Servers.CoC.Packets
         internal void Log()
         {
             File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+        }
+    }
+
+    internal class CommandConverter : JsonConverter
+    {
+        public override bool CanConvert(Type Type)
+        {
+            return Type.BaseType == typeof(Command) || Type == typeof(Command);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject Token = JObject.Load(reader);
+
+            if (JsonHelper.GetJsonNumber(Token, "ct", out int Type))
+            {
+                Command Entry;
+
+                switch (Type)
+                {
+                    case 700:
+                        Entry = new Place_Attacker();
+                        break;
+                    default:
+                        Entry = new Command();
+                        break;
+                }
+
+                Entry.Load(Token);
+
+                return Entry;
+            }
+            else
+                Logging.Error(this.GetType(), "ReadJson() - JsonObject doesn't contains 'ct' key.");
+
+            return existingValue;
+        }
+
+        public override bool CanWrite => true;
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            Command Command = (Command) value;
+
+            if (Command != null)
+            {
+                Command.Save().WriteTo(writer);
+            }
+            else
+                writer.WriteNull();
         }
     }
 }
