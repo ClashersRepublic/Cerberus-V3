@@ -282,7 +282,6 @@ namespace CR.Servers.CoC.Core.Network
         internal void Disconnect(SocketAsyncEventArgs AsyncEvent)
         {
             if (AsyncEvent == null) return;
-            Console.WriteLine("sUO");
             Token Token = (Token)AsyncEvent.UserToken;
 
             if (Token.Aborting)

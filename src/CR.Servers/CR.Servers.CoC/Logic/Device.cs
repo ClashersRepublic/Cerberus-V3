@@ -223,12 +223,14 @@ namespace CR.Servers.CoC.Logic
                         Resources.Accounts.SaveHome(this.Account.Home);
                     }
                 }
-                
 
-                /*foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                if (this.GameMode?.CommandManager != null)
                 {
-                    Command.Execute();
-                }*/
+                    foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                    {
+                        Command.Execute();
+                    }
+                }
 
                 this.Token = null;
 

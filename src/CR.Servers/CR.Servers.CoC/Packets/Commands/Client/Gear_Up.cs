@@ -1,5 +1,4 @@
-﻿using System;
-using CR.Servers.CoC.Core;
+﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
