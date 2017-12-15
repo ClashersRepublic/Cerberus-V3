@@ -154,11 +154,14 @@ namespace CR.Servers.CoC.Logic.Clan
                 
                 switch (Type)
                 {
+                    case 2:
+                        Entry = new ChatStreamEntry();
+                        break;
                     case 4:
                         Entry = new EventStreamEntry();
                         break;
-                    case 2:
-                        Entry = new ChatStreamEntry();
+                    case 16:
+                        Entry = new GiftStreamEntry();
                         break;
                     default:
                         Entry = new StreamEntry();

@@ -772,6 +772,130 @@ namespace CR.Servers.CoC.Logic
 
         }
 
+        internal void SaveV2(JObject Json)
+        {
+            #region Village 2
+
+            JArray Buildings2 = new JArray();
+
+            foreach (GameObject GameObject in this.GameObjects[0][1])
+            {
+                JObject Token = new JObject();
+
+                if (GameObject.Data != null)
+                {
+                    Token.Add("data", GameObject.Data.GlobalId);
+                    Token.Add("id", GameObject.Id);
+
+                    GameObject.Save(Token);
+                    Buildings2.Add(Token);
+                }
+            }
+
+            JArray Obstacles2 = new JArray();
+
+            foreach (GameObject GameObject in this.GameObjects[3][1])
+            {
+                JObject Token = new JObject();
+
+                if (GameObject.Data != null)
+                {
+                    Token.Add("data", GameObject.Data.GlobalId);
+                    Token.Add("id", GameObject.Id);
+
+                    GameObject.Save(Token);
+                    Obstacles2.Add(Token);
+                }
+            }
+
+            JArray Traps2 = new JArray();
+
+            foreach (GameObject GameObject in this.GameObjects[4][1])
+            {
+                JObject Token = new JObject();
+
+                if (GameObject.Data != null)
+                {
+                    Token.Add("data", GameObject.Data.GlobalId);
+                    Token.Add("id", GameObject.Id);
+
+                    GameObject.Save(Token);
+                    Traps2.Add(Token);
+                }
+            }
+
+            JArray Decos2 = new JArray();
+
+            foreach (GameObject GameObject in this.GameObjects[6][1])
+            {
+                JObject Token = new JObject();
+
+                if (GameObject.Data != null)
+                {
+                    Token.Add("data", GameObject.Data.GlobalId);
+                    Token.Add("id", GameObject.Id);
+
+                    GameObject.Save(Token);
+                    Decos2.Add(Token);
+                }
+            }
+
+            JArray VillageObjects2 = new JArray();
+
+            foreach (GameObject GameObject in this.GameObjects[8][1])
+            {
+                JObject Token = new JObject();
+
+                if (GameObject.Data != null)
+                {
+                    Token.Add("data", GameObject.Data.GlobalId);
+                    Token.Add("id", GameObject.Id);
+
+                    GameObject.Save(Token);
+                    VillageObjects2.Add(Token);
+                }
+            }
+
+            #endregion
+
+            var RespawnVars = new JObject
+            {
+                {"secondsFromLastRespawn", this.SecondsFromLastRespawn},
+                {"obstacleClearCounter", this.ObstacleClearCounter},
+                {"respawnSeed", this.VRandom.Seed},
+                {"time_to_gembox_drop", 999999999}
+            };
+
+            Json.Add("buildings", new JArray());
+            Json.Add("obstacles", new JArray());
+            Json.Add("traps", new JArray());
+            Json.Add("decos", new JArray());
+            Json.Add("vobjs", new JArray());
+
+            Json.Add("respawnVars", RespawnVars);
+
+            Json.Add("buildings2", Buildings2);
+            Json.Add("obstacles2", Obstacles2);
+            Json.Add("traps2", Traps2);
+            Json.Add("decos2", Decos2);
+            Json.Add("vobjs2", VillageObjects2);
+
+            Json.Add("v2rs", 0);
+            Json.Add("v2rseed", 0);
+            Json.Add("v2ccounter", 0);
+            Json.Add("tgsec", 0);
+            Json.Add("tgseed", 0);
+
+            Json.Add("cooldowns", new JArray());
+
+            Json.Add("newShopBuildings", new JArray());
+            Json.Add("newShopTraps", new JArray());
+            Json.Add("newShopDecos", new JArray());
+
+            Json.Add("last_news_seen", 999999999);
+
+        }
+
         internal void LoadGameObject(JToken Token, int Map)
         {
             if (JsonHelper.GetJsonNumber(Token, "data", out int DataID))

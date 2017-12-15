@@ -11,22 +11,23 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 
         public Pc_Battle_Data_V2(Device Device) : base(Device)
         {
-            Device.State = State.IN_1VS1_BATTLE;
+            this.Device.State = State.IN_1VS1_BATTLE;
         }
 
         internal Level Enemy;
         internal override void Encode()
         {
-            this.Enemy.Player.Encode(this.Data);
+            this.Device.GameMode.Level.Player.Encode(this.Data);
             this.Data.AddLong(this.Enemy.Player.UserId);
                       
             this.Data.AddInt(0);
             this.Data.AddInt(0);
             this.Data.AddInt(0);
 
-            this.Data.AddCompressed(this.Enemy.Battle().ToString());
+            this.Data.AddCompressed(this.Enemy.BattleV2().ToString());
             this.Data.AddCompressed(Game_Events.Events_Json);
             this.Data.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
+
             this.Data.AddLong(this.Enemy.Player.UserId);
             this.Data.AddHexa("592FA598".Replace(" ",""));
 

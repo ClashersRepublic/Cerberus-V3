@@ -128,6 +128,7 @@
     <Compile Include="Core\Network\Token.cs" />
     <Compile Include="Core\Resources.cs" />
     <Compile Include="Core\Settings.cs" />
+    <Compile Include="Core\Timers.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\Game\GamePlayUtil.cs" />
     <Compile Include="Extensions\Game\Globals.cs" />
@@ -161,10 +162,13 @@
     <Compile Include="Files\Fingerprint.cs" />
     <Compile Include="Files\Game_Events.cs" />
     <Compile Include="Files\LevelFile.cs" />
-    <Compile Include="Logic\Battle\Battle.cs" />
+    <Compile Include="Logic\Battle\Slots\Items\Battle_V2.cs" />
+    <Compile Include="Logic\Battle\Slots\Battle.cs" />
     <Compile Include="Logic\Battle\Manager\BattleCommandManager.cs" />
     <Compile Include="Logic\Battle\Manager\BattleManager.cs" />
     <Compile Include="Logic\Battle\Slots\Battle_Command.cs" />
+    <Compile Include="Logic\Battle\Slots\Battles_V2.cs" />
+    <Compile Include="Logic\Battle\Slots\Items\IBattle.cs" />
     <Compile Include="Logic\Battle\Slots\Items\Replay_Info.cs" />
     <Compile Include="Logic\Battle\Slots\Items\Replay_Stats.cs" />
     <Compile Include="Logic\Chat\Chat.cs" />
@@ -176,6 +180,7 @@
     <Compile Include="Logic\Clan\Slots\Streams.cs" />
     <Compile Include="Logic\Clan\StreamEntry\ChatStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\EventStreamEntry.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\GiftStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\StreamEntry.cs" />
     <Compile Include="Logic\Device.cs" />
     <Compile Include="Logic\Enums\AllianceEvent.cs" />
@@ -184,6 +189,7 @@
     <Compile Include="Logic\Enums\Resource.cs" />
     <Compile Include="Logic\Enums\Role.cs" />
     <Compile Include="Logic\Enums\AllianceStream.cs" />
+    <Compile Include="Logic\Enums\ServerTimer.cs" />
     <Compile Include="Logic\Enums\Variable.cs" />
     <Compile Include="Logic\Enums\WarState.cs" />
     <Compile Include="Logic\GameObject\Building.cs" />
@@ -239,6 +245,7 @@
     <Compile Include="Logic\Random.cs" />
     <Compile Include="Logic\Slots\Account.cs" />
     <Compile Include="Logic\Slots\Accounts.cs" />
+    <Compile Include="Logic\Slots\BattlesV2.cs" />
     <Compile Include="Logic\Slots\Clans.cs" />
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
@@ -297,6 +304,7 @@
     <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Debug.cs" />
     <Compile Include="Packets\Debugs\Clear_All_Obstacle.cs" />
+    <Compile Include="Packets\Debugs\Elite\Add_Unit.cs" />
     <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
     <Compile Include="Packets\Enums\AllianceErrorReason.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
@@ -309,6 +317,7 @@
     <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Member_Role.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Change_Alliance_Settings.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Chat_To_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Claim_Alliance_Gift.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Join_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Leave_Alliance.cs" />
@@ -323,12 +332,14 @@
     <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
     <Compile Include="Packets\Messages\Client\Battle\Cancel_V2_Battle.cs" />
     <Compile Include="Packets\Messages\Client\Battle\Execute_Battle_Command.cs" />
+    <Compile Include="Packets\Messages\Client\Battle\Watch_1vs1_Live.cs" />
     <Compile Include="Packets\Messages\Client\Home\Ask_Visit_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\Send_Global_Chat.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Data.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Header.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\V2_Battle_Result.cs" />
     <Compile Include="Packets\Messages\Server\Error\Alliance_Create_Fail.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Data.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
@@ -360,6 +371,7 @@
     <Compile Include="Packets\ServerCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

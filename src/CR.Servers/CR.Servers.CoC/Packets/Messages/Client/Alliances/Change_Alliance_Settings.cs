@@ -32,7 +32,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
         internal bool AmicalWar;
 
         internal Hiring AllianceType;
-        internal RegionData Origin;
+        internal int Origin;
 
         internal override void Decode()
         {
@@ -45,7 +45,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
             this.RequiredDuelScore = this.Reader.ReadInt32();
             this.WarFrequency = this.Reader.ReadInt32();
 
-            this.Origin = this.Reader.ReadData<RegionData>();
+            this.Origin = this.Reader.ReadInt32();
 
             this.PublicWarLog = this.Reader.ReadBooleanV2();
             this.AmicalWar = this.Reader.ReadBooleanV2();
@@ -85,26 +85,31 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     {
                         //if (Foreground != null)
                         {
-                            ShowValues();
                             var Level = this.Device.GameMode.Level;
                             var Alliance = Resources.Clans.Get(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
                             Alliance.Description = this.Description;
                             Alliance.Header.Badge = this.AllianceBadge;
                             Alliance.Header.Type = this.AllianceType;
                             Alliance.Header.WarFrequency = this.WarFrequency;
-                            Alliance.Header.Origin = this.Origin?.GlobalId ?? 0;
+                            Alliance.Header.Origin = this.Origin;
                             Alliance.Header.PublicWarLog = this.PublicWarLog;
                             Alliance.Header.RequiredScore = this.RequiredScore;
                             Alliance.Header.RequiredDuelScore = this.RequiredDuelScore;
                             Alliance.Header.AmicalWar = this.AmicalWar;
 
-                           Alliance.Streams.AddEntry(new EventStreamEntry(Level.Player.AllianceMember, Level.Player.AllianceMember, AllianceEvent.ChangedSettings));
+                            Alliance.Streams.AddEntry(new EventStreamEntry(Level.Player.AllianceMember,
+                                Level.Player.AllianceMember, AllianceEvent.ChangedSettings));
 
-                            foreach (Player Player in Alliance.Members.Connected.Values.ToArray())
+                            foreach (var Player in Alliance.Members.Connected.Values.ToArray())
                             {
                                 if (Player.Connected)
-                                { 
-                                    Player.Level.GameMode.CommandManager.AddCommand(new Changed_Alliance_Settings(Player.Level.GameMode.Device) {AllianceId = Alliance.AllianceId, AllianceBadge = Alliance.Header.Badge});
+                                {
+                                    Player.Level.GameMode.CommandManager.AddCommand(
+                                        new Changed_Alliance_Settings(Player.Level.GameMode.Device)
+                                        {
+                                            AllianceId = Alliance.AllianceId,
+                                            AllianceBadge = Alliance.Header.Badge
+                                        });
                                 }
                                 else
                                     Alliance.Members.Connected.TryRemove(Player.UserId, out _);

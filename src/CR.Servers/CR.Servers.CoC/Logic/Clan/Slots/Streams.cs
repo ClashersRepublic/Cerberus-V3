@@ -84,21 +84,26 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             }
         }
 
+        internal StreamEntry Get(int MessageID)
+        {
+            if (this.Slots.ContainsKey(MessageID))
+            {
+                return this.Slots[MessageID];
+            }
+
+            return null;
+        }
+
         internal void Update(StreamEntry StreamEntry)
         {
-            if (this.Slots.ContainsKey(StreamEntry.StreamId))
+            foreach (Player Player in this.Alliance.Members.Connected.Values.ToArray())
             {
-                this.Slots[StreamEntry.StreamId] = StreamEntry;
-
-                foreach (Player Player in this.Alliance.Members.Connected.Values.ToArray())
+                if (Player.Connected)
                 {
-                    if (Player.Connected)
-                    {
-                        new Alliance_Stream_Entry(Player.Level.GameMode.Device) { StreamEntry = StreamEntry }.Send();
-                    }
-                    else
-                        this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
+                    new Alliance_Stream_Entry(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                 }
+                else
+                    this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
             }
         }
 

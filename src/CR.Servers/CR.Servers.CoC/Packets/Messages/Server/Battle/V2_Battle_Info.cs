@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.List;
 
@@ -23,8 +19,8 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
         {
             this.Data.AddInt(0);
             this.Data.AddByte(0);
-            this.Data.AddInt(0);
-            this.Data.AddHexa("04 36 9F BE");
+            this.Data.AddLong(this.Enemy.Player.UserId); //Battleid
+
             this.Data.AddBool(this.Enemy.Player.AllianceLowId > 0);
             if (this.Enemy.Player.AllianceLowId > 0)
             {

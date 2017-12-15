@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Commands;
 using CR.Servers.CoC.Packets.Commands.Client;
 using CR.Servers.CoC.Packets.Commands.Client.Battle;
 using CR.Servers.CoC.Packets.Commands.Server;
@@ -57,8 +56,10 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));
             Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
+            Factory.Messages.Add(14334, typeof(Claim_Alliance_Gift));
             Factory.Messages.Add(14510, typeof(Execute_Battle_Command));
             Factory.Messages.Add(14715, typeof(Send_Global_Chat));
+            Factory.Messages.Add(15110, typeof(Watch_1vs1_Live));
         }
 
         private static void LoadCommands()
@@ -122,7 +123,7 @@ namespace CR.Servers.CoC.Packets
         }
 
 
-        internal static Message CreateMessage(short Type, Device Device, Reader Reader)
+        internal static Message CreateMessage(short Type, Device Device, Reader Reader) 
         {
             if (Factory.Messages.TryGetValue(Type, out Type MType))
             {
@@ -145,7 +146,6 @@ namespace CR.Servers.CoC.Packets
 
             return null;
         }
-
 
         internal static Debug CreateDebug(string Message, Device Device, out string CommandName)
         {

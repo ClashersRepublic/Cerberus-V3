@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Packets
 {
-    internal class Command
+    public class Command
     {
         internal int ExecuteSubTick = -1;
         internal virtual int Type => 0;

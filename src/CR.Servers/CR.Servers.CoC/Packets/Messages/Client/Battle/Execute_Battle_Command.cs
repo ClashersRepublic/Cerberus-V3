@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
+using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
@@ -111,9 +112,15 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
             }
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
+
+            if (this.Device.State == State.IN_1VS1_BATTLE)
+            {
+                
+                this.Device.GameMode.Level.BattleManager.Tick();
+            }
 #if Extra
-            Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
-            Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
+            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
 #endif
         }
     }

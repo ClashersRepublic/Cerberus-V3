@@ -1,5 +1,4 @@
-﻿using System;
-using CR.Servers.CoC.Logic;
+﻿using CR.Servers.CoC.Logic;
 
 namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {

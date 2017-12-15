@@ -153,6 +153,21 @@ namespace CR.Servers.CoC.Logic
             return Json;
         }
 
+        internal JObject BattleV2()
+        {
+            var Json = new JObject
+            {
+                { "exp_ver", 1 } ,
+                { "direct2", true }            
+            };
+
+
+            this.GameObjectManager.SaveV2(Json);
+            this.Player.Battle(Json);
+
+            return Json;
+        }
+
         internal void Load(JObject Json)
         {
             this.GameObjectManager.Load(Json);

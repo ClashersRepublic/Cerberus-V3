@@ -17,7 +17,7 @@ using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Logic
 {
-    internal class Device : IDisposable
+    public class Device : IDisposable
     {
         internal Chat.Chat Chat;
         internal Token Token;
@@ -25,6 +25,9 @@ namespace CR.Servers.CoC.Logic
         internal DeviceInfo Info;
         internal GameMode GameMode;
         internal DateTime LastGlobalChatEntry;
+        internal DateTime LastKeepAlive;
+        internal DateTime LastMessage;
+        internal DateTime Session;
         internal readonly Keep_Alive_Ok KeepAliveOk;
 
         internal Account Account;
@@ -66,12 +69,15 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
+        internal long TimeSinceLastKeepAliveMs => (long)DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
+
 
         internal Device(Socket Socket)
         {
             this.Socket = Socket;
             this.GameMode = new GameMode(this);
             this.KeepAliveOk = new Keep_Alive_Ok(this);
+            this.LastKeepAlive = DateTime.UtcNow;
         }
 
         internal Device(Socket Socket, Token Token) : this(Socket)
@@ -133,7 +139,9 @@ namespace CR.Servers.CoC.Logic
 
                                 //Message.Reader = new Reader(Packet);
 
-                                Logging.Info(this.GetType(), "Packet " + ConsolePad.Padding(Message.GetType().Name) + " received from " + this.Socket.RemoteEndPoint + ".");
+                                Logging.Info(this.GetType(),
+                                    "Packet " + ConsolePad.Padding(Message.GetType().Name) + " received from " +
+                                    this.Socket.RemoteEndPoint + ".");
 
                                 try
                                 {
@@ -143,12 +151,12 @@ namespace CR.Servers.CoC.Logic
                                 catch (Exception Exception)
                                 {
                                     Logging.Error(this.GetType(), Exception.GetType().Name + " when handling the following message : ID " + Identifier + ", Length " + Length + ", Version " + Version + ".");
-                                    //Logging.Error(Exception.GetType(), Exception.Message + " [" + (this.Player != null ? this.Player.HighID + ":" + this.Player.LowID : "---") + ']' + Environment.NewLine + Exception.StackTrace);
+                                    Logging.Error(Exception.GetType(), Exception.Message + " [" +  (this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + ":" + this.GameMode.Level.Player.LowID  : "-:-") + ']' + Environment.NewLine + Exception.StackTrace);
                                 }
                             }
                             else
                             {
-                                File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"Unknown Message ({Identifier}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
+                                File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}}}.bin", Packet);
 
                             }
 
@@ -208,12 +216,14 @@ namespace CR.Servers.CoC.Logic
                     if (this.Account.Player != null)
                     {
                         Resources.Accounts.SavePlayer(this.Account.Player);
+                        Resources.BattlesV2.Dequeue(this.GameMode.Level);
                     }
                     if (this.Account.Home != null)
                     {
                         Resources.Accounts.SaveHome(this.Account.Home);
                     }
                 }
+                
 
                 /*foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
                 {

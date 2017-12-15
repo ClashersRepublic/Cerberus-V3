@@ -65,6 +65,8 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal DateTime Created = DateTime.UtcNow;
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
 
+        internal long BattleIdV2;
+
         internal bool Connected => this.Level != null && this.Level.GameMode.Connected;
 
         internal long UserId => (((long)this.HighID << 32) | (uint) this.LowID);
@@ -320,12 +322,14 @@ namespace CR.Servers.CoC.Logic
 
         internal JObject Save()
         {
-            var Json = new JObject();
-            Json.Add("avatar_id_high", this.HighID);
-            Json.Add("avatar_id_low", this.LowID);
-            Json.Add("name", this.Name);
-            Json.Add("alliance_name", this.InAlliance ? this.Alliance.Header.Name : string.Empty);
-            Json.Add("xp_level", this.ExpLevel);
+            var Json = new JObject
+            {
+                {"avatar_id_high", this.HighID},
+                {"avatar_id_low", this.LowID},
+                {"name", this.Name},
+                {"alliance_name", this.InAlliance ? this.Alliance.Header.Name : string.Empty},
+                {"xp_level", this.ExpLevel}
+            };
 
             if (this.InAlliance)
             {

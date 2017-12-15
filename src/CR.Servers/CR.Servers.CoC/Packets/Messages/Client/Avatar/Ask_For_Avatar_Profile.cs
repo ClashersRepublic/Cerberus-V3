@@ -2,7 +2,6 @@
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
@@ -37,7 +36,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
         {
             if (this.AvatarHighId >= 0 && this.AvatarLowId > 0)
             {
-                var Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId).Player;
+                var Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId)?.Player;
                 
                 if (Player?.Level != null)
                 {

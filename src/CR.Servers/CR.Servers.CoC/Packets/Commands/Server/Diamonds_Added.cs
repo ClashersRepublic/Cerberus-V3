@@ -8,7 +8,7 @@ namespace CR.Servers.CoC.Packets.Commands.Server
 {
     internal class Diamonds_Added : ServerCommand
     {
-        internal override int Type => 7;
+        internal override int Type => 7; 
 
         public Diamonds_Added(Device Device, Reader Reader) : base(Device, Reader)
         {

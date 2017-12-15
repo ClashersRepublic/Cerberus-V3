@@ -30,9 +30,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             if (GameObject != null)
             {
-                var Building = GameObject as Building;
-
-                if (Building != null)
+                if (GameObject is Building Building)
                 {
                     BuildingData Data = (BuildingData) Building.Data;
                     ResourceData ResourceData = Data.GearUpResourceData;

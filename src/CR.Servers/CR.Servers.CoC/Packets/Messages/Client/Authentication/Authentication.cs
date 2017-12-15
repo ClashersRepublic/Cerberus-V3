@@ -1,12 +1,8 @@
 ﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Battle.Manager;
 using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
@@ -27,7 +23,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal int Major, Minor, Revision;
 
-        internal LocaleData LocaleData;
+        internal int LocaleId;
 
 
         public Authentication(Device device, Reader reader) : base(device, reader)
@@ -49,43 +45,83 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             this.MasterHash = Reader.ReadString();
 
             this.Reader.ReadString();
-
-
             this.Device.Info.UDID = this.Reader.ReadString();
             this.Device.Info.OpenUDID = this.Reader.ReadString();
             this.Device.Info.DeviceModel = this.Reader.ReadString();
 
-            this.LocaleData = this.Reader.ReadData<LocaleData>();
+            if (!this.Reader.EndOfStream)
+            {
+                this.LocaleId = this.Reader.ReadInt32();
+                this.Device.Info.PreferredLanguage = this.Reader.ReadString();
 
-            this.Device.Info.PreferredLanguage = this.Reader.ReadString();
-            this.Device.Info.ADID = this.Reader.ReadString();
-            this.Device.Info.OSVersion = this.Reader.ReadString();
+                if (!this.Reader.EndOfStream)
+                {
+                    this.Device.Info.ADID = this.Reader.ReadString();
 
-            this.Device.Info.Android = this.Reader.ReadBoolean();
+                    if (!this.Reader.EndOfStream)
+                    {
+                        this.Device.Info.OSVersion = this.Reader.ReadString();
 
-            this.Reader.ReadString();
+                        if (!this.Reader.EndOfStream)
+                        {
+                            this.Device.Info.Android = this.Reader.ReadBoolean();
 
-            this.Device.Info.AndroidID = this.Reader.ReadString();
+                            if (!this.Reader.EndOfStream)
+                            {
+                                this.Reader.ReadString();
+                                this.Device.Info.AndroidID = this.Reader.ReadString();
 
-            this.Reader.ReadString();
+                                if (!this.Reader.EndOfStream)
+                                {
+                                    this.Reader.ReadString();
 
-            this.Device.Info.Advertising = this.Reader.ReadBoolean();
+                                    if (!this.Reader.EndOfStream)
+                                    {
+                                        this.Device.Info.Advertising = this.Reader.ReadBoolean();
+                                        this.Reader.ReadString();
 
-            this.Reader.ReadString();
+                                        if (!this.Reader.EndOfStream)
+                                        {
+                                            this.Device.Seed = this.Reader.ReadUInt32();
+                                            if (!this.Reader.EndOfStream)
+                                            {
+                                                this.Reader.ReadVInt();
+                                                this.Reader.ReadString();
+                                                this.Reader.ReadString();
 
-            this.Device.Seed = this.Reader.ReadUInt32();
+                                                if (!this.Reader.EndOfStream)
+                                                {
+                                                    this.Device.Info.ClientVersion =  this.Reader.ReadString().Split('.');
 
-            this.Reader.ReadByte();
-            this.Reader.ReadString();
-            this.Reader.ReadString();
+                                                    if (!this.Reader.EndOfStream)
+                                                    {
+                                                        this.Reader.ReadString(); 
+                                                        this.Reader.ReadString(); 
 
-            this.Device.Info.ClientVersion = this.Reader.ReadString().Split('.');
+                                                        this.Reader.ReadVInt();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         internal override void Process()
         {
             if (!this.CheckClient())
             {
+                return;
+            }
+
+            if (Resources.Closing)
+            {
+                new Authentication_Failed(Device, LoginFailedReason.UpdateInProgress){Message = "The server is currently exiting and saving data, and you cannot log-in during this time. Please try again in a few minutes." }.Send();
                 return;
             }
 
@@ -190,10 +226,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             this.Device.Account = account;
             this.Device.GameMode.LoadLevel(account.Player.Level);
 
-            if (this.LocaleData != null)
-            {
-                this.Device.Info.Locale = this.LocaleData.GlobalId;
-            }
+            this.Device.Info.Locale = this.LocaleId >= 0 ? this.LocaleId : 2000000;
 
             var Player = account.Player;
 
@@ -216,6 +249,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             {
                 Resources.Chats.Join(this.Device);
             }
+
         }
     }
 }

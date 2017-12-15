@@ -34,7 +34,7 @@ namespace CR.Servers.Extensions.Binary
                 }
 
                 return null;
-            }     
+            }
             return this.ReadBytes(length);
         }
 
@@ -83,12 +83,12 @@ namespace CR.Servers.Extensions.Binary
 
         public override byte ReadByte()
         {
-            return (byte)this.BaseStream.ReadByte();
+            return (byte) this.BaseStream.ReadByte();
         }
 
         public override short ReadInt16()
         {
-            return (short)this.ReadUInt16();
+            return (short) this.ReadUInt16();
         }
 
         public int ReadInt24()
@@ -99,12 +99,12 @@ namespace CR.Servers.Extensions.Binary
 
         public override int ReadInt32()
         {
-            return (int)this.ReadUInt32();
+            return (int) this.ReadUInt32();
         }
 
         public override long ReadInt64()
         {
-            return (long)this.ReadUInt64();
+            return (long) this.ReadUInt64();
         }
 
         public override string ReadString()
@@ -132,7 +132,7 @@ namespace CR.Servers.Extensions.Binary
 
         public uint ReadUInt24()
         {
-            return (uint)this.ReadInt24();
+            return (uint) this.ReadInt24();
         }
 
         public override uint ReadUInt32()
@@ -228,5 +228,71 @@ namespace CR.Servers.Extensions.Binary
             }
             return null;
         }
+
+        public int ReadVInt()
+        {
+            byte Byte = this.ReadByte();
+            int Result;
+
+            if ((Byte & 0x40) != 0)
+            {
+                Result = Byte & 0x3F;
+
+                if ((Byte & 0x80) != 0)
+                {
+                    Result |= ((Byte = this.ReadByte()) & 0x7F) << 6;
+
+                    if ((Byte & 0x80) != 0)
+                    {
+                        Result |= ((Byte = this.ReadByte()) & 0x7F) << 13;
+
+                        if ((Byte & 0x80) != 0)
+                        {
+                            Result |= ((Byte = this.ReadByte()) & 0x7F) << 20;
+
+                            if ((Byte & 0x80) != 0)
+                            {
+                                Result |= ((Byte = this.ReadByte()) & 0x7F) << 27;
+                                return (int) (Result | 0x80000000);
+                            }
+
+                            return (int) (Result | 0xF8000000);
+                        }
+
+                        return (int) (Result | 0xFFF00000);
+                    }
+
+                    return (int) (Result | 0xFFFFE000);
+                }
+
+                return (int) (Result | 0xFFFFFFC0);
+            }
+            else
+            {
+                Result = Byte & 0x3F;
+
+                if ((Byte & 0x80) != 0)
+                {
+                    Result |= ((Byte = this.ReadByte()) & 0x7F) << 6;
+
+                    if ((Byte & 0x80) != 0)
+                    {
+                        Result |= ((Byte = this.ReadByte()) & 0x7F) << 13;
+
+                        if ((Byte & 0x80) != 0)
+                        {
+                            Result |= ((Byte = this.ReadByte()) & 0x7F) << 20;
+
+                            if ((Byte & 0x80) != 0)
+                            {
+                                Result |= ((Byte = this.ReadByte()) & 0x7F) << 27;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Result;
+        }
     }
-    }
+}

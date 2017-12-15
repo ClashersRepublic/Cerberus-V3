@@ -9,6 +9,7 @@ using CR.Servers.CoC.Logic.Chat;
 using CR.Servers.CoC.Logic.Slots;
 using CR.Servers.CoC.Packets;
 using CR.Servers.Core;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Core
@@ -22,7 +23,11 @@ namespace CR.Servers.CoC.Core
         internal static Gateway Gateway;
         internal static Regex Regex;
         internal static Regex Name;
+        internal static BattlesV2 BattlesV2;
+        internal static Timers Timers;
+        internal static Test Test;
         internal static bool Started;
+        internal static bool Closing;
 
         internal static void Initialize()
         {
@@ -40,18 +45,25 @@ namespace CR.Servers.CoC.Core
             }
 
             Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
-            Resources.Name = new Regex("^[a-zA-Z0-9]*$");
+            Resources.Name = new Regex("^[a-zA-Z0-9- ]*$");
+
 
             Resources.Accounts = new Accounts();
             Resources.Clans = new Clans();
             Resources.Chats = new Chats();
+            Resources.BattlesV2 = new BattlesV2();
             Resources.Random = new XorShift();
             Resources.Gateway = new Gateway();
+            Resources.Timers = new Timers();
             Resources.Started = true;
 
             Parser.Initialize();
             EventsHandler.Initialize();
 
+#if DEBUG
+            Console.WriteLine("We loaded " + Factory.Messages.Count + " messages, " + Factory.Commands.Count + " commands, and " + Factory.Debugs.Count + " debug commands.\n");
+            Resources.Test = new Test();
+#endif
         }
 
     }

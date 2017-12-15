@@ -1,7 +1,12 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
+﻿using System.Collections.Generic;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Battle.Slots;
 using CR.Servers.Extensions.Binary;
+using CR.Servers.Extensions.List;
+using CR.Servers.Logic.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Packets.Commands.Client.Battle
@@ -27,6 +32,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             base.Decode();
         }
 
+        internal override void Encode(List<byte> Data)
+        {
+            Data.AddInt(this.X);
+            Data.AddInt(this.Y);
+            Data.AddInt(this.Character.GlobalId);
+            base.Encode(Data);
+        }
 
         internal override void Execute()
         {
@@ -45,6 +57,22 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
                             Unit.Count--;
                         }
+                    }
+                }
+                else
+                {
+                    if (this.Device.State == State.IN_1VS1_BATTLE)
+                    {
+                        var Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2,  Level.Player.UserId);
+
+                        int Index = Battle.ReplayInfo.Units.FindIndex(T => T[0] == this.Character.GlobalId);
+                        if (Index > -1)
+                            Battle.ReplayInfo.Units[Index][1]++;
+                        else
+                            Battle.ReplayInfo.Units.Add(new[] { this.Character.GlobalId, 1 });
+
+                        Battle.Add(this);
+                        Level.BattleManager.BattleCommandManager.StoreCommands(this);
                     }
                 }
             }

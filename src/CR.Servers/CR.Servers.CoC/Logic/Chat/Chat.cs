@@ -47,9 +47,8 @@ namespace CR.Servers.CoC.Logic.Chat
             {
                 if (!string.IsNullOrEmpty(Message))
                 {
-                    foreach (Device Device2 in Devices.SkipWhile(T=> T == Device))
+                    foreach (Device Device2 in Devices)
                     {
-                        Console.WriteLine(Device2 == Device);
                         if (Device2.Connected)
                         {
                             new Global_Chat_Line(Device2, Device.GameMode.Level.Player){Message = Message}.Send();

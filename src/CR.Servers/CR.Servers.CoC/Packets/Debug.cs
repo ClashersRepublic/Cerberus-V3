@@ -1,6 +1,7 @@
 ﻿using System;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Clan;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Logic.Enums;
 
@@ -9,6 +10,8 @@ namespace CR.Servers.CoC.Packets
     internal class Debug : IDisposable
     {
         internal Device Device;
+
+        internal Alliance Alliance;
 
         internal string[] Parameters;
 

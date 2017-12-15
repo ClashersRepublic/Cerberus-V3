@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CR.Servers.CoC.Packets;
 
 namespace CR.Servers.CoC.Logic.Battle.Manager
@@ -21,14 +22,15 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
             this.BattleManager = BattleManager;
         }
 
-        internal void StoreCommands(List<Command> Commands)
+        internal void StoreCommands(Command Command)
         {
-            this.BufferedCommands.AddRange(Commands);
+            this.BufferedCommands.Add(Command);
         }
 
         internal void Tick()
         {
-            this.Commands.AddRange(this.BufferedCommands);
+            this.Commands.Clear();
+            this.Commands.AddRange(this.BufferedCommands.Take(512));
             this.BufferedCommands.Clear();
         }
     }

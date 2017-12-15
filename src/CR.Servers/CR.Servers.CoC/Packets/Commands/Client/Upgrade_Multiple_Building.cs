@@ -68,8 +68,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             else
                                 Logging.Error(this.GetType(), "Unable to upgrade the building. The resource data is null.");
                         }
-                        else
-                            Logging.Error(this.GetType(), "Unable to upgrade the building. UpgradeAvailable returened false.");
+                        //else
+                            //Logging.Error(this.GetType(), "Unable to upgrade the building. UpgradeAvailable returened false.");
                     }
                     else
                     {

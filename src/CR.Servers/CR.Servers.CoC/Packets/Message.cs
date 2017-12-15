@@ -83,7 +83,7 @@ namespace CR.Servers.CoC.Packets
             this.Length = this.Data.Count;
         }
 
-        internal void SendChatMessage(string message)
+        internal virtual void SendChatMessage(string message)
         {
             new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player)
             {
@@ -113,7 +113,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin",this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) -  - UserId ({(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + "-" + this.Device.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

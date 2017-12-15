@@ -8,8 +8,7 @@ namespace CR.Servers.CoC.Logic
 {
     internal class LogicDebug
     {
-
-        [Conditional("DEBUG")]
+        [Conditional("DEBUG")] 
         internal static void Execute(string Args, Player[] Players)
         {
             switch (Args)

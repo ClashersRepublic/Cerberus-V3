@@ -4,7 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 
 namespace CR.Servers.CoC.Core.Events
 {
@@ -26,18 +28,19 @@ namespace CR.Servers.CoC.Core.Events
         {
             Console.WriteLine("- SHUTDOWN -");
 
-            Logging.Info(typeof(EventHandler), "Server is shutting down, warning players about the maintenance...");
-
-            /*Task Message = Task.Run(() =>
+            Logging.Info(typeof(EventHandler), "Server is shutting down, disconnecting player...");
+            Resources.Closing = true;
+            Task.Run(() =>
             {
                 foreach (Player Player in Resources.Accounts.Players.Values.ToArray())
                 {
                     if (Player.Connected)
                     {
-                       // new Maintenance_Inbound_Message(Player.Level.GameMode.Device).Send();
+                       new Disconnected(Player.Level.GameMode.Device).Send();
                     }
                 }
-            });*/
+            });
+
 
             Task.WaitAll(Resources.Accounts.Saves());
             Task.WaitAll(Resources.Clans.Saves());

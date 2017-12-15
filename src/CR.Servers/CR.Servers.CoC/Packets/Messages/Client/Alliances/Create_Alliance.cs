@@ -32,7 +32,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
         internal int WarFrequency;
 
         internal Hiring AllianceType;
-        internal RegionData Origin;
+        internal int Origin;
 
         internal bool PublicWarLog;
         internal bool AmicalWar;
@@ -48,7 +48,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
             this.RequiredDuelScore = this.Reader.ReadInt32();
             this.WarFrequency = this.Reader.ReadInt32();
 
-            this.Origin = this.Reader.ReadData<RegionData>();
+            this.Origin = this.Reader.ReadInt32();
 
             this.PublicWarLog = this.Reader.ReadBooleanV2();
             this.AmicalWar = this.Reader.ReadBooleanV2();
@@ -92,7 +92,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     }
                                     else
                                     {
-                                        new Alliance_Create_Fail(this.Device){Error = AllianceErrorReason.InvalidDescription}.Send();
+                                        new Alliance_Create_Fail(this.Device)
+                                        {
+                                            Error = AllianceErrorReason.InvalidDescription
+                                        }.Send();
                                         return;
                                     }
 
@@ -106,24 +109,23 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                         {
                                             //Z`if (Foreground != null)
                                             {
-                                                Alliance Alliance = new Alliance();
-
-                                                Alliance.Header.Name = this.Name;
-                                                Alliance.Description = this.Description;
-                                                Alliance.Header.Locale = this.Device.Info.Locale;
-                                                Alliance.Header.Badge = this.AllianceBadge;
-                                                Alliance.Header.Type = this.AllianceType;
-                                                Alliance.Header.WarFrequency = this.WarFrequency;
-
-                                                if (this.Origin != null)
+                                                var Alliance = new Alliance
                                                 {
-                                                    Alliance.Header.Origin = this.Origin.GlobalId;
-                                                }
-
-                                                Alliance.Header.PublicWarLog = this.PublicWarLog;
-                                                Alliance.Header.RequiredScore = this.RequiredScore;
-                                                Alliance.Header.RequiredDuelScore = this.RequiredDuelScore;
-                                                Alliance.Header.AmicalWar = this.AmicalWar;
+                                                    Header =
+                                                    {
+                                                        Name = this.Name,
+                                                        Locale = this.Device.Info.Locale,
+                                                        Badge = this.AllianceBadge,
+                                                        Type = this.AllianceType,
+                                                        WarFrequency = this.WarFrequency,
+                                                        PublicWarLog = this.PublicWarLog,
+                                                        RequiredScore = this.RequiredScore,
+                                                        RequiredDuelScore = this.RequiredDuelScore,
+                                                        AmicalWar = this.AmicalWar,
+                                                        Origin = this.Origin,
+                                                    },
+                                                    Description = this.Description
+                                                };
 
                                                 if (Alliance.Members.Join(Level.Player, out Member Member))
                                                 {
@@ -134,7 +136,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                                     Level.Player.AllianceHighId = Alliance.HighId;
                                                     Level.Player.AllianceLowId = Alliance.LowId;
 
-                                                    Level.Player.Resources.Remove(Globals.AllianceCreateResourceData, Globals.AllianceCreateCost);
+                                                    Level.Player.Resources.Remove(Globals.AllianceCreateResourceData,
+                                                        Globals.AllianceCreateCost);
 
                                                     new Alliance_Full_Entry(this.Device) {Alliance = Alliance}.Send();
                                                     this.Device.GameMode.CommandManager.AddCommand(
@@ -153,7 +156,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     }
                                 }
                                 else
-                                    new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.NameTooShort }.Send();
+                                    new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.NameTooShort}
+                                        .Send();
                             }
                             else
                                 new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName }.Send();

@@ -38,6 +38,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                         if (this.Message.Length > 0)
                         {
+
                             Level.Player.Alliance.Streams.AddEntry(
                                 new ChatStreamEntry(this.Device.GameMode.Level.Player.AllianceMember)
                                 {

@@ -31,36 +31,42 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                 {
                     if (!string.IsNullOrEmpty(this.Message))
                     {
-                        if (this.Message.StartsWith(Factory.Delimiter.ToString()))
-                        {
-                            var Debug = Factory.CreateDebug(this.Message, this.Device, out string CommandName);
-
-                            new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player) { Message = this.Message}.Send();
-
-                            if (Debug != null)
-                            {
-                                if (Device.GameMode.Level.Player.Rank >= Debug.RequiredRank)
-                                {
-                                    Debug.Process();
-                                }
-                                else
-                                {
-                                    Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
-                                    return;
-                                }
-                            }
-                            else
-                                this.SendChatMessage($"Unknown command '{CommandName}'. Type '/help' for more information.");
-
-                            return;
-                        }
 
                         if (this.Message.Length <= 128)
                         {
                             this.Message = Resources.Regex.Replace(this.Message, " ");
 
+                            if (this.Message.StartsWith(" "))
+                            {
+                                this.Message = this.Message.Remove(0, 1);
+                            }
+
                             if (this.Message.Length > 0)
                             {
+                                if (this.Message.StartsWith(Factory.Delimiter.ToString()))
+                                {
+                                    var Debug = Factory.CreateDebug(this.Message, this.Device, out string CommandName);
+
+                                    new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player) { Message = this.Message }.Send();
+
+                                    if (Debug != null)
+                                    {
+                                        if (Device.GameMode.Level.Player.Rank >= Debug.RequiredRank)
+                                        {
+                                            Debug.Process();
+                                        }
+                                        else
+                                        {
+                                            Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
+                                            return;
+                                        }
+                                    }
+                                    else
+                                        this.SendChatMessage($"Unknown command '{CommandName}'. Type '/help' for more information.");
+
+                                    return;
+                                }
+
                                 this.Device.Chat.AddEntry(this.Device, this.Message);
                             }
                         }
