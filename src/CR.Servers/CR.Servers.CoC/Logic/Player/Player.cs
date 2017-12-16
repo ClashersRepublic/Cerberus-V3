@@ -79,7 +79,7 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-    internal long UserId => (((long)this.HighID << 32) | (uint) this.LowID);
+        internal long UserId => (((long) this.HighID << 32) | (uint) this.LowID);
 
         internal bool Banned => this.BanTime > DateTime.UtcNow;
 
@@ -202,7 +202,7 @@ namespace CR.Servers.CoC.Logic
                 _Packet.AddBool(false); //War Id or league id?
             }
             else
-                _Packet.AddBool(false); 
+                _Packet.AddBool(false);
 
             _Packet.AddInt(0); //Legendary_Trophies
             _Packet.AddInt(0);
@@ -300,9 +300,9 @@ namespace CR.Servers.CoC.Logic
 
             this.AllianceUnits.Encode(_Packet);
 
-             _Packet.AddInt(Tutorials.Count);
-             foreach (var Tutorial in Tutorials)
-                 _Packet.AddInt(Tutorial);
+            _Packet.AddInt(Tutorials.Count);
+            foreach (var Tutorial in Tutorials)
+                _Packet.AddInt(Tutorial);
 
             _Packet.AddInt(0); //Achievements
             _Packet.AddInt(0); //AchievementProgress

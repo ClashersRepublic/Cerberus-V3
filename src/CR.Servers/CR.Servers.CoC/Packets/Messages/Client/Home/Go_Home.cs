@@ -76,6 +76,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
                     new V2_Battle_Result(this.Device, battle).Send();
 
+                    this.Device.GameMode.Level.BattleManager.Stop();
 
                     this.Device.GameMode.Level.Player.BattleIdV2 = 0;
                     this.Device.State = State.LOGGED;

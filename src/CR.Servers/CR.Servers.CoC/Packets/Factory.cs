@@ -51,6 +51,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));
             Factory.Messages.Add(14303, typeof(Ask_For_Joinable_Alliance_List));
             Factory.Messages.Add(14305, typeof(Join_Alliance));
+            Factory.Messages.Add(14306, typeof(Change_Alliance_Member_Role));
             Factory.Messages.Add(14308, typeof(Leave_Alliance));
             Factory.Messages.Add(14315, typeof(Chat_To_Alliance));
             Factory.Messages.Add(14316, typeof(Change_Alliance_Settings));

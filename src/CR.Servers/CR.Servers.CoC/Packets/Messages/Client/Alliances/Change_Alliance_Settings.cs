@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Clan;
 using CR.Servers.CoC.Logic.Enums;

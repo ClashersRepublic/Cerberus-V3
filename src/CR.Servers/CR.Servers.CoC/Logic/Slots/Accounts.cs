@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Database;
 using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Logic.Enums;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -20,7 +17,7 @@ namespace CR.Servers.CoC.Logic.Slots
         internal ConcurrentDictionary<long, Player> Players;
         internal ConcurrentDictionary<long, Home> Homes;
 
-        internal readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             TypeNameHandling            = TypeNameHandling.Auto,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,
@@ -32,7 +29,7 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal Accounts()
         {
-            this.Seed = /*Constants.Database == DBMS.Mongo ? Mongo.PlayerSeed : MySQL_Backup.GetSeed("Players")*/ Mongo.PlayerSeed;
+            this.Seed = Mongo.PlayerSeed;
 
             this.Homes = new ConcurrentDictionary<long, Home>();
             this.Players = new ConcurrentDictionary<long, Player>();
@@ -78,7 +75,6 @@ namespace CR.Servers.CoC.Logic.Slots
             };
 
             var Home = new Home(Constants.ServerId, LowID) {LastSave = LevelFile.StartingHome};
-
 
 
             Mongo.Players.InsertOneAsync(new Core.Database.Models.Mongo.Players

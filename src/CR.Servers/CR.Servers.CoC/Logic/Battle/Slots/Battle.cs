@@ -73,6 +73,7 @@ namespace CR.Servers.CoC.Logic.Battle
         {
             if (this.PreparationTime > 0)
                 PreparationSkip = (int)System.Math.Round(this.PreparationTime);
+
             this.Commands.Add(Command); 
         }
 

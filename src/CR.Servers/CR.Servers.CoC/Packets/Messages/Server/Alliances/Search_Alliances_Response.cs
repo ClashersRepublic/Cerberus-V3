@@ -25,6 +25,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
             {
                 Alliance.Header.Encode(this.Data);
             }
+
             this.Data.AddInt(0); //Another list but no one know what is it for
         }
     }
