@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿ using System.Linq;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Extensions;
 using Magic.ClashOfClans.Extensions.Binary;

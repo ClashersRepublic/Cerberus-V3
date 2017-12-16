@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Process()
         {
-            string Nonce = Rjindael.ScrambleNonce(Device.Seed, this.Nonce);
+            string Nonce = Rjindael.ScrambleNonce(this.Device.Seed, this.Nonce);
 
             ((RC4Encrypter)this.Device.ReceiveDecrypter).Init(Factory.RC4Key + Nonce);
             ((RC4Encrypter)this.Device.SendEncrypter).Init(Factory.RC4Key + Nonce);

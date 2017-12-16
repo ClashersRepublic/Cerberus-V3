@@ -52,10 +52,14 @@
         /// <summary>
         /// Returns the unsigned angle in degrees between from and to.
         /// </summary>
-        internal int GetAngle()
+        internal double GetAngle(Vector2 Vector2)
         {
-            // TODO Implement LogicVector2::getAngle.
-            return 0;
+            // TODO : Verify Vector2::GetAngle(Vector2).
+
+            double Sinus      = this.X * Vector2.Y - Vector2.X * this.Y;
+            double Cosinus    = this.X * Vector2.X + this.Y * Vector2.Y;
+
+            return System.Math.Atan2(Sinus, Cosinus) * (180 / System.Math.PI);
         }
 
         /// <summary>

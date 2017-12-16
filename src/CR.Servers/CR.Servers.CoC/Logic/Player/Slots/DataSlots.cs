@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
@@ -105,7 +106,7 @@ namespace CR.Servers.CoC.Logic
 
                 if (Current.Count < 0)
                 {
-                    //Logging.Info(this.GetType(), "Remove() - Count is inferior at 0. This should never happen, check count before remove.");
+                    Logging.Info(this.GetType(), "Remove() - Count is inferior at 0. This should never happen, check count before remove.");
                     Current.Count = 0;
                 }
             }

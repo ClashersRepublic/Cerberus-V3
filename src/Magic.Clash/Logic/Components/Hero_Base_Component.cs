@@ -36,6 +36,7 @@ namespace Magic.ClashOfClans.Logic.Components
             {
                 var ca = Parent.Level.Avatar;
                 var currentLevel = ca.GetUnitUpgradeLevel(HeroData);
+
                 var rd = HeroData.GetUpgradeResource();
                 var cost = HeroData.GetUpgradeCost(currentLevel);
                 var multiplier = (CSV.Tables.Get(Gamefile.Globals).GetData("HERO_UPGRADE_CANCEL_MULTIPLIER") as Globals)

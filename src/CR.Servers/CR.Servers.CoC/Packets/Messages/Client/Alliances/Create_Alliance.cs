@@ -156,8 +156,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     }
                                 }
                                 else
-                                    new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.NameTooShort}
-                                        .Send();
+                                    new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.NameTooShort}.Send();
                             }
                             else
                                 new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName }.Send();

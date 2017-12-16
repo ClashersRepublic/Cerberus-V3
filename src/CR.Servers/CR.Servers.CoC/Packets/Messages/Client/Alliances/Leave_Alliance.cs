@@ -59,6 +59,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                             while (NewLeader == Member)
                                             {
+                                                Logging.Error(this.GetType(), "Warning, this should never happen! Member should be previusly removed in Quit() function however Newleader is equal to the member!");
                                                 NewLeader = Members[Resources.Random.Next(0, Members.Count)];
                                             }
                                         }
@@ -78,13 +79,23 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                             {
                                 //Logging.Info(this.GetType(), "The new leader name is " + NewLeader.Player.Name + ".");
 
-                                if (NewLeader.Role == Role.Leader)
+
+                                if (NewLeader.Role == Role.Member)
+                                {
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted){SenderRole = Role.Elder});
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted){SenderRole = Role.CoLeader});
+                                }
+                                else if (NewLeader.Role == Role.Elder)
+                                {
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted) { SenderRole = Role.CoLeader });
+                                }
+                                else if (NewLeader.Role == Role.Leader)
                                 {
                                     Logging.Error(this.GetType(), "Error when leaving the clan, NewChief was a leader.");
                                 }
 
-                                Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted));
                                 NewLeader.Role = Role.Leader;
+                                Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted));
 
                                 if (NewLeader.Player.Connected)
                                 {
@@ -108,7 +119,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     this.Device.GameMode.CommandManager.AddCommand(new Leaved_Alliance(this.Device) { AllianceId = Level.Player.AllianceId });
                 }
                 else
-                    Logging.Error(this.GetType(), "Error when leaving the clan. Quit returned false");
+                    Logging.Error(this.GetType(), "Error when leaving the clan. Quit() returned false");
             }
             else
                 Logging.Error(this.GetType(), "Error when leaving the clan. InAlliance returned false");

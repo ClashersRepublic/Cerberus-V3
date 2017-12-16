@@ -48,13 +48,14 @@ namespace CR.Servers.CoC.Logic
             base.Load(Json);
 
             JsonHelper.GetJsonString(Json, "message", out this.Message);
+
             if (JsonHelper.GetJsonNumber(Json, "alliance_high_id", out this.AllianceHighId) && JsonHelper.GetJsonNumber(Json, "alliance_low_id", out this.AllianceLowId))
             {
                 this.Alliance = Resources.Clans.Get(this.AllianceHighId, this.AllianceLowId);
             }
             else
             {
-                Logging.Error(this.GetType(), $"Unable to load Alliance for ClanMailEntry. UserID {this.SenderHighId - this.SenderLowId} with EntryId {this.HighId - this.LowId} ");
+                Logging.Error(this.GetType(), $"Unable to load Alliance for ClanMailEntry. UserID {this.SenderHighId} - {this.SenderLowId} with EntryId {this.HighId} - {this.LowId} ");
             }
         }
 

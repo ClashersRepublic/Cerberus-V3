@@ -67,7 +67,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                             });
                                     }
 
-                                    Level.Player.Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer,
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer,
                                         this.Role.Superior(CurrentRole)
                                             ? AllianceEvent.Promoted
                                             : AllianceEvent.Demoted));

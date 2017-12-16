@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
+﻿using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;

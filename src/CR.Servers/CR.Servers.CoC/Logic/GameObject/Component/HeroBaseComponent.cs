@@ -19,7 +19,7 @@ namespace CR.Servers.CoC.Logic
 
         internal Timer UpgradeTimer;
         internal HeroData HeroData;
-
+        
         internal int RemainingUpgradeTime => this.UpgradeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) ?? 0;
         internal int UpgradeLevel => this.Parent.Level.Player.GetHeroUpgradeLevel(HeroData);
         internal int VillageType => this.HeroData.VillageType;
@@ -87,6 +87,39 @@ namespace CR.Servers.CoC.Logic
                         this.FinishUpgrading();
                     }
                 }
+            }
+        }
+
+        internal void CancelUpgrade()
+        {
+            Player Player = this.Parent.Level.Player;
+
+            if (Player != null)
+            {
+                if (this.Upgrading)
+                {
+                    int CurrentUpgrade = Player.GetHeroUpgradeLevel(this.HeroData);
+
+                    var resourceCount = (int)((this.HeroData.UpgradeCost[CurrentUpgrade] * Globals.HeroUpgradeCancelMultiplier * (long)1374389535) >> 32);
+                    resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
+
+                    Logging.Info(this.GetType(), $"Hero cancel cost {resourceCount}");
+
+                    Player.Resources.Plus(this.HeroData.GlobalId, resourceCount);
+
+                    if (this.VillageType == 0)
+                    {
+                        this.Parent.Level.WorkerManager.AllocateWorker(this.Parent);
+                    }
+                    else
+                    {
+                        this.Parent.Level.WorkerManagerV2.AllocateWorker(this.Parent);
+                    }
+
+                    this.UpgradeTimer = null;
+                }
+                else 
+                    Logging.Error(this.GetType(), "Tried to cancel hero upgrade but UpgradeOnGoing returned false");
             }
         }
 

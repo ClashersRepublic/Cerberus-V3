@@ -59,9 +59,9 @@ namespace CR.Servers.CoC.Logic.Clan
 
         internal void IncrementTotalConnected()
         {
-            if (this.Connected == 50)
+            if (this.Connected > this.Header.NumberOfMembers)
             {
-                Logging.Error(this.GetType(), "Tried to increase online alliance members beyond 50.");
+                Logging.Error(this.GetType(), "Tried to increase online alliance members beyond alliance total member.");
             }
             else
             {
@@ -69,14 +69,15 @@ namespace CR.Servers.CoC.Logic.Clan
 
                 foreach (Member Member in this.Members.Slots.Values.ToList())
                 {
-                    if (Member.Player.Connected)
-                    {
-                        Player Player = Member.Player;
+                    Player Player = Member.Player;
 
-                        if (Player != null && Member.Player.Connected)
+                    if (Player != null && Player.Connected)
+                    {
+                        new Alliance_Online_Member(Player.Level.GameMode.Device)
                         {
-                            new Alliance_Online_Member(Player.Level.GameMode.Device){Connected = Connected, TotalMember = this.Header.NumberOfMembers}.Send();
-                        }
+                            Connected = Connected,
+                            TotalMember = this.Header.NumberOfMembers
+                        }.Send();
                     }
                 }
             }
@@ -94,14 +95,15 @@ namespace CR.Servers.CoC.Logic.Clan
 
                 foreach (Member Member in this.Members.Slots.Values.ToList())
                 {
-                    if (Member.Player.Connected)
-                    {
-                        Player Player = Member.Player;
+                    Player Player = Member.Player;
 
-                        if (Player != null && Member.Player.Connected)
+                    if (Player != null && Player.Connected)
+                    {
+                        new Alliance_Online_Member(Player.Level.GameMode.Device)
                         {
-                            new Alliance_Online_Member(Player.Level.GameMode.Device) { Connected = Connected, TotalMember = this.Header.NumberOfMembers }.Send();
-                        }
+                            Connected = Connected,
+                            TotalMember = this.Header.NumberOfMembers
+                        }.Send();
                     }
                 }
             }

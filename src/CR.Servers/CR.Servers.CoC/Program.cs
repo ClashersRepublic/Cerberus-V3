@@ -2,19 +2,11 @@
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Battle;
-using CR.Servers.CoC.Packets.Commands.Client.Battle;
+using CR.Servers.CoC.Logic;
 using CR.Servers.Core.Consoles;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-
 
 namespace CR.Servers.CoC
 {
@@ -22,7 +14,7 @@ namespace CR.Servers.CoC
     {
         private const int Width = 140;
         private const int Height = 30;
-        internal static int i;
+
         public static IConfigurationRoot Configuration { get; set; }
 
         private static void Main()
