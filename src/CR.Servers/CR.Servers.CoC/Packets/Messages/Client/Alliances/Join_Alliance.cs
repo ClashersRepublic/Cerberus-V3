@@ -51,6 +51,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     new Alliance_Full_Entry(this.Device) {Alliance = Alliance}.Send();
                     new Alliance_Stream(this.Device) {Alliance = Alliance}.Send();
 
+                    Alliance.IncrementTotalConnected();
                     Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Joined));
 
                     this.Device.GameMode.CommandManager.AddCommand(

@@ -86,23 +86,27 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             foreach (var Member in Members)
             {
                 var Player = Member.Player;
-
                 Packet.AddLong(Player.UserId);
                 Packet.AddString(Player.Name);
                 Packet.AddInt((int) Member.Role);
+
                 Packet.AddInt(Player.ExpLevel);
                 Packet.AddInt(Player.League);
                 Packet.AddInt(Player.Score);
                 Packet.AddInt(Player.DuelScore);
+
                 Packet.AddInt(Member.TroopSended);
                 Packet.AddInt(Member.TroopReceived);
+
                 Packet.AddInt(i++);
                 Packet.AddInt(0);
                 Packet.AddInt(i);
                 Packet.AddInt(0);
-                Packet.AddInt(Member.New);
+
+                Packet.AddInt(Member.TimeSinceJoined);
                 Packet.AddInt(0); //War Cooldown
                 Packet.AddInt(Player.ClanWarPreference);
+
                 Packet.AddByte(1);
                 Packet.AddLong(Player.UserId);
             }

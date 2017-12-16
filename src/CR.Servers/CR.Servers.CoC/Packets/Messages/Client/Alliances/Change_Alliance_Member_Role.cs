@@ -39,7 +39,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                 {
                     var Alliance = Level.Player.Alliance;
                     var Executer = Alliance.Members.Get(Level.Player.UserId);
-                    var TargetMember = Alliance.Members.Get(Level.Player.UserId);
+                    var TargetMember = Alliance.Members.Get(Target.UserId);
 
                     if (Executer != null)
                     {
@@ -52,7 +52,31 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                             {
                                 if (this.Role == Role.Leader)
                                 {
+                                    Executer.Role = Role.CoLeader;
+                                    TargetMember.Role = Role.Leader;
 
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(TargetMember, Executer, AllianceEvent.Promoted));
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer, AllianceEvent.Demoted));
+
+                                    if (this.Device.Connected)
+                                    {
+                                        this.Device.GameMode.CommandManager.AddCommand(
+                                            new Changed_Alliance_Role(this.Device)
+                                            {
+                                                AllianceId = Level.Player.AllianceId,
+                                                AllianceRole = Role.CoLeader
+                                            });
+                                    }
+
+                                    if (Target.Connected)
+                                    {
+                                        Target.Level.GameMode.CommandManager.AddCommand(
+                                            new Changed_Alliance_Role(Target.Level.GameMode.Device)
+                                            {
+                                                AllianceId = Level.Player.AllianceId,
+                                                AllianceRole = Role.Leader
+                                            });
+                                    }
                                 }
                                 else
                                 {
@@ -67,8 +91,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                             });
                                     }
 
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer,
-                                        this.Role.Superior(CurrentRole)
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(TargetMember, Executer,
+                                        CurrentRole.Superior(this.Role)
                                             ? AllianceEvent.Promoted
                                             : AllianceEvent.Demoted));
                                 }

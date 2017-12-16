@@ -35,6 +35,7 @@ namespace CR.Servers.CoC.Logic.Clan.Items
 
         internal long PlayerId => (long) this.HighId << 32 | (uint) this.LowId;
         internal int New => Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
+        internal int TimeSinceJoined => (int)DateTime.UtcNow.Subtract(this.Joined).TotalSeconds;
 
         internal Player Player
         {

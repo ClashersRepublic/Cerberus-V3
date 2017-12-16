@@ -107,8 +107,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                         });
                                 }
 
-                                Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Demoted));
                                 Member.Role = Role.CoLeader;
+                                Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Demoted));
+
                             }
                             else
                                 Logging.Error(this.GetType(), "Error when leaving the clan. New leader is null");

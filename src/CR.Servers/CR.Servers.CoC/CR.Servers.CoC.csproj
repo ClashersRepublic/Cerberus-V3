@@ -338,6 +338,7 @@
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\Send_Global_Chat.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Online_Member.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Member_State.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Data.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Header.cs" />
     <Compile Include="Packets\Messages\Server\Battle\V2_Battle_Result.cs" />

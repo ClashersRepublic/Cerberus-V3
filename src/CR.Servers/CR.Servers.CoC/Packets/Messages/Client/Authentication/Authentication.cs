@@ -242,6 +242,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             {
                 new Alliance_Full_Entry(this.Device) {Alliance = Player.Alliance}.Send();
                 new Alliance_Stream(this.Device) {Alliance = Player.Alliance}.Send();
+                new Alliance_Member_State(this.Device).Send();
                 this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);
                 Player.Alliance.IncrementTotalConnected();
             }

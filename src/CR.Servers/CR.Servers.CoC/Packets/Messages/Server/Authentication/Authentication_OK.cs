@@ -31,7 +31,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
             this.Data.AddInt(256);
             this.Data.AddInt(0); // Content Version
 
-            this.Data.AddString("dev");
+            this.Data.AddString("stage");
 
             this.Data.AddInt(1); // Total Session
             this.Data.AddInt(0); // Play Time Seconds

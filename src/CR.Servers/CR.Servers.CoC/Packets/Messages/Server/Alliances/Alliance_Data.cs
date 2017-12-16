@@ -1,5 +1,6 @@
 ﻿using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Clan;
+using CR.Servers.Extensions.List;
 
 namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 {

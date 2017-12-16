@@ -2,9 +2,9 @@
 {
     internal enum Role
     {
-        Member,
+        Member = 1,
         Leader = 2,
-        Elder,
-        CoLeader
+        Elder = 3,
+        CoLeader = 4
     }
 }
