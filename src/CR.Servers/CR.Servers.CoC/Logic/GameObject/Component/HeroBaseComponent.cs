@@ -103,8 +103,6 @@ namespace CR.Servers.CoC.Logic
                     var resourceCount = (int)((this.HeroData.UpgradeCost[CurrentUpgrade] * Globals.HeroUpgradeCancelMultiplier * (long)1374389535) >> 32);
                     resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
 
-                    Logging.Info(this.GetType(), $"Hero cancel cost {resourceCount}");
-
                     Player.Resources.Plus(this.HeroData.GlobalId, resourceCount);
 
                     if (this.VillageType == 0)
@@ -176,8 +174,7 @@ namespace CR.Servers.CoC.Logic
 
             if (HeroUpgrade != null)
             {
-                if (JsonHelper.GetJsonNumber(HeroUpgrade, "t", out int UpgradeTime) &&
-                    JsonHelper.GetJsonNumber(HeroUpgrade, "t_end", out int UpgradeTimeEnd))
+                if (JsonHelper.GetJsonNumber(HeroUpgrade, "t", out int UpgradeTime) && JsonHelper.GetJsonNumber(HeroUpgrade, "t_end", out int UpgradeTimeEnd))
                 {
                     if (UpgradeTime > -1)
                     {
@@ -191,6 +188,15 @@ namespace CR.Servers.CoC.Logic
 
                         this.UpgradeTimer = new Timer();
                         this.UpgradeTimer.StartTimer(this.Parent.Level.Player.LastTick, duration);
+
+                        if (this.VillageType == 0)
+                        {
+                            this.Parent.Level.WorkerManager.DeallocateWorker(this.Parent);
+                        }
+                        else
+                        {
+                            this.Parent.Level.WorkerManagerV2.DeallocateWorker(this.Parent);
+                        }
                     }
                 }
 

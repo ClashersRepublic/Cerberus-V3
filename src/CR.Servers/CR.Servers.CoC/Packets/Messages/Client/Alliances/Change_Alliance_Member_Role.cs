@@ -33,9 +33,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
             var Level = this.Device.GameMode.Level;
             var Target = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
 
-            if (Target != null)
+            if (Level.Player.InAlliance)
             {
-                if (Level.Player.InAlliance)
+                if (Target != null)
                 {
                     var Alliance = Level.Player.Alliance;
                     var Executer = Alliance.Members.Get(Level.Player.UserId);
@@ -55,8 +55,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     Executer.Role = Role.CoLeader;
                                     TargetMember.Role = Role.Leader;
 
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(TargetMember, Executer, AllianceEvent.Promoted));
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer, AllianceEvent.Demoted));
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(TargetMember, Executer,
+                                        AllianceEvent.Promoted));
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(Executer, Executer,
+                                        AllianceEvent.Demoted));
 
                                     if (this.Device.Connected)
                                     {

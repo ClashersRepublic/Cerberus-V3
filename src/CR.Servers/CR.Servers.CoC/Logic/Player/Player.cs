@@ -140,8 +140,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void AddExperience(int ExpPoints)
         {
-            var ExperienceData =
-                (ExperienceLevelData) CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.ExpLevel - 1);
+            var ExperienceData = (ExperienceLevelData) CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.ExpLevel - 1);
 
             this.ExpPoints += ExpPoints;
 

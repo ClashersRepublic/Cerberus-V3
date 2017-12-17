@@ -143,6 +143,9 @@ namespace CR.Servers.CoC.Logic
 
                 switch (Type)
                 {
+                    case 5:
+                        Entry = new AllianceKickOutEntry();
+                        break;
                     case 6:
                         Entry = new ClanMailEntry();
                         break;

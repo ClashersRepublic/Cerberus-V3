@@ -28,11 +28,30 @@ namespace CR.Servers.CoC.Logic
                     {
                         Data Data = Unit.ItemData;
 
-                        if (Data.GetDataType() == 4 && !this.IsSpellForge) 
+                        if (Data.GetDataType() == 4) 
                         {
                             Housing += ((CharacterData) Data).HousingSpace * Unit.Count;
                         }
-                        else
+                    }
+                }
+
+                return Housing;
+            }
+        }
+
+        internal int TotalUsedAltHousing
+        {
+            get
+            {
+                int Housing = 0;
+
+                foreach (Item Unit in this.Units)
+                {
+                    if (Unit.Count > 0)
+                    {
+                        Data Data = Unit.ItemData;
+
+                        if (Data.GetDataType() == 26)
                         {
                             Housing += ((SpellData)Data).HousingSpace * Unit.Count;
                         }
@@ -69,26 +88,31 @@ namespace CR.Servers.CoC.Logic
                 else
                     Logging.Info(this.GetType(), "AddUnit called and storage is full.");
             }
-                else
+            else
                 Logging.Info(this.GetType(), "AddUnit called with CharacterData NULL.");
         }
 
         internal bool CanAddUnit(Data Data)
         {
-            if (Data.GetDataType() == 4 && this.IsSpellForge)
+            if (Data.GetDataType() == 4)
             {
-                CharacterData Character = (CharacterData) Data;
-
-                if (this.HousingSpace >= this.TotalUsedHousing + Character.HousingSpace)
+                if (!this.IsSpellForge)
                 {
-                    return true;
+                    CharacterData Character = (CharacterData) Data;
+
+                    if (this.HousingSpace >= this.TotalUsedHousing + Character.HousingSpace)
+                    {
+                        return true;
+                    }
                 }
+                else
+                    Logging.Error(this.GetType(), $"Unable to add a Character to a spell forge");
             }
             else
             {
-                SpellData Spell = (SpellData)Data;
+                SpellData Spell = (SpellData) Data;
 
-                if (this.HousingSpace >= this.TotalUsedHousing + Spell.HousingSpace)
+                if (this.HousingSpaceAlt >= this.TotalUsedAltHousing + Spell.HousingSpace)
                 {
                     return true;
                 }

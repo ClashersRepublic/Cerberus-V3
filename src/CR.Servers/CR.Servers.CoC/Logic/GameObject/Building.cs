@@ -137,6 +137,7 @@ namespace CR.Servers.CoC.Logic
             if (BuildingData.Bunker)
             {
                 this.AddComponent(new BunkerComponent(this));
+                //this.AddComponent(new UnitStorageComponent(this));
             }
 
             if (BuildingData.UpgradesUnits)

@@ -91,10 +91,12 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(527, typeof(Upgrade_Hero));
             Factory.Commands.Add(528, typeof(SpeedUp_Hero_Upgrade));
             Factory.Commands.Add(529, typeof(Change_Hero_State));
+            Factory.Commands.Add(531, typeof(Cancel_Hero_Upgrade));
             Factory.Commands.Add(532, typeof(New_Shop_Seen));
             Factory.Commands.Add(533, typeof(Move_Multiple_Buildings));
             Factory.Commands.Add(537, typeof(Send_Alliance_Mail));
-            Factory.Commands.Add(539, typeof(New_Seen));
+            Factory.Commands.Add(539, typeof(News_Seen));
+            Factory.Commands.Add(543, typeof(Elder_Kick));
             Factory.Commands.Add(544, typeof(Unknown_544));
             Factory.Commands.Add(549, typeof(Upgrade_Multiple_Building));
             Factory.Commands.Add(553, typeof(Unknown_553));

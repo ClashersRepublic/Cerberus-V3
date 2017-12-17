@@ -29,6 +29,7 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal Clans()
         {
+            //TODO: Player gameobject seems to be called 2 time
             this.Seed = Mongo.ClanSeed;
             this.GetRange();
 

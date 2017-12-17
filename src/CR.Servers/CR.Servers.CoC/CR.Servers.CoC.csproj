@@ -225,6 +225,7 @@
     <Compile Include="Logic\Math\Math.cs" />
     <Compile Include="Logic\Math\Vector2.cs" />
     <Compile Include="Logic\Mode\GameMode.cs" />
+    <Compile Include="Logic\Player\AvatarStream\AllianceKickOutEntry.cs" />
     <Compile Include="Logic\Player\AvatarStream\ClanMailEntry.cs" />
     <Compile Include="Logic\Player\Items\Event.cs" />
     <Compile Include="Logic\Player\Items\Functions.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Packets\Commands\Client\Buy_Building.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Walls.cs" />
     <Compile Include="Packets\Commands\Client\Cancel_Consturction.cs" />
+    <Compile Include="Packets\Commands\Client\Cancel_Hero_Upgrade.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_State.cs" />
     <Compile Include="Packets\Commands\Client\Change_Village_Mode.cs" />
@@ -270,12 +272,13 @@
     <Compile Include="Packets\Commands\Client\Change_Weapon_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Clear_Obstacle.cs" />
     <Compile Include="Packets\Commands\Client\Collect_Resource.cs" />
+    <Compile Include="Packets\Commands\Client\Elder_Kick.cs" />
     <Compile Include="Packets\Commands\Client\Free_Worker.cs" />
     <Compile Include="Packets\Commands\Client\Gear_Up.cs" />
     <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Packets\Commands\Client\Move_Building.cs" />
     <Compile Include="Packets\Commands\Client\Move_Multiple_Buildings.cs" />
-    <Compile Include="Packets\Commands\Client\New_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\News_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
     <Compile Include="Packets\Commands\Client\Send_Alliance_Mail.cs" />
     <Compile Include="Packets\Commands\Client\SpeedUp_Hero_Upgrade.cs" />

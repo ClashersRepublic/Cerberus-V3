@@ -51,7 +51,7 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
                     }
                 }
 
-                this.Alliance.Header.NumberOfMembers--;
+                Interlocked.Decrement(ref this.Alliance.Header.NumberOfMembers);
             }
 
             Member = null;
@@ -63,8 +63,9 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
         {
             if (this.Slots.TryRemove(Player, out Member))
             {
-                this.Alliance.Header.NumberOfMembers--;
+                Interlocked.Decrement(ref this.Alliance.Header.NumberOfMembers);
                 this.Connected.TryRemove(Player, out _);
+                this.Alliance.DecrementTotalConnected();
                 return true;
             }
 

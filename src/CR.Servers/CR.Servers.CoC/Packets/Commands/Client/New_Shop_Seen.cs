@@ -13,9 +13,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Decode()
         {
-            Reader.ReadInt32();
-            Reader.ReadInt32();
-            Reader.ReadInt32();
+            this.Reader.ReadInt32();
+            this.Reader.ReadInt32();
+            this.Reader.ReadInt32();
             base.Decode();
         }
     }

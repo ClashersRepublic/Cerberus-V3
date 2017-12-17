@@ -61,6 +61,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     }
                 }
             }
+            else
+                Logging.Error(this.GetType(), $"Unable to cancel the construction. The game object is null with game Id {this.BuildingID}.");
         }
     }
 }
