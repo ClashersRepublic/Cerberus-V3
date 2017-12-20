@@ -9,6 +9,7 @@ using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.CoC.Packets.Commands.Client.List;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client
@@ -33,10 +34,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             for (int i = 0; i < this.Count; i++)
             {
-                WallXy.Add(new BuildingToMove
+                this.WallXy.Add(new BuildingToMove
                 {
-                    X = Reader.ReadInt32(),
-                    Y = Reader.ReadInt32()
+                    X = this.Reader.ReadInt32(),
+                    Y = this.Reader.ReadInt32()
                 });
             }
 

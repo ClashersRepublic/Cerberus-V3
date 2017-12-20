@@ -5,11 +5,11 @@ using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client
 {
-    internal class SpeedUp_Hero_Upgrade : Command
+    internal class Speed_Up_Hero_Upgrade : Command
     {
         internal override int Type => 528;
 
-        public SpeedUp_Hero_Upgrade(Device Client, Reader Reader) : base(Client, Reader)
+        public Speed_Up_Hero_Upgrade(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 

@@ -63,7 +63,7 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             }
         }
 
-        internal void Remove(int StreamId)
+        internal void Remove(long StreamId)
         {
             if (this.Slots.TryRemove(StreamId, out StreamEntry Removed))
             {
@@ -77,14 +77,14 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             {
                 if (Player.Connected)
                 {
-                    //new Alliance_Stream_Entry_Removed_Message(Player.Level.GameMode.Device, StreamEntry).Send();
+                    new Alliance_Stream_Entry_Removed(Player.Level.GameMode.Device){MessageId = StreamEntry.StreamId}.Send();
                 }
                 else
                     this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
             }
         }
 
-        internal StreamEntry Get(int MessageID)
+        internal StreamEntry Get(long MessageID)
         {
             if (this.Slots.ContainsKey(MessageID))
             {
@@ -107,13 +107,14 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             }
         }
 
-        internal void Encode(List<byte> Packet)
+        internal void Encode(List<byte> Packet, long requestorId)
         {
             var Streams = this.Slots.Values.ToArray();
             Packet.AddInt(Streams.Length);
 
             foreach (var Stream in Streams)
             {
+                Stream.RequesterId = requestorId;
                 Stream.Encode(Packet);
             }
         }

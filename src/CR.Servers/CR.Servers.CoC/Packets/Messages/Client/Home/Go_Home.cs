@@ -35,6 +35,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             {
                 if (Device.State == State.IN_PC_BATTLE) //Replay
                     Device.State = State.LOGGED;
+                else if(Device.State == State.WAR_EMODE) //War Edit Mode
+                    Device.State = State.LOGGED;
                 else if (Device.State == State.IN_NPC_BATTLE) //Stream
                     Device.State = State.LOGGED;
                 else if (Device.State == State.IN_AMICAL_BATTLE) //Stream

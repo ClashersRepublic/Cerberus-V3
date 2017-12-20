@@ -43,7 +43,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                 if (Alliance.Members.Join(Avatar, out Member Member))
                 {
-                    Member.Role = Role.Member;
                     Avatar.SetAlliance(Alliance, Member);
                     Avatar.AllianceHighId = Alliance.HighId;
                     Avatar.AllianceLowId = Alliance.LowId;

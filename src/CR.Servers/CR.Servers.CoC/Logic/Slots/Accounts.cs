@@ -155,6 +155,62 @@ namespace CR.Servers.CoC.Logic.Slots
             return Account;
         }
 
+        internal Account LoadAccountViaFacebook(string FacebookID, bool Store = true)
+        {
+            Account Account = null;
+            var Data = Mongo.Players.Find(T => T.FacebookId == FacebookID).SingleOrDefault();
+
+            if (Data != null)
+            {
+                long ID = (long) Data.HighId << 32 | (uint) Data.LowId;
+                if (!this.TryGetValue(ID, out Account))
+                {
+
+                    if (!this.Players.TryGetValue(ID, out Player Player))
+                    {
+                        Player = this.LoadPlayerFromSave(Data.Player.ToJson());
+
+                        if (Store)
+                        {
+                            this.Add(Player);
+                        }
+                    }
+
+                    if (!this.Homes.TryGetValue(ID, out Home Home))
+                    {
+                        Home = this.LoadHomeFromSave(Data.Home.ToJson());
+
+                        if (Store)
+                        {
+                            this.Add(Home);
+                        }
+                    }
+
+                    if (Player == null || Home == null)
+                    {
+                        Logging.Error(this.GetType(), $"Unable to load account id:{Data.HighId}-{Data.LowId} and with facebook id {FacebookID}.");
+                        return new Account(-1, -1, null, null);
+                    }
+
+                    Account = new Account(Data.HighId, Data.LowId, Player, Home);
+                    this.TryAdd(ID, Account);
+                }
+
+                if (Account != null)
+                {
+                    if (Account.Player.Level == null && Account.Home.Level == null)
+                    {
+                        var Level = new Level();
+                        Level.SetPlayer(Account.Player);
+                        Level.SetHome(Account.Home);
+                        Level.FastForwardTime(0);
+                        Level.Process();
+                    }
+                }
+            }
+            return Account;
+        }
+
         internal async Task<Account> LoadAccountAsync(int HighID, int LowID, bool Store = true)
         {
             long ID = (long) HighID << 32 | (uint) LowID;
@@ -212,6 +268,7 @@ namespace CR.Servers.CoC.Logic.Slots
 
             return Account;
         }
+
 
         internal async Task<Player> LoadPlayerAsync(int HighID, int LowID, bool Store = true)
         {

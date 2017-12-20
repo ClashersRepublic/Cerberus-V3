@@ -5,7 +5,6 @@ using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {

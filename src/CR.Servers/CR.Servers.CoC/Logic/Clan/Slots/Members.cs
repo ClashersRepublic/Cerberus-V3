@@ -40,13 +40,22 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
                 {
                     Member = new Member(Player);
 
-                    if (this.Slots.TryAdd(Player.UserId, Member))
+                    if (!this.Slots.ContainsKey(Player.UserId))
                     {
-                        if (Player.Connected)
+                        if (this.Slots.TryAdd(Player.UserId, Member))
                         {
-                            this.Connected.TryAdd(Player.UserId, Player);
-                        }
+                            if (Player.Connected)
+                            {
+                                this.Connected.TryAdd(Player.UserId, Player);
+                            }
 
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        Member.Role = this.Slots[Player.UserId].Role;
+                        this.Slots[Player.UserId] = Member;
                         return true;
                     }
                 }

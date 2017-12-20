@@ -156,7 +156,7 @@ namespace CR.Servers.CoC.Logic
                             }
                             else
                             {
-                                File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}}}.bin", Packet);
+                                File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}}}.bin", Packet);
 
                             }
 

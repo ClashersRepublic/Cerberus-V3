@@ -45,19 +45,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         {
                             if (Level.Player.Resources.GetCountByData(ResourceData) >= this.TrapData.BuildCost[0])
                             {
-                                if (Level.GameObjectManager.Map == 0)
-                                {
-                                    if (Level.WorkerManager.FreeWorkers > 0)
-                                    {
-                                        Level.Player.Resources.Remove(ResourceData, this.TrapData.BuildCost[0]);
-                                        this.StartConstruction(Level);
-                                    }
-                                }
-                                else
-                                {
-                                    Level.Player.Resources.Remove(ResourceData, this.TrapData.BuildCost[0]);
-                                    this.StartConstruction(Level, true, true);
-                                }
+                                Level.Player.Resources.Remove(ResourceData, this.TrapData.BuildCost[0]);
+                                this.StartConstruction(Level);
                             }
                         }
                     }
@@ -65,7 +54,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             }
         }
 
-        internal void StartConstruction(Level Level, bool Instant = false, bool NoWorker = false)
+        internal void StartConstruction(Level Level)
         {
             Trap GameObject = new Trap(this.TrapData, Level);
 
@@ -74,26 +63,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.X = this.X << 9;
             GameObject.Position.Y = this.Y << 9;
 
-            if (!NoWorker)
-            {
-                if (Level.Player.Map == 0)
-                    Level.WorkerManager.AllocateWorker(GameObject);
-                else
-                    Level.WorkerManagerV2.AllocateWorker(GameObject);
-            }
-
-            if (this.TrapData.GetBuildTime(0) <= 0 || Instant)
-            {
-                GameObject.FinishConstruction(NoWorker);
-            }
-            else
-            {
-                GameObject.ConstructionTimer = new Timer();
-                GameObject.ConstructionTimer.StartTimer(Level.Player.LastTick, this.TrapData.GetBuildTime(0));
-            }
+            GameObject.FinishConstruction(true);
 
             Level.GameObjectManager.AddGameObject(GameObject, Level.Player.Map);
-
         }
     }
 }

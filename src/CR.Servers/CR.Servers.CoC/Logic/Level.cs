@@ -1,4 +1,5 @@
 ﻿using System;
+using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Battle.Manager;
@@ -35,6 +36,13 @@ namespace CR.Servers.CoC.Logic
 
         internal Time Time => this.GameMode.Time;
         internal State State => this.GameMode.Device.State;
+
+        internal int LastLeagueRank;
+        internal int LastLeagueShuffleInfo;
+
+        internal bool EditModeShown;
+        internal string TroopRequestMessage = "I need reinforcements";
+        internal string[] ArmyNames = { "", "", "", "" };
 
         internal int TombStoneCount
         {
@@ -140,12 +148,20 @@ namespace CR.Servers.CoC.Logic
             this.UnitProductionManager.Load(Token["units"]?["unit_prod"]);
             this.SpellProductionManager.Load(Token["spells"]?["unit_prod"]);
             //this.CooldownManager.Load(Token);
+
+            JsonHelper.GetJsonNumber(Token, "last_league_rank", out this.LastLeagueRank);
+            JsonHelper.GetJsonNumber(Token, "last_league_shuffle", out this.LastLeagueShuffleInfo);
+            JsonHelper.GetJsonBoolean(Token, "edit_mode_shown", out this.EditModeShown);
+            JsonHelper.GetJsonString(Token, "troop_req_msg", out this.TroopRequestMessage);
+            if (JsonHelper.GetJsonArray(Token, "army_names", out var Army))
+            {
+                this.ArmyNames = Army.ToObject<string[]>();
+            }
         }
 
         internal JObject Battle()
         {
             var Json = new JObject {{"exp_ver", 1}};
-
 
             this.GameObjectManager.Save(Json);
             this.Player.Battle(Json);
@@ -161,7 +177,6 @@ namespace CR.Servers.CoC.Logic
                 { "direct2", true }            
             };
 
-
             this.GameObjectManager.SaveV2(Json);
             this.Player.Battle(Json);
 
@@ -174,12 +189,20 @@ namespace CR.Servers.CoC.Logic
             //this.CooldownManager.Load(Token);
             this.UnitProductionManager.Load(Json["units"]?["unit_prod"]);
             this.SpellProductionManager.Load(Json["spells"]?["unit_prod"]);
+
+            JsonHelper.GetJsonNumber(Json, "last_league_rank", out this.LastLeagueRank);
+            JsonHelper.GetJsonNumber(Json, "last_league_shuffle", out this.LastLeagueShuffleInfo);
+            JsonHelper.GetJsonBoolean(Json, "edit_mode_shown", out this.EditModeShown);
+            JsonHelper.GetJsonString(Json, "troop_req_msg", out this.TroopRequestMessage);
+            if (JsonHelper.GetJsonArray(Json, "army_names", out var Army))
+            {
+                this.ArmyNames = Army.ToObject<string[]>();
+            }
         }
 
         internal JObject Save()
         {
             JObject Json = new JObject {{"exp_ver", 1}};
-
 
             this.GameObjectManager.Save(Json);
             //this.CooldownManager.Save(Json);
@@ -198,6 +221,16 @@ namespace CR.Servers.CoC.Logic
                     "unit_prod",
                     this.SpellProductionManager.Save()
                 }
+            });
+
+            Json.Add("last_league_rank", this.LastLeagueRank);
+            Json.Add("last_league_shuffle", this.LastLeagueShuffleInfo);
+            Json.Add("edit_mode_shown", this.EditModeShown);
+            Json.Add("troop_req_msg", this.TroopRequestMessage);
+            Json.Add("army_names", new JArray
+            {
+                this.ArmyNames
+                
             });
             return Json;
         }
@@ -239,6 +272,78 @@ namespace CR.Servers.CoC.Logic
                             for (var j = 0; j < Height; j++)
                             {
                                 var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+
+                                if (Tile != null)
+                                {
+                                    if (!Tile.IsBuildable())
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Valid;
+        }
+
+
+        internal bool IsValidPlaceForBuilding(ObstacleData Data, int X, int Y, int Width, int Height)
+        {
+            var Valid = false;
+
+            if (X >= 0 && Y >= 0)
+            {
+                if (Width + X <= 50 && Height + Y <= 50)
+                {
+                    Valid = true;
+
+                    if (Width > 0 && Height > 0)
+                    {
+                        for (var i = 0; i < Width; i++)
+                        {
+                            for (var j = 0; j < Height; j++)
+                            {
+                                var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+
+                                if (Tile != null)
+                                {
+                                    if (!Tile.IsBuildable())
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Valid;
+        }
+
+        //For village generator
+        internal bool IsValidPlaceForBuilding(BuildingData Data, int X, int Y, int Width, int Height, TileMap TileMap)
+        {
+            var Valid = false;
+
+            if (X >= 0 && Y >= 0)
+            {
+                if (Width + X <= 50 && Height + Y <= 50)
+                {
+                   
+                    
+                    Valid = true;
+
+                    if (Width > 0 && Height > 0)
+                    {
+                        for (var i = 0; i < Width; i++)
+                        {
+                            for (var j = 0; j < Height; j++)
+                            {
+                                var Tile = TileMap[X + i, Y + j, Data.VillageType];
 
                                 if (Tile != null)
                                 {

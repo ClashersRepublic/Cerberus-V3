@@ -14,8 +14,8 @@ namespace CR.Servers.CoC.Logic
                     return new Obstacle(Data, Level); //ClassID 3  but csv id 8
                 case 12:
                     return new Trap(Data, Level); //ClassID 4  but csv id 12
-                /*case 6:
-                    return new Deco(Data, Level);*/
+                case 18:
+                    return new Deco(Data, Level); //ClassID 6  but csv id 18
                 case 39:
                     return new VillageObject(Data, Level); //ClassID 8  but csv id 39
                 default:

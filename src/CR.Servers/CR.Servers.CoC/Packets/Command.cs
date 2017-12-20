@@ -91,7 +91,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Logs\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 

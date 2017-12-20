@@ -1,4 +1,4 @@
-﻿namespace Magic.ClashOfClans.Network.Commands.Client
+﻿namespace Magic.ClashOfClans.Network.Commands.Client.List
 {
     internal struct BuildingToMove
     {

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.Core.Consoles;
 using Microsoft.Extensions.Configuration;
 
@@ -16,7 +17,8 @@ namespace CR.Servers.CoC
         private const int Height = 30;
 
         public static IConfigurationRoot Configuration { get; set; }
-
+        internal static int I =  30;
+        internal static int B = 30;
         private static void Main()
         {
 
@@ -46,7 +48,6 @@ namespace CR.Servers.CoC
             Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +  Environment.NewLine);
 
             Resources.Initialize();
-
             Thread.Sleep(-1);
         }
     }

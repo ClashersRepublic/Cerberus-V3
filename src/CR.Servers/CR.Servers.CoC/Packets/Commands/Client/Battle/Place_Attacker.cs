@@ -59,9 +59,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                     {
                         if (Unit.Count > 0)
                         {
-                            Console.WriteLine(this.Save());
-                            //Do some logging shit for replay and etc
-
                             Unit.Count--;
                         }
                     }

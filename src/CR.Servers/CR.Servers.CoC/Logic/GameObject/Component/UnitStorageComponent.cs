@@ -110,11 +110,23 @@ namespace CR.Servers.CoC.Logic
             }
             else
             {
-                SpellData Spell = (SpellData) Data;
-
-                if (this.HousingSpaceAlt >= this.TotalUsedAltHousing + Spell.HousingSpace)
+                if (this.IsSpellForge)
                 {
-                    return true;
+                    SpellData Spell = (SpellData) Data;
+
+                    if (this.HousingSpace >= this.TotalUsedHousing + Spell.HousingSpace)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    SpellData Spell = (SpellData) Data;
+
+                    if (this.HousingSpaceAlt >= this.TotalUsedAltHousing + Spell.HousingSpace)
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -136,7 +148,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            IsSpellForge = Building.BuildingData.IsSpellForge;
+            this.IsSpellForge = Building.BuildingData.IsSpellForge || Building.BuildingData.IsMiniSpellForge;
         }
 
         internal override void Load(JToken Json)
@@ -158,11 +170,6 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
             }
-
-            if (JsonHelper.GetJsonBoolean(Json, "storage_type", out bool IsSpellForge))
-            {
-                this.IsSpellForge = IsSpellForge;
-            }
             base.Load(Json);
         }
 
@@ -180,7 +187,6 @@ namespace CR.Servers.CoC.Logic
             }
 
             Json.Add("units", Units);
-            Json.Add("storage_type", IsSpellForge ? 1 : 0);
             base.Save(Json);
         }
         

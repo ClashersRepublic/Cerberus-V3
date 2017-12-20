@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Files;
@@ -248,6 +249,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                 this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);
                 Player.Alliance.IncrementTotalConnected();
             }
+
+            /*new Avatar_Friend_List(this.Device)
+            {
+                Friends = new List<Player>()
+                {
+                    Resources.Accounts.LoadAccount(0,2).Player
+                }
+            }.Send();*/
 
             if (this.Device.Chat == null)
             {

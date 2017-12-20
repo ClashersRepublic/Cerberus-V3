@@ -1,4 +1,4 @@
-﻿namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.List
 {
     internal struct BuildingToMove
     {

@@ -15,6 +15,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 
         internal override void Encode()
         {
+            this.StreamEntry.RequesterId = this.Device.GameMode.Level.Player.UserId;
             this.StreamEntry.Encode(this.Data);
         }
     }

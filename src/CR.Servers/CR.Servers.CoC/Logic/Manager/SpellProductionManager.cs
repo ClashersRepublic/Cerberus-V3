@@ -75,7 +75,7 @@ namespace CR.Servers.CoC.Logic.Manager
             {
                 if ((Spell.UnitOfType == 1 ? this.Level.ComponentManager.MaxSpellForgeLevel : this.Level.ComponentManager.MaxDarkSpellForgeLevel) >= Spell.SpellForgeLevel - 1)
                 {
-                    if (this.Level.ComponentManager.TotalMaxSpellHousing >= this.InProductionCapacity + Spell.HousingSpace * Count)
+                    if (this.Level.ComponentManager.TotalMaxSpellHousing * 2 >= this.InProductionCapacity + Spell.HousingSpace * Count)
                     {
                         return true;
                     }
@@ -93,7 +93,7 @@ namespace CR.Servers.CoC.Logic.Manager
         internal int GetTrainingTime(SpellData Spell)
         {
             var SpellForges = (Spell.UnitOfType == 1 ? this.Level.ComponentManager.SpellForge : this.Level.ComponentManager.DarkSpellForge)
-                .FindAll(SpellForge => SpellForge.GetUpgradeLevel() >= Spell.SpellForgeLevel - 1);
+                .FindAll(SpellForge => SpellForge.GetUpgradeLevel() >= Spell.SpellForgeLevel - 1 && !SpellForge.Constructing);
 
             if (SpellForges.Count != 0)
                 return Spell.TrainingTime / SpellForges.Count;

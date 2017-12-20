@@ -100,6 +100,7 @@ namespace CR.Servers.CoC.Logic
             // LogicAchievementManager::obstacleCleared();
 
             Player.AddExperience(GamePlayUtil.TimeToXp(ObstacleData.ClearTimeSeconds));
+            Player.ObstacleCleaned++;
 
             this.ClearTimer = null;
             this.Destructed = true;

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files.CSV_Helpers;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.Core.Consoles.Colorful;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -15,11 +18,15 @@ namespace CR.Servers.CoC.Logic
 
         internal List<GameObject> GetGameObjectsByData(Data Data)
         {
-            if (Data.GetDataType() == 1)
+            if (Data is BuildingData BuildingData)
             {
-                List<GameObject> Result = this.GameObjectManager.GameObjects[0][this.GameObjectManager.Map].FindAll(T => T.Data == Data);
+                List<GameObject> Result = this.GameObjectManager.GameObjects[0][BuildingData.VillageType].FindAll(T => T.Data.GlobalId == Data.GlobalId);
 
                 return Result;
+            }
+            else
+            {
+                
             }
 
             return null;
@@ -31,10 +38,10 @@ namespace CR.Servers.CoC.Logic
 
             if (this.GameObjectManager.GameObjects.Length > Class)
             {
-                var Obstacle = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
+                var GameObject = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
 
-                if (Obstacle != null)
-                    return Obstacle;
+                if (GameObject != null)
+                    return GameObject;
 
                 Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
             }

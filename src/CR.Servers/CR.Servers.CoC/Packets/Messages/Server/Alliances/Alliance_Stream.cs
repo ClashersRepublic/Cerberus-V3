@@ -18,7 +18,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
         internal override void Encode()
         {
             this.Data.AddInt(0);
-            this.Alliance.Streams.Encode(this.Data);
+            this.Alliance.Streams.Encode(this.Data, this.Device.GameMode.Level.Player.UserId);
         }
     }
 }

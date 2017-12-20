@@ -10,27 +10,19 @@ using Newtonsoft.Json.Linq;
 
 namespace CR.Servers.CoC.Logic
 {
+    [JsonConverter(typeof(HomeConverter))]
     internal class Home
     {
 
-        [JsonProperty("home_id_high")] internal int HighID;
-        [JsonProperty("home_id_low")] internal int LowID;
-        [JsonProperty("level")] internal JToken LastSave;
+        internal int HighID;
+        internal int LowID;
+        internal JToken LastSave;
 
         internal Level Level;
         internal DateTime Timestamp = DateTime.UtcNow;
         internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
 
-
-        [OnSerializing]
-        internal void OnSerializingMethod(StreamingContext context)
-        {
-            if (this.Level != null)
-            {
-                LastSave = this.Level.Save();
-            }
-        }
-
+        [JsonConstructor]
         public Home()
         {
             // Home.
@@ -74,6 +66,35 @@ namespace CR.Servers.CoC.Logic
             };
 
             return Json;
+        }
+    }
+    internal class HomeConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value is Home Home)
+            {
+                Home.Save().WriteTo(writer);
+            }
+            else
+                LevelFile.StartingHome.WriteTo(writer);
+        }
+
+        public override bool CanRead => true;
+        public override bool CanWrite => true;
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject Token = JObject.Load(reader);
+
+            Home Home = new Home();
+            Home.Load(Token);
+            return Home;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Home);
         }
     }
 }

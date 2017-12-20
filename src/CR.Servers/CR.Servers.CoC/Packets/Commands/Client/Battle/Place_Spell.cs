@@ -18,7 +18,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
         internal int X;
         internal int Y;
         internal SpellData Spell;
-        internal byte UnknownByte;
+        internal bool IsAllianceSpell;
         internal int UnknownInt;
 
         internal override void Decode()
@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             this.X = this.Reader.ReadInt32();
             this.Y = this.Reader.ReadInt32();
             this.Spell = this.Reader.ReadData<SpellData>();
-            this.UnknownByte = this.Reader.ReadByte();
+            this.IsAllianceSpell = this.Reader.ReadBoolean();
             this.UnknownInt = this.Reader.ReadInt32();
             base.Decode();
         }
@@ -36,15 +36,31 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             if (this.Spell != null)
             {
                 var Level = this.Device.GameMode.Level;
-                Item Unit = Level.Player.Spells.GetByData(this.Spell);
-
-                if (Unit != null)
+                if (this.IsAllianceSpell)
                 {
-                    if (Unit.Count > 0)
+                    Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.UnknownInt);
+                    if (Unit != null)
                     {
-                        //Do some logging shit for replay and etc
+                        if (Unit.Count > 0)
+                        {
+                            //Do some logging shit for replay and etc
 
-                        Unit.Count--;
+                            Unit.Count--;
+                            Level.Player.CastleUsedSpellCapacity -= this.Spell.HousingSpace;
+                        }
+                    }
+                }
+                else
+                {
+                    Item Unit = Level.Player.Spells.GetByData(this.Spell);
+                    if (Unit != null)
+                    {
+                        if (Unit.Count > 0)
+                        {
+                            //Do some logging shit for replay and etc
+
+                            Unit.Count--;
+                        }
                     }
                 }
             }

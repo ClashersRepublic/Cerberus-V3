@@ -16,6 +16,8 @@ namespace CR.Servers.CoC.Logic.Clan
     [JsonConverter(typeof(StreamEntryConverter))]
     internal class StreamEntry
     {
+        internal long RequesterId;
+
         internal int HighId;
         internal int LowId;
 
@@ -154,8 +156,14 @@ namespace CR.Servers.CoC.Logic.Clan
                 
                 switch (Type)
                 {
+                    case 1:
+                        Entry = new DonateStreamEntry();
+                        break;
                     case 2:
                         Entry = new ChatStreamEntry();
+                        break;
+                    case 3:
+                        Entry = new JoinRequestStreamEntry();
                         break;
                     case 4:
                         Entry = new EventStreamEntry();

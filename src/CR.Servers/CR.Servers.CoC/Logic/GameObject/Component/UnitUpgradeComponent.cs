@@ -100,7 +100,7 @@ namespace CR.Servers.CoC.Logic
                                 }
                                 else
                                 {
-                                    if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.ComponentManager.MaxBarrackV2Level))
+                                    if (!Character.IsUnlockedForBarrackLevel(this.Parent.Level.Player.Variables.Village2BarrackLevel))
                                     {
                                         return false;
                                     }

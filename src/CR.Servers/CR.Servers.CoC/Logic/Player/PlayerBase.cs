@@ -16,13 +16,13 @@ namespace CR.Servers.CoC.Logic
 
         [JsonProperty] internal DataSlots ResourceCaps;
         [JsonProperty] internal ResourceSlots Resources;
-
-        [JsonProperty] internal DataSlots AchievementProgress;
+        
         [JsonProperty] internal UnitSlots Units;
         [JsonProperty] internal UnitSlots Units2;
         [JsonProperty] internal UnitSlots Spells;
         [JsonProperty] internal DataSlots UnitUpgrades;
         [JsonProperty] internal AllianceUnitSlots AllianceUnits;
+        [JsonProperty] internal AllianceUnitSlots AllianceSpells;
         [JsonProperty] internal DataSlots SpellUpgrades;
         [JsonProperty] internal DataSlots HeroUpgrades;
 
@@ -30,10 +30,18 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal DataSlots HeroHealth;
         [JsonProperty] internal DataSlots HeroModes;
 
+
+        [JsonProperty] internal AchievementSlot Achievements;
+        [JsonProperty] internal AchievementProgressSlot AchievementProgress;
+
         [JsonProperty] internal NpcMapSlots NpcMapProgress;
         [JsonProperty] internal DataSlots NpcLootedGold;
         [JsonProperty] internal DataSlots NpcLootedElixir;
         [JsonProperty] internal VariableSlots Variables;
+
+        [JsonProperty] internal UnitSlots UnitPreset1;
+        [JsonProperty] internal UnitSlots UnitPreset2;
+        [JsonProperty] internal UnitSlots UnitPreset3;
 
         [JsonProperty] internal int TownHallLevel;
         [JsonProperty] internal int TownHallLevel2;
@@ -114,7 +122,6 @@ namespace CR.Servers.CoC.Logic
 
         public PlayerBase()
         {
-            this.AchievementProgress = new DataSlots();
             this.ResourceCaps = new DataSlots();
             this.Resources = new ResourceSlots();
             this.Units = new UnitSlots();
@@ -124,6 +131,7 @@ namespace CR.Servers.CoC.Logic
             this.SpellUpgrades = new DataSlots();
             this.HeroUpgrades = new DataSlots();
             this.AllianceUnits = new AllianceUnitSlots();
+            this.AllianceSpells = new AllianceUnitSlots();
 
             this.HeroHealth = new DataSlots();
             this.HeroStates = new DataSlots();
@@ -134,6 +142,11 @@ namespace CR.Servers.CoC.Logic
             this.NpcLootedElixir = new DataSlots();
 
             this.Variables = new VariableSlots();
+
+            this.UnitPreset1 = new UnitSlots();
+            this.UnitPreset2 = new UnitSlots();
+            this.UnitPreset3 = new UnitSlots();
+
         }
 
         internal int GetUnitUpgradeLevel(Data Data)

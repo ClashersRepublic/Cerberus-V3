@@ -24,7 +24,6 @@ namespace CR.Servers.CoC.Logic
 
         internal byte New = 2;
         
-
         internal DateTime Created = DateTime.UtcNow;
 
         internal int Age => (int)DateTime.UtcNow.Subtract(this.Created).TotalSeconds;

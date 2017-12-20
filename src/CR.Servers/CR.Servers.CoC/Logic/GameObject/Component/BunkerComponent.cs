@@ -11,12 +11,6 @@ namespace CR.Servers.CoC.Logic
 
         public BunkerComponent(GameObject GameObject) : base(GameObject)
         {
-            this.UnitRequestTimer = new Timer();
-            this.ClanMailTimer = new Timer();
-            this.ShareReplayTimer = new Timer();
-            this.ElderKickTimer = new Timer();
-            this.ChallengeTimer = new Timer();
-            this.ArrangeWarTimer = new Timer();
         }
 
         internal Timer UnitRequestTimer;
@@ -135,6 +129,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.UnitRequestTimer = new Timer();
                 this.UnitRequestTimer.StartTimer(this.Parent.Level.Player.LastTick, UnitRequestTimeDuration);
             }
 
@@ -156,6 +151,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.ClanMailTimer = new Timer();
                 this.ClanMailTimer.StartTimer(this.Parent.Level.Player.LastTick, ClanMailTimeDuration);
             }
 
@@ -177,6 +173,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.ShareReplayTimer = new Timer();
                 this.ShareReplayTimer.StartTimer(this.Parent.Level.Player.LastTick, ShareReplayTimeDuration);
             }
 
@@ -198,6 +195,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.ElderKickTimer = new Timer();
                 this.ElderKickTimer.StartTimer(this.Parent.Level.Player.LastTick, ElderKickTimeDuration);
             }
 
@@ -219,6 +217,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.ChallengeTimer = new Timer();
                 this.ChallengeTimer.StartTimer(this.Parent.Level.Player.LastTick, ChallengeTimeDuration);
             }
 
@@ -240,6 +239,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
+                this.ArrangeWarTimer = new Timer();
                 this.ArrangeWarTimer.StartTimer(this.Parent.Level.Player.LastTick, ArrangeWarTimeDuration);
             }
 

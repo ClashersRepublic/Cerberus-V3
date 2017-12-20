@@ -1,4 +1,7 @@
-﻿namespace CR.Servers.CoC.Logic.Map
+﻿using System;
+using System.Collections.Generic;
+
+namespace CR.Servers.CoC.Logic.Map
 {
     internal class TileMap
     {
@@ -61,6 +64,19 @@
                     this.Tiles[GameObject.VillageType][(50 * (i + GameObject.TileX)) + (j + GameObject.TileY)].AddGameObject(GameObject);
                 }
             }
+        }
+
+        internal List<Tile> GetTile(GameObject GameObject,int X, int Y, int Map)
+        {
+            List<Tile> Tiles = new List<Tile>();
+            for (int i = 0; i < GameObject.WidthInTiles; i++)
+            {
+                for (int j = 0; j < GameObject.HeightInTiles; j++)
+                {
+                    Tiles.Add(this.Tiles[GameObject.VillageType][(50 * (i + X)) + (j + Y)]);
+                }
+            }
+            return Tiles;
         }
     }
 }

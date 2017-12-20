@@ -274,32 +274,7 @@ namespace CR.Servers.CoC.Logic
                 return Count;
             }
         }
-
-
-        
-        internal int MaxBarrackV2Level
-        {
-            get
-            {
-                int MaxLevel = -1;
-
-                this.Components[0].ForEach(Component =>
-                {
-                    Building Building = (Building)Component.Parent;
-
-                    if (Building.BuildingData.VillageType == 1)
-                    {
-                        if (Building.BuildingData.IsBarrack)
-                        {
-                            MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
-                        }
-                    }
-                });
-
-                return MaxLevel;
-            }
-        }
-
+     
         internal int MaxBarrackLevel
         {
             get

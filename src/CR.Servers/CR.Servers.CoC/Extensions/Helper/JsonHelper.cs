@@ -62,6 +62,21 @@ namespace CR.Servers.CoC.Extensions.Helper
             return false;
         }
 
+        internal static bool GetJsonNumber(JToken Token, string Key, out long Long)
+        {
+            JToken KeyValue = Token[Key];
+
+            if (KeyValue != null)
+            {
+                Long = (long)KeyValue;
+                return true;
+            }
+            else
+                Long = -1;
+
+            return false;
+        }
+
         internal static bool GetJsonByte(JToken Token, string Key, out byte Byte)
         {
             JToken KeyValue = Token[Key];

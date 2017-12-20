@@ -109,6 +109,23 @@ namespace CR.Servers.CoC.Logic.Clan
             }
         }
 
+        internal void RefreshTotalConnected()
+        {
+            foreach (Member Member in this.Members.Slots.Values.ToList())
+            {
+                Player Player = Member.Player;
+
+                if (Player != null && Player.Connected)
+                {
+                    new Alliance_Online_Member(Player.Level.GameMode.Device)
+                    {
+                        Connected = this.Connected,
+                        TotalMember = this.Header.NumberOfMembers
+                    }.Send();
+                }
+            }
+        }
+
 
         public override string ToString()
         {

@@ -11,6 +11,7 @@ using CR.Servers.CoC.Packets;
 using CR.Servers.Core;
 using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Logic.Enums;
+using NLog;
 
 namespace CR.Servers.CoC.Core
 {
@@ -26,11 +27,14 @@ namespace CR.Servers.CoC.Core
         internal static BattlesV2 BattlesV2;
         internal static Timers Timers;
         internal static Test Test;
+        internal static Logger Logger;
         internal static bool Started;
         internal static bool Closing;
 
         internal static void Initialize()
         {
+            Resources.Logger = LogManager.GetCurrentClassLogger(typeof(Resources));
+
             Factory.Initialize();
             CSV.Initialize();
             LevelFile.Initialize();

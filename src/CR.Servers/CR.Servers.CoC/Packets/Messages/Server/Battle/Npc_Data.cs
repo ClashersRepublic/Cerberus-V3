@@ -19,7 +19,6 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
         internal override void Encode()
         {
             this.Data.AddInt(0);
-
             this.NpcHome.Encode(this.Data);
             this.Device.GameMode.Level.Player.Encode(this.Data);
 

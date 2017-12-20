@@ -37,6 +37,17 @@ namespace CR.Servers.CoC.Logic
 
         [JsonProperty] internal int ExpLevel = 1;
         [JsonProperty] internal int ExpPoints;
+
+        [JsonProperty] internal int LastSeasonMonth;
+        [JsonProperty] internal int LastSeasonYear;
+        [JsonProperty] internal int LastSeasonRank;
+        [JsonProperty] internal int LastSeasonScore;
+
+        [JsonProperty] internal int OldSeasonMonth;
+        [JsonProperty] internal int OldSeasonYear;
+        [JsonProperty] internal int OldSeasonRank;
+        [JsonProperty] internal int OldSeasonScore;
+
         [JsonProperty] internal int Diamonds;
         [JsonProperty] internal int FreeDiamonds;
         [JsonProperty] internal int League;
@@ -48,6 +59,10 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal int Loses;
         [JsonProperty] internal int Games;
 
+        [JsonProperty] internal int ObstacleCleaned;
+
+        [JsonProperty] internal int Donation;
+        [JsonProperty] internal int DonationReceived;
 
         [JsonProperty] internal List<int> Tutorials = new List<int>();
 
@@ -95,7 +110,10 @@ namespace CR.Servers.CoC.Logic
         internal Player()
         {
             this.Inbox = new Inbox(this);
-            /*this.Achievements = new List<Data>(60);
+            this.Achievements = new AchievementSlot();
+            this.AchievementProgress = new AchievementProgressSlot(this);
+
+            /*
             this.Missions = new List<Data>(30);
             this.Logs = new List<AvatarStreamEntry>(50);
 
@@ -151,6 +169,13 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
+        internal void AddScore(int Score)
+        {
+            var LeagueData = (LeagueData)CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.League);
+
+            this.Score += Score;
+        }
+
         internal void VerifyAlliance()
         {
             if (this.Alliance == null)
@@ -204,17 +229,20 @@ namespace CR.Servers.CoC.Logic
                 _Packet.AddBool(false);
 
             _Packet.AddInt(0); //Legendary_Trophies
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
-            _Packet.AddInt(0);
 
+            _Packet.AddInt(this.LastSeasonYear > 0 ? 1 : 0);
+
+            _Packet.AddInt(this.LastSeasonMonth);
+            _Packet.AddInt(this.LastSeasonYear);
+            _Packet.AddInt(this.LastSeasonRank);
+            _Packet.AddInt(this.LastSeasonScore);
+
+            _Packet.AddInt(this.OldSeasonYear > 0 ? 1 : 0);
+
+            _Packet.AddInt(this.OldSeasonMonth);
+            _Packet.AddInt(this.OldSeasonYear);
+            _Packet.AddInt(this.OldSeasonRank);
+            _Packet.AddInt(this.OldSeasonScore);
 
             _Packet.AddInt(0);
             _Packet.AddInt(0);
@@ -297,14 +325,29 @@ namespace CR.Servers.CoC.Logic
             this.HeroHealth.Encode(_Packet);
             this.HeroStates.Encode(_Packet);
 
-            this.AllianceUnits.Encode(_Packet);
+            _Packet.AddInt(this.AllianceUnits.Count + this.AllianceSpells.Count);
+
+            foreach (var Unit in this.AllianceUnits)
+            {
+                _Packet.AddInt(Unit.Data);
+                _Packet.AddInt(Unit.Count);
+                _Packet.AddInt(Unit.Level);
+            }
+
+            foreach (var Spell in this.AllianceSpells)
+            {
+                _Packet.AddInt(Spell.Data);
+                _Packet.AddInt(Spell.Count);
+                _Packet.AddInt(Spell.Level);
+            }
+
 
             _Packet.AddInt(Tutorials.Count);
             foreach (var Tutorial in Tutorials)
                 _Packet.AddInt(Tutorial);
-
-            _Packet.AddInt(0); //Achievements
-            _Packet.AddInt(0); //AchievementProgress
+            
+            this.Achievements.Encode(_Packet);
+            this.AchievementProgress.Encode(_Packet);
 
             this.NpcMapProgress.Encode(_Packet);
             this.NpcLootedGold.Encode(_Packet);
@@ -316,9 +359,10 @@ namespace CR.Servers.CoC.Logic
 
             this.Variables.Encode(_Packet);
 
-            _Packet.AddInt(0); // UnitPreset1
-            _Packet.AddInt(0); // UnitPreset2
-            _Packet.AddInt(0); // UnitPreset3
+            this.UnitPreset1.Encode(_Packet);
+            this.UnitPreset2.Encode(_Packet);
+            this.UnitPreset3.Encode(_Packet);
+            
             _Packet.AddInt(0); // PreviousArmySize
             _Packet.AddInt(0); // UnitCounterForEvent
             this.Units2.Encode(_Packet);

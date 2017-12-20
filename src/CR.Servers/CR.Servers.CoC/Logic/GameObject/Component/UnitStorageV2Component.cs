@@ -117,7 +117,7 @@ namespace CR.Servers.CoC.Logic
                 int ID = Array[0];
                 int Count = Array[1];
 
-                if (ID != 0)
+                if (ID > 0)
                 {
                     this.Units.Add(new Item(ID, Count));
                 }

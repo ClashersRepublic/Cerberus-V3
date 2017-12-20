@@ -2,6 +2,7 @@
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
+using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.List;
 using Newtonsoft.Json.Linq;
 
@@ -57,6 +58,16 @@ namespace CR.Servers.CoC.Logic
         internal new void Add(UnitItem Item)
         {
             if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level, out UnitItem Current))
+            {
+                Current.Count += Item.Count;
+            }
+            else
+                base.Add(Item);
+        }
+
+        internal void Add(UnitItem Item, long DonatorId)
+        {
+            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level && T.DonatorId == DonatorId, out UnitItem Current))
             {
                 Current.Count += Item.Count;
             }
@@ -158,6 +169,21 @@ namespace CR.Servers.CoC.Logic
             });
 
             return Array;
+        }
+
+        internal void Load(JToken Token)
+        {
+            foreach (JToken Unit in Token)
+            {
+                var Item = new UnitItem();
+                Item.Load(Unit);
+                this.Add(Item);
+            }
+        }
+
+        internal AllianceUnitSlots Copy()
+        {
+            return this.MemberwiseClone() as AllianceUnitSlots;
         }
     }
 }

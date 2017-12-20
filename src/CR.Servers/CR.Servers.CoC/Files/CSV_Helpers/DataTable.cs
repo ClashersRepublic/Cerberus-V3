@@ -68,14 +68,23 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Npcs:
                     _Data = new NpcData(_Row, this);
                     break;
+                case Gamefile.Decos:
+                    _Data = new DecoData(_Row, this);
+                    break;
                 case Gamefile.Missions:
                     _Data = new MissionData(_Row, this);
+                    break;
+                case Gamefile.Achievements:
+                    _Data = new AchievementData(_Row, this);
                     break;
                 case Gamefile.Spells:
                     _Data = new SpellData(_Row, this);
                     break;
                 case Gamefile.Heroes:
                     _Data = new HeroData(_Row, this);
+                    break;
+                case Gamefile.Leagues:
+                    _Data = new LeagueData(_Row, this);
                     break;
                 case Gamefile.Regions:
                     _Data = new RegionData(_Row, this);

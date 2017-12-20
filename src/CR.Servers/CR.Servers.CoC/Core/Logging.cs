@@ -11,7 +11,7 @@ namespace CR.Servers.CoC.Core
     {
         internal static void Error(Type Type, string Message)
         {
-            //Resources.Logger.Error(Type.Name + " : " + Message);
+            Resources.Logger.Error(Type.Name + " : " + Message);
 #if Console
             Console.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #else

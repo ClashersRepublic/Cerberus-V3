@@ -244,6 +244,8 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 
         internal bool IsDarkBarrack => this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 2 && !this.ForgesSpells;
 
+        internal bool IsBarrack2 => this.Name == "Barrack2";
+
         internal bool IsTrainingHousing => this.HousingSpace[0] > 0 && !this.Bunker;
 
         internal bool IsAllianceCastle => this.Name == "Alliance Castle";

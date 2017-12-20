@@ -15,13 +15,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
         {
         }
 
-        internal int HighId;
-        internal int LowId;
+        internal long StreamId;
 
         internal override void Decode()
         {
-            this.HighId = this.Reader.ReadInt32();
-            this.LowId = this.Reader.ReadInt32();
+            this.StreamId = this.Reader.ReadInt64();
         }
 
         internal override void Process()
@@ -30,7 +28,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
             if (level.Player.InAlliance)
             {
-                var stream = level.Player.Alliance.Streams.Get(this.LowId);
+                var stream = level.Player.Alliance.Streams.Get(this.StreamId);
                 if (stream != null)
                 {
                     if (stream is GiftStreamEntry StreamEntry)

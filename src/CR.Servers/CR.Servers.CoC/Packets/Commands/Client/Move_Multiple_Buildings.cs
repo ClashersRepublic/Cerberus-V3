@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Commands.Client.List;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client
@@ -17,16 +18,16 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Decode()
         {
-            var buildingCount = Reader.ReadInt32();
-            Buildings = new List<BuildingToMove>(buildingCount);
+            var buildingCount = this.Reader.ReadInt32();
+            this.Buildings = new List<BuildingToMove>(buildingCount);
 
             for (var i = 0; i < buildingCount; i++)
             {
-                Buildings.Add(new BuildingToMove
+                this.Buildings.Add(new BuildingToMove
                 {
-                    X = Reader.ReadInt32(),
-                    Y = Reader.ReadInt32(),
-                    Id = Reader.ReadInt32()
+                    X = this.Reader.ReadInt32(),
+                    Y = this.Reader.ReadInt32(),
+                    Id = this.Reader.ReadInt32()
                 });
             }
 

@@ -4,6 +4,7 @@ using System.Threading;
 using Magic.ClashOfClans.Core;
 using Magic.ClashOfClans.Core.Settings;
 using Magic.ClashOfClans.Extensions;
+using global::Discord;
 
 namespace Magic.ClashOfClans
 {

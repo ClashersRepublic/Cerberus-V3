@@ -32,6 +32,12 @@ namespace CR.Servers.CoC.Core.Database.Models.Mongo
             set;
         } = string.Empty;
 
+        public string FacebookId
+        {
+            get;
+            set;
+        } = string.Empty;
+
         public BsonDocument Player
         {
             get;

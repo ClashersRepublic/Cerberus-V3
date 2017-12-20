@@ -59,6 +59,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                                     {
                                                         if (bd2.Locked)
                                                             return;
+
 #if DEBUG
                                                         Logging.Info(this.GetType(),
                                                             $"Builder Building: Unlocking {bd2.Name} with ID {Object.Id}");
@@ -81,6 +82,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     else if (Data.IsTownHall)
                                     {
                                         Level.Player.TownHallLevel++;
+                                    }
+                                    else if (Data.IsBarrack2)
+                                    {
+                                        Level.Player.Variables.Village2BarrackLevel++;
                                     }
                                 }
                             }

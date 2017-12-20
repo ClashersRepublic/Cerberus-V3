@@ -19,7 +19,7 @@ namespace CR.Servers.CoC.Logic
         {
             var b = Parent;
             var bd = (BuildingData)b.Data;
-            IsSpellForge = bd.IsSpellForge;
+            this.IsSpellForge = bd.IsSpellForge || bd.IsMiniSpellForge;
         }
 
         internal override void Load(JToken Json)
@@ -43,7 +43,7 @@ namespace CR.Servers.CoC.Logic
                     "m", 1
                 },
                 {
-                    "unit_type", IsSpellForge ? 1 : 0
+                    "unit_type", this.IsSpellForge ? 1 : 0
                 }
             };
 

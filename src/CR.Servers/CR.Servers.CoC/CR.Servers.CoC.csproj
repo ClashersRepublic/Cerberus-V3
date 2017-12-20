@@ -58,7 +58,34 @@
   <PropertyGroup>
     <ApplicationIcon>Server.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CR.Servers.CoC.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DnsClient, Version=1.0.7.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DnsClient.1.0.7\lib\net45\DnsClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.32.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.1.32.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.32.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.Auth.1.32.0\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.32.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.Auth.1.32.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.32.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.Core.1.32.0\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Games.v1, Version=1.32.0.1071, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.Games.v1.1.32.0.1071\lib\net45\Google.Apis.Games.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.32.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Google.Apis.1.32.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
     </Reference>
@@ -84,27 +111,61 @@
       <HintPath>..\..\..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="MongoDB.Bson, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\MongoDB.Bson.2.4.4\lib\net45\MongoDB.Bson.dll</HintPath>
+    <Reference Include="MongoDB.Bson, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Bson.2.5.0\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\MongoDB.Driver.2.4.4\lib\net45\MongoDB.Driver.dll</HintPath>
+    <Reference Include="MongoDB.Driver, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.2.5.0\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver.Core, Version=2.4.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\MongoDB.Driver.Core.2.4.4\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    <Reference Include="MongoDB.Driver.Core, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.Core.2.5.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Net.Http.4.3.1\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
       <HintPath>..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -140,13 +201,16 @@
     <Compile Include="Files\CSV_Helpers\Data.cs" />
     <Compile Include="Files\CSV_Helpers\DataTable.cs" />
     <Compile Include="Files\CSV_Helpers\GlobalId.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\AchievementData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\AllianceBadgeLayerData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingClassData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\BuildingData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\CharacterData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\DecoData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\ExperienceLevelData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\GlobalData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\HeroData.cs" />
+    <Compile Include="Files\CSV_Logic\Logic\LeagueData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\LocaleData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\MissionData.cs" />
     <Compile Include="Files\CSV_Logic\Logic\NpcData.cs" />
@@ -178,7 +242,9 @@
     <Compile Include="Logic\Clan\Items\Member.cs" />
     <Compile Include="Logic\Clan\Slots\Members.cs" />
     <Compile Include="Logic\Clan\Slots\Streams.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\JoinRequestStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\ChatStreamEntry.cs" />
+    <Compile Include="Logic\Clan\StreamEntry\DonateStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\EventStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\GiftStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\StreamEntry.cs" />
@@ -186,6 +252,7 @@
     <Compile Include="Logic\Enums\AllianceEvent.cs" />
     <Compile Include="Logic\Enums\AvatarStream.cs" />
     <Compile Include="Logic\Enums\Gamefile.cs" />
+    <Compile Include="Logic\Enums\InviteState.cs" />
     <Compile Include="Logic\Enums\Resource.cs" />
     <Compile Include="Logic\Enums\Role.cs" />
     <Compile Include="Logic\Enums\AllianceStream.cs" />
@@ -234,6 +301,8 @@
     <Compile Include="Logic\Player\Items\UnitItem.cs" />
     <Compile Include="Logic\Player\Player.cs" />
     <Compile Include="Logic\Player\PlayerBase.cs" />
+    <Compile Include="Logic\Player\Slots\AchievementProgressSlot.cs" />
+    <Compile Include="Logic\Player\Slots\AchievementSlot.cs" />
     <Compile Include="Logic\Player\Slots\AllianceUnitSlots.cs" />
     <Compile Include="Logic\Player\Slots\Calendar.cs" />
     <Compile Include="Logic\Player\Slots\DataSlots.cs" />
@@ -251,13 +320,19 @@
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Packets\Command.cs" />
+    <Compile Include="Packets\Commands\Client\Boost_Buildings.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Deco.cs" />
+    <Compile Include="Packets\Commands\Client\Buy_Shield.cs" />
+    <Compile Include="Packets\Commands\Client\Claim_Achievement_Reward.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Hero_Rage.cs" />
+    <Compile Include="Packets\Commands\Client\Battle\Place_Alliance_Portal.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Place_Attacker.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Place_Hero.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Place_Spell.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Surrender_Attack.cs" />
-    <Compile Include="Packets\Commands\Client\BuildingToMove.cs" />
+    <Compile Include="Packets\Commands\Client\League_Notifications_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\List\BuildingToMove.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Resources.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Trap.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent_V2.cs" />
@@ -265,6 +340,7 @@
     <Compile Include="Packets\Commands\Client\Buy_Walls.cs" />
     <Compile Include="Packets\Commands\Client\Cancel_Consturction.cs" />
     <Compile Include="Packets\Commands\Client\Cancel_Hero_Upgrade.cs" />
+    <Compile Include="Packets\Commands\Client\Cancel_Troop_Training.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Change_Hero_State.cs" />
     <Compile Include="Packets\Commands\Client\Change_Village_Mode.cs" />
@@ -272,32 +348,51 @@
     <Compile Include="Packets\Commands\Client\Change_Weapon_Mode.cs" />
     <Compile Include="Packets\Commands\Client\Clear_Obstacle.cs" />
     <Compile Include="Packets\Commands\Client\Collect_Resource.cs" />
+    <Compile Include="Packets\Commands\Client\Copy_Village_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Elder_Kick.cs" />
+    <Compile Include="Packets\Commands\Client\Finish_Later_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Free_Worker.cs" />
     <Compile Include="Packets\Commands\Client\Gear_Up.cs" />
+    <Compile Include="Packets\Commands\Client\Layout_Building_Position.cs" />
+    <Compile Include="Packets\Commands\Client\List\UnitToRemove.cs" />
     <Compile Include="Packets\Commands\Client\Mission_Progress.cs" />
     <Compile Include="Packets\Commands\Client\Move_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Move_Building_In_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Move_Multiple_Buildings.cs" />
     <Compile Include="Packets\Commands\Client\News_Seen.cs" />
     <Compile Include="Packets\Commands\Client\New_Shop_Seen.cs" />
+    <Compile Include="Packets\Commands\Client\Remove_All_Building_In_Layout.cs" />
+    <Compile Include="Packets\Commands\Client\Remove_Units.cs" />
+    <Compile Include="Packets\Commands\Client\Remove_Units_V2.cs" />
+    <Compile Include="Packets\Commands\Client\Rename_Quick_Train.cs" />
+    <Compile Include="Packets\Commands\Client\Save_Alliance_Troop_Request_Message.cs" />
+    <Compile Include="Packets\Commands\Client\Sell_Building.cs" />
     <Compile Include="Packets\Commands\Client\Send_Alliance_Mail.cs" />
-    <Compile Include="Packets\Commands\Client\SpeedUp_Hero_Upgrade.cs" />
-    <Compile Include="Packets\Commands\Client\Speed_Up_Training_V2.cs" />
+    <Compile Include="Packets\Commands\Client\Set_Active_Layout.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Hero_Upgrade.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Troop_Training_V2.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Troop_Request.cs" />
+    <Compile Include="Packets\Commands\Client\Speed_Up_Troop_Training.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Upgrade_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Construction.cs" />
     <Compile Include="Packets\Commands\Client\Swap_GameObject.cs" />
+    <Compile Include="Packets\Commands\Client\Toggle_Clan_Filter.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit.cs" />
     <Compile Include="Packets\Commands\Client\Train_Unit_V2.cs" />
-    <Compile Include="Packets\Commands\Client\Unknown_544.cs" />
+    <Compile Include="Packets\Commands\Client\Troop_Request.cs" />
+    <Compile Include="Packets\Commands\Client\Edit_Mode_Shown.cs" />
+    <Compile Include="Packets\Commands\Client\Open_Close_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Unknown_553.cs" />
     <Compile Include="Packets\Commands\Client\Unknown_597.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Multiple_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Unit.cs" />
+    <Compile Include="Packets\Commands\Server\Alliance_Unit_Received.cs" />
     <Compile Include="Packets\Commands\Server\Changed_Alliance_Role.cs" />
     <Compile Include="Packets\Commands\Server\Changed_Alliance_Settings.cs" />
     <Compile Include="Packets\Commands\Server\Diamonds_Added.cs" />
+    <Compile Include="Packets\Commands\Server\Donate_Unit_Callback.cs" />
     <Compile Include="Packets\Commands\Server\Joined_Alliance.cs" />
     <Compile Include="Packets\Commands\Server\Leaved_Alliance.cs" />
     <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
@@ -309,6 +404,8 @@
     <Compile Include="Packets\Debugs\Clear_All_Obstacle.cs" />
     <Compile Include="Packets\Debugs\Elite\Add_Unit.cs" />
     <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
+    <Compile Include="Packets\Debugs\Elite\Generate_Base.cs" />
+    <Compile Include="Packets\Enums\AddFriendErrorReason.cs" />
     <Compile Include="Packets\Enums\AllianceErrorReason.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
     <Compile Include="Packets\Enums\NameErrorReason.cs" />
@@ -322,14 +419,19 @@
     <Compile Include="Packets\Messages\Client\Alliances\Chat_To_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Claim_Alliance_Gift.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Create_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Donate_Alliance_Unit.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Join_Alliance.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Leave_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Request_Join_Alliance.cs" />
+    <Compile Include="Packets\Messages\Client\Alliances\Respond_To_Alliance_Join_Request.cs" />
     <Compile Include="Packets\Messages\Client\Alliances\Search_Alliances.cs" />
     <Compile Include="Packets\Messages\Client\API\Bind_GameCenter_Account.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Authentication.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Client_Hello.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
+    <Compile Include="Packets\Messages\Client\Authentication\Set_Device_Token.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
+    <Compile Include="Packets\Messages\Client\Avatar\Ask_For_Avatar_Friend_List.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\Ask_For_Avatar_Profile.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\Change_Avatar_Name.cs" />
     <Compile Include="Packets\Messages\Client\Battle\Attack_Npc.cs" />
@@ -339,9 +441,13 @@
     <Compile Include="Packets\Messages\Client\Home\Ask_Visit_Home.cs" />
     <Compile Include="Packets\Messages\Client\Home\End_Client_Turn.cs" />
     <Compile Include="Packets\Messages\Client\Home\Go_Home.cs" />
+    <Compile Include="Packets\Messages\Client\Home\Inbox_Opened.cs" />
     <Compile Include="Packets\Messages\Client\Home\Send_Global_Chat.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Online_Member.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Member_State.cs" />
+    <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream_Entry_Removed.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Avatar_Friends_Online.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Avatar_Friend_List.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Data.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Live_Replay_Header.cs" />
     <Compile Include="Packets\Messages\Server\Battle\V2_Battle_Result.cs" />
@@ -350,6 +456,7 @@
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Full_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream_Entry.cs" />
+    <Compile Include="Packets\Messages\Server\Error\Avatar_Add_Friend_Fail.cs" />
     <Compile Include="Packets\Messages\Server\Error\Change_Alliance_Settings_Fail.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Joinable_Alliance_List.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Search_Alliances_Response.cs" />
@@ -804,6 +911,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Logic\Manager\WorkerManagerV2.cs" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Tools\Patch.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -828,6 +941,7 @@
   <ItemGroup>
     <Folder Include="Packets\Debugs\Administrator\" />
     <Folder Include="Packets\Debugs\Moderator\" />
+    <Folder Include="Packets\Messages\Server\Leaderboard\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
