@@ -392,6 +392,7 @@
     <Compile Include="Packets\Commands\Client\Edit_Mode_Shown.cs" />
     <Compile Include="Packets\Commands\Client\Open_Close_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Unknown_553.cs" />
+    <Compile Include="Packets\Commands\Client\Train_Quick_Units.cs" />
     <Compile Include="Packets\Commands\Client\Unknown_597.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />

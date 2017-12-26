@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
@@ -48,7 +49,15 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     Avatar.AllianceLowId = Alliance.LowId;
 
                     new Alliance_Full_Entry(this.Device) {Alliance = Alliance}.Send();
-                    new Alliance_Stream(this.Device) {Alliance = Alliance}.Send();
+
+                    try
+                    {
+                        new Alliance_Stream(this.Device) { Alliance = Alliance }.Send();
+                    }
+                    catch (Exception Exception)
+                    {
+                        Logging.Error(Exception.GetType(), $"Exception happend when trying to send Alliance Stream. {Exception.Message} : [{(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + ":" + this.Device.GameMode.Level.Player.LowID : "-:-")}]" + Environment.NewLine + Exception.StackTrace);
+                    }
 
                     Alliance.IncrementTotalConnected();
                     Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Joined));

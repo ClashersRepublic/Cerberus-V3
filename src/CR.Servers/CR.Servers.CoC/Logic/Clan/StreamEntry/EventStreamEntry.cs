@@ -9,8 +9,7 @@ namespace CR.Servers.CoC.Logic.Clan
 {
     internal class EventStreamEntry : StreamEntry
     {
-
-            internal override AllianceStream Type => AllianceStream.AllianceEvent;
+        internal override AllianceStream Type => AllianceStream.AllianceEvent;
 
         public EventStreamEntry() 
         {

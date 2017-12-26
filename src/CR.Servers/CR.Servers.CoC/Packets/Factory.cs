@@ -129,6 +129,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(552, typeof(Open_Close_Layout));
             Factory.Commands.Add(553, typeof(Unknown_553));
             Factory.Commands.Add(554, typeof(Change_Weapon_Heading));
+            Factory.Commands.Add(559, typeof(Train_Quick_Units));
             Factory.Commands.Add(567, typeof(Set_Active_Layout));
             Factory.Commands.Add(568, typeof(Copy_Village_Layout));
             Factory.Commands.Add(569, typeof(Remove_All_Building_In_Layout));

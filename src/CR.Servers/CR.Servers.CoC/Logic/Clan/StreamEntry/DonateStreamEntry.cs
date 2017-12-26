@@ -20,11 +20,12 @@ namespace CR.Servers.CoC.Logic.Clan
 
         public DonateStreamEntry()
         {
-
+            this.Units = new AllianceUnitSlots();
         }
 
         public DonateStreamEntry(Member Member) : base(Member)
         {
+            this.Units = new AllianceUnitSlots();
         }
 
         internal int MaxTroop;
@@ -36,7 +37,7 @@ namespace CR.Servers.CoC.Logic.Clan
         internal bool New = true;
 
         internal int UsedTroopSend; //Do not save this
-        internal AllianceUnitSlots Units = new AllianceUnitSlots();
+        internal AllianceUnitSlots Units;
 
         internal override void Encode(List<byte> Packet)
         {
@@ -116,9 +117,16 @@ namespace CR.Servers.CoC.Logic.Clan
 
             if (units != null)
             {
-                this.Units.Load(units);
+                if (this.Units != null)
+                {
+                    this.Units.Load(units);
+                }
+                else
+                {
+                    this.Units = new AllianceUnitSlots();
+                    this.Units.Load(units);
+                }
             }
-
         }
 
         internal override JObject Save()
@@ -130,8 +138,15 @@ namespace CR.Servers.CoC.Logic.Clan
             Json.Add("max_spell", this.MaxSpell);
             Json.Add("used_troop", this.UsedTroop);
             Json.Add("used_spell", this.UsedSpell);
-           
-            Json.Add("units", this.Units.Save());
+
+            if (this.Units != null)
+            {
+                Json.Add("units", this.Units.Save());
+            }
+            else
+            {
+                Json.Add("units", new JArray());;
+            }
             return Json;
         }
         internal void ShowValues()

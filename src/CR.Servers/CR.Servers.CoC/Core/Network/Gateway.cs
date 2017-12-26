@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets;
 using CR.Servers.Logic.Enums;
@@ -177,8 +178,9 @@ namespace CR.Servers.CoC.Core.Network
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception Exception)
                     {
+                        Logging.Error(Exception.GetType(), "Exception while Process Receive. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
                         this.Disconnect(AsyncEvent);
                     }
                 }
@@ -279,8 +281,9 @@ namespace CR.Servers.CoC.Core.Network
                 AsyncEvent = null;
             }
         }
-        internal void Disconnect(SocketAsyncEventArgs AsyncEvent)
+        internal void Disconnect(SocketAsyncEventArgs AsyncEvent, [CallerMemberName] string callerName = "")
         {
+            Console.WriteLine(callerName);
             if (AsyncEvent == null) return;
             Token Token = (Token)AsyncEvent.UserToken;
 

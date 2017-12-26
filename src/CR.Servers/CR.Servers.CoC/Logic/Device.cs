@@ -152,7 +152,7 @@ namespace CR.Servers.CoC.Logic
                             }
                         }
                         else
-                            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}}}.bin", Packet);
+                            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
 
                         if (!this.Token.Aborting)
                         {
@@ -166,7 +166,8 @@ namespace CR.Servers.CoC.Logic
                     }
                     else
                     {
-                        Logging.Error(this.GetType(), "The received buffer length is inferior the header length.");
+                        //The buffer is not yet complete,So let's handle this packet a bit later
+                        Logging.Info(this.GetType(), "The received buffer length is inferior the header length.");
                     }
                 }
             }

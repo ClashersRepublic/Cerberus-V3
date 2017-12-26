@@ -244,7 +244,16 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             if (Player.InAlliance)
             {
                 new Alliance_Full_Entry(this.Device) {Alliance = Player.Alliance}.Send();
-                new Alliance_Stream(this.Device) {Alliance = Player.Alliance}.Send();
+
+                try
+                {
+                    new Alliance_Stream(this.Device) { Alliance = Player.Alliance }.Send();
+                }
+                catch (Exception Exception)
+                {
+                    Logging.Error(Exception.GetType(), $"Exception happend when trying to send Alliance Stream. {Exception.Message} : [{this.HighId}-{this.LowId}]" + Environment.NewLine + Exception.StackTrace);
+                }
+
                 //new Alliance_Member_State(this.Device).Send();
 
                 this.Device.GameMode.Level.Player.Alliance.Members.Connected.TryAdd(Player.UserId, Player);

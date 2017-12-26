@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.List;
 using Newtonsoft.Json.Linq;
 
@@ -153,20 +151,20 @@ namespace CR.Servers.CoC.Logic
         {
             Packet.AddInt(this.Count);
 
-            this.ForEach(Item =>
+            for (int i = 0; i < this.Count; i++)
             {
-                Item.Encode(Packet);
-            });
+                this[i].Encode(Packet);
+            }
         }
 
         internal JArray Save()
         {
             JArray Array = new JArray();
 
-            this.ForEach(Item =>
+            for (int i = 0; i < this.Count; i++)
             {
-                Array.Add(Item.Save());
-            });
+                Array.Add(this[i].Save());
+            }
 
             return Array;
         }
@@ -185,9 +183,12 @@ namespace CR.Servers.CoC.Logic
         {
             var Copy = this.MemberwiseClone() as AllianceUnitSlots;
 
-            foreach (var Item in Copy)
+            if (Copy != null)
             {
-                Item.DonatorId = 0;
+                foreach (var Item in Copy)
+                {
+                    Item.DonatorId = 0;
+                }
             }
 
             return Copy;
