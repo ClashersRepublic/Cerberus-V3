@@ -281,9 +281,8 @@ namespace CR.Servers.CoC.Core.Network
                 AsyncEvent = null;
             }
         }
-        internal void Disconnect(SocketAsyncEventArgs AsyncEvent, [CallerMemberName] string callerName = "")
+        internal void Disconnect(SocketAsyncEventArgs AsyncEvent)
         {
-            Console.WriteLine(callerName);
             if (AsyncEvent == null) return;
             Token Token = (Token)AsyncEvent.UserToken;
 
