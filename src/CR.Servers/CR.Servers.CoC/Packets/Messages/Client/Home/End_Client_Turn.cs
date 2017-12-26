@@ -74,7 +74,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
         internal override void Process()
         {
+            this.Device.GameMode.Time.SubTick = this.SubTick;
+            this.Device.GameMode.Level.Tick();
 
+#if Extra
+            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
+#endif
             if (this.CommandCount > 0)
             {
                 do
@@ -112,13 +118,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     continue;
                 } while (this.Commands.Count > 0);
             }
-            this.Device.GameMode.Time.SubTick = this.SubTick;
-            this.Device.GameMode.Level.Tick();
-            
-#if Extra
-            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
-            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
-#endif
         }
     }
 }

@@ -38,11 +38,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     {
                         BuildingData Data = (BuildingData) Building.Data;
                         ResourceData ResourceData = this.UseAltResource ? Data.AltBuildResourceData(Building.GetUpgradeLevel() + 1) : Data.BuildResourceData;
+                        
                         if (ResourceData != null)
                         {
                             if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Building.GetUpgradeLevel() + 1])
                             {
-                                if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
+                                if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {
                                     Level.Player.Resources.Remove(ResourceData, Data.BuildCost[Building.GetUpgradeLevel() + 1]);
                                     Building.StartUpgrade();
@@ -90,9 +91,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                 }
                             }
                             else
-                                Logging.Error(this.GetType(),
-                                    "Unable to upgrade the building. The player doesn't have enough resources.");
+                                Logging.Error(this.GetType(),  "Unable to upgrade the building. The player doesn't have enough resources.");
                         }
+                        else
+                            Logging.Error(this.GetType(), "Unable to upgrade the building. The resource data is null");
                     }
                     else
                         Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
@@ -108,7 +110,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         {
                             if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Trap.GetUpgradeLevel() + 1])
                             {
-                                if (Level.GameObjectManager.Map == 0 ? Level.WorkerManager.FreeWorkers > 0  : Level.WorkerManagerV2.FreeWorkers > 0)
+                                if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0  : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {
                                     Level.Player.Resources.Remove(ResourceData, Data.BuildCost[Trap.GetUpgradeLevel() + 1]);
                                     Trap.StartUpgrade();
@@ -121,7 +123,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             Logging.Error(this.GetType(), "Unable to start upgrade the Trap. The resources data is null.");
                     }
                     else
-                        Logging.Error(this.GetType(), "Unable to upgrade the building. The player doesn't have enough resources.");
+                        Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
 
                 }
                 else if (GameObject is VillageObject VillageObject)
@@ -133,30 +135,23 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     {
                         if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[VillageObject.GetUpgradeLevel() + 1])
                         {
-                            if (Level.GameObjectManager.Map == 0
-                                ? Level.WorkerManager.FreeWorkers > 0
-                                : Level.WorkerManagerV2.FreeWorkers > 0)
+                            if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                             {
-                                Level.Player.Resources.Remove(ResourceData,
-                                    Data.BuildCost[VillageObject.GetUpgradeLevel() + 1]);
+                                Level.Player.Resources.Remove(ResourceData, Data.BuildCost[VillageObject.GetUpgradeLevel() + 1]);
                                 VillageObject.StartUpgrade();
                             }
                         }
                         else
-                            Logging.Error(this.GetType(),
-                                "Unable to upgrade the VillageObject. The player doesn't have enough resources.");
+                            Logging.Error(this.GetType(),  "Unable to upgrade the VillageObject. The player doesn't have enough resources.");
                     }
                     else
-                        Logging.Error(this.GetType(),
-                            "Unable to start upgrade the VillageObject. The resources data is null.");
+                        Logging.Error(this.GetType(),  "Unable to start upgrade the VillageObject. The resources data is null.");
                 }
                 else
-                    Logging.Error(this.GetType(),
-                        $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
+                    Logging.Error(this.GetType(),  $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
             }
             else
-                Logging.Error(this.GetType(),
-                    "Unable to upgrade the gameObject. GameObject is null");
+                Logging.Error(this.GetType(), "Unable to upgrade the gameObject. GameObject is null");
         }
         
     }

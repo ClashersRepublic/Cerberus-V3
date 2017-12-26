@@ -35,8 +35,7 @@
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.LZMACRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.LZMACoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LZMAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lzhamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,14 +103,14 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Visible = false;
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
@@ -119,7 +118,7 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Visible = false;
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
@@ -127,41 +126,33 @@
             // compressionToolStripMenuItem
             // 
             this.compressionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.LZMACRToolStripMenuItem,
-            this.LZMACoCToolStripMenuItem,
+            this.LZMAToolStripMenuItem,
             this.lzhamToolStripMenuItem});
             this.compressionToolStripMenuItem.Name = "compressionToolStripMenuItem";
-            this.compressionToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.compressionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.compressionToolStripMenuItem.Text = "Compress";
             this.compressionToolStripMenuItem.Visible = false;
             // 
-            // LZMACRToolStripMenuItem
+            // LZMAToolStripMenuItem
             // 
-            this.LZMACRToolStripMenuItem.Name = "LZMACRToolStripMenuItem";
-            this.LZMACRToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.LZMACRToolStripMenuItem.Text = "LZMA (CR)";
-            this.LZMACRToolStripMenuItem.Click += new System.EventHandler(this.LZMACRToolStripMenuItem_Click);
-            // 
-            // LZMACoCToolStripMenuItem
-            // 
-            this.LZMACoCToolStripMenuItem.Name = "LZMACoCToolStripMenuItem";
-            this.LZMACoCToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.LZMACoCToolStripMenuItem.Text = "LZMA (CoC)";
-            this.LZMACoCToolStripMenuItem.Click += new System.EventHandler(this.LZMACoCToolStripMenuItem_Click);
+            this.LZMAToolStripMenuItem.Name = "LZMAToolStripMenuItem";
+            this.LZMAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.LZMAToolStripMenuItem.Text = "LZMA ";
+            this.LZMAToolStripMenuItem.Click += new System.EventHandler(this.LZMAToolStripMenuItem_Click);
             // 
             // lzhamToolStripMenuItem
             // 
             this.lzhamToolStripMenuItem.CheckOnClick = true;
             this.lzhamToolStripMenuItem.Enabled = false;
             this.lzhamToolStripMenuItem.Name = "lzhamToolStripMenuItem";
-            this.lzhamToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.lzhamToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.lzhamToolStripMenuItem.Text = "Lzham";
             this.lzhamToolStripMenuItem.Click += new System.EventHandler(this.lzhamToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -447,13 +438,12 @@
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem replaceTextureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem LZMACRToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem LZMAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lzhamToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addTextureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportAllShapeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportAllChunkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportAllAnimationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem LZMACoCToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }

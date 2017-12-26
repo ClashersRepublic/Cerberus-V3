@@ -1,4 +1,7 @@
-﻿using CR.Servers.CoC.Logic;
+﻿using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client
@@ -12,12 +15,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             
         }
 
-        internal int SheildId;
+        internal int ShieldId;
 
         internal override void Decode()
         {
-            this.SheildId = this.Reader.ReadInt32();
+            this.ShieldId = this.Reader.ReadInt32();
             base.Decode();
         }
+        
     }
 }

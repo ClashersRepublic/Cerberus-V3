@@ -1,4 +1,5 @@
-﻿using CR.Servers.CoC.Extensions.Game;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -24,10 +25,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Decode()
         {
-            this.X = Reader.ReadInt32();
-            this.Y = Reader.ReadInt32();
+            this.X = this.Reader.ReadInt32();
+            this.Y = this.Reader.ReadInt32();
 
-            this.BuildingData = Reader.ReadData<BuildingData>();
+            this.BuildingData = this.Reader.ReadData<BuildingData>();
 
             base.Decode();
         }
@@ -44,7 +45,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (BuildingClassData.CanBuy)
                     {
-                        if (Level.Player.Map == 0)
+                        if (this.BuildingData.VillageType == 0)
                         {
                             if (this.BuildingData.TownHallLevel[0] <= Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
                             {
@@ -87,6 +88,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                         Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                         this.StartConstruction(Level);
                                     }
+                                    //else
+                                        //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                 }
                             }
                         }
@@ -107,6 +110,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                             Level.Player.Resources.Remove(ResourceData, Cost);
                                             this.StartConstruction(Level, Time);
                                         }
+                                        //else
+                                           // Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                     }
                                     return;
                                 }
@@ -151,12 +156,16 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                         Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                         this.StartConstruction(Level);
                                     }
+                                    //else
+                                        //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                 }
                             }
                         }
                     }
                 }
             }
+            else
+                Logging.Error(this.GetType(), $"Unable to buy building. The building data is null! ");
         }
 
         internal void StartConstruction(Level Level)
@@ -168,7 +177,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.X = this.X << 9;
             GameObject.Position.Y = this.Y << 9;
 
-            if (Level.Player.Map == 0)
+            if (this.BuildingData.VillageType == 0)
                 Level.WorkerManager.AllocateWorker(GameObject);
             else
                 Level.WorkerManagerV2.AllocateWorker(GameObject);
@@ -195,7 +204,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.X = this.X << 9;
             GameObject.Position.Y = this.Y << 9;
 
-            if (Level.Player.Map == 0)
+            if (this.BuildingData.VillageType == 0)
                 Level.WorkerManager.AllocateWorker(GameObject);
             else
                 Level.WorkerManagerV2.AllocateWorker(GameObject);

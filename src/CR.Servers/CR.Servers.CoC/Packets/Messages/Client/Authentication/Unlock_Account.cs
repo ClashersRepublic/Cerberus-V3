@@ -35,6 +35,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Process()
         {
+            ShowValues();
             if (this.UnlockCode.Length != 12 || string.IsNullOrEmpty(this.UnlockCode))
             {
                 //Remove Device

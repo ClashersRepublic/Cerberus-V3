@@ -46,7 +46,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
         internal override void Process()
         {
 
-            new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
+            new Authentication_Failed(this.Device, LoginFailedReason.Patch).Send();
             /*if (this.Protocol == 1)
             {
                 if (this.MajorVersion == Version.ClientMajorVersion && this.BuildVersion == Logic.Version.ClientBuildVersion)

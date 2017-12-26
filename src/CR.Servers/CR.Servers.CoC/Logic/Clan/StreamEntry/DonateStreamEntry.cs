@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Extensions.Helper;
 using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.Extensions;
 using CR.Servers.Extensions.List;
 using Newtonsoft.Json.Linq;
 
@@ -30,6 +33,7 @@ namespace CR.Servers.CoC.Logic.Clan
         internal int UsedSpell;
         internal bool HaveMessage;
         internal string Message;
+        internal bool New = true;
 
         internal int UsedTroopSend; //Do not save this
         internal AllianceUnitSlots Units = new AllianceUnitSlots();
@@ -41,11 +45,15 @@ namespace CR.Servers.CoC.Logic.Clan
             Packet.AddInt(this.LowId);
             Packet.AddInt(this.MaxTroop);
             Packet.AddInt(this.MaxSpell);
-            Packet.AddInt(this.UsedTroopSend);
+            Packet.AddInt(this.UsedTroop);
             Packet.AddInt(this.UsedSpell);
 
+            this.New = true;
 
-            var requestorDonatedUnit = this.Units.FindAll(T => T.DonatorId == this.RequesterId);
+
+            Packet.AddInt(0);
+
+            /*var requestorDonatedUnit = this.Units.FindAll(T => T.DonatorId == this.RequesterId);
 
             if (requestorDonatedUnit.Count > 0)
             {
@@ -66,15 +74,15 @@ namespace CR.Servers.CoC.Logic.Clan
             else
             {
                 Packet.AddInt(0);
-            }
+            }*/
 
             Packet.AddBool(this.HaveMessage);
             if (this.HaveMessage)
                 Packet.AddString(this.Message);
 
-            var donatedUnits = this.Units.FindAll(T => T.DonatorId != this.RequesterId);
+            var donatedUnits = this.Units.ToArray();
 
-            Packet.AddInt(donatedUnits.Count);
+            Packet.AddInt(donatedUnits.Length);
 
             foreach (var donatedUnit in donatedUnits)
             {
@@ -126,6 +134,15 @@ namespace CR.Servers.CoC.Logic.Clan
             Json.Add("units", this.Units.Save());
             return Json;
         }
-
+        internal void ShowValues()
+        {
+            foreach (FieldInfo Field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (Field != null)
+                {
+                    Logging.Info(this.GetType(), ConsolePad.Padding(Field.Name) + " : " + ConsolePad.Padding(!string.IsNullOrEmpty(Field.Name) ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)") : "(null)", 40));
+                }
+            }
+        }
     }
 }

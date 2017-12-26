@@ -20,13 +20,13 @@ namespace CR.Servers.CoC.Logic
         internal GameMode GameMode;
         internal TileMap TileMap;
 
-
         internal GameObjectManager GameObjectManager;
         internal WorkerManager WorkerManager;
         internal WorkerManagerV2 WorkerManagerV2;
         internal ComponentManager ComponentManager;
         internal UnitProductionManager UnitProductionManager;
         internal SpellProductionManager SpellProductionManager;
+        //internal CooldownManager CooldownManager;
 
         internal BattleManager BattleManager;
 
@@ -41,7 +41,10 @@ namespace CR.Servers.CoC.Logic
         internal int LastLeagueShuffleInfo;
 
         internal bool EditModeShown;
+
         internal string TroopRequestMessage = "I need reinforcements";
+        internal string WarRequestMessage = "I need reinforcements";
+
         internal string[] ArmyNames = { "", "", "", "" };
 
         internal int TombStoneCount
@@ -86,7 +89,7 @@ namespace CR.Servers.CoC.Logic
 
         internal bool IsBuildingCapReached(BuildingData Data)
         {
-            var TownHallLevel = GameObjectManager.Map == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
+            var TownHallLevel = Data.VillageType == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
             var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel);
             return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
@@ -99,9 +102,8 @@ namespace CR.Servers.CoC.Logic
             this.ComponentManager = new ComponentManager(this);
             this.UnitProductionManager = new UnitProductionManager(this);
             this.SpellProductionManager = new SpellProductionManager(this);
+            //this.CooldownManager = new CooldownManager(this);
             /*
-            this.CooldownManager = new CooldownManager();
-
             this.MissionManager = new MissionManager(this);*/
 
             this.TileMap = new TileMap(50, 50);
@@ -136,6 +138,7 @@ namespace CR.Servers.CoC.Logic
         {
             this.Player = Player;
             this.Player.Level = this;
+            this.Player.Process();
         }
 
         internal void SetHome(Home Home)
@@ -151,8 +154,12 @@ namespace CR.Servers.CoC.Logic
 
             JsonHelper.GetJsonNumber(Token, "last_league_rank", out this.LastLeagueRank);
             JsonHelper.GetJsonNumber(Token, "last_league_shuffle", out this.LastLeagueShuffleInfo);
+
             JsonHelper.GetJsonBoolean(Token, "edit_mode_shown", out this.EditModeShown);
+
             JsonHelper.GetJsonString(Token, "troop_req_msg", out this.TroopRequestMessage);
+            JsonHelper.GetJsonString(Token, "war_req_msg", out this.WarRequestMessage);
+
             if (JsonHelper.GetJsonArray(Token, "army_names", out var Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();
@@ -202,7 +209,11 @@ namespace CR.Servers.CoC.Logic
 
         internal JObject Save()
         {
-            JObject Json = new JObject {{"exp_ver", 1}};
+            JObject Json = new JObject
+            {
+                {"exp_ver", 1},
+                
+            };
 
             this.GameObjectManager.Save(Json);
             //this.CooldownManager.Save(Json);
@@ -223,15 +234,23 @@ namespace CR.Servers.CoC.Logic
                 }
             });
 
+            //Json.Add("newShopDecos", new JArray());
+
             Json.Add("last_league_rank", this.LastLeagueRank);
             Json.Add("last_league_shuffle", this.LastLeagueShuffleInfo);
+
             Json.Add("edit_mode_shown", this.EditModeShown);
+
             Json.Add("troop_req_msg", this.TroopRequestMessage);
+            Json.Add("war_req_msg", this.WarRequestMessage);
+
             Json.Add("army_names", new JArray
             {
                 this.ArmyNames
                 
             });
+
+
             return Json;
         }
 

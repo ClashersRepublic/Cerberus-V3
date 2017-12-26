@@ -11,8 +11,7 @@ namespace CR.Servers.CoC
     {
         internal Test()
         {
-            this.IntToVInt(20021382);
-        }
+               }
 
         internal void IntToVInt(int _Value)
         {
@@ -25,7 +24,6 @@ namespace CR.Servers.CoC
         internal void Uncompress(string Hexa)
         {
             Reader br = new Reader(Hexa.HexaToBytes());
-
 
             /*
             int AllianceCount = br.ReadInt32();

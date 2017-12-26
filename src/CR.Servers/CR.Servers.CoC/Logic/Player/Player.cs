@@ -70,9 +70,10 @@ namespace CR.Servers.CoC.Logic
 
         [JsonProperty] internal Rank Rank = Rank.Player;
         [JsonProperty] internal Inbox Inbox;
+        [JsonProperty] internal Friends Friends;
 
-        /*[JsonProperty] internal Facebook Facebook;
-        [JsonProperty] internal Google Google;
+        [JsonProperty] internal FacebookApi Facebook;
+        /*[JsonProperty] internal Google Google;
         [JsonProperty] internal Gamecenter Gamecenter;*/
 
         [JsonProperty] internal DateTime LastTick = DateTime.UtcNow;
@@ -110,9 +111,11 @@ namespace CR.Servers.CoC.Logic
         internal Player()
         {
             this.Inbox = new Inbox(this);
+            this.Friends = new Friends(this);
             this.Achievements = new AchievementSlot();
             this.AchievementProgress = new AchievementProgressSlot(this);
 
+            this.Facebook = new FacebookApi(this);
             /*
             this.Missions = new List<Data>(30);
             this.Logs = new List<AvatarStreamEntry>(50);
@@ -143,11 +146,11 @@ namespace CR.Servers.CoC.Logic
             this.Variables.Initialize();
         }
 
-
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
+        internal void Process()
         {
+            this.Friends.VerifyFriend();
             this.VerifyAlliance();
+
         }
 
         internal void AddDiamonds(int Diamonds)
@@ -169,11 +172,25 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal void AddScore(int Score)
+        internal void AddScore(int Trophies)
         {
-            var LeagueData = (LeagueData)CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.League);
+            this.Score += Trophies;
 
-            this.Score += Score;
+            LeagueData LeagueData = (LeagueData)CSV.Tables.Get(Gamefile.Leagues).GetDataWithInstanceID(this.League);
+
+            if (LeagueData?.PlacementLimitHigh > this.Score)
+            {
+                for (int i = LeagueData.GetId(); i < CSV.Tables.Get(Gamefile.Leagues).Datas.Count; i++)
+                {
+                    LeagueData Data = (LeagueData)CSV.Tables.Get(Gamefile.Leagues).Datas[i];
+
+                    if (this.Score >= Data.PlacementLimitLow)
+                    {
+                        this.League = i;
+                    }
+                    else break;
+                }
+            }
         }
 
         internal void VerifyAlliance()
@@ -272,7 +289,7 @@ namespace CR.Servers.CoC.Logic
 
 
             _Packet.AddString(this.Name);
-            _Packet.AddString(null);
+            _Packet.AddString(this.Facebook.Identifier == string.Empty ? null : this.Facebook.Identifier);
 
             _Packet.AddInt(this.ExpLevel);
             _Packet.AddInt(this.ExpPoints);

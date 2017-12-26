@@ -29,7 +29,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
             if (Player.Level != null)
             {
-             new Visit_Home_Data(this.Device, Player.Level).Send();;  
+                new Visit_Home_Data(this.Device, Player.Level).Send();
             }
             else
             {

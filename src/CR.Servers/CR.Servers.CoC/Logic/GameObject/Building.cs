@@ -316,6 +316,10 @@ namespace CR.Servers.CoC.Logic
                         this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, Time);
                     }
                 }
+                else
+                {
+                    Logging.Error(this.GetType(), "Unable to gear up the building because the buidling is already under construction! - " + Data.Name + ".");
+                }
             }
             else
             {

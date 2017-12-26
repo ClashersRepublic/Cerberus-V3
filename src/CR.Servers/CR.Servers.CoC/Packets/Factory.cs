@@ -13,6 +13,7 @@ using CR.Servers.CoC.Packets.Messages.Client.API;
 using CR.Servers.CoC.Packets.Messages.Client.Authentication;
 using CR.Servers.CoC.Packets.Messages.Client.Avatar;
 using CR.Servers.CoC.Packets.Messages.Client.Battle;
+using CR.Servers.CoC.Packets.Messages.Client.Friend;
 using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.Extensions.Binary;
 
@@ -42,13 +43,18 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(10113, typeof(Set_Device_Token));
             Factory.Messages.Add(10121, typeof(Unlock_Account));
             Factory.Messages.Add(10212, typeof(Change_Avatar_Name));
-            Factory.Messages.Add(10905, typeof(Inbox_Opened));
+            Factory.Messages.Add(10501, typeof(Accept_Friend_Request));
+            Factory.Messages.Add(10502, typeof(Add_Friend));
             Factory.Messages.Add(10504, typeof(Ask_For_Avatar_Friend_List));
+            Factory.Messages.Add(10506, typeof(Remove_Friend));
+            Factory.Messages.Add(10513, typeof(Ask_For_Playing_Facebook_Friend_List));
+            Factory.Messages.Add(10905, typeof(Inbox_Opened));
             Factory.Messages.Add(14101, typeof(Go_Home));
             Factory.Messages.Add(14102, typeof(End_Client_Turn));
             Factory.Messages.Add(14103, typeof(Cancel_V2_Battle));
             Factory.Messages.Add(14113, typeof(Ask_Visit_Home));
             Factory.Messages.Add(14134, typeof(Attack_Npc));
+            Factory.Messages.Add(14201, typeof(Bind_Facebook_Account));
             Factory.Messages.Add(14212, typeof(Bind_GameCenter_Account));
             Factory.Messages.Add(14301, typeof(Create_Alliance));
             Factory.Messages.Add(14302, typeof(Ask_For_Alliance_Data));

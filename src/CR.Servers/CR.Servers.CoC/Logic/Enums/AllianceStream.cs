@@ -6,6 +6,7 @@
         Chat = 2,
         JoinRequest = 3,
         AllianceEvent = 4,
+        FriendChallenge = 12,
         Gift = 16,
     }
 }

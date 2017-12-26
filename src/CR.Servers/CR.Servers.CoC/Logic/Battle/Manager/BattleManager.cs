@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
@@ -56,18 +57,17 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
             }
 
             this.Started = true;
-            this.Timer.Interval = 2000;
+            this.Timer.Interval = 1500;
             this.Timer.AutoReset = true;
             this.Timer.Elapsed += (Gaybdu, Nagy) =>
             {
-                //int CurrentTick = Interlocked.Increment(ref this.Tick) - 1; // -1 because it returns the incremented tick.
 
                 this.BattleCommandManager.Tick();
 
                 var Buffered = this.BattleCommandManager.Commands.ToList();
 
                 if (!this.Stopped && this.Spectators.Count > 0)
-                {
+                {   
                     foreach (Level Player in this.Spectators.Values.ToArray())
                     {
                         if (Player.GameMode.Connected)
@@ -98,7 +98,7 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
 
             var Buffered = this.BattleCommandManager.Commands.ToList();
 
-            if (!this.Stopped && this.Spectators.Count > 0)
+            if (this.Spectators.Count > 0)
             {
                 foreach (Level Player in this.Spectators.Values.ToArray())
                 {
@@ -110,6 +110,8 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
                             Spectator = this.Spectators.Count,
                             Commands = Buffered
                         }.Send();
+
+                        new Live_Replay_End(Player.GameMode.Device).Send();
                     }
                 }
             }

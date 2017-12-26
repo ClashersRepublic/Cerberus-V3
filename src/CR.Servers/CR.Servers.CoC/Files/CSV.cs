@@ -30,6 +30,7 @@ namespace CR.Servers.CoC.Files
             Gamefiles.Add((int)Gamefile.Townhall_Levels, @"Gamefiles/logic/townhall_levels.csv");
             Gamefiles.Add((int)Gamefile.Npcs, @"Gamefiles/logic/npcs.csv");
             Gamefiles.Add((int)Gamefile.Decos, @"Gamefiles/logic/decos.csv");
+            Gamefiles.Add((int)Gamefile.Shields, @"Gamefiles/logic/shields.csv");
             Gamefiles.Add((int)Gamefile.Missions, @"Gamefiles/logic/missions.csv");
             Gamefiles.Add((int)Gamefile.Achievements, @"Gamefiles/logic/achievements.csv");
             Gamefiles.Add((int)Gamefile.Spells, @"Gamefiles/logic/spells.csv");

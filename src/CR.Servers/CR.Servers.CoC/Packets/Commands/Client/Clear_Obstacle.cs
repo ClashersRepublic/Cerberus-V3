@@ -39,7 +39,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     {
                         if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.ClearCost)
                         {
-                            if (Level.GameObjectManager.Map == 0)
+                            if (Data.VillageType == 0)
                             {
                                 if (Level.WorkerManager.FreeWorkers > 0)
                                 {

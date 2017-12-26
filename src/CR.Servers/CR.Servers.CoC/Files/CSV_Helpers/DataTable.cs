@@ -71,6 +71,9 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
                 case Gamefile.Decos:
                     _Data = new DecoData(_Row, this);
                     break;
+                case Gamefile.Shields:
+                    _Data = new ShieldData(_Row, this);
+                    break;
                 case Gamefile.Missions:
                     _Data = new MissionData(_Row, this);
                     break;

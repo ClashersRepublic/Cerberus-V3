@@ -107,11 +107,11 @@ namespace CR.Servers.CoC.Logic
 
                     if (this.VillageType == 0)
                     {
-                        this.Parent.Level.WorkerManager.AllocateWorker(this.Parent);
+                        this.Parent.Level.WorkerManager.DeallocateWorker(this.Parent);
                     }
                     else
                     {
-                        this.Parent.Level.WorkerManagerV2.AllocateWorker(this.Parent);
+                        this.Parent.Level.WorkerManagerV2.DeallocateWorker(this.Parent);
                     }
 
                     this.UpgradeTimer = null;
@@ -191,11 +191,11 @@ namespace CR.Servers.CoC.Logic
 
                         if (this.VillageType == 0)
                         {
-                            this.Parent.Level.WorkerManager.DeallocateWorker(this.Parent);
+                            this.Parent.Level.WorkerManager.AllocateWorker(this.Parent);
                         }
                         else
                         {
-                            this.Parent.Level.WorkerManagerV2.DeallocateWorker(this.Parent);
+                            this.Parent.Level.WorkerManagerV2.AllocateWorker(this.Parent);
                         }
                     }
                 }

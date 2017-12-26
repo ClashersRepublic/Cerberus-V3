@@ -114,8 +114,9 @@ namespace CR.Servers.CoC.Logic
                                 this.Set(Achievement.GlobalId + 2, this.Player.League);
 
                                 i += 2;
-                            }
                                 break;
+                            }
+
                             case "npc_stars":
                             {
                                 int Stars = this.Player.NpcMapProgress.Sum(T => T.Count);

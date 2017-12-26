@@ -1,14 +1,14 @@
 ﻿{
   "Game": {
     "UpdateURL": "http://cocbetatest1.ddns.net/",
-    "PatchURL": "http://cocbetatest1.ddns.net/",
+    "PatchURL": "http://cocbetatest1.ddns.net/patch/",
     "EventURL": "http://cocbetatest1.ddns.net/events/",
-    "GameAssetsURL": "http://cocbetatest1.ddns.net/",
+    "GameAssetsURL": "http://cocbetatest1.ddns.net/patch/",
     "ClientMajorVersion": "9",
     "ClientMinorVersion": "256",
     "StartingResources": {
       "FetchFromCSV": false,
-      "Diamonds": 1000,
+      "Diamonds": 10000,
       "Gold": 2000000000,
       "Elixir": 2000000000,
       "DarkElixir": 2000000000,

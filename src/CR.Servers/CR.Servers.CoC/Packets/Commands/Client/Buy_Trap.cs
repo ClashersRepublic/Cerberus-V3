@@ -41,7 +41,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (ResourceData != null)
                     {
-                        if (this.TrapData.TownHallLevel[0] <= (Level.GameObjectManager.Map == 0 ? Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 : Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1))
+                        if (this.TrapData.TownHallLevel[0] <= (this.TrapData.VillageType == 0 ? Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 : Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1))
                         {
                             if (Level.Player.Resources.GetCountByData(ResourceData) >= this.TrapData.BuildCost[0])
                             {

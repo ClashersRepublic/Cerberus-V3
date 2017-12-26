@@ -21,49 +21,6 @@
         private const int NumFastBytes = 32;
         private const string Mf = "bt4";
         private const bool Eos = false;
-
-        internal static void CompressCoC(string file, string outputlocation)
-        {
-            var encoder = new Encoder();
-            using (var input = new FileStream(file, FileMode.Open))
-            {
-                using (var output = new FileStream(outputlocation, FileMode.Create, FileAccess.Write))
-                {
-                    CoderPropID[] propIDs =
-                    {
-                        CoderPropID.DictionarySize,
-                        CoderPropID.PosStateBits,
-                        CoderPropID.LitContextBits,
-                        CoderPropID.LitPosBits,
-                        CoderPropID.Algorithm,
-                        CoderPropID.NumFastBytes,
-                        CoderPropID.MatchFinder,    
-                        CoderPropID.EndMarker
-                    };
-
-                    object[] properties =
-                    {
-                        Dictionary,
-                        PosStateBits,
-                        3,
-                        //LitContextBits,
-                        LitPosBits,
-                        Algorithm,
-                        NumFastBytes,
-                        Mf,
-                        Eos
-                    };
-                    encoder.SetCoderProperties(propIDs, properties);
-                    encoder.WriteCoderProperties(output);
-                    output.Write(BitConverter.GetBytes(input.Length), 0, 4);
-
-                    encoder.Code(input, output, input.Length, -1, null);
-                    output.Flush();
-                    output.Dispose();
-                }
-                input.Dispose();
-            }
-        }
             
         public static byte[] HexaToBytes(string _Value)
         {
@@ -71,7 +28,7 @@
             return Enumerable.Range(0, _Tmp.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(_Tmp.Substring(x, 2), 16)).ToArray();
         }
 
-        internal static void CompressCR(string file, string outputlocation)
+        internal static void Compress(string file, string outputlocation)
         {
             File.Copy(file, file += ".clone");
             byte[] hash;
@@ -128,7 +85,7 @@
             File.Delete(file);
         }
 
-        internal static void DecompressCR(string file)
+        internal static void Decompress(string file)
         {
             var clone = file + ".clone";
             File.Copy(file, clone);
@@ -149,32 +106,6 @@
                     var md5 = new byte[16];
                     input.Read(md5, 0, 16);
 
-                    var properties = new byte[5];
-                    input.Read(properties, 0, 5);
-
-                    var fileLengthBytes = new byte[4];
-                    input.Read(fileLengthBytes, 0, 4);
-                    var fileLength = BitConverter.ToInt32(fileLengthBytes, 0);
-
-                    decoder.SetDecoderProperties(properties);
-                    decoder.Code(input, output, input.Length, fileLength, null);
-                    output.Flush();
-                    output.Close();
-                }
-                input.Close();
-            }
-            File.Delete(clone);
-        }
-
-        internal static void DecompressCoC(string file)
-        {
-            var clone = file + ".clone";
-            File.Copy(file, clone);
-            var decoder = new Decoder();
-            using (var input = new FileStream(clone, FileMode.Open))
-            {
-                using (var output = new FileStream(file, FileMode.Create, FileAccess.Write))
-                {
                     var properties = new byte[5];
                     input.Read(properties, 0, 5);
 

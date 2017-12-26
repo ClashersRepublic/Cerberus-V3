@@ -114,8 +114,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
             this.Device.GameMode.Level.Tick();
 
             if (this.Device.State == State.IN_1VS1_BATTLE)
-            {
-                
+            {    
                 this.Device.GameMode.Level.BattleManager.Tick();
             }
 #if Extra

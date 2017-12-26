@@ -8,6 +8,7 @@ using CR.Servers.CoC.Packets.Enums;
 using CR.Servers.CoC.Packets.Messages.Server.Alliances;
 using CR.Servers.CoC.Packets.Messages.Server.Authentication;
 using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+using CR.Servers.CoC.Packets.Messages.Server.Friend;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
@@ -250,13 +251,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                 Player.Alliance.IncrementTotalConnected();
             }
 
-            /*new Avatar_Friend_List(this.Device)
-            {
-                Friends = new List<Player>()
-                {
-                    Resources.Accounts.LoadAccount(0,2).Player
-                }
-            }.Send();*/
+            new Friend_List(this.Device).Send();
 
             if (this.Device.Chat == null)
             {

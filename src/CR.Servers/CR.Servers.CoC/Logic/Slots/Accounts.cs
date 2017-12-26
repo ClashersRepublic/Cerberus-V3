@@ -37,18 +37,28 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal void Add(Player Player)
         {
-            if (!this.Players.TryAdd(Player.UserId, Player))
+            if (!this.Players.ContainsKey(Player.UserId))
             {
-                Logging.Error(this.GetType(), "Unable to add the player " + Player.HighID + "-" + Player.LowID + " in list.");
+                if (!this.Players.TryAdd(Player.UserId, Player))
+                {
+                    Logging.Error(this.GetType(), "Unable to add the player avatar " + Player.HighID + "-" + Player.LowID + " in list.");
+                }
             }
+            else
+                Logging.Error(this.GetType(), "Unable to add the player avatar " + Player.HighID + "-" + Player.LowID + ". The player avatar is already in the dictionary.");
         }
 
         internal void Add(Home Home)
         {
-            if (!this.Homes.TryAdd((long)Home.HighID << 32 | (uint)Home.LowID, Home))
+            if (!this.Homes.ContainsKey((long) Home.HighID << 32 | (uint) Home.LowID))
             {
-                Logging.Error(this.GetType(), "Unable to add the player " + Home.HighID + "-" + Home.LowID + " in list.");
+                if (!this.Homes.TryAdd((long) Home.HighID << 32 | (uint) Home.LowID, Home))
+                {
+                    Logging.Error(this.GetType(),  "Unable to add the player home " + Home.HighID + "-" + Home.LowID + " in list.");
+                }
             }
+            else
+                Logging.Error(this.GetType(), "Unable to add the player home " + Home.HighID + "-" + Home.LowID + ". The player home is already in the dictionary.");
         }
 
         internal Account CreateAccount()

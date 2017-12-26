@@ -41,16 +41,16 @@ namespace CR.Servers.CoC.Logic.Slots
         {
             if (this.ContainsKey(Clan.AllianceId))
             {
-                if (!this.TryUpdate(Clan.AllianceId, Clan, Clan))
+                if (!this.TryUpdate(Clan.AllianceId, this[Clan.AllianceId], Clan))
                 {
-                    Logging.Error(this.GetType(), "Unsuccessfuly updated the specified clan to the dictionnary.");
+                    Logging.Error(this.GetType(), "Unsuccessfuly update the specified clan to the dictionnary.");
                 }
             }
             else
             {
                 if (!this.TryAdd(Clan.AllianceId, Clan))
                 {
-                    Logging.Error(this.GetType(), "Unsuccessfuly added the specified clan to the dictionnary.");
+                    Logging.Error(this.GetType(), "Unsuccessfuly add the specified clan to the dictionnary.");
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
 
             this.Data.AddString(Player.Token);
 
-            this.Data.AddString(string.Empty); // Facebook ID
+            this.Data.AddString(Player.Facebook.Identifier); // Facebook ID
             this.Data.AddString(string.Empty); // Gamecenter ID
 
             this.Data.AddInt(9);
@@ -37,7 +37,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
             this.Data.AddInt(0); // Play Time Seconds
             this.Data.AddInt(0); // Days Since Started Playing
 
-            this.Data.AddString(null); // 103121310241222
+            this.Data.AddString(FacebookApi.ApplicationId); // 103121310241222
             this.Data.AddString(null); // Server Time
             this.Data.AddString("0"); // Account Creation Date
 

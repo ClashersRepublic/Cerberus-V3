@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Logic
+﻿using CR.Servers.CoC.Core;
+
+namespace CR.Servers.CoC.Logic
 {
     internal class ResourceStorageComponent : Component
     {
@@ -14,7 +16,7 @@
         {
             if (ResourceID > this.MaxArray.Length)
             {
-                //Logging.Info(this.GetType(), "Index is out of range : " + ResourceID);
+                Logging.Info(this.GetType(), "Index is out of range : " + ResourceID);
                 return 0;
             }
 

@@ -25,6 +25,9 @@ namespace CR.Servers.CoC.Logic
         internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
         internal bool Constructing => this.ConstructionTimer != null;
         internal int GetUpgradeLevel() => this.UpgradeLevel;
+        internal override int HeightInTiles => 0;
+
+        internal override int WidthInTiles => 0;
 
         public VillageObject(Data Data, Level Level) : base(Data, Level)
         {

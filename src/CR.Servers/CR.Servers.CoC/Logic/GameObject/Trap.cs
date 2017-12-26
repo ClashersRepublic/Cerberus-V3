@@ -18,6 +18,8 @@ namespace CR.Servers.CoC.Logic
 
 
         private int UpgradeLevel;
+        internal bool NeedRepair;
+
         internal Timer ConstructionTimer;
         internal TrapData TrapData => (TrapData)this.Data;
 
@@ -43,7 +45,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
-                        if (this.Level.Player.Village2)
+                        if (this.VillageType == 1)
                         {
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >= Data.TownHallLevel[this.UpgradeLevel + 1];
                         }
@@ -68,7 +70,7 @@ namespace CR.Servers.CoC.Logic
         }
 
         internal void StartUpgrade()
-        {
+        {   
             int Time = this.TrapData.GetBuildTime(this.UpgradeLevel + 1);
 
             if (!this.Constructing)
@@ -116,13 +118,11 @@ namespace CR.Servers.CoC.Logic
             TrapData Data = this.TrapData;
             if (this.UpgradeLevel + 1 > Data.MaxLevel)
             {
-                Logging.Error(this.GetType(),
-                    "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
+                Logging.Error(this.GetType(), "Unable to upgrade the building because the level is out of range! - " + Data.Name + ".");
                 this.SetUpgradeLevel(Data.MaxLevel);
             }
             else
                 this.SetUpgradeLevel(this.UpgradeLevel + 1);
-
 
             if (!NoWorker)
             {
@@ -227,20 +227,19 @@ namespace CR.Servers.CoC.Logic
             {
                 if (Level < -1)
                 {
-                    Logging.Error(this.GetType(),
-                        "An error has been throwed when the loading of building - Load an illegal upgrade level. Level : " +
-                        Level);
+                    Logging.Error(this.GetType(), "An error has been throwed when the loading of building - Load an illegal upgrade level. Level : " + Level);
                     this.SetUpgradeLevel(0);
                 }
                 else if (Level > Data.MaxLevel)
                 {
-                    Logging.Error(this.GetType(),
-                        $"An error has been throwed when the loading of building - Loaded upgrade level {Level + 1} is over max! (max = {Data.MaxLevel + 1}) id {this.Id} data id {Data.GlobalId}");
+                    Logging.Error(this.GetType(), $"An error has been throwed when the loading of building - Loaded upgrade level {Level + 1} is over max! (max = {Data.MaxLevel + 1}) id {this.Id} data id {Data.GlobalId}");
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else
                     this.SetUpgradeLevel(Level);
             }
+
+            JsonHelper.GetJsonBoolean(Json, "needs_repair", out this.NeedRepair);
 
             base.Load(Json);
         }
@@ -253,6 +252,11 @@ namespace CR.Servers.CoC.Logic
             {
                 Json.Add("const_t", this.ConstructionTimer.GetRemainingSeconds(this.Level.Player.LastTick));
                 Json.Add("const_t_end", this.ConstructionTimer.EndTime);
+            }
+
+            if (this.NeedRepair)
+            {
+                Json.Add("needs_repair", this.NeedRepair);
             }
 
             base.Save(Json);

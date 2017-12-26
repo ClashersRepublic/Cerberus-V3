@@ -33,19 +33,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             }
             else
             {
-                if (Device.State == State.IN_PC_BATTLE) //Replay
-                    Device.State = State.LOGGED;
-                else if(Device.State == State.WAR_EMODE) //War Edit Mode
-                    Device.State = State.LOGGED;
-                else if (Device.State == State.IN_NPC_BATTLE) //Stream
-                    Device.State = State.LOGGED;
-                else if (Device.State == State.IN_AMICAL_BATTLE) //Stream
-                    Device.State = State.LOGGED;
-                else if (Device.State == State.SEARCH_BATTLE) //Search battle
-                    Device.State = State.LOGGED;
-                else if (this.Device.State == State.IN_1VS1_BATTLE)
+                if (this.Device.State == State.IN_1VS1_BATTLE)
                 {
-
                     var userId = this.Device.GameMode.Level.Player.UserId;
                     var battleId = this.Device.GameMode.Level.Player.BattleIdV2;
 
@@ -81,8 +70,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     this.Device.GameMode.Level.BattleManager.Stop();
 
                     this.Device.GameMode.Level.Player.BattleIdV2 = 0;
-                    this.Device.State = State.LOGGED;
                 }
+
+                this.Device.State = State.LOGGED;
             }
 
             new Own_Home_Data(Device).Send();

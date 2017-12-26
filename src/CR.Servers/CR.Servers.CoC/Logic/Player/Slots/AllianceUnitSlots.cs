@@ -183,7 +183,14 @@ namespace CR.Servers.CoC.Logic
 
         internal AllianceUnitSlots Copy()
         {
-            return this.MemberwiseClone() as AllianceUnitSlots;
+            var Copy = this.MemberwiseClone() as AllianceUnitSlots;
+
+            foreach (var Item in Copy)
+            {
+                Item.DonatorId = 0;
+            }
+
+            return Copy;
         }
     }
 }

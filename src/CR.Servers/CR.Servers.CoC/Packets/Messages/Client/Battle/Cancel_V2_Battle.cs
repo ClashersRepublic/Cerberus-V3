@@ -21,9 +21,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
             if (Device.State == State.SEARCH_BATTLE)
             {
                 Resources.BattlesV2.Dequeue(this.Device.GameMode.Level);
-                Device.State = State.LOGGED;
             }
 
+            Device.State = State.LOGGED;
             new Own_Home_Data(this.Device).Send();
         }
     }

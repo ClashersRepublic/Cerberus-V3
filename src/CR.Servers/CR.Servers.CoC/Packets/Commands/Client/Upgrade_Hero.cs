@@ -43,7 +43,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             {
                                 if (level.Player.Resources.GetCountByData(resourceData) >= upgradeCost)
                                 {
-                                    if (level.GameObjectManager.Map == 0 ? level.WorkerManager.FreeWorkers > 0 : level.WorkerManagerV2.FreeWorkers > 0)
+                                    if (HeroData.VillageType == 0 ? level.WorkerManager.FreeWorkers > 0 : level.WorkerManagerV2.FreeWorkers > 0)
                                     {
                                         level.Player.Resources.Remove(resourceData, upgradeCost);
                                         HeroBaseComponent.StartUpgrade();

@@ -201,22 +201,12 @@ namespace CR.Assets.Editor.ScOld
                             if (IsSc == "53-43")
                                 Lzham.DecompressSc(_textureFile);
                             else
-                                Lzma.DecompressCR(_textureFile);
+                                Lzma.Decompress(_textureFile);
                             continue;
                         }
                         break;
                     }
-                    else if (BitConverter.ToString(IsCompressed) == "5D-00")
-                    {
-                        DialogResult result =  MessageBox.Show("The tool detected that you have load a compressed file.\nWould you like to decompress and load it?\nPlease note,Choosing to decompressed will override the compressed file with a new one", "SC File Is Compresed", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
-                        if (result == DialogResult.Yes)
-                        {
-                            texReader.Close();
-                            Lzma.DecompressCoC(_textureFile);
-                            continue;
-                        }
-                        break;
-                    }
+
                     texReader.BaseStream.Seek(0, SeekOrigin.Begin);
                     while (true)
                     {
@@ -262,18 +252,7 @@ namespace CR.Assets.Editor.ScOld
                             if (IsSc == "53-43")
                                 Lzham.DecompressSc(_infoFile);
                             else
-                                Lzma.DecompressCR(_infoFile);
-                            continue;
-                        }
-                        break;
-                    }
-                    else if (BitConverter.ToString(IsCompressed) == "5D-00")
-                    {
-                        DialogResult result = MessageBox.Show("The tool detected that you have load a compressed file.\nWould you like to decompress and load it?\nPlease note,Choosing to decompressed will override the compressed file with a new one", "SC File Is Compresed", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
-                        if (result == DialogResult.Yes)
-                        {
-                            reader.Close();
-                            Lzma.DecompressCoC(_infoFile);
+                                Lzma.Decompress(_infoFile);
                             continue;
                         }
                         break;

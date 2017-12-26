@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
 using CR.Servers.Extensions.List;
 
 namespace CR.Servers.CoC.Packets.Messages.Server.Battle

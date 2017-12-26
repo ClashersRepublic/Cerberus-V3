@@ -74,6 +74,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                                 var UnitLevel = Player.GetUnitUpgradeLevel(SpellData);
                                                 var Unit = new UnitItem(SpellData.GlobalId, 1, UnitLevel);
 
+                                                DonationStream.New = false;
+                                                
                                                 Target.AllianceSpells.Add(Unit);
                                                 Unit.DonatorId = Player.UserId;
                                                 DonationStream.Units.Add(Unit, Player.UserId);
@@ -119,6 +121,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                                 var UnitLevel = Player.GetUnitUpgradeLevel(CharacterData);
                                                 var Unit = new UnitItem(CharacterData.GlobalId, 1, UnitLevel);
+
+                                                DonationStream.New = false;
 
                                                 Target.AllianceUnits.Add(Unit);
                                                 Unit.DonatorId = Player.UserId;
