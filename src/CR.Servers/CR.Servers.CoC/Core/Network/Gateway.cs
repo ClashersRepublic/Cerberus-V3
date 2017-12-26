@@ -293,7 +293,7 @@ namespace CR.Servers.CoC.Core.Network
 
             Token.Aborting = true;
 
-            Token.Device.Dispose();
+            Token.Device?.Dispose();
             Token.Dispose();
 
             if (AsyncEvent.DisconnectReuseSocket)

@@ -215,6 +215,7 @@ namespace CR.Servers.CoC.Logic
 
                         this.Account.Player.Alliance?.DecrementTotalConnected();
                     }
+
                     if (this.Account.Home != null)
                     {
                         Resources.Accounts.SaveHome(this.Account.Home);
@@ -231,7 +232,7 @@ namespace CR.Servers.CoC.Logic
 
                 this.Token = null;
 
-                this.Socket.Dispose();
+                this.Socket?.Dispose();
             }
         }
 
