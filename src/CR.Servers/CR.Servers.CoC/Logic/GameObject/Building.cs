@@ -359,7 +359,8 @@ namespace CR.Servers.CoC.Logic
                 if (UpgradeLevel > -1)
                 {
                     ResourceStorageComponent.SetMaxArray(this.BuildingData.GetResourceMaxArray(UpgradeLevel));
-                    this.Level.ComponentManager.RefreshResourceCaps();
+                    if (!this.Level.AI)
+                        this.Level.ComponentManager.RefreshResourceCaps();
                 }
             }
             

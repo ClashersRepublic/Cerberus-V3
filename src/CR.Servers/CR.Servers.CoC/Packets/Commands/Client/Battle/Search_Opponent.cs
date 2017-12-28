@@ -24,7 +24,16 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            new Enemy_Home_Data(this.Device, this.Device.GameMode.Level).Send();
+            if (this.Device.GameMode.Level.Player.ModSlot.AIAttack)
+            {
+                new Enemy_Home_Data(this.Device).Send();
+            }
+            else
+            {
+                //Get a random village
+
+                new Enemy_Home_Data(this.Device, this.Device.GameMode.Level).Send();
+            }
         }
     }
 }

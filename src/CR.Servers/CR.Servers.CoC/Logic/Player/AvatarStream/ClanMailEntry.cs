@@ -17,6 +17,10 @@ namespace CR.Servers.CoC.Logic
             
         }
 
+        public ClanMailEntry(Player Player) : base(Player)
+        {
+        }
+
         public ClanMailEntry(Player Player, Alliance Alliance) : base(Player)
         {
             this.Alliance = Alliance;
@@ -39,8 +43,8 @@ namespace CR.Servers.CoC.Logic
             Packet.AddInt(this.SenderLowId);
             Packet.AddInt(this.AllianceHighId);
             Packet.AddInt(this.AllianceLowId);
-            Packet.AddString(this.Alliance.Header.Name);
-            Packet.AddInt(this.Alliance.Header.Badge);
+            Packet.AddString(this.Alliance != null ? this.Alliance.Header.Name : "[System] Command Manager");
+            Packet.AddInt(this.Alliance != null ? this.Alliance.Header.Badge : 1526733402);
         }
 
         internal override void Load(JToken Json)

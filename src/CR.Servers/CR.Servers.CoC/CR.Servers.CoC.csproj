@@ -315,6 +315,7 @@
     <Compile Include="Logic\Player\Slots\Calendar.cs" />
     <Compile Include="Logic\Player\Slots\DataSlots.cs" />
     <Compile Include="Logic\Player\Slots\Friends.cs" />
+    <Compile Include="Logic\Player\Slots\ModSlot.cs" />
     <Compile Include="Logic\Player\Slots\NpcMapSlots.cs" />
     <Compile Include="Logic\Player\Slots\ResourceSlots.cs" />
     <Compile Include="Logic\Player\Slots\Inbox.cs" />
@@ -413,8 +414,9 @@
     <Compile Include="Packets\Debug.cs" />
     <Compile Include="Packets\Debugs\Clear_All_Obstacle.cs" />
     <Compile Include="Packets\Debugs\Elite\Add_Unit.cs" />
+    <Compile Include="Packets\Debugs\Elite\AI_Generate_Low_Base.cs" />
     <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
-    <Compile Include="Packets\Debugs\Elite\Generate_Base.cs" />
+    <Compile Include="Packets\Debugs\Elite\AI_Generate_Base.cs" />
     <Compile Include="Packets\Debugs\Max_Village.cs" />
     <Compile Include="Packets\Enums\AddFriendErrorReason.cs" />
     <Compile Include="Packets\Enums\AllianceErrorReason.cs" />

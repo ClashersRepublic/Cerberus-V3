@@ -72,6 +72,8 @@ namespace CR.Servers.CoC.Logic
         [JsonProperty] internal Inbox Inbox;
         [JsonProperty] internal Friends Friends;
 
+        [JsonProperty] internal ModSlot ModSlot;
+
         [JsonProperty] internal FacebookApi Facebook;
         /*[JsonProperty] internal Google Google;
         [JsonProperty] internal Gamecenter Gamecenter;*/
@@ -112,6 +114,7 @@ namespace CR.Servers.CoC.Logic
         {
             this.Inbox = new Inbox(this);
             this.Friends = new Friends(this);
+            this.ModSlot = new ModSlot();
             this.Achievements = new AchievementSlot();
             this.AchievementProgress = new AchievementProgressSlot(this);
 
@@ -144,6 +147,7 @@ namespace CR.Servers.CoC.Logic
 
             this.Resources.Initialize();
             this.Variables.Initialize();
+            this.ModSlot.Initialize();
         }
 
         internal void Process()

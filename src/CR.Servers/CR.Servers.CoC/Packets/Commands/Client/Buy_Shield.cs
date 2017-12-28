@@ -1,7 +1,4 @@
-﻿using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
+﻿using CR.Servers.CoC.Logic;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Commands.Client

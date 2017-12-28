@@ -23,22 +23,40 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
         {
             this.Enemy = Enemy;
             this.Enemy.Tick();
+
+            this.Player = this.Device.GameMode.Level.Player;
+            this.Device.GameMode.Level.Tick();
+        }
+
+        public Enemy_Home_Data(Device Device) : base(Device)
+        {
+            this.Player = this.Device.GameMode.Level.Player;
             this.Device.GameMode.Level.Tick();
         }
 
 
         internal Level Enemy;
+        internal Player Player;
 
         internal override void Encode()
         {
             this.Data.AddInt(0);
             this.Data.AddInt(-1);
-            
-            this.Enemy.Home.Encode(this.Data);
-            this.Enemy.Player.Encode(this.Data);
+
+            if (this.Player.ModSlot.AIAttack)
+            {
+                this.Player.ModSlot.AILevel.Home.Encode(this.Data);
+                this.Player.ModSlot.AILevel.Player.Encode(this.Data);
+            }
+            else
+            {
+                this.Enemy.Home.Encode(this.Data);
+                this.Enemy.Player.Encode(this.Data);
+            }
+
             this.Device.GameMode.Level.Player.Encode(this.Data);
 
-            this.Data.AddInt(3);
+            this.Data.AddInt(this.Player.ModSlot.AIAttack ? 2 : 3);
             this.Data.AddInt(0);
             this.Data.AddByte(0);
         }

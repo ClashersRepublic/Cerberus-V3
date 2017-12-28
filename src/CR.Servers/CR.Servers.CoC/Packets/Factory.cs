@@ -161,6 +161,8 @@ namespace CR.Servers.CoC.Packets
             Factory.Debugs.Add("addunit", typeof(Add_Unit));
             Factory.Debugs.Add("fastforward", typeof(Fast_Forward));
             Factory.Debugs.Add("clearobstacle", typeof(Clear_All_Obstacle));
+            Factory.Debugs.Add("aibase", typeof(AI_Generate_Base));
+            Factory.Debugs.Add("ailowbase", typeof(AI_Generate_Low_Base));
         }
 
 

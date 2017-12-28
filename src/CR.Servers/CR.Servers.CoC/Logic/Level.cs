@@ -14,6 +14,8 @@ namespace CR.Servers.CoC.Logic
 {
     internal class Level
     {
+        internal bool AI;
+
         internal Player Player;
         internal Home Home;
 
@@ -90,7 +92,7 @@ namespace CR.Servers.CoC.Logic
         internal bool IsBuildingCapReached(BuildingData Data)
         {
             var TownHallLevel = Data.VillageType == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
-            var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel);
+            var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel + 1);
             return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
 
@@ -112,6 +114,22 @@ namespace CR.Servers.CoC.Logic
         public Level(GameMode GameMode) : this()
         {
             this.GameMode = GameMode;
+        }
+
+        public Level(bool AI)
+        {
+            this.AI = AI;
+
+            this.Player = new Player(null, 0, 0)
+            {
+                Name = "Clashers Republic - AI Base",
+                NameSetByUser = true,
+                Score = 9999,
+                League = 22,
+                ExpLevel = 300,
+            };
+
+            this.Home = new Home();
         }
 
         internal void FastForwardTime(int Seconds)
@@ -308,7 +326,6 @@ namespace CR.Servers.CoC.Logic
             return Valid;
         }
 
-
         internal bool IsValidPlaceForBuilding(ObstacleData Data, int X, int Y, int Width, int Height)
         {
             var Valid = false;
@@ -343,8 +360,7 @@ namespace CR.Servers.CoC.Logic
             return Valid;
         }
 
-        //For village generator
-        internal bool IsValidPlaceForBuilding(BuildingData Data, int X, int Y, int Width, int Height, TileMap TileMap)
+        internal bool IsValidPlaceForBuilding(BuildingData Data, int X, int Y, int Width, int Height)
         {
             var Valid = false;
 
@@ -352,8 +368,6 @@ namespace CR.Servers.CoC.Logic
             {
                 if (Width + X <= 50 && Height + Y <= 50)
                 {
-                   
-                    
                     Valid = true;
 
                     if (Width > 0 && Height > 0)
@@ -362,7 +376,7 @@ namespace CR.Servers.CoC.Logic
                         {
                             for (var j = 0; j < Height; j++)
                             {
-                                var Tile = TileMap[X + i, Y + j, Data.VillageType];
+                                var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
 
                                 if (Tile != null)
                                 {

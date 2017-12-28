@@ -61,7 +61,9 @@ namespace CR.Servers.CoC.Logic
             }
 
             this.Components.Add(Component);
-            this.Level.ComponentManager.AddComponent(Component);
+
+            if (!this.Level.AI)
+                this.Level.ComponentManager.AddComponent(Component);
         }
 
         internal void SetPositionXY(int TileX, int TileY)

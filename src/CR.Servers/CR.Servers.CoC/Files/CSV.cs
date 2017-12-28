@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Files.CSV_Reader;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.Files.CSV_Reader;
@@ -60,6 +63,26 @@ namespace CR.Servers.CoC.Files
                     data.Process();
                 }
             }
+
+            var Buildings = CSV.Tables.Get(Gamefile.Buildings).Datas;
+            var Help = new StringBuilder();
+            Help.AppendLine("Clashers Republic - AI Base Generator");
+            Help.AppendLine("Available Building:");
+
+            foreach (var Building in Buildings)
+            {
+                if (Building is BuildingData BuildingData)
+                {
+                    Help.AppendLine($" ID {BuildingData.InstanceId}\n Name: {BuildingData.Name}\n Alt Mode: {!string.IsNullOrEmpty(BuildingData.GearUpBuilding) || BuildingData.AltAttackMode}\n");
+                }
+            }
+
+
+            Help.AppendLine("Command:\n/AIBase {Id-Here} {Attack-Mode-Here-If Available (Optional)}");
+
+            Help.AppendLine("Example:");
+            Help.AppendLine(" /AIBase 1 (Will generate normal town hall)\n/AIBase 1 true (Will not generate anything due to Alt Mode is not avaiable)\n/AIBase 9      (Will generate normal archer tower)\n/AIBase 9 true (Will generate fast attack archer tower)");
+            Constants.AIBaseHelp = Help;
 
             Console.WriteLine(Gamefiles.Count + " CSV Files loaded and stored in memory.");
         }

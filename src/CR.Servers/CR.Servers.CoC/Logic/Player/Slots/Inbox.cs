@@ -82,7 +82,7 @@ namespace CR.Servers.CoC.Logic
 
                 if (this.Player.Connected)
                 {
-                    //new Avatar_Stream_Entry_Message(this.Player.Device, StreamEntry).Send();
+                    new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) { StreamEntry = StreamEntry }.Send();
                 }
             }
         }

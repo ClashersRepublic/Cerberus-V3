@@ -237,12 +237,11 @@ namespace CR.Assets.Editor.ScOld
                 using (var reader = new BinaryReader(File.OpenRead(_infoFile)))
                 {
                     Byte[] IsCompressed = reader.ReadBytes(2);
+                    Console.WriteLine(BitConverter.ToString(IsCompressed) == "53-43");
                     if (BitConverter.ToString(IsCompressed) == "53-43")
                     {
                         reader.BaseStream.Seek(26, SeekOrigin.Begin);
-                        DialogResult result =
-                            MessageBox.Show(
-                                "The tool detected that you have load a compressed file.\nWould you like to decompress and load it?\nPlease note,Choosing to decompressed will override the compressed file with a new one",
+                        DialogResult result = MessageBox.Show("The tool detected that you have load a compressed file.\nWould you like to decompress and load it?\nPlease note,Choosing to decompressed will override the compressed file with a new one",
                                 @"SC File Is Compresed", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
 
                         if (result == DialogResult.Yes)

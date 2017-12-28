@@ -207,15 +207,10 @@ namespace CR.Servers.CoC.Core.Network
         {
             if (Message.Device.Connected)
             {
-                SocketAsyncEventArgs WriteEvent = this.WritePool.Pop();
-
-                if (WriteEvent == null)
+                SocketAsyncEventArgs WriteEvent = this.WritePool.Pop() ?? new SocketAsyncEventArgs
                 {
-                    WriteEvent = new SocketAsyncEventArgs
-                    {
-                        DisconnectReuseSocket = false
-                    };
-                }
+                    DisconnectReuseSocket = false
+                };
 
                 WriteEvent.SetBuffer(Message.ToBytes, Message.Offset, Message.Length + 7 - Message.Offset);
 
@@ -281,6 +276,7 @@ namespace CR.Servers.CoC.Core.Network
                 AsyncEvent = null;
             }
         }
+
         internal void Disconnect(SocketAsyncEventArgs AsyncEvent)
         {
             if (AsyncEvent == null) return;

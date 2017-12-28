@@ -245,7 +245,7 @@ namespace CR.Servers.CoC.Logic
                     this.GameObjects[3][Data.VillageType].Add(Obstacle);
                     this.Level.TileMap.AddGameObject(Obstacle);
 
-                    Logging.Info(this.GetType(),"Village:" + Data.VillageType +"   X:" + X + "   Y:" + Y);
+                    //Logging.Info(this.GetType(),"Village:" + Data.VillageType +"   X:" + X + "   Y:" + Y);
 
                     break;
                 }

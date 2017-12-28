@@ -222,7 +222,7 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
 
-                if (this.GameMode?.CommandManager != null)
+                if (this.GameMode?.CommandManager?.ServerCommands != null)
                 {
                     foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
                     {

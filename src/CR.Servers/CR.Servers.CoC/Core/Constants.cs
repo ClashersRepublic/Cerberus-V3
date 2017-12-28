@@ -1,4 +1,5 @@
 ﻿using CR.Servers.Logic.Enums;
+using System.Text;
 
 namespace CR.Servers.CoC.Core
 {
@@ -11,5 +12,7 @@ namespace CR.Servers.CoC.Core
         internal const int MaxSends = 1000 * 5;
 
         internal const DBMS Database = DBMS.Mongo;
+        
+        internal static StringBuilder AIBaseHelp;
     }
 }

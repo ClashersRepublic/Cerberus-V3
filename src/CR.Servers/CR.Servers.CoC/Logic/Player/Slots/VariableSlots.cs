@@ -4,7 +4,7 @@ namespace CR.Servers.CoC.Logic
 {
     internal class VariableSlots : DataSlots
     {
-        internal VariableSlots(int Capacity = 20) : base(Capacity)
+        internal VariableSlots(int Capacity = 30) : base(Capacity)
         {
             // ResourceSlots.
         }
