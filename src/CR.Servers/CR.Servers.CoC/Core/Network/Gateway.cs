@@ -279,27 +279,48 @@ namespace CR.Servers.CoC.Core.Network
 
         internal void Disconnect(SocketAsyncEventArgs AsyncEvent)
         {
-            if (AsyncEvent == null) return;
-            Token Token = (Token)AsyncEvent.UserToken;
+            Token Token = (Token) AsyncEvent?.UserToken;
 
-            if (Token.Aborting)
+            if (Token != null)
             {
-                return;
-            }
+                if (Token.Aborting)
+                {
+                    return;
+                }
 
-            Token.Aborting = true;
+                Token.Aborting = true;
 
-            Token.Device?.Dispose();
-            Token.Dispose();
+                try
+                {
+                    Token.Device?.Dispose();
+                }
+                catch (Exception Exception)
+                {
+                    Logging.Error(Exception.GetType(),
+                        "Exception while disposing device. " + Exception.Message + Environment.NewLine +
+                        Exception.StackTrace);
+                }
 
-            if (AsyncEvent.DisconnectReuseSocket)
-            {
-                this.ReadPool.Push(AsyncEvent);
-            }
-            else
-            {
-                AsyncEvent.Dispose();
-                AsyncEvent = null;
+                try
+                {
+                    Token.Dispose();
+                }
+                catch (Exception Exception)
+                {
+                    Logging.Error(Exception.GetType(),
+                        "Exception while disposing token. " + Exception.Message + Environment.NewLine +
+                        Exception.StackTrace);
+                }
+
+                if (AsyncEvent.DisconnectReuseSocket)
+                {
+                    this.ReadPool.Push(AsyncEvent);
+                }
+                else
+                {
+                    AsyncEvent.Dispose();
+                    AsyncEvent = null;
+                }
             }
         }
     }
