@@ -124,6 +124,7 @@ namespace CR.Servers.CoC.Core.Network
                 Token Token = new Token(ReadEvent, Device);
 
                 Device.State = State.SESSION;
+                Program.Connected();
 
                 if (!Socket.ReceiveAsync(ReadEvent))
                 {
@@ -308,6 +309,8 @@ namespace CR.Servers.CoC.Core.Network
                 {
                     Logging.Error(Exception.GetType(), "Exception while disposing token. " + Exception.Message + Environment.NewLine +  Exception.StackTrace);
                 }
+
+                Program.Disconnected();
 
                 if (AsyncEvent.DisconnectReuseSocket)
                 {

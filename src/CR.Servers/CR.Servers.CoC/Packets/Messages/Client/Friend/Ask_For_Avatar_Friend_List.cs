@@ -21,10 +21,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Friend
 
         internal override void Process()
         {
-            this.Device.GameMode.Level.Player.Variables.Set(Variable.FriendListLastOpened, TimeUtils.UnixUtcNow);
             new Friend_List(this.Device).Send();
-            
-
         }
     }
 }

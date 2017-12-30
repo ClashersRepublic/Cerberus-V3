@@ -1,4 +1,6 @@
-﻿using CR.Servers.Logic.Enums;
+﻿using System;
+using System.Reflection;
+using CR.Servers.Logic.Enums;
 using System.Text;
 
 namespace CR.Servers.CoC.Core
@@ -14,5 +16,6 @@ namespace CR.Servers.CoC.Core
         internal const DBMS Database = DBMS.Mongo;
         
         internal static StringBuilder AIBaseHelp;
+        internal static string Title = $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} © | Active Connections >";
     }
 }

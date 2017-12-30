@@ -330,7 +330,9 @@
     <Compile Include="Logic\Time.cs" />
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Packets\Command.cs" />
-    <Compile Include="Packets\Commands\Client\Boost_Buildings.cs" />
+    <Compile Include="Packets\Commands\Client\Add_Quick_Train.cs" />
+    <Compile Include="Packets\Commands\Client\Boost_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Boost_Buildings_Of_Type.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Deco.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Shield.cs" />
     <Compile Include="Packets\Commands\Client\Claim_Achievement_Reward.cs" />
@@ -341,6 +343,7 @@
     <Compile Include="Packets\Commands\Client\Battle\Place_Spell.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Search_Opponent.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Surrender_Attack.cs" />
+    <Compile Include="Packets\Commands\Client\Friend_List_Last_Opened.cs" />
     <Compile Include="Packets\Commands\Client\League_Notifications_Seen.cs" />
     <Compile Include="Packets\Commands\Client\List\BuildingToMove.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Resources.cs" />
@@ -376,7 +379,9 @@
     <Compile Include="Packets\Commands\Client\Remove_Units_V2.cs" />
     <Compile Include="Packets\Commands\Client\Rename_Quick_Train.cs" />
     <Compile Include="Packets\Commands\Client\Save_Alliance_Troop_Request_Message.cs" />
+    <Compile Include="Packets\Commands\Client\Seen_Builder_Menu.cs" />
     <Compile Include="Packets\Commands\Client\Sell_Building.cs" />
+    <Compile Include="Packets\Commands\Client\Send_Alliance_Challenge.cs" />
     <Compile Include="Packets\Commands\Client\Send_Alliance_Mail.cs" />
     <Compile Include="Packets\Commands\Client\Set_Active_Layout.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_Hero_Upgrade.cs" />
@@ -392,9 +397,14 @@
     <Compile Include="Packets\Commands\Client\Troop_Request.cs" />
     <Compile Include="Packets\Commands\Client\Edit_Mode_Shown.cs" />
     <Compile Include="Packets\Commands\Client\Open_Close_Layout.cs" />
-    <Compile Include="Packets\Commands\Client\Unknown_553.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_553.cs" />
     <Compile Include="Packets\Commands\Client\Train_Quick_Units.cs" />
-    <Compile Include="Packets\Commands\Client\Unknown_597.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_560.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_570.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_573.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_576.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_585.cs" />
+    <Compile Include="Packets\Commands\Client\Unknown\Unknown_597.cs" />
     <Compile Include="Packets\Commands\Client\Unlock_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Building.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Multiple_Building.cs" />

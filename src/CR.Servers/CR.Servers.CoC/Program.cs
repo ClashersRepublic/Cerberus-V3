@@ -17,8 +17,9 @@ namespace CR.Servers.CoC
         private const int Height = 30;
 
         public static IConfigurationRoot Configuration { get; set; }
-        internal static int I = 5;
-        internal static int B = 30;
+
+        public static int Op;
+
         private static void Main()
         {
 
@@ -49,6 +50,16 @@ namespace CR.Servers.CoC
 
             Resources.Initialize();
             Thread.Sleep(-1);
+        }
+
+        public static void Connected()
+        {
+            Console.Title = Constants.Title + Interlocked.Increment(ref Op);
+        }
+
+        public static void Disconnected()
+        {
+            Console.Title = Constants.Title + Interlocked.Decrement(ref Op);
         }
     }
 }

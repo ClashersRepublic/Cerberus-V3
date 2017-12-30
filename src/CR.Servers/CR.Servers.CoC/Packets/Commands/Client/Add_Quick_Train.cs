@@ -1,0 +1,31 @@
+﻿using CR.Servers.CoC.Logic;
+using CR.Servers.Extensions.Binary;
+
+namespace CR.Servers.CoC.Packets.Commands.Client
+{
+    internal class Add_Quick_Train : Command
+    {
+        internal override int Type => 558;
+
+        public Add_Quick_Train(Device Device, Reader Reader) : base(Device, Reader)
+        {
+            
+        }
+
+        internal int Database;
+        internal int Count;
+
+        internal override void Decode()
+        {
+            this.Database = this.Reader.ReadInt32();
+            this.Count = this.Reader.ReadInt32();
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                this.Reader.ReadInt32(); //Global Id
+                this.Reader.ReadInt32(); //Count
+            }
+            base.Decode();
+        }
+    }
+}
