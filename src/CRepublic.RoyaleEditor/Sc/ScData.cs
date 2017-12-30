@@ -16,10 +16,7 @@ namespace CR.Assets.Editor.Sc
         /// <exception cref="ArgumentNullException"/>
         public ScData(ScFile scFile)
         {
-            if (scFile == null)
-                throw new ArgumentNullException(nameof(scFile));
-
-            _scFile = scFile;
+            _scFile = scFile ?? throw new ArgumentNullException(nameof(scFile));
         }
         #endregion
 

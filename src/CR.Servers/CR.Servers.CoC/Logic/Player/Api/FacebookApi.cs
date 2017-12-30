@@ -5,8 +5,8 @@ namespace CR.Servers.CoC.Logic
 {
     internal class FacebookApi
     {
-        internal const string ApplicationId = "124338961457529";
-        internal const string ApplicationSecret = "08245c5cd0bb17aff05647ff6e2f4627";
+        internal const string ApplicationId = "319595285114483";
+        internal const string ApplicationSecret = "e247977dc751f310c8861f08a48917c8";
         internal const string ApplicationVersion = "2.11";
 
         [JsonProperty("fb_id")] internal string Identifier;

@@ -72,9 +72,9 @@
                     output.Write(hash, 0, hash.Length);
                     
                     encoder.SetCoderProperties(propIDs, properties);
-
+                    Console.WriteLine(input.Length);
                     encoder.WriteCoderProperties(output);
-                    output.Write(BitConverter.GetBytes(input.Length).Reverse().ToArray(), 0, 4);
+                    output.Write(BitConverter.GetBytes(Convert.ToInt32(input.Length)).ToArray(), 0, 4);
 
                     encoder.Code(input, output, input.Length, -1, null);
                     output.Flush();
@@ -87,6 +87,7 @@
 
         internal static void Decompress(string file)
         {
+            Console.WriteLine("Yo");
             var clone = file + ".clone";
             File.Copy(file, clone);
             var decoder = new Decoder();

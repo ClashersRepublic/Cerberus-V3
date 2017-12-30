@@ -26,30 +26,20 @@ namespace CR.Servers.CoC.Packets.Debugs.Elite
 
         internal override void Process()
         {
-            if (Parameters.Length >= 1)
-            {
 
-                foreach (CharacterData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
+            foreach (CharacterData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
+            {
+                if (!Data.DisableProduction)
                 {
-                    if (!Data.DisableProduction)
+                    if (Data.VillageType == 0)
                     {
-                        if (Data.UnitOfType == 1)
-                        {
-                            this.Device.GameMode.Level.Player.Units.Add(Data, 500);
-                        }
+                        this.Device.GameMode.Level.Player.Units.Add(Data, 500);
                     }
                 }
+            }
 
-                if (this.Device.Connected)
-                    new Own_Home_Data(this.Device).Send();
-            }
-            else
-            {
-                this.Help = new StringBuilder();
-                this.Help.AppendLine("Time exceed the limit!");
-                this.SendChatMessage(Help.ToString());
-            }
-            //Time bust be at least 1
+            if (this.Device.Connected)
+                new Own_Home_Data(this.Device).Send();
         }
     }
 }

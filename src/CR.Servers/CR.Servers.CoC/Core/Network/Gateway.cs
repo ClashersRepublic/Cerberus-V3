@@ -96,6 +96,7 @@ namespace CR.Servers.CoC.Core.Network
                 this.StartAccept(AsyncEvent);
             }
         }
+
         internal void ProcessAccept(SocketAsyncEventArgs AsyncEvent)
         {
             Socket Socket = AsyncEvent.AcceptSocket;
@@ -296,9 +297,7 @@ namespace CR.Servers.CoC.Core.Network
                 }
                 catch (Exception Exception)
                 {
-                    Logging.Error(Exception.GetType(),
-                        "Exception while disposing device. " + Exception.Message + Environment.NewLine +
-                        Exception.StackTrace);
+                    Logging.Error(Exception.GetType(), "Exception while disposing device. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
                 }
 
                 try
@@ -307,9 +306,7 @@ namespace CR.Servers.CoC.Core.Network
                 }
                 catch (Exception Exception)
                 {
-                    Logging.Error(Exception.GetType(),
-                        "Exception while disposing token. " + Exception.Message + Environment.NewLine +
-                        Exception.StackTrace);
+                    Logging.Error(Exception.GetType(), "Exception while disposing token. " + Exception.Message + Environment.NewLine +  Exception.StackTrace);
                 }
 
                 if (AsyncEvent.DisconnectReuseSocket)

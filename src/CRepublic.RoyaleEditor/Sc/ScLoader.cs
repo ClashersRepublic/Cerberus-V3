@@ -9,8 +9,7 @@ namespace CR.Assets.Editor.Sc
     {
         static ScLoader()
         {
-            s_version2loader = new Dictionary<Sc.ScFormatVersion, Type>();
-            s_version2loader.Add(ScFormatVersion.Version7, typeof(ScLoader7));
+            s_version2loader = new Dictionary<Sc.ScFormatVersion, Type> {{ScFormatVersion.Version7, typeof(ScLoader7)}};
         }
 
         private static readonly Dictionary<ScFormatVersion, Type> s_version2loader;
