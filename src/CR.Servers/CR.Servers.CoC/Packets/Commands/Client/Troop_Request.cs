@@ -61,7 +61,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                 UsedTroopSend = Player.CastleUsedCapacity,
                                 UsedTroop = Player.CastleUsedCapacity,
                                 UsedSpell = Player.CastleUsedSpellCapacity,
-                                Units = Player.AllianceUnits.Copy(),
+                                Units = Player.AllianceUnits.Copy() ?? new AllianceUnitSlots(),
                                 HaveMessage = this.HaveMessage,
                                 Message = this.Message
                             });

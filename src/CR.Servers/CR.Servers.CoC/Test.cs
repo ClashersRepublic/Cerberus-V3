@@ -34,10 +34,12 @@ namespace CR.Servers.CoC
 
         internal void Uncompress(string Hexa)
         {
-            string[] filePaths = Directory.GetFiles(@"Dumps\Dumps", "End_Client_Turn (14102)*.bin");
-            for (int b = 0; b < filePaths.Length; b++)
+            string[] filePaths = Directory.GetFiles(@"Dumps/Dumps", "End_Client_Turn (14102*.bin");
+            foreach (string t in filePaths)
             {
-                Reader br = new Reader(File.ReadAllBytes(filePaths[b]));
+                //File.Delete(t);
+                Console.WriteLine($"Reading File: {t}");
+                Reader br = new Reader(File.ReadAllBytes(t));
                 this.SubTick = br.ReadInt32();
                 this.Checksum = br.ReadInt32();
                 this.CommandCount = br.ReadInt32();
@@ -78,7 +80,7 @@ namespace CR.Servers.CoC
                             }
                         }
                         if (Fine)
-                        continue;
+                            continue;
                     }
                 }
                 else

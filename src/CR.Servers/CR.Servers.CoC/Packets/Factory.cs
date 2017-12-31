@@ -16,6 +16,7 @@ using CR.Servers.CoC.Packets.Messages.Client.Avatar;
 using CR.Servers.CoC.Packets.Messages.Client.Battle;
 using CR.Servers.CoC.Packets.Messages.Client.Friend;
 using CR.Servers.CoC.Packets.Messages.Client.Home;
+using CR.Servers.CoC.Packets.Messages.Client.Leaderboard;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets
@@ -71,6 +72,9 @@ namespace CR.Servers.CoC.Packets
             Factory.Messages.Add(14324, typeof(Search_Alliances));
             Factory.Messages.Add(14325, typeof(Ask_For_Avatar_Profile));
             Factory.Messages.Add(14334, typeof(Claim_Alliance_Gift));
+            Factory.Messages.Add(14401, typeof(Request_Alliance_Ranking));
+            Factory.Messages.Add(14403, typeof(Request_Player_Ranking));
+            Factory.Messages.Add(14404, typeof(Request_Local_Player_Ranking));
             Factory.Messages.Add(14510, typeof(Execute_Battle_Command));
             Factory.Messages.Add(14715, typeof(Send_Global_Chat));
             Factory.Messages.Add(15110, typeof(Watch_1vs1_Live));
@@ -114,9 +118,11 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(527, typeof(Upgrade_Hero));
             Factory.Commands.Add(528, typeof(Speed_Up_Hero_Upgrade));
             Factory.Commands.Add(529, typeof(Change_Hero_State));
+            Factory.Commands.Add(530, typeof(Unknown_530));
             Factory.Commands.Add(531, typeof(Cancel_Hero_Upgrade));
             Factory.Commands.Add(532, typeof(New_Shop_Seen));
             Factory.Commands.Add(533, typeof(Move_Multiple_Buildings));
+            Factory.Commands.Add(534, typeof(Unknown_534));
             Factory.Commands.Add(537, typeof(Send_Alliance_Mail));
             Factory.Commands.Add(538, typeof(League_Notifications_Seen));
             Factory.Commands.Add(539, typeof(News_Seen));
@@ -131,9 +137,11 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(552, typeof(Open_Close_Layout));
             Factory.Commands.Add(553, typeof(Unknown_553));
             Factory.Commands.Add(554, typeof(Change_Weapon_Heading));
+            Factory.Commands.Add(556, typeof(Unknown_556));
             Factory.Commands.Add(558, typeof(Add_Quick_Train));
             Factory.Commands.Add(559, typeof(Train_Quick_Units));
             Factory.Commands.Add(560, typeof(Unknown_560));
+            Factory.Commands.Add(566, typeof(Unknown_566));
             Factory.Commands.Add(567, typeof(Set_Active_Layout));
             Factory.Commands.Add(568, typeof(Copy_Village_Layout));
             Factory.Commands.Add(569, typeof(Remove_All_Building_In_Layout));
@@ -145,6 +153,7 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(576, typeof(Unknown_576));
             Factory.Commands.Add(577, typeof(Swap_GameObject));
             Factory.Commands.Add(579, typeof(Friend_List_Last_Opened));
+            Factory.Commands.Add(581, typeof(Unknown_581));
             Factory.Commands.Add(584, typeof(Boost_Buildings_Of_Type));
             Factory.Commands.Add(585, typeof(Unknown_585));
             Factory.Commands.Add(586, typeof(Rename_Quick_Train));
@@ -152,18 +161,23 @@ namespace CR.Servers.CoC.Packets
             Factory.Commands.Add(591, typeof(Change_Village_Mode));
             Factory.Commands.Add(592, typeof(Train_Unit_V2));
             Factory.Commands.Add(593, typeof(Speed_Up_All_Training_V2));
+            Factory.Commands.Add(595, typeof(Clock_Tower_Boost));
             Factory.Commands.Add(596, typeof(Remove_Units_V2));
             Factory.Commands.Add(597, typeof(Unknown_597));
             Factory.Commands.Add(598, typeof(Layout_Building_Position));
+            Factory.Commands.Add(599, typeof(Unknown_599));
             Factory.Commands.Add(600, typeof(Gear_Up));
             Factory.Commands.Add(601, typeof(Search_Opponent_V2));
+            Factory.Commands.Add(603, typeof(Account_Bound));
             Factory.Commands.Add(604, typeof(Seen_Builder_Menu));
+            Factory.Commands.Add(605, typeof(Unknown_605));
             Factory.Commands.Add(700, typeof(Place_Attacker));
             Factory.Commands.Add(701, typeof(Place_Alliance_Portal));
             Factory.Commands.Add(703, typeof(Surrender_Attack));
             Factory.Commands.Add(704, typeof(Place_Spell));
             Factory.Commands.Add(705, typeof(Place_Hero));
             Factory.Commands.Add(706, typeof(Hero_Rage));
+            Factory.Commands.Add(711, typeof(Change_Battle_Troop));
             Factory.Commands.Add(800, typeof(Search_Opponent));
         }
 

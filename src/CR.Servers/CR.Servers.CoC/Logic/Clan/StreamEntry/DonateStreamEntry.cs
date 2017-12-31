@@ -149,6 +149,7 @@ namespace CR.Servers.CoC.Logic.Clan
             }
             return Json;
         }
+
         internal void ShowValues()
         {
             foreach (FieldInfo Field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))

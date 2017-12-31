@@ -48,6 +48,25 @@ namespace CR.Servers.CoC
             Console.WriteLine();
             Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +  Environment.NewLine);
 
+            var A = new AllianceUnitSlots
+            {
+                {1, 2, 3}
+            };
+
+            var b = A.Copy();
+
+           A.Clear();
+
+            var c = A.Copy();
+            A = null;
+            var d = A.Copy();
+
+            Console.WriteLine(A.Count);
+            Console.WriteLine(b.Count);
+            Console.WriteLine(c.Count);
+            Console.WriteLine(d == null);
+
+
             Resources.Initialize();
             Thread.Sleep(-1);
         }

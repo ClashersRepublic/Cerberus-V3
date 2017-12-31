@@ -122,12 +122,20 @@ namespace CR.Servers.CoC.Logic
 
                     if (Buffer.Length - 7 >= Length)
                     {
-                        if (this.ReceiveDecrypter == null)
+                        byte[] Packet;
+                        if (Identifier == 10100)
                         {
-                            this.InitializeEncrypter(Identifier);
+                            Packet = Reader.ReadBytes(Length);
                         }
+                        else
+                        {
+                            if (this.ReceiveDecrypter == null)
+                            {
+                                this.InitializeEncrypter(Identifier);
+                            }
 
-                        byte[] Packet = this.ReceiveDecrypter.Decrypt(Reader.ReadBytes(Length));
+                            Packet = this.ReceiveDecrypter.Decrypt(Reader.ReadBytes(Length));
+                        }
 
                         Message Message = Factory.CreateMessage(Identifier, this, new Reader(Packet));
 
@@ -150,6 +158,8 @@ namespace CR.Servers.CoC.Logic
                                 Logging.Error(this.GetType(), Exception.GetType().Name + " when handling the following message : ID " + Identifier + ", Length " + Length + ", Version " + Version + ".");
                                 Logging.Error(Exception.GetType(), Exception.Message + " [" + (this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + ":" + this.GameMode.Level.Player.LowID  : "-:-") + ']' + Environment.NewLine + Exception.StackTrace);
                             }
+
+                            Message.Reader.Dispose();
                         }
                         else
                             File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
@@ -163,6 +173,8 @@ namespace CR.Servers.CoC.Logic
                                 this.Process(Reader.ReadBytes(Buffer.Length - 7 - Length));
                             }
                         }
+
+                        Reader.Dispose();
                     }
                     else
                     {

@@ -35,7 +35,6 @@ namespace CR.Servers.CoC.Logic
         {
             this.Data = Data;
             this.Count = Count;
-            this.ItemData = CSV.Tables.GetWithGlobalId(this.Data);
         }
 
         internal virtual void Decode(Reader Reader)
