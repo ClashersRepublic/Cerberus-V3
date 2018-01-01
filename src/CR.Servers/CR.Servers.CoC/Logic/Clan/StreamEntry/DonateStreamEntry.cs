@@ -81,6 +81,9 @@ namespace CR.Servers.CoC.Logic.Clan
             if (this.HaveMessage)
                 Packet.AddString(this.Message);
 
+             if (this.Units == null)
+                this.Units = new AllianceUnitSlots();
+
             var donatedUnits = this.Units.ToArray();
 
             Packet.AddInt(donatedUnits.Length);

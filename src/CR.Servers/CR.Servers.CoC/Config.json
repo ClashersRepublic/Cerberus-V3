@@ -15,5 +15,8 @@
       "GoldV2": 2000000000,
       "ElixirV2": 2000000000
     }
-  }
+  },
+  "Server": {
+    "RestartInterval" :  0 
+  } 
 }
