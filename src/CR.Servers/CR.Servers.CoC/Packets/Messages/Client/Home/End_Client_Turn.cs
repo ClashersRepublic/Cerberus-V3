@@ -118,8 +118,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     catch (Exception Exception)
                     {
                         Logging.Error(Exception.GetType(), $"Exception while executing a command {Command.Type}. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
-                        this.Reader.BaseStream.Position = 0;
-                        Log();
                     }
 #if Extra
                     Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
