@@ -227,7 +227,7 @@ namespace CR.Servers.CoC.Logic
                 {
                     if (this.Account.Player != null)
                     {
-                        await Resources.Accounts.SavePlayer(this.Account.Player);
+                         Resources.Accounts.SavePlayer(this.Account.Player);
 
                         if (this.GameMode?.Level != null && this.Account.Player.BattleIdV2 > 0)
                         {
@@ -239,7 +239,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (this.Account.Home != null)
                     {
-                        await Resources.Accounts.SaveHome(this.Account.Home);
+                         Resources.Accounts.SaveHome(this.Account.Home);
                     }
                 }
 
