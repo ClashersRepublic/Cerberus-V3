@@ -38,7 +38,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             foreach (var building in Buildings)
             {
-                GameObject GameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(building.Id);
+                GameObject GameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectByPreciseId(building.Id);
 
                 if (GameObject != null)
                 {

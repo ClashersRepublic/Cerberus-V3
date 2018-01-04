@@ -164,17 +164,22 @@ namespace CR.Servers.CoC.Logic
                         else
                             File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
 
-                        if (!this.Token.Aborting)
+                        if (this.Token != null)
                         {
-                            this.Token.Packet.RemoveRange(0, Length + 7);
-
-                            if (Buffer.Length - 7 - Length >= 7)
+                            if (!this.Token.Aborting)
                             {
-                                this.Process(Reader.ReadBytes(Buffer.Length - 7 - Length));
+                                this.Token.Packet.RemoveRange(0, Length + 7);
+
+                                if (Buffer.Length - 7 - Length >= 7)
+                                {
+                                    this.Process(Reader.ReadBytes(Buffer.Length - 7 - Length));
+                                }
+                            }
+                            else
+                            {
+                                this.Token = null;
                             }
                         }
-
-                        Reader.Dispose();
                     }
                     else
                     {
@@ -187,7 +192,11 @@ namespace CR.Servers.CoC.Logic
             {
                 if (this.Connected)
                 {
-                    Resources.Gateway.Disconnect(this.Token.Args);
+                    if (this.Token != null)
+                    {
+                        Resources.Gateway.Disconnect(this.Token.Args);
+                        this.Token = null;
+                    }
                 }
             }
         }
@@ -205,20 +214,20 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
             if (!this.Disposed)
             {
                 this.Disposed = true;
                 this.State = State.DISCONNECTED;
-
+                
                 this.Chat?.Quit(this);
 
                 if (this.Account != null)
                 {
                     if (this.Account.Player != null)
                     {
-                        Resources.Accounts.SavePlayer(this.Account.Player);
+                        await Resources.Accounts.SavePlayer(this.Account.Player);
 
                         if (this.GameMode?.Level != null && this.Account.Player.BattleIdV2 > 0)
                         {
@@ -230,21 +239,35 @@ namespace CR.Servers.CoC.Logic
 
                     if (this.Account.Home != null)
                     {
-                        Resources.Accounts.SaveHome(this.Account.Home);
+                        await Resources.Accounts.SaveHome(this.Account.Home);
                     }
                 }
 
-                if (this.GameMode?.CommandManager?.ServerCommands != null)
+                if (this.GameMode?.CommandManager != null)
                 {
-                    foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                    if (this.GameMode.CommandManager.ServerCommands != null)
                     {
-                        Command.Execute();
+                        foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                        {
+                            Command.Execute();
+                        }
+                    }
+                    else
+                    {
+                        Logging.Error(this.GetType(), "CommandManager != null but ServerCommands == null");
                     }
                 }
 
-                this.Token = null;
+                try
+                {
+                    this.Socket.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception)
+                {
+                    // Already Closed.
+                }
 
-                this.Socket?.Dispose();
+                this.Socket.Close();
             }
         }
 

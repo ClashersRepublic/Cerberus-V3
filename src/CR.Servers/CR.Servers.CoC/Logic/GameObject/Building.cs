@@ -214,7 +214,20 @@ namespace CR.Servers.CoC.Logic
 
                 if (troopHousing >= 0)
                 {
-                    int Time = Globals.TroopHousingV2BuildTimeSeconds.Length == troopHousing ? Globals.TroopHousingV2BuildTimeSeconds[troopHousing - 1] : Globals.TroopHousingV2BuildTimeSeconds[troopHousing];
+                    int Time;
+                    switch (troopHousing)
+                    {
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            Time = Globals.TroopHousingV2BuildTimeSeconds[troopHousing - 1];
+                            break;
+
+                        default:
+                            Time = Globals.TroopHousingV2BuildTimeSeconds[4];
+                            break;
+                    }
                     this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Time));
                 }
                 else

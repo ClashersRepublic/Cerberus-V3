@@ -43,12 +43,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         {
                             var unitLevel = level.Player.GetUnitUpgradeLevel(this.Unit);
 
-                            var resourceData = this.UnitType == 1
-                                ? ((SpellData)Unit).UpgradeResourceData
-                                : ((CharacterData)Unit).UpgradeResourceData;
-                            var upgradeCost = this.UnitType == 1
-                                ? ((SpellData)Unit).UpgradeCost[unitLevel]
-                                : ((CharacterData)Unit).UpgradeCost[unitLevel];
+                            var resourceData = this.UnitType == 1 ? ((SpellData)Unit).UpgradeResourceData  : ((CharacterData)Unit).UpgradeResourceData;
+                            var upgradeCost = this.UnitType == 1 ? ((SpellData)Unit).UpgradeCost[unitLevel] : ((CharacterData)Unit).UpgradeCost[unitLevel];
 
                             if (resourceData != null)
                             {

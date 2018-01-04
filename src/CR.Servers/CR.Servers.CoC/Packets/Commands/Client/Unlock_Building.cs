@@ -64,8 +64,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     else
                                     {
                                         building.ConstructionTimer = new Timer();
-                                        building.ConstructionTimer.StartTimer(level.Player.LastTick,
-                                            data.GetBuildTime(0));
+                                        building.ConstructionTimer.StartTimer(level.Player.LastTick, data.GetBuildTime(0));
                                     }
                                 }
                                 else

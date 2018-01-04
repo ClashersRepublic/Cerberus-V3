@@ -37,7 +37,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             var Player = this.Device.GameMode.Level.Player;
 
-            if (Player.InAlliance)
+            /*if (Player.InAlliance)
             {
                 var Bunker = this.Device.GameMode.Level.GameObjectManager.Bunker;
                 if (Bunker != null)
@@ -79,7 +79,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     Logging.Error(this.GetType(), "Unable to request troop. The player doesn't have a bunker!");
             }
             else
-                Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");
+                Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");*/
         }
     }
 }

@@ -45,8 +45,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     var Level = Device.GameMode.Level;
                     //if (!Level.IsBuildingCapReached(this.BuildingData))
                     {
-                        BuildingClassData BuildingClassData = (BuildingClassData) CSV.Tables
-                            .Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
+                        BuildingClassData BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
                         ResourceData ResourceData = this.BuildingData.BuildResourceData;
 
                         if (BuildingClassData.CanBuy)
@@ -103,15 +102,30 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             }
                             else
                             {
-                                if (this.BuildingData.TownHallLevel2[0] <=
-                                    Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1)
+                                if (this.BuildingData.TownHallLevel2[0] <= Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1)
                                 {
                                     if (this.BuildingData.IsTroopHousingV2)
                                     {
                                         var TroopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
+                                        int Cost;
+                                        int Time;
 
-                                        int Cost = Globals.TroopHousingV2Cost[TroopHousing];
-                                        int Time = Globals.TroopHousingV2BuildTimeSeconds[TroopHousing];
+                                        switch (TroopHousing)
+                                        {
+                                            case 1:
+                                            case 2:
+                                            case 3:
+                                            case 4:
+                                                Cost = Globals.TroopHousingV2Cost[TroopHousing];
+                                                Time = Globals.TroopHousingV2BuildTimeSeconds[TroopHousing];
+                                                break;
+
+                                            default:
+                                                Cost = Globals.TroopHousingV2Cost[4];
+                                                Time = Globals.TroopHousingV2BuildTimeSeconds[1];
+                                                break;
+                                        }
+
                                         if (Level.Player.Resources.GetCountByData(ResourceData) >= Cost)
                                         {
                                             if (Level.WorkerManagerV2.FreeWorkers > 0)
@@ -158,8 +172,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                         return;
                                     }
 
-                                    if (Level.Player.Resources.GetCountByData(ResourceData) >=
-                                        this.BuildingData.BuildCost[0])
+                                    if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
                                     {
                                         if (Level.WorkerManagerV2.FreeWorkers > 0)
                                         {
@@ -190,7 +203,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     Error.AppendLine($"Village type :  {this.BuildingData.VillageType}");
 
                     Error.AppendLine($"Player Id :  {this.Device.GameMode.Level.Player.UserId}");
-                    Error.AppendLine($"Player current village :  {this.Device.GameMode.Level.Player}");
+                    Error.AppendLine($"Player current village :  {this.Device.GameMode.Level.GameObjectManager.Map}");
                     Error.AppendLine($"Player town hall level :  {this.Device.GameMode.Level.Player.TownHallLevel}");
                     Error.AppendLine($"Player town hall2 level :  {this.Device.GameMode.Level.Player.TownHallLevel2}");
                     Error.AppendLine($"Player have free worker : {this.Device.GameMode.Level.WorkerManager.FreeWorkers}");

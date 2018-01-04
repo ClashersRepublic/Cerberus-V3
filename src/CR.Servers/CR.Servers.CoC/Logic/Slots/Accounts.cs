@@ -152,7 +152,7 @@ namespace CR.Servers.CoC.Logic.Slots
 
             if (Account != null)
             {
-                if (Account.Player.Level == null && Account.Home.Level == null)
+                if (Account.Player.Level == null || Account.Home.Level == null)
                 {
                     var Level = new Level();
                     Level.SetPlayer(Account.Player);

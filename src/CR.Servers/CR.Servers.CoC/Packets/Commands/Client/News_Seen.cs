@@ -18,9 +18,5 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             this.NewsId = this.Reader.ReadInt32();
             base.Decode();
         }
-
-        internal override void Execute()
-        {
-        }
     }
 }

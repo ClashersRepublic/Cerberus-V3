@@ -152,19 +152,27 @@ namespace CR.Servers.CoC.Core.Network
         {
             if (AsyncEvent.BytesTransferred > 0 && AsyncEvent.SocketError == SocketError.Success)
             {
-                Token Token = (Token)AsyncEvent.UserToken;
-
-                if (!Token.Aborting)
+                if (AsyncEvent.UserToken is Token Token)
                 {
-                    Token.SetData();
-
-                    try
+                    if (!Token.Aborting)
                     {
-                        if (Token.Device.Socket.Available == 0)
-                        {
-                            Token.Process();
+                        Token.SetData();
 
-                            if (!Token.Aborting)
+                        try
+                        {
+                            if (Token.Device.Socket.Available == 0)
+                            {
+                                Token.Process();
+
+                                if (!Token.Aborting)
+                                {
+                                    if (!Token.Device.Socket.ReceiveAsync(AsyncEvent))
+                                    {
+                                        this.ProcessReceive(AsyncEvent);
+                                    }
+                                }
+                            }
+                            else
                             {
                                 if (!Token.Device.Socket.ReceiveAsync(AsyncEvent))
                                 {
@@ -172,19 +180,16 @@ namespace CR.Servers.CoC.Core.Network
                                 }
                             }
                         }
-                        else
+                        catch (Exception Exception)
                         {
-                            if (!Token.Device.Socket.ReceiveAsync(AsyncEvent))
-                            {
-                                this.ProcessReceive(AsyncEvent);
-                            }
+                            Logging.Error(Exception.GetType(), "Exception while Process Receive. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
+                            this.Disconnect(AsyncEvent);
                         }
                     }
-                    catch (Exception Exception)
-                    {
-                        Logging.Error(Exception.GetType(), "Exception while Process Receive. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
-                        this.Disconnect(AsyncEvent);
-                    }
+                }
+                else
+                {
+                    Logging.Error(this.GetType(), "Token was null at ProcessReceive(Saea).");
                 }
             }
             else
@@ -292,13 +297,20 @@ namespace CR.Servers.CoC.Core.Network
 
                 Token.Aborting = true;
 
-                try
+                if (Token.Device != null)
                 {
-                    Token.Device?.Dispose();
+                    try
+                    {
+                        Token.Device.Dispose();
+                    }
+                    catch (Exception Exception)
+                    {
+                        Logging.Error(Exception.GetType(),  "Exception while disposing device. " + Exception.Message + Environment.NewLine +  Exception.StackTrace);
+                    }
                 }
-                catch (Exception Exception)
+                else
                 {
-                    Logging.Error(Exception.GetType(), "Exception while disposing device. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
+                    Logging.Error(this.GetType(), "Token.Device was null at Disconnect(Saea).");
                 }
 
                 try

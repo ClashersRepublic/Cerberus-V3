@@ -23,7 +23,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            ShowValues();
             var Level = this.Device.GameMode.Level;
 
             Level.LastLeagueRank = this.League;

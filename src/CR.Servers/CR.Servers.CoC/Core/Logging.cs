@@ -24,7 +24,7 @@ namespace CR.Servers.CoC.Core
         {
             //Resources.Logger.Info(Type.Name + " : " + Message);
 #if Console
-            Console.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
+            //Console.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #else
             Debug.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #endif

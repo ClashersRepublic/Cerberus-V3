@@ -30,7 +30,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             this.SubTick = this.Reader.ReadInt32();
             this.Checksum = this.Reader.ReadInt32();
             this.CommandCount = this.Reader.ReadInt32();
-            if (this.CommandCount <= 512)
+            if (this.CommandCount <= 2056) //512
             {
                 if (this.CommandCount > 0)
                 {
@@ -69,7 +69,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Command count is too high! (" + this.CommandCount + ")");
+            }
 
         }
 
@@ -111,20 +113,30 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         }
                     }
 
-                    try
+                    if (Command.ExecuteSubTick <= this.SubTick)
                     {
-                        Command.Execute();
-                    }
-                    catch (Exception Exception)
-                    {
-                        Logging.Error(Exception.GetType(), $"Exception while executing a command {Command.Type}. " + Exception.Message + Environment.NewLine + Exception.StackTrace);
-                    }
+                        try
+                        {
+                            this.Commands.Remove(Command);
+                            Command.Execute();
 #if Extra
-                    Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
+                            Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
 #endif
-
-                    this.Commands.Remove(Command);
-                    continue;
+                            continue;
+                        }
+                        catch (Exception Exception)
+                        {
+                            this.Commands.Remove(Command);
+                            Logging.Error(Exception.GetType(),
+                                $"Exception while executing a command {Command.Type}. " + Exception.Message +
+                                Environment.NewLine + Exception.StackTrace);
+                        }
+                    }
+                    else
+                    {
+                        this.Commands.Remove(Command);
+                        Logging.Error(this.GetType(), this.Device, "Execute command failed! Command should have been executed already. (type=" + Command.Type + ", command_tick=" + Command.ExecuteSubTick + ", server_tick=" + this.SubTick + ")");
+                    }
                 } while (this.Commands.Count > 0);
             }
         }
