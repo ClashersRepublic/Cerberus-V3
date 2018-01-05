@@ -1,27 +1,27 @@
-﻿using System;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class HeroBaseComponent : Component
     {
-        internal override int Type => 10;
+        internal HeroData HeroData;
+
+        internal Timer UpgradeTimer;
 
         public HeroBaseComponent(GameObject GameObject, HeroData HeroData) : base(GameObject)
         {
             this.HeroData = HeroData;
         }
 
-        internal Timer UpgradeTimer;
-        internal HeroData HeroData;
-        
+        internal override int Type => 10;
+
         internal int RemainingUpgradeTime => this.UpgradeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) ?? 0;
-        internal int UpgradeLevel => this.Parent.Level.Player.GetHeroUpgradeLevel(HeroData);
+        internal int UpgradeLevel => this.Parent.Level.Player.GetHeroUpgradeLevel(this.HeroData);
         internal int VillageType => this.HeroData.VillageType;
         internal bool Upgrading => this.UpgradeTimer != null;
 
@@ -31,9 +31,9 @@ namespace CR.Servers.CoC.Logic
             {
                 if (!this.Upgrading)
                 {
-                    var Level = Parent.Level;
-                    var Data = this.HeroData;
-                    
+                    Level Level = this.Parent.Level;
+                    HeroData Data = this.HeroData;
+
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
                         return (this.VillageType == 1 ? Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 : Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1) >= Data.RequiredTownHallLevel[this.UpgradeLevel + 1];
@@ -100,7 +100,7 @@ namespace CR.Servers.CoC.Logic
                 {
                     int CurrentUpgrade = Player.GetHeroUpgradeLevel(this.HeroData);
 
-                    var resourceCount = (int)((this.HeroData.UpgradeCost[CurrentUpgrade] * Globals.HeroUpgradeCancelMultiplier * (long)1374389535) >> 32);
+                    int resourceCount = (int) ((this.HeroData.UpgradeCost[CurrentUpgrade] * Globals.HeroUpgradeCancelMultiplier * (long) 1374389535) >> 32);
                     resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
 
                     Player.Resources.Plus(this.HeroData.GlobalId, resourceCount);
@@ -116,8 +116,10 @@ namespace CR.Servers.CoC.Logic
 
                     this.UpgradeTimer = null;
                 }
-                else 
+                else
+                {
                     Logging.Error(this.GetType(), "Tried to cancel hero upgrade but UpgradeOnGoing returned false");
+                }
             }
         }
 
@@ -129,7 +131,9 @@ namespace CR.Servers.CoC.Logic
                 this.Parent.Level.Player.HeroUpgrades.Set(this.HeroData, this.HeroData.MaxLevel);
             }
             else
+            {
                 this.Parent.Level.Player.IncreaseHeroUpgradeLevel(this.HeroData);
+            }
 
             if (this.VillageType == 0)
             {
@@ -178,11 +182,13 @@ namespace CR.Servers.CoC.Logic
                 {
                     if (UpgradeTime > -1)
                     {
-                        var startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                        int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
 
-                        var duration = UpgradeTimeEnd - startTime;
+                        int duration = UpgradeTimeEnd - startTime;
                         if (duration < 0)
+                        {
                             duration = 0;
+                        }
 
                         //duration = Math.Min(duration, this.HeroData.GetUpgradeTime(this.UpgradeLevel + 1));
 

@@ -1,20 +1,19 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Leaderboard
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Leaderboard
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Request_Player_Ranking : Message
     {
-        internal override short Type => 14403;
-
-        public Request_Player_Ranking(Device Device, Reader Reader) : base(Device, Reader)
-        {
-
-        }
-
         internal bool HasLong;
         internal long UnknownLong;
         internal int VillageType;
+
+        public Request_Player_Ranking(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override short Type => 14403;
 
         internal override void Decode()
         {

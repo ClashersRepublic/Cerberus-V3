@@ -1,21 +1,21 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions.Binary;
+
     internal class Ask_Visit_Home : Message
     {
-        internal override short Type => 14113;
+        internal int HighId;
+        internal int LowId;
 
         public Ask_Visit_Home(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int HighId;
-        internal int LowId;
+        internal override short Type => 14113;
 
         internal override void Decode()
         {
@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
         internal override void Process()
         {
-            var Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
+            Player Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
 
             if (Player.Level != null)
             {
@@ -36,5 +36,5 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                 new Own_Home_Data(this.Device).Send();
             }
         }
-    }   
+    }
 }

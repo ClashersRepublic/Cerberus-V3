@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Commands.Server
+﻿namespace CR.Servers.CoC.Packets.Commands.Server
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+
     internal class Changed_Alliance_Role : ServerCommand
     {
-        internal override int Type => 8;
+        internal long AllianceId;
+        internal Role AllianceRole;
 
         public Changed_Alliance_Role(Device Device) : base(Device)
         {
-            
         }
 
         public Changed_Alliance_Role(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal long AllianceId;
-        internal Role AllianceRole;
+        internal override int Type => 8;
 
         internal override void Decode()
         {
@@ -33,7 +31,7 @@ namespace CR.Servers.CoC.Packets.Commands.Server
         internal override void Encode(List<byte> Data)
         {
             Data.AddLong(this.AllianceId);
-            Data.AddInt((int)this.AllianceRole);
+            Data.AddInt((int) this.AllianceRole);
             base.Encode(Data);
         }
     }

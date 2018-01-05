@@ -1,32 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Clan.Slots;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Clan.Slots;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+
     internal class Alliance
     {
+        internal int Connected;
+
+        [JsonProperty] internal string Description;
+        [JsonProperty] internal AllianceHeader Header;
         [JsonProperty] internal int HighId;
         [JsonProperty] internal int LowId;
 
         [JsonProperty] internal Members Members;
         [JsonProperty] internal Streams Streams;
-        [JsonProperty] internal AllianceHeader Header;
         [JsonProperty] internal WarState WarState;
-
-        [JsonProperty] internal string Description;
-
-        internal int Connected;
-
-        internal long AllianceId => (long)this.HighId << 32 | (uint)this.LowId;
 
         internal Alliance()
         {
@@ -40,6 +37,8 @@ namespace CR.Servers.CoC.Logic.Clan
             this.HighId = HighID;
             this.LowId = LowID;
         }
+
+        internal long AllianceId => ((long) this.HighId << 32) | (uint) this.LowId;
 
         internal void Encode(List<byte> Packet)
         {

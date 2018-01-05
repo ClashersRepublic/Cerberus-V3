@@ -1,19 +1,19 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Add_Quick_Train : Command
     {
-        internal override int Type => 558;
+        internal int Count;
+
+        internal int Database;
 
         public Add_Quick_Train(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Database;
-        internal int Count;
+        internal override int Type => 558;
 
         internal override void Decode()
         {

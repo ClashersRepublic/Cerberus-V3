@@ -10,7 +10,6 @@
         DoesNotExist = 5,
 
         TooManyFriendsYou = 7,
-        TooManyFriendsOther = 8,
-
+        TooManyFriendsOther = 8
     }
 }

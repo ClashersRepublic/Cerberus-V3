@@ -1,39 +1,32 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic.Battle.Slots.Items;
-using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.CoC.Packets;
-using CR.Servers.CoC.Packets.Messages.Server.Battle;
-
-using Timers = System.Timers.Timer;
-
-namespace CR.Servers.CoC.Logic.Battle.Manager
+﻿namespace CR.Servers.CoC.Logic.Battle.Manager
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Timers;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic.Battle.Slots.Items;
+    using CR.Servers.CoC.Packets;
+    using CR.Servers.CoC.Packets.Messages.Server.Battle;
+
     internal class BattleManager
     {
+        internal IBattle Battle;
+        internal BattleCommandManager BattleCommandManager;
+        internal int Gamelasttick;
+
+        internal DateTime Gamelastticktime;
 
         internal Level Player;
-        internal IBattle Battle;
 
         internal ConcurrentDictionary<long, Level> Spectators;
-        internal BattleCommandManager BattleCommandManager;
 
         internal bool Started;
         internal bool Stopped;
 
-        internal Timers Timer;
-
-        internal DateTime Gamelastticktime;
-        internal int Gamelasttick;
-
-        internal bool Running => this.Started && !this.Stopped;
+        internal Timer Timer;
 
 
         public BattleManager(Level Player, IBattle Battle)
@@ -41,13 +34,15 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
             this.Player = Player;
             this.Battle = Battle;
 
-            this.Timer = new Timers();
+            this.Timer = new Timer();
 
             this.Spectators = new ConcurrentDictionary<long, Level>();
             this.BattleCommandManager = new BattleCommandManager(this);
 
             this.Begin();
         }
+
+        internal bool Running => this.Started && !this.Stopped;
 
         internal void Begin()
         {
@@ -61,13 +56,12 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
             this.Timer.AutoReset = true;
             this.Timer.Elapsed += (Gaybdu, Nagy) =>
             {
-
                 this.BattleCommandManager.Tick();
 
-                var Buffered = this.BattleCommandManager.Commands.ToList();
+                List<Command> Buffered = this.BattleCommandManager.Commands.ToList();
 
                 if (!this.Stopped && this.Spectators.Count > 0)
-                {   
+                {
                     foreach (Level Player in this.Spectators.Values.ToArray())
                     {
                         if (Player.GameMode.Connected)
@@ -96,7 +90,7 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
 
             this.BattleCommandManager.Tick();
 
-            var Buffered = this.BattleCommandManager.Commands.ToList();
+            List<Command> Buffered = this.BattleCommandManager.Commands.ToList();
 
             if (this.Spectators.Count > 0)
             {
@@ -127,12 +121,12 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
             {
                 if (this.Spectators.TryAdd(Player.Player.UserId, Player))
                 {
-                    new Live_Replay_Header(Player.GameMode.Device){ReplayHeaderJson = this.Battle.Save().ToString(), InitialStreamEndSubTick = this.Battle.EndTick, InitialCommands = this.Battle.Commands}.Send();
+                    new Live_Replay_Header(Player.GameMode.Device) {ReplayHeaderJson = this.Battle.Save().ToString(), InitialStreamEndSubTick = this.Battle.EndTick, InitialCommands = this.Battle.Commands}.Send();
                 }
                 else
                 {
                     this.Spectators[Player.Player.UserId] = Player;
-                    new Live_Replay_Header(Player.GameMode.Device) { ReplayHeaderJson = this.Battle.Save().ToString(), InitialStreamEndSubTick = this.Battle.EndTick, InitialCommands = this.Battle.Commands }.Send();
+                    new Live_Replay_Header(Player.GameMode.Device) {ReplayHeaderJson = this.Battle.Save().ToString(), InitialStreamEndSubTick = this.Battle.EndTick, InitialCommands = this.Battle.Commands}.Send();
                 }
             }
         }
@@ -146,7 +140,7 @@ namespace CR.Servers.CoC.Logic.Battle.Manager
         }
 
         internal void Tick()
-        {          
+        {
             this.Battle.BattleTick = this.Player.Time.SubTick;
             /*this.BattleCommandManager.Tick();
 

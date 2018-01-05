@@ -1,25 +1,25 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
-    internal class Place_Spell :Command
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using Newtonsoft.Json.Linq;
+
+    internal class Place_Spell : Command
     {
-        internal override int Type => 704;
-
-        public Place_Spell(Device Device, Reader Reader) : base(Device, Reader)
-        {
-
-        }
+        internal bool IsAllianceSpell;
+        internal SpellData Spell;
+        internal int UnknownInt;
 
         internal int X;
         internal int Y;
-        internal SpellData Spell;
-        internal bool IsAllianceSpell;
-        internal int UnknownInt;
+
+        public Place_Spell(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override int Type => 704;
 
         internal override void Decode()
         {
@@ -35,7 +35,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
         {
             if (this.Spell != null)
             {
-                var Level = this.Device.GameMode.Level;
+                Level Level = this.Device.GameMode.Level;
                 if (this.IsAllianceSpell)
                 {
                     Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.UnknownInt);

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+
     internal class Filter
     {
         internal GameObjectManager GameObjectManager;
@@ -24,10 +22,6 @@ namespace CR.Servers.CoC.Logic
 
                 return Result;
             }
-            else
-            {
-                
-            }
 
             return null;
         }
@@ -38,10 +32,12 @@ namespace CR.Servers.CoC.Logic
 
             if (this.GameObjectManager.GameObjects.Length > Class)
             {
-                var GameObject = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
+                GameObject GameObject = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
 
                 if (GameObject != null)
+                {
                     return GameObject;
+                }
 
                 Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
             }
@@ -57,7 +53,9 @@ namespace CR.Servers.CoC.Logic
                 int Index = Id % 1000000;
 
                 if (this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Count > Index)
+                {
                     return this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map][Index];
+                }
 
                 Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
             }

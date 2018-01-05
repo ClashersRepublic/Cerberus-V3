@@ -1,11 +1,19 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class Global_Chat_Line : Message
     {
-        internal override short Type => 24715;
+        internal bool Bot;
+        internal int ExpLevel;
+        internal int League;
+
+        internal string Message;
+        internal string Name;
+
+        internal Player Player;
+        internal long UserId;
 
         public Global_Chat_Line(Device Device) : base(Device)
         {
@@ -20,14 +28,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Home
             this.UserId = this.Player.UserId;
         }
 
-        internal string Message;
-
-        internal Player Player;
-        internal string Name;
-        internal int ExpLevel;
-        internal int League;
-        internal long UserId;
-        internal bool Bot;
+        internal override short Type => 24715;
 
         internal override void Encode()
         {
@@ -47,7 +48,9 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Home
                 this.Data.AddInt(this.Player.Alliance.Header.Badge);
             }
             else
+            {
                 this.Data.AddBool(false);
+            }
         }
     }
 }

@@ -1,27 +1,28 @@
-﻿using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Mission_Progress : Command
     {
-        internal override int Type => 519;
         internal int Mission_ID;
 
         public Mission_Progress(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 
+        internal override int Type => 519;
+
         internal override void Decode()
         {
-            Mission_ID = Reader.ReadInt32();
+            this.Mission_ID = this.Reader.ReadInt32();
             base.Decode();
         }
 
         internal override void Execute()
         {
-            if (Device.Account.Player.Mission_Finish(Mission_ID))
+            if (this.Device.Account.Player.Mission_Finish(this.Mission_ID))
             {
                 // Missions Mission = CSV.Tables.Get(Gamefile.Missions).GetDataWithID(Mission_ID) as Missions;
             }

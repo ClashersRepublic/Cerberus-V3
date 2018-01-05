@@ -1,76 +1,39 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Core.Consoles.Colorful;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class GameObjectManager
     {
-        internal Level Level;
-
-        internal List<GameObject>[][] GameObjects;
-        internal int[] ObstaclesIndex;
+        internal Building Bunker;
         internal int[] DecoIndex;
 
-        internal Building Bunker;
-        internal Building TownHall;
-        internal Building TownHall2;
-        internal Building Laboratory;
-
         internal Filter Filter;
-        internal Random VRandom;
-        internal Random V2Random;
-        internal Random TgRandom;
+
+        internal List<GameObject>[][] GameObjects;
+        internal Building Laboratory;
+        internal Level Level;
+        internal int ObstacleClearCounter;
+        internal int ObstacleClearCounterV2;
+        internal int[] ObstaclesIndex;
 
         internal int SecondsFromLastRespawn;
-        internal int ObstacleClearCounter;
 
         internal int SecondsFromLastRespawnV2;
-        internal int ObstacleClearCounterV2;
 
         internal int SecondsFromLastTgRespawn;
-
-
-
-        internal int Checksum
-        {
-            get
-            {
-                var Checksum = 0;
-
-                for (var i = 0; i < 9; i++)
-                {
-                    Checksum += this.GameObjects[i][0].Count;
-                    Checksum += this.GameObjects[i][1].Count;
-                }
-
-                int c = 0;
-                foreach (var gameObject in this.GameObjects)
-                {
-                    for (var j = 0; j < gameObject[0].Count; j++)
-                    {
-                        Checksum += gameObject[0][j].Checksum;
-                    }
-
-                    for (var j = 0; j < gameObject[1].Count; j++)
-                    {
-                        Checksum += gameObject[1][j].Checksum;
-                    }
-                    c++;
-                }
-
-                return Checksum;
-            }
-        }
-
-        internal int Map => Level.Player?.Map ?? 0;
+        internal Random TgRandom;
+        internal Building TownHall;
+        internal Building TownHall2;
+        internal Random V2Random;
+        internal Random VRandom;
 
         public GameObjectManager()
         {
@@ -78,11 +41,11 @@ namespace CR.Servers.CoC.Logic
             this.ObstaclesIndex = new int[2];
             this.DecoIndex = new int[2];
 
-            for (var i = 0; i < this.GameObjects.Length; i++)
+            for (int i = 0; i < this.GameObjects.Length; i++)
             {
                 this.GameObjects[i] = new List<GameObject>[2];
 
-                for (var j = 0; j < this.GameObjects[i].Length; j++)
+                for (int j = 0; j < this.GameObjects[i].Length; j++)
                 {
                     this.GameObjects[i][j] = new List<GameObject>();
                 }
@@ -99,13 +62,47 @@ namespace CR.Servers.CoC.Logic
             this.Level = Level;
         }
 
+
+        internal int Checksum
+        {
+            get
+            {
+                int Checksum = 0;
+
+                for (int i = 0; i < 9; i++)
+                {
+                    Checksum += this.GameObjects[i][0].Count;
+                    Checksum += this.GameObjects[i][1].Count;
+                }
+
+                int c = 0;
+                foreach (List<GameObject>[] gameObject in this.GameObjects)
+                {
+                    for (int j = 0; j < gameObject[0].Count; j++)
+                    {
+                        Checksum += gameObject[0][j].Checksum;
+                    }
+
+                    for (int j = 0; j < gameObject[1].Count; j++)
+                    {
+                        Checksum += gameObject[1][j].Checksum;
+                    }
+                    c++;
+                }
+
+                return Checksum;
+            }
+        }
+
+        internal int Map => this.Level.Player?.Map ?? 0;
+
         internal void AddGameObject(GameObject GameObject, int Map)
         {
             int GType = GameObject.Type;
 
             if (GType == 0)
             {
-                Building Building = (Building)GameObject;
+                Building Building = (Building) GameObject;
                 BuildingData Data = Building.BuildingData;
 
                 if (Data.IsTownHall)
@@ -141,7 +138,7 @@ namespace CR.Servers.CoC.Logic
 
         public void RemoveGameObject(GameObject go, int Map)
         {
-            GameObjects[go.Type][Map].Remove(go);
+            this.GameObjects[go.Type][Map].Remove(go);
         }
 
         internal void CreateTallGrass()
@@ -239,7 +236,7 @@ namespace CR.Servers.CoC.Logic
                             X = X << 9,
                             Y = Y << 9
                         },
-                        Id = GlobalId.Create(503, this.ObstaclesIndex[Data.VillageType]++),
+                        Id = GlobalId.Create(503, this.ObstaclesIndex[Data.VillageType]++)
                     };
 
                     this.GameObjects[3][Data.VillageType].Add(Obstacle);
@@ -282,13 +279,13 @@ namespace CR.Servers.CoC.Logic
         {
             for (int i = 0; i < this.GameObjects[0][0].Count; i++)
             {
-                Building Building = (Building)this.GameObjects[0][0][i];
-                Building.Id =  GlobalId.Create(500, i);
+                Building Building = (Building) this.GameObjects[0][0][i];
+                Building.Id = GlobalId.Create(500, i);
             }
 
             for (int i = 0; i < this.GameObjects[0][1].Count; i++)
             {
-                Building Building = (Building)this.GameObjects[0][1][i];
+                Building Building = (Building) this.GameObjects[0][1][i];
                 Building.Id = GlobalId.Create(500, i);
             }
 
@@ -296,7 +293,7 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < this.GameObjects[3][0].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle)this.GameObjects[3][0][i];
+                Obstacle Obstacle = (Obstacle) this.GameObjects[3][0][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -311,7 +308,7 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < this.GameObjects[3][1].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle)this.GameObjects[3][1][i];
+                Obstacle Obstacle = (Obstacle) this.GameObjects[3][1][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -334,7 +331,7 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < this.GameObjects[3][0].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle)this.GameObjects[3][0][i];
+                Obstacle Obstacle = (Obstacle) this.GameObjects[3][0][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -350,7 +347,7 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < this.GameObjects[3][1].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle)this.GameObjects[3][1][i];
+                Obstacle Obstacle = (Obstacle) this.GameObjects[3][1][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -365,25 +362,13 @@ namespace CR.Servers.CoC.Logic
 
         internal void Process()
         {
-            this.GameObjects[0][0].ForEach(GameObject =>
-            {
-                GameObject.Process();
-            });
+            this.GameObjects[0][0].ForEach(GameObject => { GameObject.Process(); });
 
-            this.GameObjects[0][1].ForEach(GameObject =>
-            {
-                GameObject.Process();
-            });
+            this.GameObjects[0][1].ForEach(GameObject => { GameObject.Process(); });
 
-            this.GameObjects[4][0].ForEach(GameObject =>
-            {
-                GameObject.Process();
-            });
+            this.GameObjects[4][0].ForEach(GameObject => { GameObject.Process(); });
 
-            this.GameObjects[4][1].ForEach(GameObject =>
-            {
-                GameObject.Process();
-            });
+            this.GameObjects[4][1].ForEach(GameObject => { GameObject.Process(); });
         }
 
         internal void RespawnObstacles()
@@ -432,7 +417,7 @@ namespace CR.Servers.CoC.Logic
         {
             #region Village 1
 
-            JArray Buildings = (JArray)Json["buildings"];
+            JArray Buildings = (JArray) Json["buildings"];
 
             if (Buildings != null)
             {
@@ -442,9 +427,11 @@ namespace CR.Servers.CoC.Logic
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "An error has been throwed the load of the game objects. Building array is NULL!");
+            }
 
-            JArray Obstacles = (JArray)Json["obstacles"];
+            JArray Obstacles = (JArray) Json["obstacles"];
 
             if (Obstacles != null)
             {
@@ -459,7 +446,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray Traps = (JArray)Json["traps"];
+            JArray Traps = (JArray) Json["traps"];
 
             if (Traps != null)
             {
@@ -469,7 +456,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray Decos = (JArray)Json["decos"];
+            JArray Decos = (JArray) Json["decos"];
 
             if (Decos != null)
             {
@@ -484,7 +471,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray VillageObjects = (JArray)Json["vobjs"];
+            JArray VillageObjects = (JArray) Json["vobjs"];
 
             if (VillageObjects != null)
             {
@@ -495,9 +482,10 @@ namespace CR.Servers.CoC.Logic
             }
 
             #endregion
+
             #region Village 2
 
-            JArray Buildings2 = (JArray)Json["buildings2"];
+            JArray Buildings2 = (JArray) Json["buildings2"];
 
             if (Buildings2 != null)
             {
@@ -507,7 +495,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray Obstacles2 = (JArray)Json["obstacles2"];
+            JArray Obstacles2 = (JArray) Json["obstacles2"];
 
 
             if (Obstacles2 != null)
@@ -523,7 +511,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray Traps2 = (JArray)Json["traps2"];
+            JArray Traps2 = (JArray) Json["traps2"];
 
             if (Traps2 != null)
             {
@@ -533,7 +521,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray Decos2 = (JArray)Json["decos2"];
+            JArray Decos2 = (JArray) Json["decos2"];
 
             if (Decos2 != null)
             {
@@ -548,14 +536,13 @@ namespace CR.Servers.CoC.Logic
                 }
             }
 
-            JArray VillageObjects2 = (JArray)Json["vobjs2"];
+            JArray VillageObjects2 = (JArray) Json["vobjs2"];
 
             if (VillageObjects2 != null)
             {
                 foreach (JToken Token in VillageObjects2)
                 {
                     this.LoadGameObject(Token, 1);
-                        
                 }
             }
 
@@ -573,14 +560,13 @@ namespace CR.Servers.CoC.Logic
                 Logging.Info(this.GetType(), "Load() - Can't find respawn variables.");
                 this.VRandom.Seed = 112;
             }
-            
+
             this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out int SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
             this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out int V2RandomSeed) ? V2RandomSeed : 112;
             this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out int ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
 
             this.SecondsFromLastTgRespawn = JsonHelper.GetJsonNumber(Json, "tgsec", out int SecondsFromLastTGRespawn) ? SecondsFromLastTGRespawn : 0;
             this.TgRandom.Seed = JsonHelper.GetJsonNumber(Json, "tgseed", out int TGRandomSed) ? TGRandomSed : 112;
-
         }
 
 
@@ -669,6 +655,7 @@ namespace CR.Servers.CoC.Logic
             }
 
             #endregion
+
             #region Village 2
 
             JArray Buildings2 = new JArray();
@@ -753,7 +740,7 @@ namespace CR.Servers.CoC.Logic
 
             #endregion
 
-            var RespawnVars = new JObject
+            JObject RespawnVars = new JObject
             {
                 {"secondsFromLastRespawn", this.SecondsFromLastRespawn},
                 {"obstacleClearCounter", this.ObstacleClearCounter},
@@ -778,7 +765,6 @@ namespace CR.Servers.CoC.Logic
             Json.Add("tgsec", this.SecondsFromLastTgRespawn);
             Json.Add("tgseed", this.TgRandom.Seed);
             Json.Add("last_news_seen", 999999999);
-
         }
 
         internal void SaveV2(JObject Json)
@@ -867,7 +853,7 @@ namespace CR.Servers.CoC.Logic
 
             #endregion
 
-            var RespawnVars = new JObject
+            JObject RespawnVars = new JObject
             {
                 {"secondsFromLastRespawn", this.SecondsFromLastRespawn},
                 {"obstacleClearCounter", this.ObstacleClearCounter},
@@ -902,7 +888,6 @@ namespace CR.Servers.CoC.Logic
             Json.Add("newShopDecos", new JArray());
 
             Json.Add("last_news_seen", 999999999);
-
         }
 
         internal void LoadGameObject(JToken Token, int Map)
@@ -926,7 +911,9 @@ namespace CR.Servers.CoC.Logic
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "An error has been throwed when the load of GameObject. data not exist.");
+            }
         }
 
         internal void Tick()

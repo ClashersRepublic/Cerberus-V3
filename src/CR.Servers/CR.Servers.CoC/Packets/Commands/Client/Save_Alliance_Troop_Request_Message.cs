@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Save_Alliance_Troop_Request_Message : Command
     {
-        internal override int Type => 540;
+        internal string Message;
 
         public Save_Alliance_Troop_Request_Message(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal string Message;
+        internal override int Type => 540;
 
         internal override void Decode()
         {

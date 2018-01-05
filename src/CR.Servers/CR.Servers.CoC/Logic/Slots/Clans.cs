@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Database;
-using CR.Servers.CoC.Logic.Clan;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic.Slots
+﻿namespace CR.Servers.CoC.Logic.Slots
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Database;
+    using CR.Servers.CoC.Logic.Clan;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+    using Newtonsoft.Json;
+
     internal class Clans : ConcurrentDictionary<long, Alliance>
     {
         private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
@@ -34,7 +34,6 @@ namespace CR.Servers.CoC.Logic.Slots
             this.GetRange();
 
             Logging.Info(this.GetType(), this.Count + " alliances loaded to the memory.");
-
         }
 
         internal void Add(Alliance Clan)
@@ -78,11 +77,11 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal async Task<Alliance> GetAsync(int HighID, int LowID, bool Store = true)
         {
-            long Id = (long) HighID << 32 | (uint) LowID;
+            long Id = ((long) HighID << 32) | (uint) LowID;
 
             if (!this.TryGetValue(Id, out Alliance Clan))
             {
-                var Save = await Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1)
+                Core.Database.Models.Mongo.Clans Save = await Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1)
                     .SingleOrDefaultAsync();
 
                 if (Save != null)
@@ -101,11 +100,11 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal Alliance Get(int HighID, int LowID, bool Store = true)
         {
-            long Id = (long) HighID << 32 | (uint) LowID;
+            long Id = ((long) HighID << 32) | (uint) LowID;
 
             if (!this.TryGetValue(Id, out Alliance Clan))
             {
-                var Save = Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1).SingleOrDefault();
+                Core.Database.Models.Mongo.Clans Save = Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1).SingleOrDefault();
 
                 if (Save != null)
                 {
@@ -122,14 +121,14 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal List<Alliance> GetRange(int Offset = 0, int Limit = 50, bool Store = true)
         {
-            var Clans = new List<Alliance>(Limit);
-            var Saves = Mongo.Clans.Find(T => T.HighId == 0 && T.LowId >= Offset).Limit(Limit).ToList();
+            List<Alliance> Clans = new List<Alliance>(Limit);
+            List<Core.Database.Models.Mongo.Clans> Saves = Mongo.Clans.Find(T => T.HighId == 0 && T.LowId >= Offset).Limit(Limit).ToList();
 
-            foreach (var Save in Saves)
+            foreach (Core.Database.Models.Mongo.Clans Save in Saves)
             {
                 if (Save != null)
                 {
-                    var Clan = JsonConvert.DeserializeObject<Alliance>(Save.Data.ToJson(), this.Settings);
+                    Alliance Clan = JsonConvert.DeserializeObject<Alliance>(Save.Data.ToJson(), this.Settings);
 
                     if (Store && Clan.Members.Slots.Count > 0)
                     {
@@ -181,16 +180,18 @@ namespace CR.Servers.CoC.Logic.Slots
             }
 
             return Clan;
-
         }
 
-        internal async Task Save(Alliance Clan) => await Mongo.Clans.UpdateOneAsync(T => T.HighId == Clan.HighId && T.LowId == Clan.LowId, Builders<Core.Database.Models.Mongo.Clans>.Update.Set(T => T.Data, BsonDocument.Parse(JsonConvert.SerializeObject(Clan, this.Settings))));
+        internal async Task Save(Alliance Clan)
+        {
+            await Mongo.Clans.UpdateOneAsync(T => T.HighId == Clan.HighId && T.LowId == Clan.LowId, Builders<Core.Database.Models.Mongo.Clans>.Update.Set(T => T.Data, BsonDocument.Parse(JsonConvert.SerializeObject(Clan, this.Settings))));
+        }
 
         internal async Task Saves()
         {
             Alliance[] Clans = this.Values.ToArray();
 
-            foreach (var Clan in Clans)
+            foreach (Alliance Clan in Clans)
             {
                 try
                 {
@@ -198,7 +199,7 @@ namespace CR.Servers.CoC.Logic.Slots
                 }
                 catch (Exception Exception)
                 {
-                    Logging.Error(this.GetType(), "An error has been throwed when the save of the clan id " + Clan + " due to " + Exception +  ".");
+                    Logging.Error(this.GetType(), "An error has been throwed when the save of the clan id " + Clan + " due to " + Exception + ".");
                 }
             }
         }

@@ -1,23 +1,22 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Friend
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Friend
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.Extensions.List;
+
     internal class Friend_List : Message
     {
-        internal override short Type => 20105;
+        internal FriendListType ListType;
 
         public Friend_List(Device Device) : base(Device)
         {
-            
         }
 
-        internal FriendListType ListType;
+        internal override short Type => 20105;
 
         internal override void Encode()
         {
-            this.Data.AddInt((int)this.ListType); //0 Normal, 1 Facebook, 2 Gamecenter, 3 Tencent
+            this.Data.AddInt((int) this.ListType); //0 Normal, 1 Facebook, 2 Gamecenter, 3 Tencent
             this.Device.GameMode.Level.Player.Friends.Encode(this.Data);
         }
     }

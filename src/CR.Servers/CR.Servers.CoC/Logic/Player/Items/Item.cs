@@ -1,34 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     internal class Item
     {
-        [JsonProperty("id")] internal int Data;
-        [JsonProperty("cnt")] internal int Count;
-
-        internal Data ItemData
-        {
-            get => _data ?? (_data = CSV.Tables.GetWithGlobalId(this.Data));
-            set => _data = value;
-        }
-
         private Data _data;
-
-        internal virtual int Checksum => Data + this.Count;
+        [JsonProperty("cnt")] internal int Count;
+        [JsonProperty("id")] internal int Data;
 
         public Item()
         {
-
         }
 
         public Item(int Data, int Count)
@@ -36,6 +24,14 @@ namespace CR.Servers.CoC.Logic
             this.Data = Data;
             this.Count = Count;
         }
+
+        internal Data ItemData
+        {
+            get => this._data ?? (this._data = CSV.Tables.GetWithGlobalId(this.Data));
+            set => this._data = value;
+        }
+
+        internal virtual int Checksum => this.Data + this.Count;
 
         internal virtual void Decode(Reader Reader)
         {
@@ -53,7 +49,9 @@ namespace CR.Servers.CoC.Logic
         internal virtual void Load(JToken Token)
         {
             if (JsonHelper.GetJsonNumber(Token, "id", out this.Data))
+            {
                 this.ItemData = CSV.Tables.GetWithGlobalId(this.Data);
+            }
 
             JsonHelper.GetJsonNumber(Token, "cnt", out this.Count);
         }

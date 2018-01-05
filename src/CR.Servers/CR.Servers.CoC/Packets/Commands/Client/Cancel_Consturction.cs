@@ -1,18 +1,18 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Cancel_Consturction : Command
     {
-        internal override int Type => 505;
+        internal int BuildingID;
 
         public Cancel_Consturction(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int BuildingID;
+        internal override int Type => 505;
 
         internal override void Decode()
         {
@@ -22,8 +22,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
-            var GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.BuildingID);
+            Level Level = this.Device.GameMode.Level;
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.BuildingID);
 
             if (GameObject != null)
             {
@@ -62,7 +62,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), $"Unable to cancel the construction. The game object is null with game Id {this.BuildingID}.");
+            }
         }
     }
 }

@@ -1,29 +1,28 @@
-﻿using System;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class UnitUpgradeComponent : Component
     {
-        internal override int Type => 9;
+        internal Timer Timer;
+        internal Data UnitData;
+
+        internal int UnitType;
 
         public UnitUpgradeComponent(GameObject GameObject) : base(GameObject)
         {
             // UnitUpgradeComponent.
         }
 
-        internal Timer Timer;
-        internal Data UnitData;
-
-        internal int UnitType;
+        internal override int Type => 9;
 
         internal bool UpgradeOnGoing => this.Timer != null;
 
@@ -105,7 +104,6 @@ namespace CR.Servers.CoC.Logic
                                         return false;
                                     }
                                 }
-
                             }
                             else
                             {
@@ -122,8 +120,8 @@ namespace CR.Servers.CoC.Logic
                                     return false;
                                 }
                             }
-                            
-                            return Building.GetUpgradeLevel() + 1 >=  Character.LaboratoryLevel[Player.GetUnitUpgradeLevel(Character)] && !Building.Constructing;
+
+                            return Building.GetUpgradeLevel() + 1 >= Character.LaboratoryLevel[Player.GetUnitUpgradeLevel(Character)] && !Building.Constructing;
                         }
 
                         SpellData Spell = (SpellData) Data;
@@ -145,10 +143,10 @@ namespace CR.Servers.CoC.Logic
                                 }
                             }
 
-                            return Building.GetUpgradeLevel() + 1 >=  Spell.LaboratoryLevel[Player.GetUnitUpgradeLevel(Spell)] && !Building.Constructing;
+                            return Building.GetUpgradeLevel() + 1 >= Spell.LaboratoryLevel[Player.GetUnitUpgradeLevel(Spell)] && !Building.Constructing;
                         }
 
-                        Logging.Error(this.GetType(),  "Unable to approve the upgrade. Builder village doesn't have spell");
+                        Logging.Error(this.GetType(), "Unable to approve the upgrade. Builder village doesn't have spell");
                         return false;
                     }
                 }
@@ -182,7 +180,7 @@ namespace CR.Servers.CoC.Logic
             {
                 if (this.CanStartUpgrading(Data))
                 {
-                    var Time = Data.GetDataType() == 4
+                    int Time = Data.GetDataType() == 4
                         ? ((CharacterData) Data).GetUpgradeTime(Player.GetUnitUpgradeLevel(Data))
                         : ((SpellData) Data).GetUpgradeTime(Player.GetUnitUpgradeLevel(Data));
 
@@ -248,7 +246,7 @@ namespace CR.Servers.CoC.Logic
 
                         if (this.UnitData != null)
                         {
-                            var startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                            int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                             int Duration = TimeEnd - startTime;
 
                             if (Duration < 0)

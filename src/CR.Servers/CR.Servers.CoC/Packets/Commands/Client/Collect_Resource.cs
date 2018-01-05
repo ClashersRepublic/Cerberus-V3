@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Collect_Resource : Command
     {
-        internal override int Type => 506;
+        internal int BuildingId;
+
         public Collect_Resource(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int BuildingId;
+        internal override int Type => 506;
 
         internal override void Decode()
         {
@@ -22,8 +23,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
-            Building Building = (Building)Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            Level Level = this.Device.GameMode.Level;
+            Building Building = (Building) Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
 
             if (Building != null)
             {
@@ -33,7 +34,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     Buildings.ForEach(GameObject =>
                     {
-                        Building building = (Building)GameObject;
+                        Building building = (Building) GameObject;
 
                         if (!building.Constructing)
                         {

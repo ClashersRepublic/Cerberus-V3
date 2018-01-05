@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Train_Quick_Units : Command
     {
-        internal override int Type => 559;
+        internal int Slot;
 
         public Train_Quick_Units(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Slot;
+        internal override int Type => 559;
 
         internal override void Decode()
         {

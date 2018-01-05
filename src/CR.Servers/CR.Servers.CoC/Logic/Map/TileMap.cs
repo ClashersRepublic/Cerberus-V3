@@ -1,11 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CR.Servers.CoC.Logic.Map
+﻿namespace CR.Servers.CoC.Logic.Map
 {
+    using System.Collections.Generic;
+
     internal class TileMap
     {
         private readonly Tile[][] Tiles;
+
+        public TileMap(int Width, int Height)
+        {
+            this.Tiles = new Tile[2][];
+
+            this.Tiles[0] = new Tile[Width * Height];
+            this.Tiles[1] = new Tile[Width * Height];
+
+            for (int i = 0; i < Width * Height; i++)
+            {
+                this.Tiles[0][i] = new Tile();
+                this.Tiles[1][i] = new Tile();
+            }
+        }
 
         internal Tile this[int X, int Y, int Map]
         {
@@ -22,27 +35,13 @@ namespace CR.Servers.CoC.Logic.Map
             }
         }
 
-        public TileMap(int Width, int Height)
-        {
-            this.Tiles = new Tile[2][];
-
-            this.Tiles[0] = new Tile[Width * Height];
-            this.Tiles[1] = new Tile[Width * Height];
-
-            for (int i = 0; i < Width * Height; i++)
-            {
-                this.Tiles[0][i] = new Tile();
-                this.Tiles[1][i] = new Tile();
-            }
-        }
-
         internal void AddGameObject(GameObject GameObject)
         {
             for (int i = 0; i < GameObject.WidthInTiles; i++)
             {
                 for (int j = 0; j < GameObject.HeightInTiles; j++)
                 {
-                    this.Tiles[GameObject.VillageType][(50 * (i + GameObject.TileX)) + (j + GameObject.TileY)].AddGameObject(GameObject);
+                    this.Tiles[GameObject.VillageType][50 * (i + GameObject.TileX) + j + GameObject.TileY].AddGameObject(GameObject);
                 }
             }
         }
@@ -53,7 +52,7 @@ namespace CR.Servers.CoC.Logic.Map
             {
                 for (int j = 0; j < GameObject.HeightInTiles; j++)
                 {
-                    this.Tiles[GameObject.VillageType][(50 * (i + OldX)) + (j + OldY)].RemoveGameObject(GameObject);
+                    this.Tiles[GameObject.VillageType][50 * (i + OldX) + j + OldY].RemoveGameObject(GameObject);
                 }
             }
 
@@ -61,19 +60,19 @@ namespace CR.Servers.CoC.Logic.Map
             {
                 for (int j = 0; j < GameObject.HeightInTiles; j++)
                 {
-                    this.Tiles[GameObject.VillageType][(50 * (i + GameObject.TileX)) + (j + GameObject.TileY)].AddGameObject(GameObject);
+                    this.Tiles[GameObject.VillageType][50 * (i + GameObject.TileX) + j + GameObject.TileY].AddGameObject(GameObject);
                 }
             }
         }
 
-        internal List<Tile> GetTile(GameObject GameObject,int X, int Y, int Map)
+        internal List<Tile> GetTile(GameObject GameObject, int X, int Y, int Map)
         {
             List<Tile> Tiles = new List<Tile>();
             for (int i = 0; i < GameObject.WidthInTiles; i++)
             {
                 for (int j = 0; j < GameObject.HeightInTiles; j++)
                 {
-                    Tiles.Add(this.Tiles[GameObject.VillageType][(50 * (i + X)) + (j + Y)]);
+                    Tiles.Add(this.Tiles[GameObject.VillageType][50 * (i + X) + j + Y]);
                 }
             }
             return Tiles;

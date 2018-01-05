@@ -1,16 +1,17 @@
-﻿using CR.Servers.CoC.Core;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+
     internal class ResourceStorageComponent : Component
     {
         internal int[] MaxArray;
-        internal override int Type => 6;
 
         public ResourceStorageComponent(GameObject GameObject) : base(GameObject)
         {
             // ResourceStorageComponent.
         }
+
+        internal override int Type => 6;
 
         internal int GetMax(int ResourceID)
         {

@@ -1,28 +1,26 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Commands.Server
+﻿namespace CR.Servers.CoC.Packets.Commands.Server
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+
     internal class Alliance_Unit_Received : ServerCommand
     {
-        internal override int Type => 5;
+        internal string Donator;
+        internal int Level;
+        internal int UnitId;
+        internal int UnitType;
 
         public Alliance_Unit_Received(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
         public Alliance_Unit_Received(Device Device) : base(Device)
         {
-
         }
-        
-        internal string Donator;
-        internal int UnitType;
-        internal int UnitId;
-        internal int Level;
+
+        internal override int Type => 5;
 
         internal override void Encode(List<byte> Data)
         {

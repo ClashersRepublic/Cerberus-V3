@@ -1,25 +1,26 @@
-﻿using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using Newtonsoft.Json.Linq;
+
     internal class BunkerComponent : Component
     {
-        internal override int Type => 7;
+        internal Timer ArrangeWarTimer;
+        internal Timer ChallengeTimer;
+        internal Timer ClanMailTimer;
+        internal Timer ElderKickTimer;
+        internal Timer ShareReplayTimer;
+
+        internal Timer UnitRequestTimer;
 
         public BunkerComponent(GameObject GameObject) : base(GameObject)
         {
         }
 
-        internal Timer UnitRequestTimer;
-        internal Timer ClanMailTimer;
-        internal Timer ShareReplayTimer;
-        internal Timer ElderKickTimer;
-        internal Timer ChallengeTimer;
-        internal Timer ArrangeWarTimer;
-       
+        internal override int Type => 7;
+
         internal bool CanSendUnitRequest
         {
             get
@@ -116,7 +117,7 @@ namespace CR.Servers.CoC.Logic
                 int UnitRequestTimeDuration = 0;
                 if (UnitRequestTime >= 0)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     UnitRequestTimeDuration = UnitRequestTimeEnd - startTime;
 
                     if (UnitRequestTimeDuration < 0)
@@ -138,7 +139,7 @@ namespace CR.Servers.CoC.Logic
                 int ClanMailTimeDuration = 0;
                 if (ClanMailTime >= 0)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     ClanMailTimeDuration = ClanMailTimeEnd - startTime;
 
                     if (ClanMailTimeDuration < 0)
@@ -160,7 +161,7 @@ namespace CR.Servers.CoC.Logic
                 int ShareReplayTimeDuration = 0;
                 if (ShareReplayTime >= 0)
                 {
-                    var startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     ShareReplayTimeDuration = ShareReplayTimeEnd - startTime;
 
                     if (ShareReplayTimeDuration < 0)
@@ -177,19 +178,19 @@ namespace CR.Servers.CoC.Logic
                 this.ShareReplayTimer.StartTimer(this.Parent.Level.Player.LastTick, ShareReplayTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "elder_kick_time", out int ElderKickTime) &&  JsonHelper.GetJsonNumber(Json, "elder_kick_time_end", out int ElderKickTimeEnd))
+            if (JsonHelper.GetJsonNumber(Json, "elder_kick_time", out int ElderKickTime) && JsonHelper.GetJsonNumber(Json, "elder_kick_time_end", out int ElderKickTimeEnd))
             {
                 int ElderKickTimeDuration = 0;
                 if (ElderKickTime >= 0)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     ElderKickTimeDuration = ElderKickTimeEnd - startTime;
 
                     if (ElderKickTimeDuration < 0)
                     {
                         ElderKickTimeDuration = 0;
                     }
-                    else if(ElderKickTimeDuration > Globals.ElderKickCooldown)
+                    else if (ElderKickTimeDuration > Globals.ElderKickCooldown)
                     {
                         ElderKickTimeDuration = Globals.ElderKickCooldown;
                     }
@@ -204,7 +205,7 @@ namespace CR.Servers.CoC.Logic
                 int ChallengeTimeDuration = 0;
                 if (ChallengeTime >= 0)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     ChallengeTimeDuration = ChallengeTimeEnd - startTime;
 
                     if (ChallengeTimeDuration < 0)
@@ -226,7 +227,7 @@ namespace CR.Servers.CoC.Logic
                 int ArrangeWarTimeDuration = 0;
                 if (ArrangeWarTime >= 0)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                     ArrangeWarTimeDuration = ArrangeWarTimeEnd - startTime;
 
                     if (ArrangeWarTimeDuration < 0)
@@ -289,32 +290,32 @@ namespace CR.Servers.CoC.Logic
 
         internal override void Tick()
         {
-            if (UnitRequestTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.UnitRequestTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.UnitRequestTimer = null;
             }
 
-            if (ClanMailTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.ClanMailTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.ClanMailTimer = null;
             }
 
-            if (ShareReplayTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.ShareReplayTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.ShareReplayTimer = null;
             }
 
-            if (ElderKickTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.ElderKickTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.ElderKickTimer = null;
             }
 
-            if (ChallengeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.ChallengeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.ChallengeTimer = null;
             }
 
-            if (ArrangeWarTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
+            if (this.ArrangeWarTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) <= 0)
             {
                 this.ArrangeWarTimer = null;
             }

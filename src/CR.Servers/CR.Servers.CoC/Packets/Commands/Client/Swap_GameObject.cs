@@ -1,32 +1,32 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Swap_GameObject : Command
     {
-        internal override int Type => 577;
+        internal int Id1;
+        internal int Id2;
 
         public Swap_GameObject(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int Id1;
-        internal int Id2;
+        internal override int Type => 577;
 
         internal override void Decode()
         {
-            this.Id1 = Reader.ReadInt32();
-            this.Id2 = Reader.ReadInt32();
+            this.Id1 = this.Reader.ReadInt32();
+            this.Id2 = this.Reader.ReadInt32();
 
             base.Decode();
         }
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
-            var GameObject1 = Level.GameObjectManager.Filter.GetGameObjectById(this.Id1);
-            var GameObject2 = Level.GameObjectManager.Filter.GetGameObjectById(this.Id2);
+            Level Level = this.Device.GameMode.Level;
+            GameObject GameObject1 = Level.GameObjectManager.Filter.GetGameObjectById(this.Id1);
+            GameObject GameObject2 = Level.GameObjectManager.Filter.GetGameObjectById(this.Id2);
 
             if (GameObject1 != null && GameObject2 != null)
             {

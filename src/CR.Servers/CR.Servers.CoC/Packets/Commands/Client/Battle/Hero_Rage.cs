@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battle;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class Hero_Rage : Command
     {
-        internal override int Type => 706;
+        internal int GlobalId;
 
         public Hero_Rage(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int GlobalId;
+        internal override int Type => 706;
 
         internal override void Decode()
         {
@@ -33,10 +33,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (this.Device.State == State.IN_1VS1_BATTLE)
             {
-                var Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2, Level.Player.UserId);
+                Battle_V2 Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2, Level.Player.UserId);
 
                 Battle.Add(this);
                 Level.BattleManager.BattleCommandManager.StoreCommands(this);
@@ -49,7 +49,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             JObject Json = new JObject
             {
                 {"base", this.SaveBase()},
-                { "d", this.GlobalId}
+                {"d", this.GlobalId}
             };
 
             return Json;

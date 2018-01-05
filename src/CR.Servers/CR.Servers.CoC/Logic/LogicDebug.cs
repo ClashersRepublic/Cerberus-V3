@@ -1,25 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+
     internal class LogicDebug
     {
-        [Conditional("DEBUG")] 
+        [Conditional("DEBUG")]
         internal static void Execute(string Args, Player[] Players)
         {
             switch (Args)
             {
                 case "Add 1000 Diamonds":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         if (Player.Connected)
                         {
-                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device){Count = 1000});
+                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) {Count = 1000});
                         }
                     }
 
@@ -28,11 +28,11 @@ namespace CR.Servers.CoC.Logic
 
                 case "Add 10000 Diamonds":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         if (Player.Connected)
                         {
-                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) {Count = 10000 });
+                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) {Count = 10000});
                         }
                     }
 
@@ -41,23 +41,23 @@ namespace CR.Servers.CoC.Logic
 
                 case "Add 100000 Diamonds":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         if (Player.Connected)
                         {
-                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) { Count = 100000 });
-                            }
+                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) {Count = 100000});
+                        }
                     }
 
                     break;
                 }
                 case "Add 1000000 Diamonds":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         if (Player.Connected)
                         {
-                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) { Count = 100000 });
+                            Player.Level.GameMode.CommandManager.AddCommand(new Diamonds_Added(Player.Level.GameMode.Device) {Count = 100000});
                         }
                     }
 
@@ -65,21 +65,21 @@ namespace CR.Servers.CoC.Logic
                 }
                 case "Fast Forward 1000":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         Player.Level.FastForwardTime(1000);
                         if (Player.Connected)
                         {
                             new Disconnected(Player.Level.GameMode.Device).Send();
                         }
-                        }
+                    }
 
                     break;
                 }
 
                 case "Fast Forward 10000":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         Player.Level.FastForwardTime(10000);
                         if (Player.Connected)
@@ -92,7 +92,7 @@ namespace CR.Servers.CoC.Logic
 
                 case "Fast Forward 100000":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         Player.Level.FastForwardTime(100000);
                         if (Player.Connected)
@@ -105,7 +105,7 @@ namespace CR.Servers.CoC.Logic
                 }
                 case "Fast Forward 1000000":
                 {
-                    foreach (var Player in Players)
+                    foreach (Player Player in Players)
                     {
                         Player.Level.FastForwardTime(100000);
                         if (Player.Connected)
@@ -116,50 +116,50 @@ namespace CR.Servers.CoC.Logic
 
                     break;
                 }
-                    /*case "Remove 1000 Diamonds":
+                /*case "Remove 1000 Diamonds":
+                {
+                    foreach (Player Player in Players)
                     {
-                        foreach (Player Player in Players)
+                        if (Player.Connected)
                         {
-                            if (Player.Connected)
-                            {
-                                Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(1000));
-                            }
+                            Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(1000));
                         }
-
-                        break;
                     }
 
-                    case "Remove 10000 Diamonds":
-                    {
-                        foreach (Player Player in Players)
-                        {
-                            if (Player.Connected)
-                            {
-                                Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(10000));
-                            }
-                        }
+                    break;
+                }
 
-                        break;
+                case "Remove 10000 Diamonds":
+                {
+                    foreach (Player Player in Players)
+                    {
+                        if (Player.Connected)
+                        {
+                            Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(10000));
+                        }
                     }
 
-                    case "Remove 100000 Diamonds":
-                    {
-                        foreach (Player Player in Players)
-                        {
-                            if (Player.Connected)
-                            {
-                                Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(100000));
-                            }
-                        }
+                    break;
+                }
 
-                        break;
-                    }*/
+                case "Remove 100000 Diamonds":
+                {
+                    foreach (Player Player in Players)
+                    {
+                        if (Player.Connected)
+                        {
+                            Player.GameMode.CommandManager.AddCommand(new TransactionsRevokedCommand(100000));
+                        }
+                    }
+
+                    break;
+                }*/
             }
         }
 
         internal static string[] GetListOfCommands()
         {
-            var Commands = new List<string>
+            List<string> Commands = new List<string>
             {
                 "Add 1000 Diamonds",
                 "Add 10000 Diamonds",
@@ -168,7 +168,7 @@ namespace CR.Servers.CoC.Logic
                 "Fast Forward 1000",
                 "Fast Forward 10000",
                 "Fast Forward 100000",
-                "Fast Forward 1000000",
+                "Fast Forward 1000000"
             };
 
 
@@ -176,4 +176,3 @@ namespace CR.Servers.CoC.Logic
         }
     }
 }
-

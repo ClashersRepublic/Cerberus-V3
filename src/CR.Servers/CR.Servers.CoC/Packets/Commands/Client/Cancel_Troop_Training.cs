@@ -1,19 +1,19 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Cancel_Troop_Training : Command
     {
-        internal override int Type => 509;
+        internal int UnitCount;
+
+        internal int UnitId;
 
         public Cancel_Troop_Training(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal int UnitId;
-        internal int UnitCount;
+        internal override int Type => 509;
 
         internal override void Decode()
         {

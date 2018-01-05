@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-
-namespace CR.Servers.CoC.Logic.Manager
+﻿namespace CR.Servers.CoC.Logic.Manager
 {
+    using System.Collections.Generic;
+    using System.Threading;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+
     internal class CommandManager
     {
         internal bool ChangeNameOnGoing;
-        internal int NextServerCommandId;
 
         internal Level Level;
+        internal int NextServerCommandId;
         internal Dictionary<int, ServerCommand> ServerCommands;
 
         public CommandManager()
@@ -35,10 +35,14 @@ namespace CR.Servers.CoC.Logic.Manager
                     new Available_Server_Command(this.Level.GameMode.Device) {Command = Command}.Send();
                 }
                 else
+                {
                     Command.Execute();
+                }
             }
             else
+            {
                 Logging.Info(this.GetType(), "AddCommand() - Command is not a server command.");
+            }
         }
     }
 }

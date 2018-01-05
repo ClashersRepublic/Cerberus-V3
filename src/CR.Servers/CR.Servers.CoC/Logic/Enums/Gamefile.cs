@@ -36,6 +36,6 @@
         Regions = 32,
         AllianceBadgeLayer = 34,
         Variables = 37,
-        Village_Objects = 39,
+        Village_Objects = 39
     }
 }

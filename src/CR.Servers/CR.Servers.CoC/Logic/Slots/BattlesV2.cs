@@ -1,15 +1,15 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using CR.Servers.CoC.Logic.Battle;
-using CR.Servers.CoC.Logic.Battle.Slots;
-
-namespace CR.Servers.CoC.Logic.Slots
+﻿namespace CR.Servers.CoC.Logic.Slots
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic.Battle;
+    using CR.Servers.CoC.Logic.Battle.Slots;
+
     internal class BattlesV2 : ConcurrentDictionary<long, Battles_V2>
     {
         internal int Seed = 1;
 
-        internal List<Level> Waiting = null;
+        internal List<Level> Waiting;
 
         public BattlesV2()
         {

@@ -1,34 +1,32 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Battle.Slots;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battle;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class Place_Attacker : Command
     {
-        internal override int Type => 700;
+        internal CharacterData Character;
+
+        internal int X;
+        internal int Y;
 
         public Place_Attacker()
         {
-
         }
 
         public Place_Attacker(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal int X;
-        internal int Y;
-        internal CharacterData Character;
+        internal override int Type => 700;
 
         internal override void Decode()
         {
@@ -50,7 +48,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
         {
             if (this.Character != null)
             {
-                var Level = this.Device.GameMode.Level;
+                Level Level = this.Device.GameMode.Level;
                 if (Level.GameObjectManager.Map == 0)
                 {
                     Item Unit = Level.Player.Units.GetByData(this.Character);
@@ -67,13 +65,17 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
                 {
                     if (this.Device.State == State.IN_1VS1_BATTLE)
                     {
-                        var Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2,  Level.Player.UserId);
+                        Battle_V2 Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2, Level.Player.UserId);
 
                         int Index = Battle.ReplayInfo.Units.FindIndex(T => T[0] == this.Character.GlobalId);
                         if (Index > -1)
+                        {
                             Battle.ReplayInfo.Units[Index][1]++;
+                        }
                         else
-                            Battle.ReplayInfo.Units.Add(new[] { this.Character.GlobalId, 1 });
+                        {
+                            Battle.ReplayInfo.Units.Add(new[] {this.Character.GlobalId, 1});
+                        }
 
                         Battle.Add(this);
                         Level.BattleManager.BattleCommandManager.StoreCommands(this);
@@ -106,13 +108,14 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             JObject Json = new JObject
             {
                 {"ct", this.Type},
-                {"c", new JObject
+                {
+                    "c", new JObject
                     {
                         {"base", this.SaveBase()},
                         {"d", this.Character.GlobalId},
                         {"x", this.X},
                         {"y", this.Y}
-                    }               
+                    }
                 }
             };
 

@@ -5,6 +5,6 @@
         SendFriendRequest = 2,
         ReceivedFriendRequest = 3,
         Friend = 4,
-        Removed = 6,
+        Removed = 6
     }
 }

@@ -1,39 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class DataSlots : List<Item>
     {
-        internal int Checksum
-        {
-            get
-            {
-                var Checksum = 0;
-
-                this.ForEach(Item =>
-                {
-                    Checksum += Item.Checksum;
-                });
-
-                return Checksum;
-            }
-        }
-
         public DataSlots(int Capacity = 50) : base(Capacity)
         {
             // DataSlots.
         }
 
-        public DataSlots() 
+        public DataSlots()
         {
+        }
+
+        internal int Checksum
+        {
+            get
+            {
+                int Checksum = 0;
+
+                this.ForEach(Item => { Checksum += Item.Checksum; });
+
+                return Checksum;
+            }
         }
 
         internal void Add(Data Data, int Count)
@@ -43,7 +37,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Count;
             }
             else
+            {
                 base.Add(new Item(Data.GlobalId, Count));
+            }
         }
 
         internal void Add(int Data, int Count)
@@ -53,7 +49,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Count;
             }
             else
+            {
                 base.Add(new Item(Data, Count));
+            }
         }
 
         internal new void Add(Item Item)
@@ -63,7 +61,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Item.Count;
             }
             else
+            {
                 base.Add(Item);
+            }
         }
 
         internal Item GetByData(Data Data)
@@ -94,7 +94,7 @@ namespace CR.Servers.CoC.Logic
             }
 #if DEBUG
             //else if (Count > 0)
-                //Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove. (" + Data.GlobalID + ")");
+            //Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove. (" + Data.GlobalID + ")");
 #endif
         }
 
@@ -112,7 +112,7 @@ namespace CR.Servers.CoC.Logic
             }
 #if DEBUG
             //else if (Count > 0)
-              //  Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove.");
+            //  Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove.");
 #endif
         }
 
@@ -123,7 +123,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Count;
             }
             else
+            {
                 base.Add(new Item(Id, Count));
+            }
         }
 
         internal void Set(Data Data, int Count)
@@ -133,7 +135,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Count;
             }
             else
+            {
                 base.Add(new Item(Data.GlobalId, Count));
+            }
         }
 
         internal void Set(Item Item)
@@ -143,27 +147,23 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Item.Count;
             }
             else
+            {
                 base.Add(Item);
+            }
         }
 
         internal void Encode(List<byte> Packet)
         {
             Packet.AddInt(this.Count);
 
-            this.ForEach(Item =>
-            {
-                Item.Encode(Packet);
-            });
+            this.ForEach(Item => { Item.Encode(Packet); });
         }
 
         internal JArray Save()
         {
             JArray Array = new JArray();
 
-            this.ForEach(Item =>
-            {
-                Array.Add(Item.Save());
-            });
+            this.ForEach(Item => { Array.Add(Item.Save()); });
 
             return Array;
         }

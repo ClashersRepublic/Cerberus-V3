@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using CR.Servers.CoC.Core.Events;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions;
-
-namespace CR.Servers.CoC.Core.Consoles
+﻿namespace CR.Servers.CoC.Core.Consoles
 {
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using CR.Servers.CoC.Core.Events;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions;
+
     internal class Parser
     {
         internal static void Initialize()
@@ -34,8 +34,9 @@ namespace CR.Servers.CoC.Core.Consoles
                                 Console.WriteLine("# " + DateTime.Now.ToString("d") + " ---- STATS ---- " + DateTime.Now.ToString("T") + " #");
                                 Console.WriteLine("# ----------------------------------- #");
                                 Console.WriteLine("# In-Memory Accounts # " + ConsolePad.Padding(Resources.Accounts.Count.ToString(), 15) + " #");
-                                //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
-                                Console.WriteLine("# ----------------------------------- #");
+                                Console.WriteLine("# Message Queue      # " + ConsolePad.Padding(Resources.PacketManager.ReceiveMessageQueue.Count.ToString() + "-" + Resources.PacketManager.SendMessageQueue.Count.ToString(), 15) + " #");
+                                    //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
+                                    Console.WriteLine("# ----------------------------------- #");
                             }
 
                             break;
@@ -45,7 +46,6 @@ namespace CR.Servers.CoC.Core.Consoles
                         {
                             if (Resources.Started)
                             {
-
                             }
 
                             break;

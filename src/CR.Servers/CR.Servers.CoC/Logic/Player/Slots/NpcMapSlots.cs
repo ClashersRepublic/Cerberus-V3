@@ -1,23 +1,24 @@
-﻿using System.Linq;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Linq;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+
     internal class NpcMapSlots : DataSlots
     {
         internal NpcMapSlots(int Capacity = 50) : base(Capacity)
         {
         }
+
         internal NpcMapSlots()
         {
         }
 
         internal bool CanAttackNPC(Data Data)
         {
-            NpcData Npc = (NpcData)Data;
+            NpcData Npc = (NpcData) Data;
 
             /*
             for (int i = 0; i < Npc.MapDependencies.Length; i++)

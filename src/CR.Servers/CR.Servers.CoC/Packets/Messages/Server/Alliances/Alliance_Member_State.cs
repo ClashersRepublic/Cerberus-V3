@@ -1,16 +1,16 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class Alliance_Member_State : Message
     {
-        internal override short Type => 20208;
-
         public Alliance_Member_State(Device Device) : base(Device)
         {
             this.Version = 9;
         }
+
+        internal override short Type => 20208;
 
         internal override void Encode()
         {

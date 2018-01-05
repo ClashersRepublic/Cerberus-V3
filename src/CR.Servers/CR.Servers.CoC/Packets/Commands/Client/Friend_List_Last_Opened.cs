@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.Binary;
+
     internal class Friend_List_Last_Opened : Command
     {
-        internal override int Type => 579;
-
         public Friend_List_Last_Opened(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override int Type => 579;
 
         internal override void Execute()
         {

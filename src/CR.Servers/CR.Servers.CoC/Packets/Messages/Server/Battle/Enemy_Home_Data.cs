@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Map;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Battle
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+
     internal class Enemy_Home_Data : Message
     {
-        internal override short Type => 24107;
+        internal Level Enemy;
+        internal Player Player;
 
         public Enemy_Home_Data(Device Device, Level Enemy) : base(Device)
         {
@@ -34,9 +24,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
             this.Device.GameMode.Level.Tick();
         }
 
-
-        internal Level Enemy;
-        internal Player Player;
+        internal override short Type => 24107;
 
         internal override void Encode()
         {

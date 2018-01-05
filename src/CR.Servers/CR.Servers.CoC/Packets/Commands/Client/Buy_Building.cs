@@ -1,28 +1,28 @@
-﻿using System;
-using System.Text;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System;
+    using System.Text;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.Binary;
+
     internal class Buy_Building : Command
     {
-        internal override int Type => 500;
+        internal BuildingData BuildingData;
+
+        internal int X;
+        internal int Y;
 
         public Buy_Building(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int X;
-        internal int Y;
-
-        internal BuildingData BuildingData;
+        internal override int Type => 500;
 
 
         internal override void Decode()
@@ -39,10 +39,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             try
             {
-
                 if (this.BuildingData != null)
                 {
-                    var Level = Device.GameMode.Level;
+                    Level Level = this.Device.GameMode.Level;
                     //if (!Level.IsBuildingCapReached(this.BuildingData))
                     {
                         BuildingClassData BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
@@ -106,7 +105,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                 {
                                     if (this.BuildingData.IsTroopHousingV2)
                                     {
-                                        var TroopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
+                                        int TroopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
                                         int Cost;
                                         int Time;
 
@@ -161,7 +160,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                             default:
                                                 Cost = this.BuildingData.BuildCost[0];
                                                 break;
-
                                         }
 
                                         if (Level.Player.HasEnoughDiamonds(Cost))
@@ -188,13 +186,16 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), $"Unable to buy building. The building data is null! ");
+                }
             }
             catch (Exception Exception)
             {
-                var Error = new StringBuilder();
+                StringBuilder Error = new StringBuilder();
                 Error.AppendLine($"Exception : {Exception.GetType()}");
-                Error.AppendLine($"Message : {Exception.Message}");;
+                Error.AppendLine($"Message : {Exception.Message}");
+                ;
                 Error.AppendLine($"Stack Trace : {Exception.StackTrace}");
                 if (this.BuildingData != null)
                 {
@@ -228,9 +229,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.Y = this.Y << 9;
 
             if (this.BuildingData.VillageType == 0)
+            {
                 Level.WorkerManager.AllocateWorker(GameObject);
+            }
             else
+            {
                 Level.WorkerManagerV2.AllocateWorker(GameObject);
+            }
 
             if (this.BuildingData.GetBuildTime(0) <= 0)
             {
@@ -255,9 +260,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.Y = this.Y << 9;
 
             if (this.BuildingData.VillageType == 0)
+            {
                 Level.WorkerManager.AllocateWorker(GameObject);
+            }
             else
+            {
                 Level.WorkerManagerV2.AllocateWorker(GameObject);
+            }
 
             if (Time <= 0)
             {

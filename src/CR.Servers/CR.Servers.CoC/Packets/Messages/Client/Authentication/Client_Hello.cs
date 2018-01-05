@@ -1,32 +1,32 @@
-﻿using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Authentication;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Authentication;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Client_Hello : Message
     {
-        internal override short Type => 10100;
+        internal int AppStore;
+        internal int BuildVersion;
+
+        internal string ContentHash;
+        internal int DeviceType;
+        internal int KeyVersion;
+
+        internal int MajorVersion;
+        internal int MinorVersion;
+
+        internal int Protocol;
 
         public Client_Hello(Device Device, Reader Reader) : base(Device, Reader)
         {
             Device.State = State.SESSION;
         }
 
-        internal int Protocol;
-        internal int KeyVersion;
-
-        internal int MajorVersion;
-        internal int MinorVersion;
-        internal int BuildVersion;
-
-        internal int AppStore;
-        internal int DeviceType;
-
-        internal string ContentHash;
+        internal override short Type => 10100;
 
         internal override void Decode()
         {
@@ -45,7 +45,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Process()
         {
-
             new Authentication_Failed(this.Device, LoginFailedReason.Patch).Send();
             /*if (this.Protocol == 1)
             {

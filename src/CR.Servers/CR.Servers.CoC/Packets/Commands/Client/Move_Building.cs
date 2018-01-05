@@ -1,32 +1,30 @@
-﻿using System;
-using System.Text;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Collections.Generic;
+    using System.Text;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Map;
+    using CR.Servers.Extensions.Binary;
+
     internal class Move_Building : Command
     {
+        internal int Id;
 
-        internal override int Type => 501;
+        internal int X;
+        internal int Y;
 
         public Move_Building(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 
-        internal int X;
-        internal int Y;
-
-        internal int Id;
+        internal override int Type => 501;
 
         internal override void Decode()
         {
-            this.X = Reader.ReadInt32();
-            this.Y = Reader.ReadInt32();
-            this.Id = Reader.ReadInt32();
+            this.X = this.Reader.ReadInt32();
+            this.Y = this.Reader.ReadInt32();
+            this.Id = this.Reader.ReadInt32();
 
             base.Decode();
         }
@@ -43,12 +41,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (GameObject.VillageType == 1)
                     {
-                        var Tiles = this.Device.GameMode.Level.TileMap.GetTile(GameObject, this.X, this.Y, 1);
+                        List<Tile> Tiles = this.Device.GameMode.Level.TileMap.GetTile(GameObject, this.X, this.Y, 1);
                         if (Tiles != null)
                         {
-                            foreach (var Tile in Tiles)
+                            foreach (Tile Tile in Tiles)
                             {
-                                foreach (var TileObject in Tile.GameObjects)
+                                foreach (GameObject TileObject in Tile.GameObjects)
                                 {
                                     if (TileObject is Obstacle Obstacle)
                                     {
@@ -63,14 +61,16 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unexpected issue while moving building! Tiles is null");
+                        }
                     }
                 }
             }
             else
             {
-                var Error = new StringBuilder();
-                var Precise = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.Id);
+                StringBuilder Error = new StringBuilder();
+                GameObject Precise = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.Id);
                 if (Precise != null)
                 {
                     Error.AppendLine($"Building Id :  {this.Id}");
@@ -99,7 +99,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 }
 
                 Resources.Logger.Debug(Error);
-
             }
         }
     }

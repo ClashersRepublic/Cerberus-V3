@@ -1,18 +1,18 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Unknown
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Unknown
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Unknown_581 : Command
     {
-        internal override int Type => 581;
+        internal int Count;
 
         public Unknown_581(Device Device, Reader Reader) : base(Device, Reader)
         {
             //Seems to be war related
         }
 
-        internal int Count;
+        internal override int Type => 581;
 
         internal override void Decode()
         {

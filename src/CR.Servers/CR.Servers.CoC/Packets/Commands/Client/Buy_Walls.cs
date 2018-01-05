@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Client.List;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Client.List;
+    using CR.Servers.Extensions.Binary;
+
     internal class Buy_Walls : Command
     {
-        internal override int Type => 590;
-
-        public Buy_Walls(Device Device, Reader Reader) : base(Device, Reader)
-        {
-
-        }
+        internal BuildingData BuildingData;
 
         internal int Count;
         internal List<BuildingToMove> WallXy;
-        internal BuildingData BuildingData;
+
+        public Buy_Walls(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override int Type => 590;
 
         internal override void Decode()
         {
@@ -49,7 +45,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             if (this.BuildingData != null)
             {
-                var Level = Device.GameMode.Level;
+                Level Level = this.Device.GameMode.Level;
                 //if (!Level.IsBuildingCapReached(this.BuildingData))
                 {
                     BuildingClassData BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
@@ -66,7 +62,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                     Level.Player.WallGroupId++;
 
-                                    foreach (var Xy in this.WallXy)
+                                    foreach (BuildingToMove Xy in this.WallXy)
                                     {
                                         this.StartConstruction(Level, Xy);
                                     }
@@ -89,9 +85,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
             GameObject.Position.Y = Xy.Y << 9;
 
             if (CombatComponent != null)
+            {
                 CombatComponent.WallI = Level.Player.WallGroupId;
+            }
             else
+            {
                 Logging.Error(this.GetType(), "CombatComponent should not be null when buying multiple wall!");
+            }
 
             Level.WorkerManagerV2.AllocateWorker(GameObject);
 

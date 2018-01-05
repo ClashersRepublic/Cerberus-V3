@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic.Clan.Slots
+﻿namespace CR.Servers.CoC.Logic.Clan.Slots
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+
     internal class Members
     {
         internal Alliance Alliance;
+        internal ConcurrentDictionary<long, Player> Connected;
 
         [JsonProperty] internal ConcurrentDictionary<long, Member> Slots;
-        internal ConcurrentDictionary<long, Player> Connected;
 
         public Members()
         {
@@ -81,21 +77,30 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             return false;
         }
 
-        internal bool Quit(Player Player, out Member Member) => this.Quit(Player.UserId, out Member);
+        internal bool Quit(Player Player, out Member Member)
+        {
+            return this.Quit(Player.UserId, out Member);
+        }
 
-        internal bool Quit(Member Player, out Member Member) => this.Quit(Player.PlayerId, out Member);
+        internal bool Quit(Member Player, out Member Member)
+        {
+            return this.Quit(Player.PlayerId, out Member);
+        }
 
-        internal Member Get(long UserID) =>  this.Slots.ContainsKey(UserID) ? this.Slots[UserID] : null;
+        internal Member Get(long UserID)
+        {
+            return this.Slots.ContainsKey(UserID) ? this.Slots[UserID] : null;
+        }
 
         internal void Encode(List<byte> Packet)
         {
-            var Members = this.Slots.Values.ToArray();
+            Member[] Members = this.Slots.Values.ToArray();
 
             Packet.AddInt(Members.Length);
             int i = 0;
-            foreach (var Member in Members)
+            foreach (Member Member in Members)
             {
-                var Player = Member.Player;
+                Player Player = Member.Player;
                 Packet.AddLong(Player.UserId);
                 Packet.AddString(Player.Name);
                 Packet.AddInt((int) Member.Role);

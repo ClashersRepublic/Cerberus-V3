@@ -1,60 +1,88 @@
-﻿using System;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json;
+
     internal class PlayerBase
     {
-        internal Level Level;
-
-        [JsonProperty] internal int AllianceHighId;
-        [JsonProperty] internal int AllianceLowId;
-
-        [JsonProperty] internal DataSlots ResourceCaps;
-        [JsonProperty] internal ResourceSlots Resources;
-        
-        [JsonProperty] internal UnitSlots Units;
-        [JsonProperty] internal UnitSlots Units2;
-        [JsonProperty] internal UnitSlots Spells;
-        [JsonProperty] internal DataSlots UnitUpgrades;
-        [JsonProperty] internal AllianceUnitSlots AllianceUnits;
-        [JsonProperty] internal AllianceUnitSlots AllianceSpells;
-        [JsonProperty] internal DataSlots SpellUpgrades;
-        [JsonProperty] internal DataSlots HeroUpgrades;
-
-        [JsonProperty] internal DataSlots HeroStates;
-        [JsonProperty] internal DataSlots HeroHealth;
-        [JsonProperty] internal DataSlots HeroModes;
+        [JsonProperty] internal AchievementProgressSlot AchievementProgress;
 
 
         [JsonProperty] internal AchievementSlot Achievements;
-        [JsonProperty] internal AchievementProgressSlot AchievementProgress;
+
+        [JsonProperty] internal int AllianceHighId;
+        [JsonProperty] internal int AllianceLowId;
+        [JsonProperty] internal AllianceUnitSlots AllianceSpells;
+        [JsonProperty] internal AllianceUnitSlots AllianceUnits;
+
+        [JsonProperty] internal int CastleLevel = -1;
+        [JsonProperty] internal int CastleTotalCapacity;
+        [JsonProperty] internal int CastleTotalSpellCapacity;
+        [JsonProperty] internal int CastleUsedCapacity;
+        [JsonProperty] internal int CastleUsedSpellCapacity;
+        [JsonProperty] internal DataSlots HeroHealth;
+        [JsonProperty] internal DataSlots HeroModes;
+
+        [JsonProperty] internal DataSlots HeroStates;
+        [JsonProperty] internal DataSlots HeroUpgrades;
+        internal Level Level;
+        [JsonProperty] internal DataSlots NpcLootedElixir;
+        [JsonProperty] internal DataSlots NpcLootedGold;
 
         [JsonProperty] internal NpcMapSlots NpcMapProgress;
-        [JsonProperty] internal DataSlots NpcLootedGold;
-        [JsonProperty] internal DataSlots NpcLootedElixir;
-        [JsonProperty] internal VariableSlots Variables;
+
+        [JsonProperty] internal DataSlots ResourceCaps;
+        [JsonProperty] internal ResourceSlots Resources;
+        [JsonProperty] internal UnitSlots Spells;
+        [JsonProperty] internal DataSlots SpellUpgrades;
+
+        [JsonProperty] internal int TownHallLevel;
+        [JsonProperty] internal int TownHallLevel2;
 
         [JsonProperty] internal UnitSlots UnitPreset1;
         [JsonProperty] internal UnitSlots UnitPreset2;
         [JsonProperty] internal UnitSlots UnitPreset3;
 
-        [JsonProperty] internal int TownHallLevel;
-        [JsonProperty] internal int TownHallLevel2;
-
-        [JsonProperty] internal int CastleLevel = -1;
-        [JsonProperty] internal int CastleTotalCapacity;
-        [JsonProperty] internal int CastleUsedCapacity;
-        [JsonProperty] internal int CastleTotalSpellCapacity;
-        [JsonProperty] internal int CastleUsedSpellCapacity;
+        [JsonProperty] internal UnitSlots Units;
+        [JsonProperty] internal UnitSlots Units2;
+        [JsonProperty] internal DataSlots UnitUpgrades;
+        [JsonProperty] internal VariableSlots Variables;
 
         [JsonProperty] internal int WallGroupId;
 
-        internal long AllianceId=> (long)this.AllianceHighId << 32 | (uint)this.AllianceLowId;
+        public PlayerBase()
+        {
+            this.ResourceCaps = new DataSlots();
+            this.Resources = new ResourceSlots();
+            this.Units = new UnitSlots();
+            this.Units2 = new UnitSlots();
+            this.Spells = new UnitSlots();
+            this.UnitUpgrades = new DataSlots();
+            this.SpellUpgrades = new DataSlots();
+            this.HeroUpgrades = new DataSlots();
+            this.AllianceUnits = new AllianceUnitSlots();
+            this.AllianceSpells = new AllianceUnitSlots();
+
+            this.HeroHealth = new DataSlots();
+            this.HeroStates = new DataSlots();
+            this.HeroModes = new DataSlots();
+
+            this.NpcMapProgress = new NpcMapSlots();
+            this.NpcLootedGold = new DataSlots();
+            this.NpcLootedElixir = new DataSlots();
+
+            this.Variables = new VariableSlots();
+
+            this.UnitPreset1 = new UnitSlots();
+            this.UnitPreset2 = new UnitSlots();
+            this.UnitPreset3 = new UnitSlots();
+        }
+
+        internal long AllianceId => ((long) this.AllianceHighId << 32) | (uint) this.AllianceLowId;
 
         internal bool InAlliance => this.AllianceId > 0;
 
@@ -101,11 +129,11 @@ namespace CR.Servers.CoC.Logic
             set => this.Resources.Set(3000008, value);
         }
 
-        internal TownhallLevelData TownhallLevelData => (TownhallLevelData)CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel);
+        internal TownhallLevelData TownhallLevelData => (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel);
 
-        internal TownhallLevelData TownhallLevel2Data => (TownhallLevelData)CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel2);
+        internal TownhallLevelData TownhallLevel2Data => (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel2);
 
-        internal int Checksum => this.Resources.Checksum
+        internal virtual int Checksum => this.Resources.Checksum
                                  + this.ResourceCaps.Checksum // OutOfSync
                                  + this.Units.Checksum
                                  + this.Spells.Checksum
@@ -113,41 +141,12 @@ namespace CR.Servers.CoC.Logic
                                  + this.UnitUpgrades.Checksum
                                  + this.SpellUpgrades.Checksum
                                  + this.Units2.Checksum
-                                 + this.TownHallLevel 
+                                 + this.TownHallLevel
                                  + this.TownHallLevel2;
 
         internal virtual bool ClientPlayer => false;
 
         internal virtual bool NpcPlayer => false;
-
-        public PlayerBase()
-        {
-            this.ResourceCaps = new DataSlots();
-            this.Resources = new ResourceSlots();
-            this.Units = new UnitSlots();
-            this.Units2 = new UnitSlots();
-            this.Spells = new UnitSlots();
-            this.UnitUpgrades = new DataSlots();
-            this.SpellUpgrades = new DataSlots();
-            this.HeroUpgrades = new DataSlots();
-            this.AllianceUnits = new AllianceUnitSlots();
-            this.AllianceSpells = new AllianceUnitSlots();
-
-            this.HeroHealth = new DataSlots();
-            this.HeroStates = new DataSlots();
-            this.HeroModes = new DataSlots();
-
-            this.NpcMapProgress = new NpcMapSlots();
-            this.NpcLootedGold = new DataSlots();
-            this.NpcLootedElixir = new DataSlots();
-
-            this.Variables = new VariableSlots();
-
-            this.UnitPreset1 = new UnitSlots();
-            this.UnitPreset2 = new UnitSlots();
-            this.UnitPreset3 = new UnitSlots();
-
-        }
 
         internal int GetUnitUpgradeLevel(Data Data)
         {
@@ -161,7 +160,9 @@ namespace CR.Servers.CoC.Logic
                 this.UnitUpgrades.Add(Data, 1);
             }
             else
+            {
                 this.SpellUpgrades.Add(Data, 1);
+            }
         }
 
         internal int GetHeroUpgradeLevel(Data Data)

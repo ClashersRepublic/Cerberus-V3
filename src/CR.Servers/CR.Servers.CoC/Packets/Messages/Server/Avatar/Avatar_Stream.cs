@@ -1,15 +1,15 @@
-﻿using System.Linq;
-using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
 {
+    using System.Linq;
+    using CR.Servers.CoC.Logic;
+
     internal class Avatar_Stream : Message
     {
-        internal override short Type => 24411;
-
-        public Avatar_Stream(Device Device) : base (Device)
+        public Avatar_Stream(Device Device) : base(Device)
         {
         }
+
+        internal override short Type => 24411;
 
 
         internal override void Encode()
@@ -19,9 +19,9 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
 
         internal override void Process()
         {
-            var Streams = this.Device.GameMode.Level.Player.Inbox.Entries.Values.Where(T => T.New == 2).ToArray();
+            MailEntry[] Streams = this.Device.GameMode.Level.Player.Inbox.Entries.Values.Where(T => T.New == 2).ToArray();
 
-            foreach (var Stream in Streams)
+            foreach (MailEntry Stream in Streams)
             {
                 Stream.New = 0;
             }

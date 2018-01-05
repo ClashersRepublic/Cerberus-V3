@@ -4,6 +4,6 @@
     {
         Waiting = 1,
         Accepted = 2,
-        Refused = 3,
+        Refused = 3
     }
 }

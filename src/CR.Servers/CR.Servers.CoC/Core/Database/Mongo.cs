@@ -1,8 +1,8 @@
-﻿using CR.Servers.CoC.Core.Database.Models.Mongo;
-using MongoDB.Driver;
-
-namespace CR.Servers.CoC.Core.Database
+﻿namespace CR.Servers.CoC.Core.Database
 {
+    using CR.Servers.CoC.Core.Database.Models.Mongo;
+    using MongoDB.Driver;
+
     internal class Mongo
     {
         private static IMongoClient Client;
@@ -15,7 +15,7 @@ namespace CR.Servers.CoC.Core.Database
         {
             get
             {
-                var last = Clans.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Clans>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
+                Clans last = Clans.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Clans>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
 
                 return last?.LowId ?? 0;
             }
@@ -25,7 +25,7 @@ namespace CR.Servers.CoC.Core.Database
         {
             get
             {
-                var last = Players.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Players>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
+                Players last = Players.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Players>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
 
                 return last?.LowId ?? 0;
             }
@@ -33,11 +33,11 @@ namespace CR.Servers.CoC.Core.Database
 
         internal static void Initialize()
         {
-            Mongo.Client = new MongoClient("mongodb://127.0.0.1:27017");
-            Mongo.Database = Mongo.Client.GetDatabase("ClashOfClans");
+            Client = new MongoClient("mongodb://127.0.0.1:27017");
+            Database = Client.GetDatabase("ClashOfClans");
 
-            Mongo.Clans = Mongo.Database.GetCollection<Clans>("Clans");
-            Mongo.Players = Mongo.Database.GetCollection<Players>("Players");
+            Clans = Database.GetCollection<Clans>("Clans");
+            Players = Database.GetCollection<Players>("Players");
         }
     }
 }

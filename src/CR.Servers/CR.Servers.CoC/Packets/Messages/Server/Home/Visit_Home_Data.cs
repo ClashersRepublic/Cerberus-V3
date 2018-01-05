@@ -1,12 +1,12 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+
     internal class Visit_Home_Data : Message
     {
-        internal override short Type => 24113;
+        internal Level Visit;
 
         internal Visit_Home_Data(Device Device, Level Player) : base(Device)
         {
@@ -15,7 +15,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Home
             this.Device.State = State.VISIT;
         }
 
-        internal Level Visit;
+        internal override short Type => 24113;
 
         internal override void Encode()
         {

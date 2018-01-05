@@ -1,26 +1,25 @@
-﻿using System;
-using System.Text;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Debugs.Elite
+﻿namespace CR.Servers.CoC.Packets.Debugs.Elite
 {
+    using System;
+    using System.Text;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Logic.Enums;
+
     internal class Fast_Forward : Debug
     {
-        internal override Rank RequiredRank => Rank.Elite;
+        internal StringBuilder Help;
 
         public Fast_Forward(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
-
         }
-        
-        internal StringBuilder Help;
+
+        internal override Rank RequiredRank => Rank.Elite;
 
         internal override void Process()
         {
-            if (Parameters.Length >= 1)
+            if (this.Parameters.Length >= 1)
             {
                 if (int.TryParse(this.Parameters[0], out int Time))
                 {
@@ -29,7 +28,9 @@ namespace CR.Servers.CoC.Packets.Debugs.Elite
                         this.Device.GameMode.Level.FastForwardTime(Time);
 
                         if (this.Device.Connected)
+                        {
                             new Own_Home_Data(this.Device).Send();
+                        }
 
 
                         this.SendChatMessage("Command successfuly processed! Total elapsed time " + TimeSpan.FromSeconds(Time));
@@ -39,7 +40,7 @@ namespace CR.Servers.CoC.Packets.Debugs.Elite
                 {
                     this.Help = new StringBuilder();
                     this.Help.AppendLine("Time exceed the limit!");
-                    this.SendChatMessage(Help.ToString());
+                    this.SendChatMessage(this.Help.ToString());
                 }
                 //Time bust be at least 1
             }

@@ -1,21 +1,20 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.Extensions.Binary;
 
     internal class Claim_Alliance_Gift : Message
     {
-        internal override short Type => 14334;
+        internal long StreamId;
 
         public Claim_Alliance_Gift(Device Device, Reader Reader) : base(Device, Reader)
         {
         }
 
-        internal long StreamId;
+        internal override short Type => 14334;
 
         internal override void Decode()
         {
@@ -24,11 +23,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            var level = this.Device.GameMode.Level;
+            Level level = this.Device.GameMode.Level;
 
             if (level.Player.InAlliance)
             {
-                var stream = level.Player.Alliance.Streams.Get(this.StreamId);
+                StreamEntry stream = level.Player.Alliance.Streams.Get(this.StreamId);
                 if (stream != null)
                 {
                     if (stream is GiftStreamEntry StreamEntry)
@@ -48,16 +47,24 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                 });
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to claim the alliance gift. The player already claimed the gift");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to claim the alliance gift. The stream is not a giftstream.");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to claim the alliance gift. The stream is null.");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to claim the alliance gift. The player is not in an alliance.");
+            }
         }
     }
 }

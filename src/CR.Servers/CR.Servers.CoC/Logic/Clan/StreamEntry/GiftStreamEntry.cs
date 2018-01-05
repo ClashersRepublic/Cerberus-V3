@@ -1,29 +1,28 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class GiftStreamEntry : StreamEntry
     {
-        internal override AllianceStream Type => AllianceStream.Gift;
+        internal List<long> Claimers = new List<long>();
+
+        internal int ClaimLeft = 50;
+        internal int DiamondCount;
 
         public GiftStreamEntry()
         {
-
         }
 
         public GiftStreamEntry(Member Member) : base(Member)
         {
         }
 
-        internal int ClaimLeft = 50;
-        internal int DiamondCount;
-
-        internal List<long> Claimers = new List<long>();
+        internal override AllianceStream Type => AllianceStream.Gift;
 
         internal override void Encode(List<byte> Packet)
         {
@@ -32,10 +31,9 @@ namespace CR.Servers.CoC.Logic.Clan
             Packet.AddVInt(this.DiamondCount);
             Packet.AddInt(this.Claimers.Count);
 
-            foreach (var Claimer in this.Claimers)
+            foreach (long Claimer in this.Claimers)
             {
                 Packet.AddLong(Claimer);
-
             }
         }
 
@@ -71,7 +69,7 @@ namespace CR.Servers.CoC.Logic.Clan
             Json.Add("claim_left", this.ClaimLeft);
             Json.Add("diamond_count", this.DiamondCount);
 
-            foreach (var claimer in this.Claimers)
+            foreach (long claimer in this.Claimers)
             {
                 claimers.Add(claimer);
             }
@@ -80,6 +78,5 @@ namespace CR.Servers.CoC.Logic.Clan
 
             return Json;
         }
-
     }
 }

@@ -31,7 +31,9 @@ namespace CR.Servers.CoC.Extensions.Game
                     return 100;
                 }
                 default:
+                {
                     return 100;
+                }
             }
         }
 

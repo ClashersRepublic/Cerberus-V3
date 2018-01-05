@@ -1,22 +1,21 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Train_Unit_V2 : Command
     {
-        internal override int Type => 592;
+        internal int BuildingId;
+        internal CharacterData Unit;
+        internal int UnitOfType;
 
         public Train_Unit_V2(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int BuildingId;
-        internal int UnitOfType;
-        internal CharacterData Unit;
+        internal override int Type => 592;
 
         internal override void Decode()
         {
@@ -28,13 +27,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
-            var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            Level Level = this.Device.GameMode.Level;
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
             if (GameObject != null)
             {
                 if (GameObject is Building Building)
                 {
-                    var UnitStorageV2Component = Building.UnitStorageV2Component;
+                    UnitStorageV2Component UnitStorageV2Component = Building.UnitStorageV2Component;
 
                     if (UnitStorageV2Component != null)
                     {

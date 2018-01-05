@@ -8,7 +8,7 @@
         private int _y;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RC4Encrypter"/> class.
+        ///     Initializes a new instance of the <see cref="RC4Encrypter" /> class.
         /// </summary>
         internal RC4Encrypter(string baseKey, string nonce)
         {
@@ -16,7 +16,7 @@
         }
 
         /// <summary>
-        /// Initializes this instance.
+        ///     Initializes this instance.
         /// </summary>
         internal void Init(string basekey, string nonce)
         {
@@ -28,7 +28,7 @@
 
             for (int i = 0; i < 256; i++)
             {
-                this._key[i] = (byte)i;
+                this._key[i] = (byte) i;
             }
 
             int j = 0;
@@ -54,7 +54,7 @@
         }
 
         /// <summary>
-        /// Decryptes this instance.
+        ///     Decryptes this instance.
         /// </summary>
         internal override byte[] Decrypt(byte[] stream)
         {
@@ -69,14 +69,14 @@
                 this._key[this._y] = this._key[this._x];
                 this._key[this._x] = tmpSwap;
 
-                decrypted[i] = (byte)(stream[i] ^ this._key[(this._key[this._x] + this._key[this._y]) % 256]);
+                decrypted[i] = (byte) (stream[i] ^ this._key[(this._key[this._x] + this._key[this._y]) % 256]);
             }
 
             return decrypted;
         }
 
         /// <summary>
-        /// Encryptes this instance.
+        ///     Encryptes this instance.
         /// </summary>
         internal override byte[] Encrypt(byte[] stream)
         {
@@ -91,7 +91,7 @@
                 this._key[this._y] = this._key[this._x];
                 this._key[this._x] = tmpSwap;
 
-                encrypted[i] = (byte)(stream[i] ^ this._key[(this._key[this._x] + this._key[this._y]) % 256]);
+                encrypted[i] = (byte) (stream[i] ^ this._key[(this._key[this._x] + this._key[this._y]) % 256]);
             }
 
             return encrypted;

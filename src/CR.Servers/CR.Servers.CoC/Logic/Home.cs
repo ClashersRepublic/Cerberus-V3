@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     [JsonConverter(typeof(HomeConverter))]
     internal class Home
     {
-
         internal int HighID;
-        internal int LowID;
         internal JToken LastSave;
 
         internal Level Level;
+        internal int LowID;
         internal DateTime Timestamp = DateTime.UtcNow;
-        internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
 
         [JsonConstructor]
         public Home()
@@ -34,9 +31,11 @@ namespace CR.Servers.CoC.Logic
             this.LowID = LowID;
         }
 
+        internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
+
         internal void Encode(List<byte> Packet)
         {
-            Packet.AddInt((int)TimeUtils.ToUnixTimestamp(Timestamp));
+            Packet.AddInt((int) TimeUtils.ToUnixTimestamp(this.Timestamp));
             Packet.AddInt(this.HighID);
             Packet.AddInt(this.LowID);
 
@@ -68,8 +67,12 @@ namespace CR.Servers.CoC.Logic
             return Json;
         }
     }
+
     internal class HomeConverter : JsonConverter
     {
+        public override bool CanRead => true;
+        public override bool CanWrite => true;
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             if (value is Home Home)
@@ -77,11 +80,10 @@ namespace CR.Servers.CoC.Logic
                 Home.Save().WriteTo(writer);
             }
             else
+            {
                 LevelFile.StartingHome.WriteTo(writer);
+            }
         }
-
-        public override bool CanRead => true;
-        public override bool CanWrite => true;
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {

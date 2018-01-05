@@ -6,6 +6,6 @@
         Unknown1 = 1,
         InvalidDescription = 2,
         NameTooShort = 3,
-        InvalidName = 4,
+        InvalidName = 4
     }
 }

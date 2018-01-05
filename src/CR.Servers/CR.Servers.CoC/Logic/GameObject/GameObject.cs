@@ -1,18 +1,27 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using Newtonsoft.Json.Linq;
+
     internal class GameObject
     {
+        internal List<Component> Components;
         internal Data Data;
+
+        internal int Id;
         internal Level Level;
         internal Vector2 Position;
 
-        internal int Id;
+        public GameObject(Data Data, Level Level)
+        {
+            this.Level = Level;
+            this.Data = Data;
+            this.Position = new Vector2(0, 0);
+            this.Components = new List<Component>(16);
+        }
 
         internal int TileX => this.Position.X >> 9;
 
@@ -42,16 +51,6 @@ namespace CR.Servers.CoC.Logic
 
         internal virtual int Type => 0;
 
-        internal List<Component> Components;
-
-        public GameObject(Data Data, Level Level)
-        {
-            this.Level = Level;
-            this.Data = Data;
-            this.Position = new Vector2(0, 0);
-            this.Components = new List<Component>(16);
-        }
-
         internal void AddComponent(Component Component)
         {
             if (this.Components.Contains(Component))
@@ -63,7 +62,9 @@ namespace CR.Servers.CoC.Logic
             this.Components.Add(Component);
 
             if (!this.Level.AI)
+            {
                 this.Level.ComponentManager.AddComponent(Component);
+            }
         }
 
         internal void SetPositionXY(int TileX, int TileY)
@@ -90,18 +91,12 @@ namespace CR.Servers.CoC.Logic
 
         internal virtual void FastForwardTime(int Secs)
         {
-            this.Components.ForEach(Component =>
-            {
-                Component.FastForwardTime(Secs);
-            });
+            this.Components.ForEach(Component => { Component.FastForwardTime(Secs); });
         }
 
         internal virtual void Tick()
         {
-            this.Components.ForEach(Component =>
-            {
-                Component.Tick();
-            });
+            this.Components.ForEach(Component => { Component.Tick(); });
         }
 
         internal virtual void Process()
@@ -116,12 +111,11 @@ namespace CR.Servers.CoC.Logic
                 this.Position.Y = Y << 9;
             }
             else
-                Logging.Error(this.GetType(), "An error has been throwed when the load of game object. Position X or Y is null!");
-
-            this.Components.ForEach(Component =>
             {
-                Component.Load(Json);
-            });
+                Logging.Error(this.GetType(), "An error has been throwed when the load of game object. Position X or Y is null!");
+            }
+
+            this.Components.ForEach(Component => { Component.Load(Json); });
         }
 
         internal virtual void Save(JObject Json)
@@ -129,10 +123,7 @@ namespace CR.Servers.CoC.Logic
             Json.Add("x", this.TileX);
             Json.Add("y", this.TileY);
 
-            this.Components.ForEach(Component =>
-            {
-                Component.Save(Json);
-            });
+            this.Components.ForEach(Component => { Component.Save(Json); });
         }
     }
 }

@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-
-namespace CR.Servers.CoC.Core.Events
+﻿namespace CR.Servers.CoC.Core.Events
 {
+    using System;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+
     internal class EventsHandler
     {
+        private static EventHandler EHandler;
+
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler Handler, bool Enabled);
 
-        private static EventHandler EHandler;
-        private delegate void EventHandler();
-
         internal static void Initialize()
         {
-            EventsHandler.EHandler += EventsHandler.Process;
-            EventsHandler.SetConsoleCtrlHandler(EventsHandler.EHandler, true);
+            EHandler += Process;
+            SetConsoleCtrlHandler(EHandler, true);
         }
-       
+
         internal static void Process()
         {
             Console.WriteLine("- SHUTDOWN -");
@@ -36,7 +33,7 @@ namespace CR.Servers.CoC.Core.Events
                 {
                     if (Player.Connected)
                     {
-                       new Disconnected(Player.Level.GameMode.Device).Send();
+                        new Disconnected(Player.Level.GameMode.Device).Send();
                     }
                 }
             });
@@ -49,5 +46,7 @@ namespace CR.Servers.CoC.Core.Events
             //AllSave.Wait();
             //Message.Wait();
         }
+
+        private delegate void EventHandler();
     }
 }

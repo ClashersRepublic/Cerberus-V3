@@ -1,19 +1,18 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.Extensions.List;
+
     internal class Alliance_Stream : Message
     {
-        internal override short Type => 24311;
+        internal Alliance Alliance;
 
         public Alliance_Stream(Device Device) : base(Device)
         {
         }
 
-
-        internal Alliance Alliance;
+        internal override short Type => 24311;
 
         internal override void Encode()
         {

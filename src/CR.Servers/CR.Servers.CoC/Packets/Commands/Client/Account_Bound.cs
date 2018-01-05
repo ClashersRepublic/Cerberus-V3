@@ -1,16 +1,15 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Account_Bound : Command
     {
-        internal override int Type => 603;
-
         public Account_Bound(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override int Type => 603;
 
         internal override void Decode()
         {

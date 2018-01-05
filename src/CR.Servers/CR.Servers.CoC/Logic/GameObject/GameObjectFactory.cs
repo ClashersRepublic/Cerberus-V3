@@ -1,7 +1,7 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+
     internal static class GameObjectFactory
     {
         internal static GameObject CreateGameObject(Data Data, Level Level)

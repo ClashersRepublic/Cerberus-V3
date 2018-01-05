@@ -1,25 +1,18 @@
-﻿using System;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Troop_Request : Command
     {
-        internal override int Type => 511;
+        internal bool HaveMessage;
+        internal string Message;
 
         public Troop_Request(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal bool HaveMessage;
-        internal string Message;
+        internal override int Type => 511;
 
         internal override void Decode()
         {
@@ -35,7 +28,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Player = this.Device.GameMode.Level.Player;
+            Player Player = this.Device.GameMode.Level.Player;
 
             /*if (Player.InAlliance)
             {

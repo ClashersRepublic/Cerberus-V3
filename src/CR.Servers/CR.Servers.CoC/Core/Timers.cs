@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using Microsoft.VisualBasic.CompilerServices;
-using NLog;
-using Timer = System.Timers.Timer;
-
-namespace CR.Servers.CoC.Core
+﻿namespace CR.Servers.CoC.Core
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using Math = System.Math;
+    using Timer = System.Timers.Timer;
+
     internal class Timers : ConcurrentDictionary<ServerTimer, Timer>
     {
-
         internal bool Initialized;
 
         internal Timers()
@@ -36,7 +32,7 @@ namespace CR.Servers.CoC.Core
 
         internal void Stop()
         {
-            foreach (var Timer in this.Values)
+            foreach (Timer Timer in this.Values)
             {
                 Timer.Stop();
             }
@@ -48,15 +44,17 @@ namespace CR.Servers.CoC.Core
         {
             if (this.Initialized)
             {
-                foreach (var Timer in this.Values)
+                foreach (Timer Timer in this.Values)
+                {
                     Timer.Start();
+                }
             }
         }
 
 
         internal void Save()
         {
-            var Timer = new Timer
+            Timer Timer = new Timer
             {
                 Interval = TimeSpan.FromHours(1).TotalMilliseconds,
                 AutoReset = true
@@ -71,26 +69,25 @@ namespace CR.Servers.CoC.Core
             };
 
             if (!this.TryAdd(ServerTimer.DataSaving, Timer))
+            {
                 Logging.Error(this.GetType(), $"Failed to add DataSaving timer to ServerTimer dictionary");
-
+            }
         }
 
         internal void KeepAlive()
         {
-            var Timer = new Timer
+            Timer Timer = new Timer
             {
                 Interval = 60000,
                 AutoReset = true
             };
 
-            Timer.Elapsed += (_Sender, _Args) =>
-            {
-
-            };
+            Timer.Elapsed += (_Sender, _Args) => { };
 
             if (!this.TryAdd(ServerTimer.KeepAliveCheck, Timer))
+            {
                 Logging.Error(this.GetType(), $"Failed to add KeepAlive timer to ServerTimer dictionary");
-
+            }
         }
 
         internal void Restart()
@@ -100,11 +97,11 @@ namespace CR.Servers.CoC.Core
                 interval = TimeSpan.FromMinutes(30);
             }
 
-            if (System.Math.Abs(interval.TotalSeconds) > 60)
+            if (Math.Abs(interval.TotalSeconds) > 60)
             {
-              Console.WriteLine($"Server Restarter has been loaded successfully. Restart Interval : {interval.TotalSeconds} seconds");
+                Console.WriteLine($"Server Restarter has been loaded successfully. Restart Interval : {interval.TotalSeconds} seconds");
 
-                var Timer = new Timer
+                Timer Timer = new Timer
                 {
                     Interval = interval.TotalMilliseconds,
                     AutoReset = true
@@ -139,7 +136,9 @@ namespace CR.Servers.CoC.Core
                 };
 
                 if (!this.TryAdd(ServerTimer.ServerRestart, Timer))
+                {
                     Logging.Error(this.GetType(), $"Failed to add ServerRestart timer to ServerTimer dictionary");
+                }
             }
             else
             {

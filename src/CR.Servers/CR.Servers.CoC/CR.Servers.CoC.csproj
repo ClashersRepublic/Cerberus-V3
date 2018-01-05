@@ -183,6 +183,7 @@
     <Compile Include="Core\Events\EventsHandler.cs" />
     <Compile Include="Core\Logging.cs" />
     <Compile Include="Core\Network\Gateway.cs" />
+    <Compile Include="Core\Network\PacketManager.cs" />
     <Compile Include="Core\Network\Processor.cs" />
     <Compile Include="Core\Network\SocketAsyncEventArgsPool.cs" />
     <Compile Include="Core\Network\Token.cs" />

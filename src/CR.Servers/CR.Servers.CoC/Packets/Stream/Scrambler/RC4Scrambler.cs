@@ -12,11 +12,11 @@
         private int _ix;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RC4Scrambler"/> class.
+        ///     Initializes a new instance of the <see cref="RC4Scrambler" /> class.
         /// </summary>
         public RC4Scrambler(int seed)
         {
-            for (var i = 0; i < this._seeds.Length; i++)
+            for (int i = 0; i < this._seeds.Length; i++)
             {
                 this._seeds[i] = seed;
                 seed = 1812433253 * ((seed ^ (seed >> 30)) + 1);
@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        /// Gets the next random int value.
+        ///     Gets the next random int value.
         /// </summary>
         public int NextInt()
         {
@@ -32,8 +32,8 @@
             {
                 for (int i = 1, j = 0; i <= this._seeds.Length; i++, j++)
                 {
-                    var v4 = (this._seeds[i % this._seeds.Length] & LOWER_MASK) + (this._seeds[j] & UPPER_MASK);
-                    var v6 = (v4 >> 1) ^ this._seeds[(i + 396) % this._seeds.Length];
+                    int v4 = (this._seeds[i % this._seeds.Length] & LOWER_MASK) + (this._seeds[j] & UPPER_MASK);
+                    int v6 = (v4 >> 1) ^ this._seeds[(i + 396) % this._seeds.Length];
 
                     if ((v4 & 1) == 1)
                     {
@@ -46,8 +46,8 @@
 
             int val = this._seeds[this._ix];
 
-            val ^= (val >> 11) ^ ((val ^ (val >> 11)) << 7) & TEMPERING_MASK_B;
-            val = (((val ^ (val << 15) & TEMPERING_MASK_C) >> 18) ^ val ^ (val << 15) & TEMPERING_MASK_C);
+            val ^= (val >> 11) ^ (((val ^ (val >> 11)) << 7) & TEMPERING_MASK_B);
+            val = ((val ^ ((val << 15) & TEMPERING_MASK_C)) >> 18) ^ val ^ ((val << 15) & TEMPERING_MASK_C);
 
             this._ix = (this._ix + 1) % this._seeds.Length;
 

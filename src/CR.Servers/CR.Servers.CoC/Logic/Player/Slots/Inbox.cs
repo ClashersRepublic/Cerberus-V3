@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+
     internal class Inbox
     {
+        [JsonProperty] internal ConcurrentDictionary<long, MailEntry> Entries;
         internal Player Player;
 
         [JsonProperty] internal int Seed;
-        [JsonProperty] internal ConcurrentDictionary<long, MailEntry> Entries;
 
         public Inbox(Player Player)
         {
@@ -42,12 +41,14 @@ namespace CR.Servers.CoC.Logic
 
                     if (this.Player.Connected)
                     {
-                        new Avatar_Stream_Entry(this.Player.Level.GameMode.Device){StreamEntry = StreamEntry}.Send();
+                        new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                     }
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Impossible to add a base of AvatarStreamEntry.");
+            }
         }
 
         internal void Remove(MailEntry MailEntry)
@@ -82,17 +83,17 @@ namespace CR.Servers.CoC.Logic
 
                 if (this.Player.Connected)
                 {
-                    new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) { StreamEntry = StreamEntry }.Send();
+                    new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                 }
             }
         }
 
         internal void Encode(List<byte> Packet)
         {
-            var Streams = this.Entries.Values.ToArray();
+            MailEntry[] Streams = this.Entries.Values.ToArray();
             Packet.AddInt(Streams.Length);
 
-            foreach (var Stream in Streams)
+            foreach (MailEntry Stream in Streams)
             {
                 Stream.Encode(Packet);
             }
@@ -109,6 +110,5 @@ namespace CR.Servers.CoC.Logic
                 }
             }
         }
-
     }
 }

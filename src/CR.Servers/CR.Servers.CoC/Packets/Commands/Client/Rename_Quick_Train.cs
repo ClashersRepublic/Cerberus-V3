@@ -1,22 +1,22 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions.Binary;
+
     internal class Rename_Quick_Train : Command
     {
-        internal override int Type => 586;
+        internal string Name;
+
+        internal int Slot;
 
         public Rename_Quick_Train(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Slot;
-        internal string Name;
+        internal override int Type => 586;
 
         internal override void Decode()
         {
@@ -44,7 +44,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 this.Device.GameMode.Level.ArmyNames[this.Slot] = this.Name;
             }
             else
+            {
                 new Out_Of_Sync(this.Device).Send();
+            }
         }
     }
 }

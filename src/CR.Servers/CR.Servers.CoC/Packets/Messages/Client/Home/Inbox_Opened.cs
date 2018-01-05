@@ -1,16 +1,15 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
-    internal class Inbox_Opened  :Message
-    {
-        internal override short Type => 10905;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
 
+    internal class Inbox_Opened : Message
+    {
         public Inbox_Opened(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override short Type => 10905;
 
         internal override void Decode()
         {

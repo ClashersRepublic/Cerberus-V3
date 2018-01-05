@@ -1,27 +1,27 @@
-﻿using System;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using System;
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.Binary;
+
     internal class Join_Alliance : Message
     {
-        internal override short Type => 14305;
+        internal int ClanHighId;
+        internal int ClanLowId;
 
         public Join_Alliance(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int ClanHighId;
-        internal int ClanLowId;
+        internal override short Type => 14305;
 
         internal override void Decode()
         {
@@ -31,13 +31,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            var Alliance = Resources.Clans.Get(this.ClanHighId, this.ClanLowId);
+            Alliance Alliance = Resources.Clans.Get(this.ClanHighId, this.ClanLowId);
 
             if (Alliance != null)
             {
-                var Avatar = this.Device.GameMode.Level.Player;
-                
-                foreach (var entry in Avatar.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
+                Player Avatar = this.Device.GameMode.Level.Player;
+
+                foreach (MailEntry entry in Avatar.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
                 {
                     Avatar.Inbox.Remove(entry);
                 }
@@ -52,7 +52,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                     try
                     {
-                        new Alliance_Stream(this.Device) { Alliance = Alliance }.Send();
+                        new Alliance_Stream(this.Device) {Alliance = Alliance}.Send();
                     }
                     catch (Exception Exception)
                     {
@@ -74,10 +74,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     );
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to join the clan, Join() function returned false");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to join the clan. Get() returned a null clan");
+            }
         }
     }
 }

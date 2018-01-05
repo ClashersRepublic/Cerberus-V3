@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets
+﻿namespace CR.Servers.CoC.Packets
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+
     internal abstract class Message
     {
+        internal List<byte> Data;
+
+        internal Device Device;
         internal int Length;
-        internal short Version;
 
         internal int Offset;
 
-        internal abstract short Type { get; }
-
-        internal Device Device;
-
         internal Reader Reader;
-        internal List<byte> Data;
+        internal short Version;
 
         internal Message(Device Device)
         {
@@ -40,21 +37,8 @@ namespace CR.Servers.CoC.Packets
             this.Reader = Reader;
         }
 
-        internal byte[] ToBytes
-        {
-            get
-            {
-                List<byte> Packet = new List<byte>();
-
-                Packet.AddShort(this.Type);
-                Packet.AddUInt24((uint)this.Length);
-                Packet.AddShort(this.Version);
-                Packet.AddRange(this.Data.ToArray());
-
-                return Packet.ToArray();
-            }
-        }
-
+        internal abstract short Type { get; }
+        
         internal virtual void Decode()
         {
             //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Decoding.");
@@ -69,20 +53,7 @@ namespace CR.Servers.CoC.Packets
         {
             //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Processing.");
         }
-
-        internal virtual void Encrypt()
-        {
-            if (this.Device.State > State.SESSION_OK)
-            {
-                byte[] Packet = this.Data.ToArray();
-                Packet = this.Device.SendEncrypter.Encrypt(Packet);
-
-                this.Data.Clear();
-                this.Data.AddRange(Packet);
-            }
-            this.Length = this.Data.Count;
-        }
-
+        
         internal virtual void SendChatMessage(string message)
         {
             new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player)
@@ -97,7 +68,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void ShowBuffer()
         {
-            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
+            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
         }
 
         internal void ShowValues()
@@ -113,7 +84,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - UserId ({(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + "-" + this.Device.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - UserId ({(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + "-" + this.Device.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

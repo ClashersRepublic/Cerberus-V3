@@ -1,20 +1,20 @@
-﻿using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Ask_For_Joinable_Alliance_List : Message
     {
-        internal override short Type => 14303;
-
         public Ask_For_Joinable_Alliance_List(Device Device, Reader Reader) : base(Device, Reader)
         {
         }
+
+        internal override short Type => 14303;
 
         internal override void Process()
         {

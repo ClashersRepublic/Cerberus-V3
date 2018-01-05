@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Battle
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class Live_Replay_Data : Message
     {
-        internal override short Type => 24119;
+        internal List<Command> Commands;
+
+        internal int EndSubTick;
+        internal int Spectator;
+        internal int Spectator1;
 
         public Live_Replay_Data(Device Device) : base(Device)
         {
             this.Version = 9;
         }
 
-        internal int EndSubTick;
-        internal int Spectator;
-        internal int Spectator1;
-        internal List<Command> Commands;
+        internal override short Type => 24119;
 
         internal override void Encode()
         {

@@ -1,21 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class AllianceKickOutEntry : MailEntry
     {
-        internal override AvatarStream Type => AvatarStream.KickedFromClan;
+        internal Alliance Alliance;
+
+        internal int AllianceHighId;
+        internal int AllianceLowId;
+
+        internal string Message;
 
         public AllianceKickOutEntry()
         {
-
         }
 
         public AllianceKickOutEntry(Player Player, Alliance Alliance) : base(Player)
@@ -25,12 +28,7 @@ namespace CR.Servers.CoC.Logic
             this.AllianceLowId = Alliance.LowId;
         }
 
-        internal int AllianceHighId;
-        internal int AllianceLowId;
-
-        internal string Message;
-
-        internal Alliance Alliance;
+        internal override AvatarStream Type => AvatarStream.KickedFromClan;
 
         internal override void Encode(List<byte> Packet)
         {

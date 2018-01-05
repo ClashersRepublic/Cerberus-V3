@@ -1,30 +1,27 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class Place_Alliance_Portal : Command
     {
-        internal override int Type => 701;
+        internal int GlobalId;
+        internal int X;
+        internal int Y;
 
         public Place_Alliance_Portal()
         {
-
         }
 
         public Place_Alliance_Portal(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal int GlobalId;
-        internal int X;
-        internal int Y;
+        internal override int Type => 701;
 
         internal override void Decode()
         {
@@ -44,7 +41,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (Level.GameObjectManager.Map == 0)
             {
                 /*if (!Level.Modes.IsAttackingOwnBase)
@@ -57,11 +54,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 
         internal override void Load(JToken Token)
         {
-            JObject Command = (JObject)Token["c"];
+            JObject Command = (JObject) Token["c"];
 
             if (Command != null)
             {
-                JObject TickBase = (JObject)Command["base"];
+                JObject TickBase = (JObject) Command["base"];
 
                 if (TickBase != null)
                 {
@@ -79,7 +76,8 @@ namespace CR.Servers.CoC.Packets.Commands.Client.Battle
             JObject Json = new JObject
             {
                 {"ct", this.Type},
-                {"c", new JObject
+                {
+                    "c", new JObject
                     {
                         {"base", this.SaveBase()},
                         {"d", this.GlobalId},

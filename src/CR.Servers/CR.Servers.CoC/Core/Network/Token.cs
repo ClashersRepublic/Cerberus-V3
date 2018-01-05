@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Core.Network
+﻿namespace CR.Servers.CoC.Core.Network
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Sockets;
+    using CR.Servers.CoC.Logic;
+
     internal class Token : IDisposable
     {
-        internal Device Device;
-        internal Socket Socket;
-        internal SocketAsyncEventArgs Args;
-        internal List<byte> Packet;
-        
         internal bool Aborting;
-
-        internal bool Connected
-        {
-            get
-            {
-                return !this.Aborting && this.Socket.Connected;
-            }
-        }
+        internal SocketAsyncEventArgs Args;
+        internal Device Device;
+        internal List<byte> Packet;
+        internal Socket Socket;
 
         internal Token(SocketAsyncEventArgs Args, Device Device, Socket socket)
         {
@@ -31,27 +22,11 @@ namespace CR.Servers.CoC.Core.Network
 
             this.Args = Args;
             this.Args.UserToken = this;
-            
+
             this.Packet = new List<byte>(Constants.ReceiveBuffer);
         }
 
-        internal void SetData()
-        {
-            if (!this.Aborting)
-            {
-                byte[] Data = new byte[this.Args.BytesTransferred];
-                Array.Copy(this.Args.Buffer, Data, this.Args.BytesTransferred);
-                this.Packet.AddRange(Data);
-            }
-        }
-
-        internal void Process()
-        {
-            if (!this.Aborting)
-            {
-                this.Device.Process(this.Packet.ToArray());
-            }
-        }
+        internal bool Connected => !this.Aborting && this.Socket.Connected;
 
         public void Dispose()
         {
@@ -72,6 +47,24 @@ namespace CR.Servers.CoC.Core.Network
 
             this.Packet = null;
             this.Device = null;
+        }
+
+        internal void SetData()
+        {
+            if (!this.Aborting)
+            {
+                byte[] Data = new byte[this.Args.BytesTransferred];
+                Array.Copy(this.Args.Buffer, Data, this.Args.BytesTransferred);
+                this.Packet.AddRange(Data);
+            }
+        }
+
+        internal void Process()
+        {
+            if (!this.Aborting)
+            {
+                this.Device.Process(this.Packet.ToArray());
+            }
         }
     }
 }

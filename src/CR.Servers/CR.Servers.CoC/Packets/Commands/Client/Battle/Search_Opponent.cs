@@ -1,19 +1,17 @@
-﻿using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Battle.Manager;
-using CR.Servers.CoC.Packets.Messages.Server.Battle;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Battle;
+    using CR.Servers.Extensions.Binary;
+
     internal class Search_Opponent : Command
     {
-        internal override int Type => 800;
-
         public Search_Opponent(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override int Type => 800;
 
         internal override void Decode()
         {

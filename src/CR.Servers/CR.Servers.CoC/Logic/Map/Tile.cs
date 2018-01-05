@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace CR.Servers.CoC.Logic.Map
+﻿namespace CR.Servers.CoC.Logic.Map
 {
+    using System.Collections.Generic;
+
     internal class Tile
     {
         internal List<GameObject> GameObjects;

@@ -1,46 +1,47 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Battle;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-using Microsoft.VisualBasic.CompilerServices;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battle;
+    using CR.Servers.CoC.Logic.Battle.Slots;
+    using CR.Servers.CoC.Packets.Messages.Server.Battle;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Go_Home : Message
     {
-        internal override short Type => 14101;
+        internal int Mode;
 
         public Go_Home(Device device, Reader reader) : base(device, reader)
         {
             // Space
         }
 
-        internal int Mode;
+        internal override short Type => 14101;
 
         internal override void Decode()
         {
-            Mode = Reader.ReadInt32();
+            this.Mode = this.Reader.ReadInt32();
         }
 
         internal override void Process()
         {
-            if (Mode == 1)
+            if (this.Mode == 1)
             {
-                Device.State = State.WAR_EMODE;
+                this.Device.State = State.WAR_EMODE;
             }
             else
             {
                 if (this.Device.State == State.IN_1VS1_BATTLE)
                 {
-                    var userId = this.Device.GameMode.Level.Player.UserId;
-                    var battleId = this.Device.GameMode.Level.Player.BattleIdV2;
+                    long userId = this.Device.GameMode.Level.Player.UserId;
+                    long battleId = this.Device.GameMode.Level.Player.BattleIdV2;
 
-                    var home = Resources.BattlesV2.GetPlayer(battleId, userId);
-                    var enemy = Resources.BattlesV2.GetEnemy(battleId, userId);
-                    var battle = Resources.BattlesV2[battleId];
+                    Battle_V2 home = Resources.BattlesV2.GetPlayer(battleId, userId);
+                    Battle_V2 enemy = Resources.BattlesV2.GetEnemy(battleId, userId);
+                    Battles_V2 battle = Resources.BattlesV2[battleId];
 
                     home.Set_Replay_Info();
                     home.Finished = true;
@@ -75,7 +76,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                 this.Device.State = State.LOGGED;
             }
 
-            new Own_Home_Data(Device).Send();
+            new Own_Home_Data(this.Device).Send();
         }
     }
 }

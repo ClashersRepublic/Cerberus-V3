@@ -1,23 +1,23 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Alliances
 {
-    internal class Alliance_Full_Entry  :Message
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.Extensions.List;
+
+    internal class Alliance_Full_Entry : Message
     {
-        internal override short Type => 24324;
+        internal Alliance Alliance;
 
         public Alliance_Full_Entry(Device Device) : base(Device)
         {
         }
 
-        internal Alliance Alliance;
+        internal override short Type => 24324;
 
         internal override void Encode()
         {
             this.Data.AddString(this.Alliance.Description);
-            this.Data.AddInt((int)this.Alliance.WarState);
+            this.Data.AddInt((int) this.Alliance.WarState);
             this.Data.AddInt(0);
 
             this.Data.AddByte(0);

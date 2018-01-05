@@ -1,22 +1,21 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Leaderboard
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Leaderboard
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Request_Alliance_Ranking : Message
     {
-        internal override short Type => 14401;
+        internal bool HasLong;
+        internal bool Local;
+        internal long UnknownLong;
+        internal int VillageType;
 
         public Request_Alliance_Ranking(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal bool HasLong;
-        internal long UnknownLong;
-        internal bool Local;
-        internal int VillageType;
-         
+        internal override short Type => 14401;
+
         internal override void Decode()
         {
             this.HasLong = this.Reader.ReadBooleanV2();

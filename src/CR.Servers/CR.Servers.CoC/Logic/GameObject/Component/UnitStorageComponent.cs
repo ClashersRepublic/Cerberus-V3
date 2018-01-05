@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class UnitStorageComponent : Component
     {
         internal int HousingSpace;
@@ -15,6 +13,12 @@ namespace CR.Servers.CoC.Logic
         internal bool IsSpellForge;
 
         internal List<Item> Units;
+
+        public UnitStorageComponent(GameObject GameObject) : base(GameObject)
+        {
+            this.Units = new List<Item>();
+            this.SetStorage();
+        }
 
         internal int TotalUsedHousing
         {
@@ -28,7 +32,7 @@ namespace CR.Servers.CoC.Logic
                     {
                         Data Data = Unit.ItemData;
 
-                        if (Data.GetDataType() == 4) 
+                        if (Data.GetDataType() == 4)
                         {
                             Housing += ((CharacterData) Data).HousingSpace * Unit.Count;
                         }
@@ -53,7 +57,7 @@ namespace CR.Servers.CoC.Logic
 
                         if (Data.GetDataType() == 26)
                         {
-                            Housing += ((SpellData)Data).HousingSpace * Unit.Count;
+                            Housing += ((SpellData) Data).HousingSpace * Unit.Count;
                         }
                     }
                 }
@@ -63,12 +67,6 @@ namespace CR.Servers.CoC.Logic
         }
 
         internal override int Type => 0;
-
-        public UnitStorageComponent(GameObject GameObject) : base(GameObject)
-        {
-            this.Units = new List<Item>();
-            this.SetStorage();
-        }
 
         internal void AddUnit(Data Data)
         {
@@ -83,13 +81,19 @@ namespace CR.Servers.CoC.Logic
                         ++Unit.Count;
                     }
                     else
+                    {
                         this.Units.Add(new Item(Data.GlobalId, 1));
+                    }
                 }
                 else
+                {
                     Logging.Info(this.GetType(), "AddUnit called and storage is full.");
+                }
             }
             else
+            {
                 Logging.Info(this.GetType(), "AddUnit called with CharacterData NULL.");
+            }
         }
 
         internal bool CanAddUnit(Data Data)
@@ -106,7 +110,9 @@ namespace CR.Servers.CoC.Logic
                     }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), $"Unable to add a Character to a spell forge");
+                }
             }
             else
             {
@@ -135,7 +141,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void SetStorage()
         {
-            Building Building = (Building)this.Parent;
+            Building Building = (Building) this.Parent;
 
             if (!Building.Locked)
             {
@@ -153,7 +159,7 @@ namespace CR.Servers.CoC.Logic
 
         internal override void Load(JToken Json)
         {
-            JArray Units = (JArray)Json["units"];
+            JArray Units = (JArray) Json["units"];
 
             if (Units != null)
             {
@@ -189,6 +195,5 @@ namespace CR.Servers.CoC.Logic
             Json.Add("units", Units);
             base.Save(Json);
         }
-        
     }
 }

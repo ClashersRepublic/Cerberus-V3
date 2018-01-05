@@ -1,18 +1,18 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class League_Notifications_Seen : Command
     {
-        internal override int Type => 538;
-        public League_Notifications_Seen(Device Device, Reader Reader) : base(Device, Reader)
-        {
-            
-        }
-
         internal int League;
         internal int Unknown;
+
+        public League_Notifications_Seen(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override int Type => 538;
 
         internal override void Decode()
         {
@@ -23,7 +23,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
             Level.LastLeagueRank = this.League;
             Level.LastLeagueShuffleInfo = 0;

@@ -1,36 +1,36 @@
-﻿using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Change_Alliance_Settings : Message
     {
-        internal override short Type => 14316;
+        internal int AllianceBadge;
+
+        internal Hiring AllianceType;
+        internal bool AmicalWar;
+
+        internal string Description;
+        internal int Origin;
+
+        internal bool PublicWarLog;
+        internal int RequiredDuelScore;
+        internal int RequiredScore;
+        internal int WarFrequency;
 
         public Change_Alliance_Settings(Device Device, Reader Reader) : base(Device, Reader)
         {
         }
 
-        internal string Description;
-
-        internal int AllianceBadge;
-        internal int RequiredScore;
-        internal int RequiredDuelScore;
-        internal int WarFrequency;
-
-        internal bool PublicWarLog;
-        internal bool AmicalWar;
-
-        internal Hiring AllianceType;
-        internal int Origin;
+        internal override short Type => 14316;
 
         internal override void Decode()
         {
@@ -83,8 +83,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                     {
                         //if (Foreground != null)
                         {
-                            var Level = this.Device.GameMode.Level;
-                            var Alliance = Resources.Clans.Get(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
+                            Level Level = this.Device.GameMode.Level;
+                            Alliance Alliance = Resources.Clans.Get(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
                             Alliance.Description = this.Description;
                             Alliance.Header.Badge = this.AllianceBadge;
                             Alliance.Header.Type = this.AllianceType;
@@ -98,7 +98,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                             Alliance.Streams.AddEntry(new EventStreamEntry(Level.Player.AllianceMember,
                                 Level.Player.AllianceMember, AllianceEvent.ChangedSettings));
 
-                            foreach (var Player in Alliance.Members.Connected.Values.ToArray())
+                            foreach (Player Player in Alliance.Members.Connected.Values.ToArray())
                             {
                                 if (Player.Connected)
                                 {
@@ -110,7 +110,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                         });
                                 }
                                 else
+                                {
                                     Alliance.Members.Connected.TryRemove(Player.UserId, out _);
+                                }
                             }
                         }
                     }

@@ -5,10 +5,8 @@
         internal int X;
         internal int Y;
 
-        internal int HashCode => this.Y + 31 * this.X;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="Vector2"/> class.
+        ///     Initializes a new instance of the <see cref="Vector2" /> class.
         /// </summary>
         public Vector2()
         {
@@ -16,7 +14,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Vector2"/> class.
+        ///     Initializes a new instance of the <see cref="Vector2" /> class.
         /// </summary>
         public Vector2(int X, int Y)
         {
@@ -24,8 +22,10 @@
             this.Y = Y;
         }
 
+        internal int HashCode => this.Y + 31 * this.X;
+
         /// <summary>
-        /// Adds a vector2.
+        ///     Adds a vector2.
         /// </summary>
         internal void Add(Vector2 Vector2)
         {
@@ -34,7 +34,7 @@
         }
 
         /// <summary>
-        /// Clones this instance.
+        ///     Clones this instance.
         /// </summary>
         internal Vector2 Clone()
         {
@@ -42,28 +42,28 @@
         }
 
         /// <summary>
-        /// Dot Product of two vectors.
+        ///     Dot Product of two vectors.
         /// </summary>
         internal int Dot(Vector2 Vector2)
         {
-            return (this.X * Vector2.X) + (this.Y * Vector2.Y);
+            return this.X * Vector2.X + this.Y * Vector2.Y;
         }
 
         /// <summary>
-        /// Returns the unsigned angle in degrees between from and to.
+        ///     Returns the unsigned angle in degrees between from and to.
         /// </summary>
         internal double GetAngle(Vector2 Vector2)
         {
             // TODO : Verify Vector2::GetAngle(Vector2).
 
-            double Sinus      = this.X * Vector2.Y - Vector2.X * this.Y;
-            double Cosinus    = this.X * Vector2.X + this.Y * Vector2.Y;
+            double Sinus = this.X * Vector2.Y - Vector2.X * this.Y;
+            double Cosinus = this.X * Vector2.X + this.Y * Vector2.Y;
 
             return System.Math.Atan2(Sinus, Cosinus) * (180 / System.Math.PI);
         }
 
         /// <summary>
-        /// Returns the distance between this vector and specified vector.
+        ///     Returns the distance between this vector and specified vector.
         /// </summary>
         internal int GetDistance(Vector2 Vector2)
         {
@@ -84,7 +84,7 @@
         }
 
         /// <summary>
-        /// Returns the distance between this vector and specified vector.
+        ///     Returns the distance between this vector and specified vector.
         /// </summary>
         internal int GetDistanceSquared(Vector2 Vector2)
         {
@@ -105,7 +105,7 @@
         }
 
         /// <summary>
-        /// Returns the distance between this vector and specified vector.
+        ///     Returns the distance between this vector and specified vector.
         /// </summary>
         internal int GetDistanceSquaredHelper(int X, int Y)
         {
@@ -127,7 +127,7 @@
         }
 
         /// <summary>
-        /// Calculates the length of the vector.
+        ///     Calculates the length of the vector.
         /// </summary>
         internal int GetLength()
         {
@@ -145,7 +145,7 @@
         }
 
         /// <summary>
-        /// Calculates the length of the vector.
+        ///     Calculates the length of the vector.
         /// </summary>
         internal int GetLengthSquared()
         {
@@ -163,7 +163,7 @@
         }
 
         /// <summary>
-        /// Returns if the given vector is exactly equal to this vector.
+        ///     Returns if the given vector is exactly equal to this vector.
         /// </summary>
         internal bool IsEqual(Vector2 Vector2)
         {
@@ -176,7 +176,7 @@
         }
 
         /// <summary>
-        /// Returns if the vector is int area.
+        ///     Returns if the vector is int area.
         /// </summary>
         internal bool IsInArea(int MinX, int MinY, int MaxX, int MaxY)
         {
@@ -189,7 +189,7 @@
         }
 
         /// <summary>
-        /// Multiplies the components of two vectors by one another.
+        ///     Multiplies the components of two vectors by one another.
         /// </summary>
         internal void Multiply(Vector2 Vector2)
         {
@@ -198,7 +198,8 @@
         }
 
         /// <summary>
-        /// Turns the current vector into a unit vector. The result is a vector one unit in length pointing in the same direction as the original vector.
+        ///     Turns the current vector into a unit vector. The result is a vector one unit in length pointing in the same
+        ///     direction as the original vector.
         /// </summary>
         internal void Normalize(int Value)
         {
@@ -212,7 +213,7 @@
         }
 
         /// <summary>
-        /// Rotates the Vector2 by the given angle, counter-clockwise assuming the y-axis points up.
+        ///     Rotates the Vector2 by the given angle, counter-clockwise assuming the y-axis points up.
         /// </summary>
         internal void Rotate(int Degrees)
         {
@@ -221,7 +222,7 @@
         }
 
         /// <summary>
-        /// Sets this vector position.
+        ///     Sets this vector position.
         /// </summary>
         internal void Set(int X, int Y)
         {
@@ -230,7 +231,7 @@
         }
 
         /// <summary>
-        /// Subtracts a vector from a vector.
+        ///     Subtracts a vector from a vector.
         /// </summary>
         internal void Substract(Vector2 Vector2)
         {

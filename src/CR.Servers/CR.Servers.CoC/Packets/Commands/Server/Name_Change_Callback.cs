@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Commands.Server
+﻿namespace CR.Servers.CoC.Packets.Commands.Server
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+
     internal class Name_Change_Callback : ServerCommand
     {
-
-
-        internal override int Type => 3;
+        internal string AvatarName;
+        internal int ChangeNameCount;
 
         public Name_Change_Callback(Device Client) : base(Client)
         {
@@ -19,15 +18,14 @@ namespace CR.Servers.CoC.Packets.Commands.Server
         {
         }
 
-        internal string AvatarName;
-        internal int ChangeNameCount;
+
+        internal override int Type => 3;
 
         internal override void Decode()
         {
-            this.AvatarName = Reader.ReadString();
-            this.ChangeNameCount = Reader.ReadInt32();
+            this.AvatarName = this.Reader.ReadString();
+            this.ChangeNameCount = this.Reader.ReadInt32();
             base.Decode();
-
         }
 
         internal override void Encode(List<byte> Data)
@@ -39,7 +37,7 @@ namespace CR.Servers.CoC.Packets.Commands.Server
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (this.AvatarName != null)
             {
                 Level.Player.Name = this.AvatarName;
@@ -50,9 +48,10 @@ namespace CR.Servers.CoC.Packets.Commands.Server
                     Level.Player.ChangeNameCount++;
                 }
                 else
+                {
                     Level.Player.NameSetByUser = true;
+                }
             }
-            
         }
     }
 }

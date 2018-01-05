@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Speed_Up_Troop_Training : Command
     {
-        internal override int Type => 513;
+        internal int Manager;
 
         public Speed_Up_Troop_Training(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal int Manager;
+        internal override int Type => 513;
 
         internal override void Decode()
         {

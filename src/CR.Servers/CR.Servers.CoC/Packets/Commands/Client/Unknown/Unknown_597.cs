@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Unknown
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Unknown
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Unknown_597 : Command
     {
-        internal override int Type => 597;
+        internal int Timestamp;
 
         public Unknown_597(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Timestamp;
+        internal override int Type => 597;
 
         internal override void Decode()
         {

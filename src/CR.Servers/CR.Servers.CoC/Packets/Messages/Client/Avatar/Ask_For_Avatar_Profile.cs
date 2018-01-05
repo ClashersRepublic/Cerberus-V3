@@ -1,23 +1,21 @@
-﻿using System;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+    using CR.Servers.Extensions.Binary;
+
     internal class Ask_For_Avatar_Profile : Message
     {
-        internal override short Type => 14325;
+        internal int AvatarHighId;
+        internal int AvatarLowId;
 
         public Ask_For_Avatar_Profile(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal int AvatarHighId;
-        internal int AvatarLowId;
+        internal override short Type => 14325;
 
         internal override void Decode()
         {
@@ -36,7 +34,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
         {
             if (this.AvatarHighId >= 0 && this.AvatarLowId > 0)
             {
-                var Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId)?.Player;
+                Player Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId)?.Player;
                 if (Player?.Level != null)
                 {
                     new Avatar_Profile_Data(this.Device, Player.Level).Send();

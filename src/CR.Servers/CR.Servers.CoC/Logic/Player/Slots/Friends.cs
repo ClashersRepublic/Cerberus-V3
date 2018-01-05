@@ -1,19 +1,19 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using CR.Servers.CoC.Core;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+
     internal class Friends
     {
+        internal ConcurrentDictionary<long, Player> Connected;
         internal Player Player;
 
         [JsonProperty] internal ConcurrentDictionary<long, Friend> Slots;
-        internal ConcurrentDictionary<long, Player> Connected;
 
         public Friends()
         {
@@ -61,11 +61,11 @@ namespace CR.Servers.CoC.Logic
         {
             if (this.Slots != null)
             {
-                foreach (var Friend in this.Slots.Values.ToArray())
+                foreach (Friend Friend in this.Slots.Values.ToArray())
                 {
                     if (Friend.Player == null)
                     {
-                        var Player = Resources.Accounts.LoadAccount(Friend.HighId, Friend.LowId)?.Player;
+                        Player Player = Resources.Accounts.LoadAccount(Friend.HighId, Friend.LowId)?.Player;
                         if (Player != null)
                         {
                             Friend.Player = Player;
@@ -90,17 +90,27 @@ namespace CR.Servers.CoC.Logic
             return false;
         }
 
-        internal bool Remove(Player Player, out Friend Friend) => this.Remove(Player.UserId, out Friend);
-        internal bool Remove(Friend Player, out Friend Friend) => this.Remove(Player.PlayerId, out Friend);
+        internal bool Remove(Player Player, out Friend Friend)
+        {
+            return this.Remove(Player.UserId, out Friend);
+        }
 
-        internal Friend Get(long UserID) => this.Slots.ContainsKey(UserID) ? this.Slots[UserID] : null;
+        internal bool Remove(Friend Player, out Friend Friend)
+        {
+            return this.Remove(Player.PlayerId, out Friend);
+        }
+
+        internal Friend Get(long UserID)
+        {
+            return this.Slots.ContainsKey(UserID) ? this.Slots[UserID] : null;
+        }
 
         internal void Encode(List<byte> Packet)
         {
-            var Friends = this.Slots.Values.ToArray();
+            Friend[] Friends = this.Slots.Values.ToArray();
 
             Packet.AddInt(Friends.Length);
-            foreach (var Friend in Friends)
+            foreach (Friend Friend in Friends)
             {
                 Friend.Encode(Packet);
             }

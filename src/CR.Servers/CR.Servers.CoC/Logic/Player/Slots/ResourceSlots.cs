@@ -1,9 +1,9 @@
-﻿using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Logic.Enums;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Logic.Enums;
+
     internal class ResourceSlots : DataSlots
     {
         internal ResourceSlots(int Capacity = 10) : base(Capacity)
@@ -32,44 +32,52 @@ namespace CR.Servers.CoC.Logic
 
         internal void Set(Resource Resource, int Count)
         {
-            Set(3000000 + (int)Resource, Count);
+            this.Set(3000000 + (int) Resource, Count);
         }
 
         internal void Plus(int Global, int Count)
         {
-            var i = FindIndex(R => R.Data == Global);
+            int i = this.FindIndex(R => R.Data == Global);
 
             if (i > -1)
+            {
                 this[i].Count += Count;
+            }
             else
-                Add(new Item(Global, Count));
+            {
+                this.Add(new Item(Global, Count));
+            }
         }
 
         internal void Plus(Resource Resource, int Count)
         {
-            Plus(3000000 + (int)Resource, Count);
+            this.Plus(3000000 + (int) Resource, Count);
         }
 
         internal bool Minus(int Global, int Count)
         {
-            var i = FindIndex(R => R.Data == Global);
+            int i = this.FindIndex(R => R.Data == Global);
 
             if (i > -1)
+            {
                 if (this[i].Count >= Count)
                 {
                     this[i].Count -= Count;
                     return true;
                 }
+            }
 
             return false;
         }
 
         internal void Minus(Resource _Resource, int _Value)
         {
-            var Index = FindIndex(T => T.Data == 3000000 + (int)_Resource);
+            int Index = this.FindIndex(T => T.Data == 3000000 + (int) _Resource);
 
             if (Index > -1)
+            {
                 this[Index].Count -= _Value;
+            }
         }
     }
 }

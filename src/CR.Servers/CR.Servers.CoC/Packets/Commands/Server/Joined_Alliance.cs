@@ -1,40 +1,38 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Commands.Server
+﻿namespace CR.Servers.CoC.Packets.Commands.Server
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+
     internal class Joined_Alliance : ServerCommand
     {
-        internal override int Type => 1;
+        internal int AllianceBadge;
+
+        internal long AllianceId;
+        internal int AllianceLevel;
+
+        internal string AllianceName;
+
+        internal bool CreateAlliance;
 
         public Joined_Alliance(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
         public Joined_Alliance(Device Device) : base(Device)
         {
-
         }
 
-        internal long AllianceId;
-
-        internal string AllianceName;
-
-        internal int AllianceBadge;
-        internal int AllianceLevel;
-
-        internal bool CreateAlliance;
+        internal override int Type => 1;
 
         internal override void Decode()
         {
-            this.AllianceId = Reader.ReadInt64();
-            this.AllianceName = Reader.ReadString();
-            this.AllianceBadge = Reader.ReadInt32();
-            this.CreateAlliance = Reader.ReadBoolean();
-            this.AllianceLevel = Reader.ReadInt32();
+            this.AllianceId = this.Reader.ReadInt64();
+            this.AllianceName = this.Reader.ReadString();
+            this.AllianceBadge = this.Reader.ReadInt32();
+            this.CreateAlliance = this.Reader.ReadBoolean();
+            this.AllianceLevel = this.Reader.ReadInt32();
 
             base.Decode();
         }

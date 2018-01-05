@@ -1,34 +1,32 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Buy_Deco : Command
     {
-        internal override int Type => 512;
+        internal DecoData DecoData;
+
+        internal int X;
+        internal int Y;
 
         public Buy_Deco(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int X;
-        internal int Y;
-
-        internal DecoData DecoData;
+        internal override int Type => 512;
 
 
         internal override void Decode()
         {
-            this.X = Reader.ReadInt32();
-            this.Y = Reader.ReadInt32();
+            this.X = this.Reader.ReadInt32();
+            this.Y = this.Reader.ReadInt32();
 
-            this.DecoData = Reader.ReadData<DecoData>();
+            this.DecoData = this.Reader.ReadData<DecoData>();
 
             base.Decode();
         }
@@ -37,7 +35,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             if (this.DecoData != null)
             {
-                var Level = Device.GameMode.Level;
+                Level Level = this.Device.GameMode.Level;
                 //TODO Add Cap check
                 //if (!Level.IsBuildingCapReached(this.BuildingData))
                 {
@@ -58,10 +56,14 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             this.AddGameObject(Level);
                         }
                         else
-                        Logging.Error(this.GetType(), "Unable to buy deco. The player doesn't have enough resources!");                  
+                        {
+                            Logging.Error(this.GetType(), "Unable to buy deco. The player doesn't have enough resources!");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), $"Unable to buy deco. The player have exp level lower then required exp level ({Level.Player.ExpLevel} - {this.DecoData.RequiredExpLevel})!");
+                    }
                 }
             }
         }

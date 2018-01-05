@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CR.Servers.CoC.Packets;
-
-namespace CR.Servers.CoC.Logic.Battle.Manager
+﻿namespace CR.Servers.CoC.Logic.Battle.Manager
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CR.Servers.CoC.Packets;
+
     internal class BattleCommandManager
     {
-        internal List<Command> Commands;
-        internal List<Command> BufferedCommands;
-
         internal BattleManager BattleManager;
+        internal List<Command> BufferedCommands;
+        internal List<Command> Commands;
 
         public BattleCommandManager()
         {

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using CR.Servers.Extensions.List;
+﻿namespace CR.Servers.CoC.Logic
+{
+    using System.Collections.Generic;
+    using CR.Servers.Extensions.List;
 
-namespace CR.Servers.CoC.Logic
-{ 
     internal class AchievementSlot : List<int>
     {
         internal Player Player;

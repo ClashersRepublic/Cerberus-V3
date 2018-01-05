@@ -1,20 +1,19 @@
-﻿using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions.Binary;
+
     internal class Claim_Achievement_Reward : Command
     {
-        internal override int Type => 523;
+        internal int AchievementId;
 
         public Claim_Achievement_Reward(Device Device, Reader reader) : base(Device, reader)
         {
-            
         }
 
-        internal int AchievementId;
+        internal override int Type => 523;
 
         internal override void Decode()
         {
@@ -24,7 +23,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (!Level.Player.AchievementProgress.Claim(this.AchievementId))
             {
                 new Out_Of_Sync(this.Device).Send();

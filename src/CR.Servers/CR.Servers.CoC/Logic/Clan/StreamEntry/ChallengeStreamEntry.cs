@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class ChallengeStreamEntry : StreamEntry
     {
-        internal override AllianceStream Type => AllianceStream.FriendChallenge;
+        internal string Message;
 
         public ChallengeStreamEntry()
         {
-
         }
-
-        internal string Message;
 
         public ChallengeStreamEntry(Member Member) : base(Member)
         {
         }
+
+        internal override AllianceStream Type => AllianceStream.FriendChallenge;
 
         internal override void Encode(List<byte> Packet)
         {

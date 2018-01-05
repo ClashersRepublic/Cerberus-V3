@@ -1,27 +1,27 @@
 ﻿#define Extra
 
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
 namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Execute_Battle_Command : Message
     {
-        internal int SubTick;
         internal int Checksum;
         internal int CommandCount;
 
         internal List<Command> Commands;
-
-        internal override short Type => 14510;
+        internal int SubTick;
 
         public Execute_Battle_Command(Device Device, Reader Reader) : base(Device, Reader)
         {
             // Execute_Battle_Command.
         }
+
+        internal override short Type => 14510;
 
         internal override void Decode()
         {
@@ -36,11 +36,11 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
                     for (int i = 0; i < this.CommandCount; i++)
                     {
-                        var CommandID = Reader.ReadInt32();
+                        int CommandID = this.Reader.ReadInt32();
 
                         if (Factory.Commands.ContainsKey(CommandID))
                         {
-                            var Command = Factory.CreateCommand(CommandID, Device, Reader);
+                            Command Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
 
                             if (Command != null)
                             {
@@ -60,15 +60,16 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
                             this.CommandCount = this.Commands.Count;
                             this.Reader.BaseStream.Position = 0;
                             Logging.Info(this.GetType(), "Command is unhandled! (" + CommandID + ")");
-                            Log();
+                            this.Log();
                             break;
                         }
                     }
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Command count is too high! (" + this.CommandCount + ")");
-
+            }
         }
 
         internal override void Process()
@@ -82,7 +83,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand)Command;
+                        ServerCommand ServerCommand = (ServerCommand) Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
@@ -96,7 +97,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
                         else
                         {
                             this.Reader.BaseStream.Position = 0;
-                            Log();
+                            this.Log();
                             Logging.Error(this.GetType(), this.Device, "Execute battle command failed! Server Command " + Command.Type + " is not available.");
                             return;
                         }
@@ -107,14 +108,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
                     Logging.Info(this.GetType(), "Battle Command is handled! (" + Command.Type + ")");
 #endif
                     this.Commands.Remove(Command);
-                    continue;
                 } while (this.Commands.Count > 0);
             }
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
 
             if (this.Device.State == State.IN_1VS1_BATTLE)
-            {    
+            {
                 this.Device.GameMode.Level.BattleManager.Tick();
             }
 #if Extra

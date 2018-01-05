@@ -1,16 +1,12 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Stream;
-using CR.Servers.CoC.Packets.Stream.Scrambler;
-using CR.Servers.Extensions.List;
-using CR.Servers.Library;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Stream.Scrambler;
+    using CR.Servers.Extensions.List;
+
     internal class SessionKey : Message
     {
-        internal override short Type => 20000;
-
         public byte[] Nonce;
 
         public SessionKey(Device device) : base(device)
@@ -19,10 +15,12 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             Resources.Random.NextBytes(this.Nonce);
         }
 
+        internal override short Type => 20000;
+
         internal override void Encode()
         {
-            Data.AddByteArray(this.Nonce);
-            Data.AddInt(1);
+            this.Data.AddByteArray(this.Nonce);
+            this.Data.AddInt(1);
         }
 
         internal override void Process()

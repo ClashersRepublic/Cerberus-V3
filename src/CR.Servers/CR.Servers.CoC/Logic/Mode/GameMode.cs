@@ -1,20 +1,14 @@
-﻿using CR.Servers.CoC.Logic.Manager;
-
-namespace CR.Servers.CoC.Logic.Mode
+﻿namespace CR.Servers.CoC.Logic.Mode
 {
+    using CR.Servers.CoC.Logic.Manager;
+
     internal class GameMode
     {
+        internal CommandManager CommandManager;
         internal Device Device;
         internal Level Level;
 
         internal Time Time;
-        internal CommandManager CommandManager;
-        //internal State State;
-
-        /*
-        internal GameLogManager GameLogManager;*/
-
-        internal bool Connected => this.Device != null && this.Device.Connected;
 
         public GameMode(Device Device)
         {
@@ -23,6 +17,12 @@ namespace CR.Servers.CoC.Logic.Mode
             this.CommandManager = new CommandManager();
             /*this.GameLogManager = new GameLogManager(this);*/
         }
+        //internal State State;
+
+        /*
+        internal GameLogManager GameLogManager;*/
+
+        internal bool Connected => this.Device != null && this.Device.Connected;
 
         internal void LoadLevel(Level Level)
         {
@@ -30,6 +30,5 @@ namespace CR.Servers.CoC.Logic.Mode
             this.Level.SetGameMode(this);
             this.CommandManager.SetLevel(Level);
         }
-      
     }
 }

@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Upgrade_Multiple_Building : Command
     {
-        internal override int Type => 549;
+        internal List<int> BuildingIds;
+        internal int Count;
+
+        internal bool UseAltResource;
 
         public Upgrade_Multiple_Building(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal bool UseAltResource;
-        internal int Count;
-        internal List<int> BuildingIds;
+        internal override int Type => 549;
 
         internal override void Decode()
         {
@@ -40,11 +36,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
-            foreach (var BuildingId in BuildingIds)
+            foreach (int BuildingId in this.BuildingIds)
             {
-                var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(BuildingId);
+                GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(BuildingId);
 
                 if (GameObject != null)
                 {
@@ -66,10 +62,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                 }
                             }
                             else
+                            {
                                 Logging.Error(this.GetType(), "Unable to upgrade the building. The resource data is null.");
+                            }
                         }
                         //else
-                            //Logging.Error(this.GetType(), "Unable to upgrade the building. UpgradeAvailable returened false.");
+                        //Logging.Error(this.GetType(), "Unable to upgrade the building. UpgradeAvailable returened false.");
                     }
                     else
                     {
@@ -77,12 +75,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         Logging.Error(this.GetType(),
                             $"UpgradeMultipleBuilding is expected to be use only with Building but it was called for {GameObject.Type}. Please inform the developer right away!");
                     }
-
                 }
-                else 
+                else
+                {
                     Logging.Error(this.GetType(), "Unable to upgrade the building. The gameobject is null.");
+                }
             }
-
         }
     }
 }

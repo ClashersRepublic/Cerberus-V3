@@ -1,28 +1,13 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class AllianceUnitSlots : List<UnitItem>
     {
-        internal int Checksum
-        {
-            get
-            {
-                int Checksum = 0;
-
-                this.ForEach(Item =>
-                {
-                    Checksum += Item.Checksum;
-                });
-
-                return Checksum;
-            }
-        }
-
         public AllianceUnitSlots(int Capacity = 50) : base(Capacity)
         {
             // AllianceUnitSlots.
@@ -33,6 +18,18 @@ namespace CR.Servers.CoC.Logic
             // AllianceUnitSlots.
         }
 
+        internal int Checksum
+        {
+            get
+            {
+                int Checksum = 0;
+
+                this.ForEach(Item => { Checksum += Item.Checksum; });
+
+                return Checksum;
+            }
+        }
+
         internal void Add(Data Data, int Count, int Level)
         {
             if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
@@ -40,7 +37,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Count;
             }
             else
+            {
                 base.Add(new UnitItem(Data.GlobalId, Count, Level));
+            }
         }
 
         internal void Add(int Data, int Count, int Level)
@@ -50,7 +49,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Count;
             }
             else
+            {
                 base.Add(new UnitItem(Data, Count, Level));
+            }
         }
 
         internal new void Add(UnitItem Item)
@@ -60,7 +61,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Item.Count;
             }
             else
+            {
                 base.Add(Item);
+            }
         }
 
         internal void Add(UnitItem Item, long DonatorId)
@@ -70,7 +73,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count += Item.Count;
             }
             else
+            {
                 base.Add(Item);
+            }
         }
 
         internal Item GetByData(Data Data, int Level)
@@ -114,7 +119,7 @@ namespace CR.Servers.CoC.Logic
                 }
             }
             //else
-                //Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove.");
+            //Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove.");
         }
 
         internal void Set(int Id, int Count, int Level)
@@ -124,7 +129,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Count;
             }
             else
+            {
                 this.Add(new UnitItem(Id, Count, Level));
+            }
         }
 
         internal void Set(Data Data, int Count, int Level)
@@ -134,7 +141,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Count;
             }
             else
+            {
                 this.Add(new UnitItem(Data.GlobalId, Count, Level));
+            }
         }
 
         internal void Set(UnitItem Item)
@@ -144,7 +153,9 @@ namespace CR.Servers.CoC.Logic
                 Current.Count = Item.Count;
             }
             else
+            {
                 this.Add(Item);
+            }
         }
 
         internal void Encode(List<byte> Packet)
@@ -173,7 +184,7 @@ namespace CR.Servers.CoC.Logic
         {
             foreach (JToken Unit in Token)
             {
-                var Item = new UnitItem();
+                UnitItem Item = new UnitItem();
                 Item.Load(Unit);
                 this.Add(Item);
             }
@@ -181,11 +192,11 @@ namespace CR.Servers.CoC.Logic
 
         internal AllianceUnitSlots Copy()
         {
-            var Copy = this.MemberwiseClone() as AllianceUnitSlots;
+            AllianceUnitSlots Copy = this.MemberwiseClone() as AllianceUnitSlots;
 
             if (Copy != null)
             {
-                foreach (var Item in Copy)
+                foreach (UnitItem Item in Copy)
                 {
                     Item.DonatorId = 0;
                 }

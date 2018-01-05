@@ -1,19 +1,18 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Copy_Village_Layout : Command
     {
-        internal override int Type => 568;
+        internal int From;
+        internal int To;
 
         public Copy_Village_Layout(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int From;
-        internal int To;
+        internal override int Type => 568;
 
         internal override void Decode()
         {

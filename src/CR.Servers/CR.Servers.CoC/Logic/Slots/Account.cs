@@ -3,10 +3,10 @@
     internal class Account
     {
         internal int HighId;
+        internal Home Home;
         internal int LowId;
 
         internal Player Player;
-        internal Home Home;
 
         public Account(int HighID, int LowID, Player Player, Home Home)
         {
@@ -16,6 +16,6 @@
             this.Home = Home;
         }
 
-        internal long AccountId => (((long)this.HighId << 32) | (uint)this.LowId);
+        internal long AccountId => ((long) this.HighId << 32) | (uint) this.LowId;
     }
 }

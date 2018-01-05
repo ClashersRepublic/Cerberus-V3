@@ -1,43 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     [JsonConverter(typeof(MailConverter))]
     internal class MailEntry
     {
+        internal DateTime Created = DateTime.UtcNow;
         internal int HighId;
         internal int LowId;
 
+        internal byte New = 2;
+
         internal int SenderHighId;
-        internal int SenderLowId;
-        internal int SenderLevel;
         internal int SenderLeague;
+        internal int SenderLevel;
+        internal int SenderLowId;
 
         internal string SenderName;
-
-        internal byte New = 2;
-        
-        internal DateTime Created = DateTime.UtcNow;
-
-        internal int Age => (int)DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
-
-        internal long StreamId => (long)this.HighId << 32 | (uint)this.LowId;
-
-        internal virtual AvatarStream Type
-        {
-            get
-            {
-                Logging.Error(this.GetType(), "Type must be overrided");
-                return 0;
-            }
-        }
 
         public MailEntry()
         {
@@ -55,9 +41,22 @@ namespace CR.Servers.CoC.Logic
             this.SenderLeague = Player.League;
         }
 
+        internal int Age => (int) DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
+
+        internal long StreamId => ((long) this.HighId << 32) | (uint) this.LowId;
+
+        internal virtual AvatarStream Type
+        {
+            get
+            {
+                Logging.Error(this.GetType(), "Type must be overrided");
+                return 0;
+            }
+        }
+
         internal virtual void Encode(List<byte> Packet)
         {
-            Packet.AddInt((int)this.Type);
+            Packet.AddInt((int) this.Type);
             Packet.AddInt(this.HighId);
             Packet.AddInt(this.LowId);
 
@@ -98,7 +97,9 @@ namespace CR.Servers.CoC.Logic
                 JsonHelper.GetJsonByte(Base, "new", out this.New);
             }
             else
+            {
                 Logging.Error(this.GetType(), "Json doesn't contains base object!");
+            }
         }
 
         internal virtual JObject Save()
@@ -118,7 +119,7 @@ namespace CR.Servers.CoC.Logic
             JObject Json = new JObject
             {
                 {"type", (int) this.Type},
-                { "base", Base}
+                {"base", Base}
             };
 
             return Json;
@@ -127,6 +128,8 @@ namespace CR.Servers.CoC.Logic
 
     internal class MailConverter : JsonConverter
     {
+        public override bool CanWrite => true;
+
         public override bool CanConvert(Type Type)
         {
             return Type.BaseType == typeof(MailEntry) || Type == typeof(MailEntry);
@@ -157,24 +160,23 @@ namespace CR.Servers.CoC.Logic
 
                 return Entry;
             }
-            else
-                Logging.Info(this.GetType(), "ReadJson() - JsonObject doesn't contains 'type' key.");
+            Logging.Info(this.GetType(), "ReadJson() - JsonObject doesn't contains 'type' key.");
 
             return existingValue;
         }
 
-        public override bool CanWrite => true;
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            MailEntry Mail = (MailEntry)value;
+            MailEntry Mail = (MailEntry) value;
 
             if (Mail != null)
             {
                 Mail.Save().WriteTo(writer);
             }
             else
+            {
                 writer.WriteNull();
+            }
         }
     }
 }

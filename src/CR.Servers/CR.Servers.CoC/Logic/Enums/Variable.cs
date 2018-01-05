@@ -21,6 +21,6 @@
         LootLimitCooldown = 37000016,
         Village2BarrackLevel = 37000017,
         LootLimitFreeSpeedUp = 37000018,
-        SeenBuilderMenu = 37000019,
+        SeenBuilderMenu = 37000019
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CR.Servers.CoC.Logic.Enums
+﻿namespace CR.Servers.CoC.Logic.Enums
 {
     internal enum AvatarStream
     {
@@ -14,6 +8,5 @@ namespace CR.Servers.CoC.Logic.Enums
         KickedFromClan = 5,
         ClanMail = 6,
         Attack = 7
-
     }
 }

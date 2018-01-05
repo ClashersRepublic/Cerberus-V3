@@ -1,26 +1,25 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class ChatStreamEntry : StreamEntry
     {
-        internal override AllianceStream Type => AllianceStream.Chat;
-
-        public ChatStreamEntry() 
-        {
-
-        }
-
         internal string Message;
+
+        public ChatStreamEntry()
+        {
+        }
 
         public ChatStreamEntry(Member Member) : base(Member)
         {
         }
+
+        internal override AllianceStream Type => AllianceStream.Chat;
 
         internal override void Encode(List<byte> Packet)
         {

@@ -1,31 +1,31 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Buy_Trap : Command
     {
-        internal override int Type => 510;
-
-        public Buy_Trap(Device device, Reader reader) : base(device, reader)
-        {
-        }
+        internal TrapData TrapData;
 
 
         internal int X;
         internal int Y;
 
-        internal TrapData TrapData;
+        public Buy_Trap(Device device, Reader reader) : base(device, reader)
+        {
+        }
+
+        internal override int Type => 510;
 
 
         internal override void Decode()
         {
-            this.X = Reader.ReadInt32();
-            this.Y = Reader.ReadInt32();
+            this.X = this.Reader.ReadInt32();
+            this.Y = this.Reader.ReadInt32();
 
-            this.TrapData = Reader.ReadData<TrapData>();
+            this.TrapData = this.Reader.ReadData<TrapData>();
 
             base.Decode();
         }
@@ -34,7 +34,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
             if (this.TrapData != null)
             {
-                var Level = Device.GameMode.Level;
+                Level Level = this.Device.GameMode.Level;
                 //if (!Level.IsBuildingCapReached(this.BuildingData))
                 {
                     ResourceData ResourceData = this.TrapData.BuildResourceData;

@@ -1,24 +1,23 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+    using CR.Servers.Extensions.Binary;
+
     internal class Change_Avatar_Name : Message
     {
-        internal override short Type => 10212;
+        internal string AvatarName;
+        internal bool NameSetByUser;
 
         public Change_Avatar_Name(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
-        internal string AvatarName;
-        internal bool NameSetByUser;
+        internal override short Type => 10212;
 
         internal override void Decode()
         {
@@ -56,14 +55,20 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Avatar
                                         });
                                 }
                                 else
-                                    new Name_Change_Fail(this.Device) { Error = NameErrorReason.NameTooShort }.Send();
+                                {
+                                    new Name_Change_Fail(this.Device) {Error = NameErrorReason.NameTooShort}.Send();
+                                }
                             }
                             else
-                                new Name_Change_Fail(this.Device) { Error = NameErrorReason.NameInvalid }.Send();
+                            {
+                                new Name_Change_Fail(this.Device) {Error = NameErrorReason.NameInvalid}.Send();
+                            }
                         }
                     }
                     else
-                        new Name_Change_Fail(this.Device){Error = NameErrorReason.NameInvalid }.Send();
+                    {
+                        new Name_Change_Fail(this.Device) {Error = NameErrorReason.NameInvalid}.Send();
+                    }
                 }
             }
         }

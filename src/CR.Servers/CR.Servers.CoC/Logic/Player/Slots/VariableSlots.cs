@@ -1,23 +1,23 @@
-﻿using CR.Servers.CoC.Logic.Enums;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Logic.Enums;
+
     internal class VariableSlots : DataSlots
     {
         internal VariableSlots(int Capacity = 30) : base(Capacity)
         {
             // ResourceSlots.
         }
+
         internal int Village2BarrackLevel
         {
-            get => this.GetCountByGlobalId((int)Variable.Village2BarrackLevel);
+            get => this.GetCountByGlobalId((int) Variable.Village2BarrackLevel);
             set => this.Set(Variable.Village2BarrackLevel, value);
         }
 
 
         internal void Initialize()
         {
-
             this.Set(Variable.AccountBound, 0);
             this.Set(Variable.BeenInArrangedWar, 0);
             this.Set(Variable.ChallengeLayoutIsWar, 0);
@@ -42,7 +42,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void Set(Variable Resource, int Count)
         {
-            Set((int)Resource, Count);
+            this.Set((int) Resource, Count);
         }
     }
 }

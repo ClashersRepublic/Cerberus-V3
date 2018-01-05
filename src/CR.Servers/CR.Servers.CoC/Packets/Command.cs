@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Packets.Commands.Client.Battle;
-using CR.Servers.Extensions;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets
+﻿namespace CR.Servers.CoC.Packets
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Commands.Client.Battle;
+    using CR.Servers.Extensions;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     [JsonConverter(typeof(CommandConverter))]
     public class Command
     {
+        internal Device Device;
         internal int ExecuteSubTick = -1;
-        internal virtual int Type => 0;
-        internal virtual bool IsServerCommand => false;
 
         internal Reader Reader;
-        internal Device Device;
 
         public Command()
         {
@@ -40,6 +37,9 @@ namespace CR.Servers.CoC.Packets
             this.Reader = Reader;
         }
 
+        internal virtual int Type => 0;
+        internal virtual bool IsServerCommand => false;
+
         internal virtual void Decode()
         {
             this.ExecuteSubTick = this.Reader.ReadInt32();
@@ -47,7 +47,7 @@ namespace CR.Servers.CoC.Packets
 
         internal virtual void Encode(List<byte> Data)
         {
-            Data.AddInt(ExecuteSubTick);
+            Data.AddInt(this.ExecuteSubTick);
         }
 
         internal virtual void Execute()
@@ -62,7 +62,7 @@ namespace CR.Servers.CoC.Packets
         {
             return null;
         }
-        
+
         internal JObject SaveBase()
         {
             return new JObject
@@ -75,7 +75,7 @@ namespace CR.Servers.CoC.Packets
 
         internal void ShowBuffer()
         {
-            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
+            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
         }
 
         internal void ShowValues()
@@ -91,12 +91,14 @@ namespace CR.Servers.CoC.Packets
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 
     internal class CommandConverter : JsonConverter
     {
+        public override bool CanWrite => true;
+
         public override bool CanConvert(Type Type)
         {
             return Type.BaseType == typeof(Command) || Type == typeof(Command);
@@ -124,13 +126,10 @@ namespace CR.Servers.CoC.Packets
 
                 return Entry;
             }
-            else
-                Logging.Error(this.GetType(), "ReadJson() - JsonObject doesn't contains 'ct' key.");
+            Logging.Error(this.GetType(), "ReadJson() - JsonObject doesn't contains 'ct' key.");
 
             return existingValue;
         }
-
-        public override bool CanWrite => true;
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -141,7 +140,9 @@ namespace CR.Servers.CoC.Packets
                 Command.Save().WriteTo(writer);
             }
             else
+            {
                 writer.WriteNull();
+            }
         }
     }
 }

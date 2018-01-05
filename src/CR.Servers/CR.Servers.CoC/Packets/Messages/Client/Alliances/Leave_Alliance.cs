@@ -1,31 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.Extensions.Binary;
+
     internal class Leave_Alliance : Message
     {
-        internal override short Type => 14308;
-
         public Leave_Alliance(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
+
+        internal override short Type => 14308;
 
         internal override void Process()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
             if (Level.Player.InAlliance)
             {
-                var Alliance = Level.Player.Alliance;
+                Alliance Alliance = Level.Player.Alliance;
                 if (Alliance.Members.Quit(Level.Player.UserId, out Member Member))
                 {
                     if (Member.Role == Role.Leader)
@@ -82,12 +81,12 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                 if (NewLeader.Role == Role.Member)
                                 {
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted){SenderRole = Role.Elder});
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted){SenderRole = Role.CoLeader});
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted) {SenderRole = Role.Elder});
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted) {SenderRole = Role.CoLeader});
                                 }
                                 else if (NewLeader.Role == Role.Elder)
                                 {
-                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted) { SenderRole = Role.CoLeader });
+                                    Alliance.Streams.AddEntry(new EventStreamEntry(NewLeader, Member, AllianceEvent.Promoted) {SenderRole = Role.CoLeader});
                                 }
                                 else if (NewLeader.Role == Role.Leader)
                                 {
@@ -109,21 +108,26 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                 Member.Role = Role.CoLeader;
                                 Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Demoted));
-
                             }
                             else
+                            {
                                 Logging.Error(this.GetType(), "Error when leaving the clan. New leader is null");
+                            }
                         }
                     }
 
                     Alliance.Streams.AddEntry(new EventStreamEntry(Member, Member, AllianceEvent.Left));
-                    this.Device.GameMode.CommandManager.AddCommand(new Leaved_Alliance(this.Device) { AllianceId = Level.Player.AllianceId });
+                    this.Device.GameMode.CommandManager.AddCommand(new Leaved_Alliance(this.Device) {AllianceId = Level.Player.AllianceId});
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Error when leaving the clan. Quit() returned false");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Error when leaving the clan. InAlliance returned false");
+            }
         }
     }
 }

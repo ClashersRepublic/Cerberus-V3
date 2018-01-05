@@ -1,8 +1,8 @@
-﻿using CR.Servers.CoC.Packets;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Battle.Slots.Items
+﻿namespace CR.Servers.CoC.Logic.Battle.Slots.Items
 {
+    using CR.Servers.CoC.Packets;
+    using Newtonsoft.Json.Linq;
+
     public interface IBattle
     {
         double BattleTick { get; set; }

@@ -1,7 +1,7 @@
-﻿using CR.Servers.CoC.Extensions;
-
-namespace CR.Servers.CoC.Core
+﻿namespace CR.Servers.CoC.Core
 {
+    using CR.Servers.CoC.Extensions;
+
     internal class Settings
     {
         public static string PatchServer;
@@ -19,7 +19,6 @@ namespace CR.Servers.CoC.Core
             GameAssetsServer = Extension.ParseConfigString("Game:GameAssetsURL");
             ClientMajorVersion = Extension.ParseConfigString("Game:ClientMajorVersion");
             ClientMinorVersion = Extension.ParseConfigString("Game:ClientMinorVersion");
-
         }
     }
 }

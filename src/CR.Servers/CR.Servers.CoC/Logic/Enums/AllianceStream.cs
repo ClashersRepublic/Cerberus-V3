@@ -7,6 +7,6 @@
         JoinRequest = 3,
         AllianceEvent = 4,
         FriendChallenge = 12,
-        Gift = 16,
+        Gift = 16
     }
 }

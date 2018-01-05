@@ -6,7 +6,6 @@
 
         public Random()
         {
-
         }
 
         public Random(int Seed)
@@ -19,10 +18,12 @@
             int Seed = this.Seed;
 
             if (Seed == 0)
+            {
                 Seed = -1;
+            }
 
             int v2 = Seed ^ (Seed << 13) ^ ((Seed ^ (this.Seed << 13)) >> 17);
-            return 32 * v2 ^ v2;
+            return (32 * v2) ^ v2;
         }
 
         internal int Rand(int Max)

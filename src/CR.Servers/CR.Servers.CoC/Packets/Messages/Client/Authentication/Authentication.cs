@@ -1,43 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.CoC.Packets.Messages.Server.Authentication;
-using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-using CR.Servers.CoC.Packets.Messages.Server.Friend;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
+    using System;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.CoC.Packets.Messages.Server.Authentication;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+    using CR.Servers.CoC.Packets.Messages.Server.Friend;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Authentication : Message
     {
-        internal override short Type => 10101;
-
         internal int HighId;
-        internal int LowId;
 
-        internal string Token, MasterHash;
+        internal int LocaleId;
+        internal int LowId;
 
         internal int Major, Minor, Revision;
 
-        internal int LocaleId;
+        internal string Token, MasterHash;
 
 
         public Authentication(Device device, Reader reader) : base(device, reader)
         {
-            Device.State = State.LOGIN;
+            this.Device.State = State.LOGIN;
         }
+
+        internal override short Type => 10101;
 
         internal override void Decode()
         {
-            this.HighId = Reader.ReadInt32();
-            this.LowId = Reader.ReadInt32();
+            this.HighId = this.Reader.ReadInt32();
+            this.LowId = this.Reader.ReadInt32();
 
             this.Token = this.Reader.ReadString();
 
@@ -45,7 +44,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             this.Minor = this.Reader.ReadInt32();
             this.Revision = this.Reader.ReadInt32();
 
-            this.MasterHash = Reader.ReadString();
+            this.MasterHash = this.Reader.ReadString();
 
             this.Reader.ReadString();
             this.Device.Info.UDID = this.Reader.ReadString();
@@ -94,12 +93,12 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
                                                 if (!this.Reader.EndOfStream)
                                                 {
-                                                    this.Device.Info.ClientVersion =  this.Reader.ReadString().Split('.');
+                                                    this.Device.Info.ClientVersion = this.Reader.ReadString().Split('.');
 
                                                     if (!this.Reader.EndOfStream)
                                                     {
-                                                        this.Reader.ReadString(); 
-                                                        this.Reader.ReadString(); 
+                                                        this.Reader.ReadString();
+                                                        this.Reader.ReadString();
 
                                                         this.Reader.ReadVInt();
                                                     }
@@ -124,20 +123,24 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
             if (Resources.Closing)
             {
-                new Authentication_Failed(Device, LoginFailedReason.UpdateInProgress){Message = "The server is currently exiting and saving data, and you cannot log-in during this time. Please try again in a few minutes." }.Send();
+                new Authentication_Failed(this.Device, LoginFailedReason.UpdateInProgress) {Message = "The server is currently exiting and saving data, and you cannot log-in during this time. Please try again in a few minutes."}.Send();
                 return;
             }
 
             if (this.HighId == 0 && this.LowId == 0 && this.Token == null)
             {
-                var Account = Resources.Accounts.CreateAccount();
+                Account Account = Resources.Accounts.CreateAccount();
 
                 if (Account.Player != null && Account.Home != null)
                 {
                     if (Account.Player.Locked)
-                        new Authentication_Failed(Device, LoginFailedReason.Locked).Send();
+                    {
+                        new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
+                    }
                     else
+                    {
                         this.Login(Account);
+                    }
                 }
                 else
                 {
@@ -146,7 +149,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             }
             else
             {
-                var Account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
+                Account Account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
 
                 if (Account?.Player != null && Account?.Home != null)
                 {
@@ -190,18 +193,15 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
                     if (!string.IsNullOrEmpty(Settings.PatchServer))
                     {
-                        if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(MasterHash, Fingerprint.Sha))
+                        if (!string.IsNullOrEmpty(Fingerprint.Json) && !string.Equals(this.MasterHash, Fingerprint.Sha))
                         {
-                            new Authentication_Failed(Device, LoginFailedReason.Patch).Send();
+                            new Authentication_Failed(this.Device, LoginFailedReason.Patch).Send();
                             return false;
                         }
                     }
                     return true;
                 }
-                else
-                {
-                    new Authentication_Failed(this.Device, LoginFailedReason.Update).Send();
-                }
+                new Authentication_Failed(this.Device, LoginFailedReason.Update).Send();
             }
             else
             {
@@ -231,10 +231,12 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
             this.Device.Info.Locale = this.LocaleId >= 0 ? this.LocaleId : 2000000;
 
-            var Player = account.Player;
+            Player Player = account.Player;
 
             if (this.Device.UseRC4)
+            {
                 new SessionKey(this.Device).Send();
+            }
 
             new Authentication_OK(this.Device).Send();
 
@@ -247,7 +249,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
                 try
                 {
-                    new Alliance_Stream(this.Device) { Alliance = Player.Alliance }.Send();
+                    new Alliance_Stream(this.Device) {Alliance = Player.Alliance}.Send();
                 }
                 catch (Exception Exception)
                 {
@@ -266,7 +268,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             {
                 Resources.Chats.Join(this.Device);
             }
-            
         }
     }
 }

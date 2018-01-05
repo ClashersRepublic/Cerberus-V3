@@ -1,30 +1,16 @@
-﻿using CR.Servers.CoC.Packets;
-using CR.Servers.Extensions;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Core.Network
+﻿namespace CR.Servers.CoC.Core.Network
 {
+    using CR.Servers.CoC.Packets;
+    using CR.Servers.Extensions;
+    using CR.Servers.Logic.Enums;
+
     internal static class Processor
     {
-        internal static void Send(this Message Message)
+        internal static void Send(this Message message)
         {
-            if (Message.Device.State != State.DISCONNECTED)
+            if (message.Device.Connected)
             {
-                if (Message.Device.Connected)
-                {
-                    Message.Encode();
-                    Message.Encrypt();
-                    Message.Process();
-
-                    if (Message.Device.UseRC4)
-                    {
-                        
-                    }
-
-                    Logging.Info(typeof(Processor), "Packet " + ConsolePad.Padding(Message.GetType().Name) + "    sent to    " + Message.Device.Token.Socket.RemoteEndPoint + ".");
-
-                    Resources.Gateway.Send(Message.ToBytes, Message.Device.Token.Socket);
-                }
+                Resources.PacketManager.SendMessageQueue.Enqueue(message);
             }
         }
     }

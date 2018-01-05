@@ -1,19 +1,20 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Change_Hero_State : Command
     {
-        internal override int Type => 529;
+        internal int BuildingId;
+        internal bool Sleeping;
 
         public Change_Hero_State(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 
-        internal int BuildingId;
-        internal bool Sleeping;
+        internal override int Type => 529;
 
         internal override void Decode()
         {
@@ -24,31 +25,39 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var level = this.Device.GameMode.Level;
-            var gameObject = level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            Level level = this.Device.GameMode.Level;
+            GameObject gameObject = level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
             if (gameObject != null)
             {
                 if (gameObject is Building building)
                 {
-                    var HeroBaseComponent = building.HeroBaseComponent;
+                    HeroBaseComponent HeroBaseComponent = building.HeroBaseComponent;
                     if (HeroBaseComponent != null)
                     {
-                        var HeroData = HeroBaseComponent.HeroData;
+                        HeroData HeroData = HeroBaseComponent.HeroData;
                         if (HeroData != null)
                         {
                             level.Player.HeroStates.Set(HeroData, this.Sleeping ? 2 : 3);
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to change hero state. Hero data is null.");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to change hero state. The HeroBaseComponent is null.");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to change hero state. The game object is not a building.");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to change hero state. The game object is null.");
+            }
         }
     }
 }

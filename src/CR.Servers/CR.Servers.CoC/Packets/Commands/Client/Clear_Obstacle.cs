@@ -1,32 +1,32 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Clear_Obstacle : Command
     {
-        internal override int Type => 507;
+        internal int ObstacleId;
 
         public Clear_Obstacle(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int ObstacleId;
+        internal override int Type => 507;
 
         internal override void Decode()
         {
-            this.ObstacleId = Reader.ReadInt32();
+            this.ObstacleId = this.Reader.ReadInt32();
             base.Decode();
         }
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
-            var GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.ObstacleId);
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.ObstacleId);
 
             if (GameObject != null)
             {
@@ -58,21 +58,31 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     }
                                 }
                                 else
+                                {
                                     Logging.Error(this.GetType(),
                                         "Unable to start clearing the Obstacle. The player doesn't reach THV2 level for clearing obstacle.");
+                                }
                             }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. The player doesn't have enough resources.");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. The resources data is null.");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. GameObject is not an obstacle.");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to start clearing the Obstacle. GameObject is null");
+            }
         }
     }
 }

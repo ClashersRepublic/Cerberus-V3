@@ -1,19 +1,19 @@
-﻿using System;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Battle
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using System;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class V2_Battle_Info : Message
     {
-        internal override short Type => 24372;
+        internal Level Enemy;
 
         public V2_Battle_Info(Device Device, Level Enemy) : base(Device)
         {
             this.Enemy = Enemy;
         }
 
-        internal Level Enemy;
+        internal override short Type => 24372;
 
         internal override void Encode()
         {
@@ -40,8 +40,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
             this.Data.AddVInt(15000);
             this.Data.AddVInt(15000);
             this.Data.AddVInt(0);
-            this.Data.AddVInt((int)TimeSpan.FromMinutes(4).TotalSeconds);
-
+            this.Data.AddVInt((int) TimeSpan.FromMinutes(4).TotalSeconds);
         }
     }
 }

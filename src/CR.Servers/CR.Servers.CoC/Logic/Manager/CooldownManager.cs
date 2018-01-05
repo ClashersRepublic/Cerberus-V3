@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Manager
+﻿namespace CR.Servers.CoC.Logic.Manager
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using Newtonsoft.Json.Linq;
+
     internal class CooldownManager
     {
+        internal List<Cooldown> Cooldowns;
+
+        internal Level Level;
+
         public CooldownManager(Level Level)
         {
             this.Level = Level;
             this.Cooldowns = new List<Cooldown>();
         }
 
-        internal Level Level;
-        internal List<Cooldown> Cooldowns;
-
         internal void AddCooldown(int Cooldown, int Target)
         {
             this.Cooldowns.Add(new Cooldown(this.Level, Cooldown, Target));
         }
+
         internal void FastForwardTime(int Seconds)
         {
             this.Cooldowns.ForEach(Cooldown => Cooldown.FastForwardTime(Seconds));
@@ -53,10 +55,7 @@ namespace CR.Servers.CoC.Logic.Manager
         {
             JArray Cooldowns = new JArray();
 
-            this.Cooldowns.ForEach(Cooldown =>
-            {
-                Cooldowns.Add(Cooldown.Save());
-            });
+            this.Cooldowns.ForEach(Cooldown => { Cooldowns.Add(Cooldown.Save()); });
 
             Json.Add("cooldowns", Cooldowns);
         }

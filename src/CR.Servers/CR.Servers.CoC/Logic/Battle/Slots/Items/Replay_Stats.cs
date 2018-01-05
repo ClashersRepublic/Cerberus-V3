@@ -1,50 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Battle.Slots.Items
+﻿namespace CR.Servers.CoC.Logic.Battle.Slots.Items
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     internal class Replay_Stats
     {
-        [JsonProperty] internal bool TownHallDestroyed;
-
-        [JsonProperty] internal bool BattleEnded;
-
-        [JsonProperty] internal bool AllianceUsed;
-
-        [JsonProperty] internal int DestructionPercentage;
-
-        [JsonProperty] internal int BattleTime;
-
-        [JsonProperty] internal int OriginalAttackerScore;
-
-        [JsonProperty] internal int AttackerScore;
-
-        [JsonProperty] internal int OriginalDefenderScore;
-
-        [JsonProperty] internal int DefenderScore = 0;
-
-        [JsonProperty] internal string AllianceName = string.Empty;
-
-        [JsonProperty] internal int AttackerStars = 0;
-
-        [JsonProperty] internal int[] HomeId = { 0, 0 };
-
         [JsonProperty] internal int AllianceBadge = -1;
 
         [JsonProperty] internal int AllianceBadge2 = -1;
 
-        [JsonProperty] internal int DeployedHousingSpace;
+        [JsonProperty] internal string AllianceName = string.Empty;
+
+        [JsonProperty] internal bool AllianceUsed;
 
         [JsonProperty] internal int ArmyDeploymentPercentage;
 
+        [JsonProperty] internal int AttackerScore;
+
+        [JsonProperty] internal int AttackerStars;
+
+        [JsonProperty] internal bool BattleEnded;
+
+        [JsonProperty] internal int BattleTime;
+
+        [JsonProperty] internal int DefenderScore;
+
+        [JsonProperty] internal int DeployedHousingSpace;
+
+        [JsonProperty] internal int DestructionPercentage;
+
+        [JsonProperty] internal int[] HomeId = {0, 0};
+
+        [JsonProperty] internal int OriginalAttackerScore;
+
+        [JsonProperty] internal int OriginalDefenderScore;
+        [JsonProperty] internal bool TownHallDestroyed;
+
         internal JObject Save()
         {
-            var Json = new JObject
+            JObject Json = new JObject
             {
                 {"townhallDestroyed", this.TownHallDestroyed},
                 {"battleEnded", this.BattleEnded},

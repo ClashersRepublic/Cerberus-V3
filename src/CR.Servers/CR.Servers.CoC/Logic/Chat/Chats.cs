@@ -1,19 +1,19 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-
-namespace CR.Servers.CoC.Logic.Chat
+﻿namespace CR.Servers.CoC.Logic.Chat
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+
     internal class Chats : Dictionary<int, ConcurrentStack<Chat>>
     {
         internal Chats()
         {
             foreach (LocaleData Data in CSV.Tables.Get(Gamefile.Locales).Datas)
             {
-                for (int i = 0; i < Math.Max(Constants.MaxPlayers / 25, 1); i++)
+                for (int i = 0; i < Math.Max(Constants.MaxPlayers / 50, 1); i++)
                 {
                     if (!this.ContainsKey(Data.GlobalId))
                     {
@@ -23,7 +23,6 @@ namespace CR.Servers.CoC.Logic.Chat
                     this[Data.GlobalId].Push(new Chat());
                 }
             }
-            
         }
 
         internal void Join(Device Device)
@@ -32,7 +31,7 @@ namespace CR.Servers.CoC.Logic.Chat
             {
                 if (Device.Chat == null && Device.GameMode.Level.Player != null)
                 {
-                    if (Device.Info.Locale!= 0)
+                    if (Device.Info.Locale != 0)
                     {
                         if (this.TryGetValue(Device.Info.Locale, out ConcurrentStack<Chat> Chats))
                         {

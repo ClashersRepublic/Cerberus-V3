@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Change_Weapon_Heading : Command
     {
-        internal override int Type => 554;
+        internal int BuildingID;
 
         public Change_Weapon_Heading(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int BuildingID;
+        internal override int Type => 554;
 
         internal override void Decode()
         {
@@ -31,15 +26,15 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
-            var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingID);
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingID);
 
             if (GameObject != null)
             {
                 if (GameObject is Building Building)
                 {
-                    var CombatComponent = Building.CombatComponent;
+                    CombatComponent CombatComponent = Building.CombatComponent;
 
                     if (CombatComponent != null)
                     {
@@ -50,11 +45,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to change the weapon heading. The CombatComponent for the game object is null.");
+                    }
                 }
                 else if (GameObject is Trap Trap)
                 {
-                    var CombatComponent = Trap.CombatComponent;
+                    CombatComponent CombatComponent = Trap.CombatComponent;
 
                     if (CombatComponent != null)
                     {
@@ -65,14 +62,20 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                         }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to change the trap heading. The CombatComponent for the game object is null.");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(),
                         "Unable to change the weapon heading. Unable to determine game object");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to change the weapon heading. The game object is null.");
+            }
         }
     }
 }

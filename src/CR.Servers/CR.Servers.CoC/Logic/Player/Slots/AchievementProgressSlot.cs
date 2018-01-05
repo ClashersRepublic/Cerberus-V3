@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+
     internal class AchievementProgressSlot : DataSlots
     {
         internal Player Player;
@@ -35,12 +29,12 @@ namespace CR.Servers.CoC.Logic
                         {
                             case "upgrade":
                             {
-                                var Data = CSV.Tables.Get(Gamefile.Buildings).GetData(Achievement.ActionData);
+                                Data Data = CSV.Tables.Get(Gamefile.Buildings).GetData(Achievement.ActionData);
                                 if (Data != null)
                                 {
                                     if (Data is BuildingData BuildingData)
                                     {
-                                        var Buildings =
+                                        List<GameObject> Buildings =
                                             this.Player.Level.GameObjectManager.Filter.GetGameObjectsByData(
                                                 BuildingData);
 
@@ -63,7 +57,7 @@ namespace CR.Servers.CoC.Logic
 
                             case "unit_unlock":
                             {
-                                var Data = CSV.Tables.Get(Gamefile.Characters).GetData(Achievement.ActionData);
+                                Data Data = CSV.Tables.Get(Gamefile.Characters).GetData(Achievement.ActionData);
                                 if (Data != null)
                                 {
                                     if (Data is CharacterData CharacterData)
@@ -80,7 +74,6 @@ namespace CR.Servers.CoC.Logic
                                             {
                                                 Building = this.Player.Level.ComponentManager.MaxDarkBarrackLevel + 1 >=
                                                            CharacterData.BarrackLevel;
-
                                             }
                                         }
                                         else
@@ -141,7 +134,7 @@ namespace CR.Servers.CoC.Logic
 
                             case "gear_up":
                             {
-                                var Buildings = this.Player.Level.GameObjectManager.GameObjects[0][0].ToArray();
+                                GameObject[] Buildings = this.Player.Level.GameObjectManager.GameObjects[0][0].ToArray();
                                 int GearUp = Buildings.Cast<Building>().Count(Building => Building?.CombatComponent?.GearUp > 0);
 
                                 this.Set(Achievement.GlobalId, GearUp);
@@ -154,15 +147,15 @@ namespace CR.Servers.CoC.Logic
 
                             case "repair_building":
                             {
-                                var Data = CSV.Tables.Get(Gamefile.Buildings).GetData(Achievement.ActionData);
+                                Data Data = CSV.Tables.Get(Gamefile.Buildings).GetData(Achievement.ActionData);
                                 if (Data != null)
                                 {
                                     if (Data is BuildingData BuildingData)
                                     {
-                                        var Buildings = this.Player.Level.GameObjectManager.Filter.GetGameObjectsByData(BuildingData);
+                                        List<GameObject> Buildings = this.Player.Level.GameObjectManager.Filter.GetGameObjectsByData(BuildingData);
                                         if (Buildings != null && Buildings.Count > 0)
                                         {
-                                            var Gameobject = Buildings[0];
+                                            GameObject Gameobject = Buildings[0];
                                             if (Gameobject is Building Building)
                                             {
                                                 if (!Building.Locked)
@@ -185,7 +178,7 @@ namespace CR.Servers.CoC.Logic
         {
             this.Refresh();
 
-            var Data = CSV.Tables.Get(Gamefile.Achievements).GetDataWithID(GlobalId);
+            Data Data = CSV.Tables.Get(Gamefile.Achievements).GetDataWithID(GlobalId);
             if (Data != null)
             {
                 if (Data is AchievementData Achievement)

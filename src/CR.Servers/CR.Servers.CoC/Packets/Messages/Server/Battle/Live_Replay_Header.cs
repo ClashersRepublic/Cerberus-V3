@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Battle
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class Live_Replay_Header : Message
     {
-        internal override short Type => 24118;
+        internal List<Command> InitialCommands;
+
+        internal int InitialStreamEndSubTick;
+
+        internal string ReplayHeaderJson;
 
         public Live_Replay_Header(Device Device) : base(Device)
         {
             this.Version = 9;
         }
 
-        internal string ReplayHeaderJson;
-
-        internal int InitialStreamEndSubTick;
-        internal List<Command> InitialCommands;
+        internal override short Type => 24118;
 
         internal override void Encode()
         {

@@ -1,22 +1,21 @@
-﻿using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.Extensions.Binary;
+
     internal class Send_Alliance_Mail : Command
     {
-        internal override int Type => 537;
+        internal string Message;
 
         public Send_Alliance_Mail(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal string Message;
+        internal override int Type => 537;
 
         internal override void Decode()
         {
@@ -26,7 +25,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (!Level.GameObjectManager.Bunker.Locked)
             {
                 BunkerComponent BunkerComponent = Level.GameObjectManager.Bunker.BunkerComponent;

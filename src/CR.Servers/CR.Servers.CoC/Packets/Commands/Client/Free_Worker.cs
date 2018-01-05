@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Free_Worker : Command
     {
-        internal override int Type => 521;
+        internal Command Command;
+        internal bool EmbedCommand;
+
+        internal int TimeLeft;
+        internal int VillageWorker;
 
         public Free_Worker(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal int TimeLeft;
-        internal int VillageWorker;
-        internal bool EmbedCommand;
-        internal Command Command;
+        internal override int Type => 521;
 
         internal override void Decode()
         {
@@ -30,15 +27,15 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             if (this.EmbedCommand)
             {
-                var CommandID = this.Reader.ReadInt32();
+                int CommandID = this.Reader.ReadInt32();
 
                 if (Factory.Commands.ContainsKey(CommandID))
                 {
-                    Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
+                    this.Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
 
-                    if (Command != null)
+                    if (this.Command != null)
                     {
-                        Command.Decode();
+                        this.Command.Decode();
                     }
                 }
                 else
@@ -52,7 +49,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
         internal override void Execute()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
 
             if (this.VillageWorker == 0)
             {
@@ -64,7 +61,6 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 {
                     Logging.Error(this.GetType(), "Free worker called even when there is free worker!");
                 }
-
             }
             else
             {
@@ -77,7 +73,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     Logging.Error(this.GetType(), "Free worker called even when there is free worker!");
                 }
             }
-                
+
             if (this.Command != null)
             {
                 try
@@ -85,11 +81,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     if (!this.Command.IsServerCommand)
                     {
                         this.Command.Execute();
-                        Logging.Info(this.GetType(), "Embedded Command is handled! (" + Command.Type + ")");
+                        Logging.Info(this.GetType(), "Embedded Command is handled! (" + this.Command.Type + ")");
                     }
                     else
                     {
-                        Logging.Error(this.GetType(), "Unable to execute server command as embedded command! (" + Command.Type + ")");
+                        Logging.Error(this.GetType(), "Unable to execute server command as embedded command! (" + this.Command.Type + ")");
                     }
                 }
                 catch (Exception Exception)

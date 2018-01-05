@@ -1,100 +1,46 @@
-﻿using System;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Battle.Manager;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Logic.Manager;
-using CR.Servers.CoC.Logic.Map;
-using CR.Servers.CoC.Logic.Mode;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Battle.Manager;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Logic.Manager;
+    using CR.Servers.CoC.Logic.Map;
+    using CR.Servers.CoC.Logic.Mode;
+    using CR.Servers.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class Level
     {
         internal bool AI;
 
-        internal Player Player;
-        internal Home Home;
-
-        internal GameMode GameMode;
-        internal TileMap TileMap;
-
-        internal GameObjectManager GameObjectManager;
-        internal WorkerManager WorkerManager;
-        internal WorkerManagerV2 WorkerManagerV2;
-        internal ComponentManager ComponentManager;
-        internal UnitProductionManager UnitProductionManager;
-        internal SpellProductionManager SpellProductionManager;
+        internal string[] ArmyNames = {"", "", "", ""};
         //internal CooldownManager CooldownManager;
 
         internal BattleManager BattleManager;
+        internal ComponentManager ComponentManager;
 
-        internal int WidthInTiles => 50;
+        internal bool EditModeShown;
 
-        internal int HeightInTiles => 50;
+        internal GameMode GameMode;
 
-        internal Time Time => this.GameMode.Time;
-        internal State State => this.GameMode.Device.State;
+        internal GameObjectManager GameObjectManager;
+        internal Home Home;
 
         internal int LastLeagueRank;
         internal int LastLeagueShuffleInfo;
 
-        internal bool EditModeShown;
+        internal Player Player;
+        internal SpellProductionManager SpellProductionManager;
+        internal TileMap TileMap;
 
         internal string TroopRequestMessage = "I need reinforcements";
+        internal UnitProductionManager UnitProductionManager;
         internal string WarRequestMessage = "I need reinforcements";
-
-        internal string[] ArmyNames = { "", "", "", "" };
-
-        internal int TombStoneCount
-        {
-            get
-            {
-                var Count = 0;
-
-                this.GameObjectManager.GameObjects[3][0].ForEach(GameObject =>
-                {
-                    var Obstacle = (Obstacle)GameObject;
-
-                    if (Obstacle.ObstacleData.IsTombstone)
-                    {
-                        ++Count;
-                    }
-                });
-
-                return Count;
-            }
-        }
-
-        internal int TombStoneV2Count
-        {
-            get
-            {
-                var Count = 0;
-
-                this.GameObjectManager.GameObjects[3][1].ForEach(GameObject =>
-                {
-                    var Obstacle = (Obstacle)GameObject;
-
-                    if (Obstacle.ObstacleData.IsTombstone)
-                    {
-                        ++Count;
-                    }
-                });
-
-                return Count;
-            }
-        }
-
-        internal bool IsBuildingCapReached(BuildingData Data)
-        {
-            var TownHallLevel = Data.VillageType == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
-            var LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel + 1);
-            return GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
-        }
+        internal WorkerManager WorkerManager;
+        internal WorkerManagerV2 WorkerManagerV2;
 
         public Level()
         {
@@ -126,10 +72,64 @@ namespace CR.Servers.CoC.Logic
                 NameSetByUser = true,
                 Score = 9999,
                 League = 22,
-                ExpLevel = 300,
+                ExpLevel = 300
             };
 
             this.Home = new Home();
+        }
+
+        internal int WidthInTiles => 50;
+
+        internal int HeightInTiles => 50;
+
+        internal Time Time => this.GameMode.Time;
+        internal State State => this.GameMode.Device.State;
+
+        internal int TombStoneCount
+        {
+            get
+            {
+                int Count = 0;
+
+                this.GameObjectManager.GameObjects[3][0].ForEach(GameObject =>
+                {
+                    Obstacle Obstacle = (Obstacle) GameObject;
+
+                    if (Obstacle.ObstacleData.IsTombstone)
+                    {
+                        ++Count;
+                    }
+                });
+
+                return Count;
+            }
+        }
+
+        internal int TombStoneV2Count
+        {
+            get
+            {
+                int Count = 0;
+
+                this.GameObjectManager.GameObjects[3][1].ForEach(GameObject =>
+                {
+                    Obstacle Obstacle = (Obstacle) GameObject;
+
+                    if (Obstacle.ObstacleData.IsTombstone)
+                    {
+                        ++Count;
+                    }
+                });
+
+                return Count;
+            }
+        }
+
+        internal bool IsBuildingCapReached(BuildingData Data)
+        {
+            int TownHallLevel = Data.VillageType == 0 ? this.GameObjectManager.TownHall.GetUpgradeLevel() : this.GameObjectManager.TownHall2.GetUpgradeLevel();
+            TownhallLevelData LevelData = (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(TownHallLevel + 1);
+            return this.GameObjectManager.Filter.GetGameObjectCount(Data, -1) >= LevelData?.Caps[Data];
         }
 
         internal void FastForwardTime(int Seconds)
@@ -139,7 +139,7 @@ namespace CR.Servers.CoC.Logic
             this.SpellProductionManager.FastForwardTime(Seconds);
             //this.CooldownManager.FastForwardTime(Seconds);
         }
-        
+
         internal void Process()
         {
             this.GameObjectManager.Process();
@@ -164,7 +164,7 @@ namespace CR.Servers.CoC.Logic
             this.Home = Home;
             this.Home.Level = this;
 
-            var Token = Home.LastSave;
+            JToken Token = Home.LastSave;
             this.GameObjectManager.Load(Token);
             this.UnitProductionManager.Load(Token["units"]?["unit_prod"]);
             this.SpellProductionManager.Load(Token["spells"]?["unit_prod"]);
@@ -178,7 +178,7 @@ namespace CR.Servers.CoC.Logic
             JsonHelper.GetJsonString(Token, "troop_req_msg", out this.TroopRequestMessage);
             JsonHelper.GetJsonString(Token, "war_req_msg", out this.WarRequestMessage);
 
-            if (JsonHelper.GetJsonArray(Token, "army_names", out var Army))
+            if (JsonHelper.GetJsonArray(Token, "army_names", out JArray Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();
             }
@@ -186,7 +186,7 @@ namespace CR.Servers.CoC.Logic
 
         internal JObject Battle()
         {
-            var Json = new JObject {{"exp_ver", 1}};
+            JObject Json = new JObject {{"exp_ver", 1}};
 
             this.GameObjectManager.Save(Json);
             this.Player.Battle(Json);
@@ -196,10 +196,10 @@ namespace CR.Servers.CoC.Logic
 
         internal JObject BattleV2()
         {
-            var Json = new JObject
+            JObject Json = new JObject
             {
-                { "exp_ver", 1 } ,
-                { "direct2", true }            
+                {"exp_ver", 1},
+                {"direct2", true}
             };
 
             this.GameObjectManager.SaveV2(Json);
@@ -219,7 +219,7 @@ namespace CR.Servers.CoC.Logic
             JsonHelper.GetJsonNumber(Json, "last_league_shuffle", out this.LastLeagueShuffleInfo);
             JsonHelper.GetJsonBoolean(Json, "edit_mode_shown", out this.EditModeShown);
             JsonHelper.GetJsonString(Json, "troop_req_msg", out this.TroopRequestMessage);
-            if (JsonHelper.GetJsonArray(Json, "army_names", out var Army))
+            if (JsonHelper.GetJsonArray(Json, "army_names", out JArray Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();
             }
@@ -229,8 +229,7 @@ namespace CR.Servers.CoC.Logic
         {
             JObject Json = new JObject
             {
-                {"exp_ver", 1},
-                
+                {"exp_ver", 1}
             };
 
             this.GameObjectManager.Save(Json);
@@ -265,7 +264,6 @@ namespace CR.Servers.CoC.Logic
             Json.Add("army_names", new JArray
             {
                 this.ArmyNames
-                
             });
 
 
@@ -286,7 +284,7 @@ namespace CR.Servers.CoC.Logic
 
         internal bool IsValidPlaceForObstacle(ObstacleData Data, int X, int Y, int Width, int Height, bool Edge)
         {
-            var Valid = false;
+            bool Valid = false;
 
             if (X >= 0 && Y >= 0)
             {
@@ -304,11 +302,11 @@ namespace CR.Servers.CoC.Logic
 
                     if (Width > 0 && Height > 0)
                     {
-                        for (var i = 0; i < Width; i++)
+                        for (int i = 0; i < Width; i++)
                         {
-                            for (var j = 0; j < Height; j++)
+                            for (int j = 0; j < Height; j++)
                             {
-                                var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
 
                                 if (Tile != null)
                                 {
@@ -328,7 +326,7 @@ namespace CR.Servers.CoC.Logic
 
         internal bool IsValidPlaceForBuilding(ObstacleData Data, int X, int Y, int Width, int Height)
         {
-            var Valid = false;
+            bool Valid = false;
 
             if (X >= 0 && Y >= 0)
             {
@@ -338,11 +336,11 @@ namespace CR.Servers.CoC.Logic
 
                     if (Width > 0 && Height > 0)
                     {
-                        for (var i = 0; i < Width; i++)
+                        for (int i = 0; i < Width; i++)
                         {
-                            for (var j = 0; j < Height; j++)
+                            for (int j = 0; j < Height; j++)
                             {
-                                var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
 
                                 if (Tile != null)
                                 {
@@ -362,7 +360,7 @@ namespace CR.Servers.CoC.Logic
 
         internal bool IsValidPlaceForBuilding(BuildingData Data, int X, int Y, int Width, int Height)
         {
-            var Valid = false;
+            bool Valid = false;
 
             if (X >= 0 && Y >= 0)
             {
@@ -372,11 +370,11 @@ namespace CR.Servers.CoC.Logic
 
                     if (Width > 0 && Height > 0)
                     {
-                        for (var i = 0; i < Width; i++)
+                        for (int i = 0; i < Width; i++)
                         {
-                            for (var j = 0; j < Height; j++)
+                            for (int j = 0; j < Height; j++)
                             {
-                                var Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
 
                                 if (Tile != null)
                                 {

@@ -1,26 +1,24 @@
-﻿using System;
-using System.Runtime.Serialization;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic.Enums;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic.Clan.Items
+﻿namespace CR.Servers.CoC.Logic.Clan.Items
 {
+    using System;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json;
+
     internal class Member
     {
+        private Player _Player;
         [JsonProperty] internal int HighId;
+        [JsonProperty] internal DateTime Joined;
         [JsonProperty] internal int LowId;
+
+        [JsonProperty] internal Role Role;
 
         [JsonProperty] internal int TroopReceived;
         [JsonProperty] internal int TroopSended;
 
-        [JsonProperty] internal Role Role;
-        [JsonProperty] internal DateTime Joined;
-
-        private Player _Player;
-
         internal Member()
-        {       
+        {
         }
 
         internal Member(Player Player)
@@ -33,25 +31,29 @@ namespace CR.Servers.CoC.Logic.Clan.Items
             this.Role = Role.Member;
         }
 
-        internal long PlayerId => (long) this.HighId << 32 | (uint) this.LowId;
-        internal int New => Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
-        internal int TimeSinceJoined => (int)DateTime.UtcNow.Subtract(this.Joined).TotalSeconds;
+        internal long PlayerId => ((long) this.HighId << 32) | (uint) this.LowId;
+        internal int New => this.Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
+        internal int TimeSinceJoined => (int) DateTime.UtcNow.Subtract(this.Joined).TotalSeconds;
 
         internal Player Player
         {
             get
             {
-                if (_Player != null)
-                    return _Player;
+                if (this._Player != null)
+                {
+                    return this._Player;
+                }
 
-                _Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
+                this._Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
 
-                if (_Player == null)
-                    Logging.Error(this.GetType(), $"LoadLevel returned null for Player with account id {HighId} - {LowId}");
+                if (this._Player == null)
+                {
+                    Logging.Error(this.GetType(), $"LoadLevel returned null for Player with account id {this.HighId} - {this.LowId}");
+                }
 
-                return _Player;
+                return this._Player;
             }
-            set => _Player = value;
+            set => this._Player = value;
         }
     }
 }

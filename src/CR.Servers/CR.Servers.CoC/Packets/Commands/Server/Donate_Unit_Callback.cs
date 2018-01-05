@@ -1,35 +1,33 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Commands.Server
+﻿namespace CR.Servers.CoC.Packets.Commands.Server
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+
     internal class Donate_Unit_Callback : ServerCommand
     {
-        internal override int Type => 4;
+        internal long StreamId;
+        internal int UnitId;
+        internal int UnitType;
+        internal bool UseDiamonds;
 
         public Donate_Unit_Callback(Device Device, Reader Reader) : base(Device, Reader)
         {
-
         }
 
         public Donate_Unit_Callback(Device Device) : base(Device)
         {
-
         }
 
-        internal long StreamId;
-        internal int UnitType;
-        internal int UnitId;
-        internal bool UseDiamonds;
+        internal override int Type => 4;
 
         internal override void Encode(List<byte> Data)
         {
             Data.AddLong(this.StreamId);
-            Data.AddInt(this.UnitType); 
+            Data.AddInt(this.UnitType);
             Data.AddInt(this.UnitId);
-            Data.AddBool(this.UseDiamonds); 
+            Data.AddBool(this.UseDiamonds);
             base.Encode(Data);
         }
 

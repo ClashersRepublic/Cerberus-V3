@@ -1,28 +1,28 @@
-﻿using System;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using System;
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.Binary;
+
     internal class Respond_To_Alliance_Join_Request : Message
     {
-        internal override short Type => 14321;
+        internal bool Decision;
+
+        internal long StreamId;
 
         public Respond_To_Alliance_Join_Request(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal long StreamId;
-        internal bool Decision;
+        internal override short Type => 14321;
 
         internal override void Decode()
         {
@@ -32,17 +32,17 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            var Player = this.Device.GameMode.Level.Player;
-            var Alliance = Player.Alliance;
+            Player Player = this.Device.GameMode.Level.Player;
+            Alliance Alliance = Player.Alliance;
 
             if (Alliance != null)
             {
-                var AllianceMember = Player.AllianceMember;
+                Member AllianceMember = Player.AllianceMember;
                 if (AllianceMember != null)
                 {
                     if (AllianceMember.Role != Role.Member)
                     {
-                        var Stream = Alliance.Streams.Get(this.StreamId);
+                        StreamEntry Stream = Alliance.Streams.Get(this.StreamId);
 
                         if (Stream != null)
                         {
@@ -50,13 +50,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                             {
                                 if (this.Decision)
                                 {
-                                    var Target = Resources.Accounts.LoadAccount(JoinRequest.SenderHighId, JoinRequest.SenderLowId)?.Player;
+                                    Player Target = Resources.Accounts.LoadAccount(JoinRequest.SenderHighId, JoinRequest.SenderLowId)?.Player;
 
                                     if (Target != null)
                                     {
                                         if (Target.AllianceId == 0)
                                         {
-                                            foreach (var entry in Target.Inbox.Entries.Values .Where(T => T.Type == AvatarStream.Invitation).ToArray())
+                                            foreach (MailEntry entry in Target.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
                                             {
                                                 Target.Inbox.Remove(entry);
                                             }
@@ -73,7 +73,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
                                                     try
                                                     {
-                                                        new Alliance_Stream(this.Device) { Alliance = Alliance }.Send();
+                                                        new Alliance_Stream(this.Device) {Alliance = Alliance}.Send();
                                                     }
                                                     catch (Exception Exception)
                                                     {
@@ -101,7 +101,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                                 Alliance.Streams.AddEntry(new EventStreamEntry(Member, AllianceMember, AllianceEvent.Accepted));
                                             }
                                             else
+                                            {
                                                 Logging.Error(this.GetType(), "Unable to respond to alliance join request. Join() function returned false!");
+                                            }
                                         }
                                         else
                                         {
@@ -109,7 +111,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                         }
                                     }
                                     else
+                                    {
                                         Logging.Error(this.GetType(), "Unable to respond to alliance join request. The target player is null!");
+                                    }
                                 }
 
                                 JoinRequest.Judge = Player.Name;
@@ -117,19 +121,29 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                 Alliance.Streams.Update(JoinRequest);
                             }
                             else
+                            {
                                 Logging.Error(this.GetType(), "Unable to respond to alliance join request. The stream is not JoinRequestStreamEntry!");
+                            }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to respond to alliance join request. The stream is null!");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to respond to alliance join request. The executer have an member role and is not permited to accept join request!");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to respond to alliance join request. Alliance member is null and this a major bug, Please inform server developer ASAP!");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to respond to alliance join request. Alliance is null and this a major bug, Please inform server developer ASAP!");
+            }
         }
     }
 }

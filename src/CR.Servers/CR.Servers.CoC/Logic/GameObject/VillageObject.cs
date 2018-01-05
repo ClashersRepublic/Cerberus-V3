@@ -1,36 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class VillageObject : GameObject
     {
-        private int UpgradeLevel;
         internal Timer ConstructionTimer;
-        internal VillageObjectData VillageObjectData => (VillageObjectData)this.Data;
+        private int UpgradeLevel;
+
+        public VillageObject(Data Data, Level Level) : base(Data, Level)
+        {
+        }
+
+        internal VillageObjectData VillageObjectData => (VillageObjectData) this.Data;
 
         internal override int Type => 8;
         internal override int VillageType => this.VillageObjectData.VillageType;
-        internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
         internal bool Constructing => this.ConstructionTimer != null;
-        internal int GetUpgradeLevel() => this.UpgradeLevel;
         internal override int HeightInTiles => 0;
 
         internal override int WidthInTiles => 0;
 
-        public VillageObject(Data Data, Level Level) : base(Data, Level)
+        internal int GetUpgradeLevel()
         {
+            return this.UpgradeLevel;
         }
 
         internal void FinishConstruction()
@@ -43,7 +42,9 @@ namespace CR.Servers.CoC.Logic
                 this.SetUpgradeLevel(Data.MaxLevel);
             }
             else
+            {
                 this.SetUpgradeLevel(this.UpgradeLevel + 1);
+            }
 
             if (this.VillageType == 0)
             {
@@ -78,7 +79,7 @@ namespace CR.Servers.CoC.Logic
                 {
                     this.FinishConstruction();
                 }
-                else                                                  
+                else
                 {
                     this.ConstructionTimer = new Timer();
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, Time);
@@ -138,8 +139,8 @@ namespace CR.Servers.CoC.Logic
             {
                 if (ConstructionTime > -1)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
-                    var duration = ConstructionTimeEnd - startTime;
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int duration = ConstructionTimeEnd - startTime;
 
                     //ConstructionTime = Math.Min(ConstructionTime, Data.GetBuildTime(this.UpgradeLevel + 1));
 
@@ -165,10 +166,11 @@ namespace CR.Servers.CoC.Logic
                         "An error has been throwed when the loading of village object - Load an illegal upgrade level. Level : " +
                         Level);
                     this.SetUpgradeLevel(0);
-
                 }
                 else
+                {
                     this.SetUpgradeLevel(Level);
+                }
             }
 
             base.Load(Json);

@@ -1,14 +1,14 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-
-namespace CR.Servers.CoC.Logic.Clan.Slots
+﻿namespace CR.Servers.CoC.Logic.Clan.Slots
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+
     internal class Streams
     {
         internal Alliance Alliance;
@@ -47,7 +47,9 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
                         new Alliance_Stream_Entry(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                     }
                     else
+                    {
                         this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
+                    }
                 }
                 return true;
             }
@@ -77,10 +79,12 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
             {
                 if (Player.Connected)
                 {
-                    new Alliance_Stream_Entry_Removed(Player.Level.GameMode.Device){MessageId = StreamEntry.StreamId}.Send();
+                    new Alliance_Stream_Entry_Removed(Player.Level.GameMode.Device) {MessageId = StreamEntry.StreamId}.Send();
                 }
                 else
+                {
                     this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
+                }
             }
         }
 
@@ -103,21 +107,22 @@ namespace CR.Servers.CoC.Logic.Clan.Slots
                     new Alliance_Stream_Entry(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                 }
                 else
+                {
                     this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
+                }
             }
         }
 
         internal void Encode(List<byte> Packet, long requestorId)
         {
-            var Streams = this.Slots.Values.ToArray();
+            StreamEntry[] Streams = this.Slots.Values.ToArray();
             Packet.AddInt(Streams.Length);
 
-            foreach (var Stream in Streams)
+            foreach (StreamEntry Stream in Streams)
             {
                 Stream.RequesterId = requestorId;
                 Stream.Encode(Packet);
             }
         }
-
     }
 }

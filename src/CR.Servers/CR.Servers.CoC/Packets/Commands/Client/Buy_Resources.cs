@@ -1,32 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Manager;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Buy_Resources : Command
     {
-        internal override int Type => 518;
+        internal Command Command;
+
+
+        internal int Count;
+        internal ResourceData Data;
+        internal bool EmbedCommand;
 
         public Buy_Resources(Device device, Reader reader) : base(device, reader)
         {
         }
 
-
-        internal int Count;
-
-        internal Command Command;
-        internal ResourceData Data;
-        internal bool EmbedCommand;
+        internal override int Type => 518;
 
         internal override void Decode()
         {
@@ -39,15 +34,15 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
             if (this.EmbedCommand)
             {
-                var CommandID = this.Reader.ReadInt32();
+                int CommandID = this.Reader.ReadInt32();
 
                 if (Factory.Commands.ContainsKey(CommandID))
                 {
-                    Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
+                    this.Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
 
-                    if (Command != null)
+                    if (this.Command != null)
                     {
-                        Command.Decode();
+                        this.Command.Decode();
                     }
                 }
                 else
@@ -69,7 +64,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 {
                     // if (string.IsNullOrEmpty(this.Data.WarRefResource))
                     {
-                        var Level = this.Device.GameMode.Level;
+                        Level Level = this.Device.GameMode.Level;
                         int Cost = GamePlayUtil.GetResourceCost(this.Data, this.Count, this.Data.VillageType);
 
                         if (Level.Player.HasEnoughDiamonds(Cost))
@@ -86,11 +81,11 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                         if (!this.Command.IsServerCommand)
                                         {
                                             this.Command.Execute();
-                                            Logging.Info(this.GetType(), "Embedded Command is handled! (" + Command.Type + ")");
+                                            Logging.Info(this.GetType(), "Embedded Command is handled! (" + this.Command.Type + ")");
                                         }
                                         else
                                         {
-                                            Logging.Error(this.GetType(), "Unable to execute server command as embedded command! (" +  Command.Type + ")");
+                                            Logging.Error(this.GetType(), "Unable to execute server command as embedded command! (" + this.Command.Type + ")");
                                         }
                                     }
                                     catch (Exception Exception)
@@ -101,14 +96,20 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to buy resources. The player don't have enough diamond.");
+                        }
                     }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to buy resources. Premium resources is not buyable.");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to buy resources. Data is null or invalid.");
+            }
         }
     }
 }

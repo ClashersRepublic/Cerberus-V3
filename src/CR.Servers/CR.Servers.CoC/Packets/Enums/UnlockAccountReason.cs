@@ -4,6 +4,6 @@
     {
         Default = 4,
         UnlockError = 5,
-        Boombox = 10,
+        Boombox = 10
     }
 }

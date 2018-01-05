@@ -1,27 +1,84 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Core.Consoles.Colorful;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     internal class Building : GameObject
     {
-        private int UpgradeLevel;
-
-        internal bool Locked;
         internal bool BoostPause;
 
         internal Timer BoostTimer;
         internal Timer ConstructionTimer;
 
-        internal BuildingData BuildingData => (BuildingData)this.Data;
+        internal bool Gearing;
+
+        internal bool Locked;
+        private int UpgradeLevel;
+
+        public Building(Data Data, Level Level) : base(Data, Level)
+        {
+            BuildingData BuildingData = this.BuildingData;
+
+
+            if (BuildingData.IsTrainingHousing)
+            {
+                this.AddComponent(new UnitStorageComponent(this));
+            }
+
+            if (BuildingData.IsDefense || BuildingData.IsWallStraight)
+            {
+                this.AddComponent(new CombatComponent(this));
+            }
+
+            if (!string.IsNullOrEmpty(BuildingData.ProducesResource))
+            {
+                this.AddComponent(new ResourceProductionComponent(this));
+            }
+
+            if (BuildingData.CanStoreResources)
+            {
+                this.AddComponent(new ResourceStorageComponent(this)
+                {
+                    MaxArray = BuildingData.GetResourceMaxArray(0)
+                });
+            }
+
+            if (BuildingData.UnitProduction[0] > 0)
+            {
+                this.AddComponent(new UnitProductionComponent(this));
+            }
+
+            if (BuildingData.Bunker)
+            {
+                this.AddComponent(new BunkerComponent(this));
+                //this.AddComponent(new UnitStorageComponent(this));
+            }
+
+            if (BuildingData.UpgradesUnits)
+            {
+                this.AddComponent(new UnitUpgradeComponent(this));
+            }
+
+            if (BuildingData.IsHeroBarrack)
+            {
+                HeroData hd = CSV.Tables.Get(Gamefile.Heroes).GetData(BuildingData.HeroType) as HeroData;
+                this.AddComponent(new HeroBaseComponent(this, hd));
+            }
+
+            if (BuildingData.Village2Housing > 0)
+            {
+                this.AddComponent(new UnitStorageV2Component(this));
+            }
+        }
+
+        internal BuildingData BuildingData => (BuildingData) this.Data;
 
 
         internal override int HeightInTiles => this.BuildingData.Height;
@@ -58,13 +115,11 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool Boosted => this.BoostTimer != null;
 
         internal bool Constructing => this.ConstructionTimer != null;
-
-        internal bool Gearing;
 
         internal bool UpgradeAvailable
         {
@@ -72,7 +127,7 @@ namespace CR.Servers.CoC.Logic
             {
                 if (!this.Constructing)
                 {
-                    var Data = this.BuildingData;
+                    BuildingData Data = this.BuildingData;
 
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
@@ -89,72 +144,19 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal UnitStorageComponent UnitStorageComponent => this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent)Component : null;
-        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent)Component : null;
-        internal ResourceProductionComponent ResourceProductionComponent => this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent)Component : null;
-        internal ResourceStorageComponent ResourceStorageComponent => this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent)Component : null;
-        internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent)Component : null;
-        internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent)Component : null;
-        internal HeroBaseComponent HeroBaseComponent => this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent)Component : null;
-        internal UnitStorageV2Component UnitStorageV2Component => this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component)Component : null;
+        internal UnitStorageComponent UnitStorageComponent => this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent) Component : null;
+        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+        internal ResourceProductionComponent ResourceProductionComponent => this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent) Component : null;
+        internal ResourceStorageComponent ResourceStorageComponent => this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent) Component : null;
+        internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent) Component : null;
+        internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent) Component : null;
+        internal HeroBaseComponent HeroBaseComponent => this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent) Component : null;
+        internal UnitStorageV2Component UnitStorageV2Component => this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component) Component : null;
 
 
-        internal int GetUpgradeLevel() => this.UpgradeLevel;
-
-        public Building(Data Data, Level Level) : base(Data, Level)
+        internal int GetUpgradeLevel()
         {
-            BuildingData BuildingData = this.BuildingData;
-
-
-            if (BuildingData.IsTrainingHousing)
-            {
-                this.AddComponent(new UnitStorageComponent(this));
-            }
-
-            if (BuildingData.IsDefense || BuildingData.IsWallStraight)
-            {
-                AddComponent(new CombatComponent(this));
-            }
-
-            if (!string.IsNullOrEmpty(BuildingData.ProducesResource))
-            {
-                this.AddComponent(new ResourceProductionComponent(this));
-            }
-
-            if (BuildingData.CanStoreResources)
-            {
-                this.AddComponent(new ResourceStorageComponent(this)
-                {
-                    MaxArray = BuildingData.GetResourceMaxArray(0)
-                });
-            }
-
-            if (BuildingData.UnitProduction[0] > 0)
-            {
-                this.AddComponent(new UnitProductionComponent(this));
-            }       
-
-            if (BuildingData.Bunker)
-            {
-                this.AddComponent(new BunkerComponent(this));
-                //this.AddComponent(new UnitStorageComponent(this));
-            }
-
-            if (BuildingData.UpgradesUnits)
-            {
-                this.AddComponent(new UnitUpgradeComponent(this));
-            }
-
-            if (BuildingData.IsHeroBarrack)
-            {
-                var hd = CSV.Tables.Get(Gamefile.Heroes).GetData(BuildingData.HeroType) as HeroData;
-                this.AddComponent(new HeroBaseComponent(this, hd));
-            }
-
-            if (BuildingData.Village2Housing > 0)
-            {
-                this.AddComponent(new UnitStorageV2Component(this));
-            }
+            return this.UpgradeLevel;
         }
 
         internal void FinishConstruction()
@@ -167,10 +169,10 @@ namespace CR.Servers.CoC.Logic
 
                 this.CombatComponent.GearUp = 1;
 
-                if (CombatComponent.AltAttackMode)
+                if (this.CombatComponent.AltAttackMode)
                 {
-                    CombatComponent.AttackMode = true;
-                    CombatComponent.AttackModeDraft = true;
+                    this.CombatComponent.AttackMode = true;
+                    this.CombatComponent.AttackModeDraft = true;
                 }
 
                 this.Level.WorkerManagerV2.DeallocateWorker(this);
@@ -183,13 +185,17 @@ namespace CR.Servers.CoC.Logic
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else
+                {
                     this.SetUpgradeLevel(this.UpgradeLevel + 1);
+                }
 
                 if (this.Locked)
                 {
                     this.Locked = false;
-                    if(this.VillageType == 1)
+                    if (this.VillageType == 1)
+                    {
                         this.Level.WorkerManagerV2.DeallocateWorker(this);
+                    }
                 }
                 else
                 {
@@ -210,7 +216,7 @@ namespace CR.Servers.CoC.Logic
             }
             else
             {
-                var troopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
+                int troopHousing = this.Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
 
                 if (troopHousing >= 0)
                 {
@@ -238,29 +244,28 @@ namespace CR.Servers.CoC.Logic
 
             if (this.HeroBaseComponent != null)
             {
-
                 if (CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType) is HeroData HeroData)
                 {
                     this.Level.Player.HeroUpgrades.Set(HeroData, 0);
                     this.Level.Player.HeroStates.Set(HeroData, 3);
                     if (HeroData.HasAltMode)
+                    {
                         this.Level.Player.HeroModes.Set(HeroData, 0);
+                    }
                 }
-
             }
 
             this.ConstructionTimer = null;
-
         }
 
         internal void CancelConstruction()
         {
             if (this.Constructing)
             {
-                this.SetUpgradeLevel(UpgradeLevel);
+                this.SetUpgradeLevel(this.UpgradeLevel);
                 //Alt resource not supported yet
 
-                var resourceCount = (int) ((this.BuildingData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long) 1374389535) >> 32);
+                int resourceCount = (int) ((this.BuildingData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long) 1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
 
                 this.Level.Player.Resources.Plus(this.BuildingData.GlobalId, resourceCount);
@@ -274,8 +279,10 @@ namespace CR.Servers.CoC.Logic
                 }
 
                 this.ConstructionTimer = null;
-                if (UpgradeLevel == -1)
+                if (this.UpgradeLevel == -1)
+                {
                     this.Level.GameObjectManager.RemoveGameObject(this, this.VillageType); //Should never happend since supercell disable this
+                }
             }
         }
 
@@ -331,12 +338,12 @@ namespace CR.Servers.CoC.Logic
                 }
                 else
                 {
-                    Logging.Error(this.GetType(), "Unable to gear up the building because the buidling is already under construction! - " + Data.Name + ".");
+                    Logging.Error(this.GetType(), "Unable to gear up the building because the buidling is already under construction! - " + this.Data.Name + ".");
                 }
             }
             else
             {
-                Logging.Error(this.GetType(),  "Unable to gear up the building because the buidling is already geared up! - " + Data.Name + ".");
+                Logging.Error(this.GetType(), "Unable to gear up the building because the buidling is already geared up! - " + this.Data.Name + ".");
             }
         }
 
@@ -373,10 +380,12 @@ namespace CR.Servers.CoC.Logic
                 {
                     ResourceStorageComponent.SetMaxArray(this.BuildingData.GetResourceMaxArray(UpgradeLevel));
                     if (!this.Level.AI)
+                    {
                         this.Level.ComponentManager.RefreshResourceCaps();
+                    }
                 }
             }
-            
+
             UnitStorageComponent UnitStorageComponent = this.UnitStorageComponent;
 
             if (UnitStorageComponent != null)
@@ -437,10 +446,12 @@ namespace CR.Servers.CoC.Logic
             {
                 if (ConstructionTime > -1)
                 {
-                    var startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
-                    var duration = ConstructionTimeEnd - startTime;
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int duration = ConstructionTimeEnd - startTime;
                     if (duration < 0)
+                    {
                         duration = 0;
+                    }
                     //ConstructionTime = Math.Min(ConstructionTime, Data.GetBuildTime(this.UpgradeLevel + 1));
 
                     this.ConstructionTimer = new Timer();
@@ -455,11 +466,14 @@ namespace CR.Servers.CoC.Logic
                     else
                     {
                         if (this.VillageType == 0)
+                        {
                             this.Level.WorkerManager.AllocateWorker(this);
+                        }
                         else
+                        {
                             this.Level.WorkerManagerV2.AllocateWorker(this);
+                        }
                     }
-
                 }
             }
 
@@ -467,10 +481,12 @@ namespace CR.Servers.CoC.Logic
             {
                 if (BoostTime > -1)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
-                    var duration = BoostTimeEnd - startTime;
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int duration = BoostTimeEnd - startTime;
                     if (duration < 0)
+                    {
                         duration = 0;
+                    }
                     this.BoostTimer = new Timer();
                     this.BoostTimer.StartTimer(this.Level.Player.LastTick, duration);
                 }
@@ -497,7 +513,9 @@ namespace CR.Servers.CoC.Logic
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else
+                {
                     this.SetUpgradeLevel(Level);
+                }
             }
 
             base.Load(Json);
@@ -508,9 +526,11 @@ namespace CR.Servers.CoC.Logic
             Json.Add("lvl", this.UpgradeLevel);
 
             if (this.Locked)
+            {
                 Json.Add("locked", this.Locked);
+            }
 
-            if (Gearing)
+            if (this.Gearing)
             {
                 Json.Add("gearing", this.Gearing);
             }
@@ -529,7 +549,9 @@ namespace CR.Servers.CoC.Logic
 
 
             if (this.BoostPause)
+            {
                 Json.Add("boost_pause", this.BoostPause);
+            }
 
             base.Save(Json);
         }

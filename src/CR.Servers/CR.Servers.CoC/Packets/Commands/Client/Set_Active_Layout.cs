@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Set_Active_Layout : Command
     {
-        internal override int Type => 567;
+        internal int Layout;
 
         public Set_Active_Layout(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Layout;
+        internal override int Type => 567;
 
         internal override void Decode()
         {

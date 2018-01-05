@@ -1,16 +1,15 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Edit_Mode_Shown : Command
     {
-        internal override int Type => 544;
-
         public Edit_Mode_Shown(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override int Type => 544;
 
         internal override void Execute()
         {

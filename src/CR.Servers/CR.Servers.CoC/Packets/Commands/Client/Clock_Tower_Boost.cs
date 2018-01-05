@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Clock_Tower_Boost : Command
     {
-        internal override int Type => 595;
+        internal int Id;
 
         public Clock_Tower_Boost(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Id;
+        internal override int Type => 595;
 
         internal override void Decode()
         {

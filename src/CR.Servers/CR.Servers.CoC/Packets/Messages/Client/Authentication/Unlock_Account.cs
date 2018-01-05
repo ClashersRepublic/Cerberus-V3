@@ -1,28 +1,28 @@
-﻿using System;
-using System.Linq;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Authentication;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 {
+    using System;
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Authentication;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Unlock_Account : Message
     {
-        internal override short Type => 10121;
-
         internal int HighId;
         internal int LowId;
-        internal string UserToken;
         internal string UnlockCode;
+        internal string UserToken;
 
         public Unlock_Account(Device device, Reader reader) : base(device, reader)
         {
-            Device.State = State.UNLOCK_ACC;
+            this.Device.State = State.UNLOCK_ACC;
         }
+
+        internal override short Type => 10121;
 
         internal override void Decode()
         {
@@ -35,7 +35,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Process()
         {
-            ShowValues();
+            this.ShowValues();
             if (this.UnlockCode.Length != 12 || string.IsNullOrEmpty(this.UnlockCode))
             {
                 //Remove Device
@@ -44,7 +44,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
             if (this.UnlockCode[0] == '/')
             {
-                if (int.TryParse(this.UnlockCode.Substring(1), out var n))
+                if (int.TryParse(this.UnlockCode.Substring(1), out int n))
                 {
                     if (n == 0)
                     {
@@ -57,7 +57,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                     int LowId = 0;
 
                     this.ToHighAndLow(n, ref HighId, ref LowId);
-                    var Account = Resources.Accounts.LoadAccount(HighId, LowId);
+                    Account Account = Resources.Accounts.LoadAccount(HighId, LowId);
                     if (Account != null)
                     {
                         Account.Player.Locked = true;
@@ -67,7 +67,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                     {
                         new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
                     }
-
                 }
                 else
                 {
@@ -76,7 +75,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
             }
             else
             {
-                var Account = Resources.Accounts.LoadPlayerAsync(this.HighId, this.LowId).Result;
+                Player Account = Resources.Accounts.LoadPlayerAsync(this.HighId, this.LowId).Result;
                 if (Account != null)
                 {
                     if (string.Equals(this.UnlockCode, Account.Password, StringComparison.CurrentCultureIgnoreCase))
@@ -87,17 +86,18 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
                     else
                     {
                         new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.Default}.Send();
-
                     }
                 }
                 else
-                    new Unlock_Account_Failed(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
+                {
+                    new Unlock_Account_Failed(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
+                }
             }
         }
 
         internal void ToHighAndLow(long l, ref int High, ref int Low)
         {
-            var bytes = new Reader(BitConverter.GetBytes(l).Reverse().ToArray());
+            Reader bytes = new Reader(BitConverter.GetBytes(l).Reverse().ToArray());
 
             High = bytes.ReadInt32();
             Low = bytes.ReadInt32();

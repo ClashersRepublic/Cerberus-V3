@@ -52,38 +52,44 @@
         };
 
         /// <summary>
-        /// Returns the absolute value of a number.
+        ///     Returns the absolute value of a number.
         /// </summary>
         internal static int Abs(int a)
         {
             if (a < 0)
+            {
                 return -a;
+            }
             return a;
         }
 
         /// <summary>
-        /// Returns the number with the highest value.
+        ///     Returns the number with the highest value.
         /// </summary>
         /// <returns></returns>
         internal static int Max(int a, int b)
         {
             if (a <= b)
+            {
                 return b;
+            }
             return a;
         }
 
         /// <summary>
-        /// Returns the number with the lowest value.
+        ///     Returns the number with the lowest value.
         /// </summary>
         internal static int Min(int a, int b)
         {
             if (a >= b)
+            {
                 return b;
+            }
             return a;
         }
 
         /// <summary>
-        /// Returns the square root of x.
+        ///     Returns the square root of x.
         /// </summary>
         internal static int Sqrt(int Value)
         {
@@ -96,26 +102,34 @@
                 if (Value < 0x100)
                 {
                     if (Value < 0)
+                    {
                         Result = -1;
+                    }
                     else
-                        Result = Math.SQRT_TABLE[Value] >> 4;
+                    {
+                        Result = SQRT_TABLE[Value] >> 4;
+                    }
                 }
                 else
                 {
                     if (Value < 4096)
                     {
                         if (Value < 1024)
-                            v9 = (Math.SQRT_TABLE[Value >> 2] >> 3) + 1;
+                        {
+                            v9 = (SQRT_TABLE[Value >> 2] >> 3) + 1;
+                        }
                         else
-                            v9 = (Math.SQRT_TABLE[Value >> 4] >> 2) + 1;
+                        {
+                            v9 = (SQRT_TABLE[Value >> 4] >> 2) + 1;
+                        }
                     }
                     else if (Value < 0x4000)
                     {
-                        v9 = (Math.SQRT_TABLE[Value >> 6] >> 1) + 1;
+                        v9 = (SQRT_TABLE[Value >> 6] >> 1) + 1;
                     }
                     else
                     {
-                        v9 = Math.SQRT_TABLE[Value >> 8] + 1;
+                        v9 = SQRT_TABLE[Value >> 8] + 1;
                     }
 
                     Result = v9 * v9 <= Value ? v9 : v9 - 1;
@@ -126,17 +140,21 @@
                 if (Value < 0x100000)
                 {
                     if (Value < 0x40000)
-                        v9 = 2 * Math.SQRT_TABLE[Value >> 10];
+                    {
+                        v9 = 2 * SQRT_TABLE[Value >> 10];
+                    }
                     else
-                        v9 = 4 * Math.SQRT_TABLE[Value >> 12];
+                    {
+                        v9 = 4 * SQRT_TABLE[Value >> 12];
+                    }
                 }
                 else if (Value < 0x400000)
                 {
-                    v9 = 8 * Math.SQRT_TABLE[Value >> 14];
+                    v9 = 8 * SQRT_TABLE[Value >> 14];
                 }
                 else
                 {
-                    v9 = 16 * Math.SQRT_TABLE[Value >> 16];
+                    v9 = 16 * SQRT_TABLE[Value >> 16];
                 }
 
                 v6 = (Value / v9 + v9 + 1) >> 1;
@@ -147,19 +165,25 @@
                 if (Value < 0x10000000)
                 {
                     if (Value < 0x4000000)
-                        v9 = 32 * Math.SQRT_TABLE[Value >> 18];
+                    {
+                        v9 = 32 * SQRT_TABLE[Value >> 18];
+                    }
                     else
-                        v9 = Math.SQRT_TABLE[Value >> 20] << 6;
+                    {
+                        v9 = SQRT_TABLE[Value >> 20] << 6;
+                    }
                 }
                 else if (Value < 0x40000000)
                 {
-                    v9 = Math.SQRT_TABLE[Value >> 22] << 7;
+                    v9 = SQRT_TABLE[Value >> 22] << 7;
                 }
                 else
                 {
                     if (Value >= 0x7FFFFFFF)
+                    {
                         return 0xFFFF;
-                    v9 = Math.SQRT_TABLE[Value >> 24] << 8;
+                    }
+                    v9 = SQRT_TABLE[Value >> 24] << 8;
                 }
 
                 v6 = (Value / ((Value / v9 + v9 + 1) >> 1) + ((Value / v9 + v9 + 1) >> 1) + 1) >> 1;
@@ -173,7 +197,7 @@
         {
             long v4 = ((-1240768329L * (Degrees + 90)) >> 32) + Degrees + 90;
             long v5 = Degrees + 90 - 360 * ((v4 >> 8) + (v4 >> 31));
-            int v6 = (int)(v5 + (-(v5 < 0 ? 1 : 0) & 0x168));
+            int v6 = (int) (v5 + (-(v5 < 0 ? 1 : 0) & 0x168));
 
             int SinValue;
 
@@ -181,16 +205,20 @@
             {
                 int v8 = v6 - 180;
                 if (v6 - 180 > 90)
+                {
                     v8 = 360 - v6;
+                }
 
-                SinValue = -Math.SIN_TABLE[v8];
+                SinValue = -SIN_TABLE[v8];
             }
             else
             {
                 if (v6 > 90)
+                {
                     v6 = 180 - v6;
+                }
 
-                SinValue = Math.SIN_TABLE[v6];
+                SinValue = SIN_TABLE[v6];
             }
 
             int v9 = X * SinValue;
@@ -200,16 +228,20 @@
             {
                 int v12 = v10 - 180;
                 if (v10 - 180 > 90)
+                {
                     v12 = 360 - v10;
+                }
 
-                SinValue = -Math.SIN_TABLE[v12];
+                SinValue = -SIN_TABLE[v12];
             }
             else
             {
                 if (v10 > 90)
+                {
                     v10 = 180 - v10;
+                }
 
-                SinValue = Math.SIN_TABLE[v10];
+                SinValue = SIN_TABLE[v10];
             }
 
             return (v9 - SinValue * Y) >> 10;
@@ -220,7 +252,9 @@
             int v4 = Degrees % 360;
 
             if (Degrees % 360 < 0)
+            {
                 v4 += 360;
+            }
 
             int SinValue;
 
@@ -229,16 +263,20 @@
                 int v6 = v4 - 180;
 
                 if (v4 - 180 > 90)
+                {
                     v6 = 360 - v4;
+                }
 
-                SinValue = -Math.SIN_TABLE[v6];
+                SinValue = -SIN_TABLE[v6];
             }
             else
             {
                 if (v4 > 90)
+                {
                     v4 = 180 - v4;
+                }
 
-                SinValue = Math.SIN_TABLE[v4];
+                SinValue = SIN_TABLE[v4];
             }
 
             int v7 = X * SinValue;
@@ -249,16 +287,20 @@
                 int v10 = v8 - 180;
 
                 if (v8 - 180 > 90)
+                {
                     v10 = 360 - v8;
+                }
 
-                SinValue = -Math.SIN_TABLE[v10];
+                SinValue = -SIN_TABLE[v10];
             }
             else
             {
                 if (v8 > 90)
+                {
                     v8 = 180 - v8;
+                }
 
-                SinValue = Math.SIN_TABLE[v8];
+                SinValue = SIN_TABLE[v8];
             }
             return (v7 + SinValue * Y) >> 10;
         }

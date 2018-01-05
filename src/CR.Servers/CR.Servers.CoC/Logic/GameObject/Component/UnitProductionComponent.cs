@@ -1,24 +1,24 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class UnitProductionComponent : Component
     {
+        internal bool IsSpellForge;
 
         public UnitProductionComponent(GameObject go) : base(go)
         {
-            SetProductionType(go);
+            this.SetProductionType(go);
         }
 
         internal override int Type => 3;
-        internal bool IsSpellForge;
 
         public void SetProductionType(GameObject go)
         {
-            var b = Parent;
-            var bd = (BuildingData)b.Data;
+            GameObject b = this.Parent;
+            BuildingData bd = (BuildingData) b.Data;
             this.IsSpellForge = bd.IsSpellForge || bd.IsMiniSpellForge;
         }
 
@@ -37,7 +37,7 @@ namespace CR.Servers.CoC.Logic
 
         internal override void Save(JObject Json)
         {
-            var UnitProd = new JObject
+            JObject UnitProd = new JObject
             {
                 {
                     "m", 1

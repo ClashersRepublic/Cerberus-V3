@@ -1,16 +1,16 @@
-﻿using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
 {
+    using CR.Servers.CoC.Logic;
+
     internal class Avatar_Stream_Entry : Message
     {
-        internal override short Type => 24412;
+        internal MailEntry StreamEntry;
 
-        public Avatar_Stream_Entry(Device Device) : base (Device)
+        public Avatar_Stream_Entry(Device Device) : base(Device)
         {
         }
 
-        internal MailEntry StreamEntry;
+        internal override short Type => 24412;
 
         internal override void Encode()
         {

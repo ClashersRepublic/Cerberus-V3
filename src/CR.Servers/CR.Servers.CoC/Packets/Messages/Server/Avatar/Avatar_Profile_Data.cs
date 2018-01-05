@@ -1,11 +1,11 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+
     internal class Avatar_Profile_Data : Message
     {
-        internal override short Type => 24334;
+        internal Level Player;
 
         public Avatar_Profile_Data(Device Device, Level Level) : base(Device)
         {
@@ -13,7 +13,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Avatar
             this.Player.Tick();
         }
 
-        internal Level Player;
+        internal override short Type => 24334;
 
         internal override void Encode()
         {

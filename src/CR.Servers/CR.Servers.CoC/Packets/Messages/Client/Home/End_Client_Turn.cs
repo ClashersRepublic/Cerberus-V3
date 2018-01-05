@@ -1,36 +1,35 @@
 ﻿#define Extra
 
-using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.Binary;
-
 namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
+    using System;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class End_Client_Turn : Message
     {
-        internal int SubTick;
         internal int Checksum;
         internal int CommandCount;
 
         internal List<Command> Commands;
-
-        internal override short Type => 14102;
+        internal int SubTick;
 
         public End_Client_Turn(Device Device, Reader Reader) : base(Device, Reader)
         {
             // End_Client_Turn.
         }
 
-
+        internal override short Type => 14102;
+        
         internal override void Decode()
         {
             this.SubTick = this.Reader.ReadInt32();
             this.Checksum = this.Reader.ReadInt32();
             this.CommandCount = this.Reader.ReadInt32();
-            if (this.CommandCount <= 2056) //512
+
+            if (this.CommandCount <= 512)
             {
                 if (this.CommandCount > 0)
                 {
@@ -38,31 +37,19 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
                     for (int i = 0; i < this.CommandCount; i++)
                     {
-                        var CommandID = Reader.ReadInt32();
+                        int CommandID = this.Reader.ReadInt32();
+                        Command Command = Factory.CreateCommand(CommandID, this.Device, this.Reader);
 
-                        if (Factory.Commands.ContainsKey(CommandID))
+                        if (Command != null)
                         {
-                            var Command = Factory.CreateCommand(CommandID, Device, Reader);
+                            Command.Decode();
 
-                            if (Command != null)
-                            {
-                                Command.Decode();
-
-                                this.Commands.Add(Command);
-                            }
-                            else
-                            {
-                                Logging.Info(this.GetType(), "Command is null! (" + CommandID + ")");
-                                this.CommandCount = this.Commands.Count;
-                                break;
-                            }
+                            this.Commands.Add(Command);
                         }
                         else
                         {
+                            Logging.Info(this.GetType(), "Command is null! (" + CommandID + ")");
                             this.CommandCount = this.Commands.Count;
-                            this.Reader.BaseStream.Position = 0;
-                            Logging.Info(this.GetType(), "Command is unhandled! (" + CommandID + ")");
-                            Log();
                             break;
                         }
                     }
@@ -72,7 +59,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             {
                 Logging.Error(this.GetType(), "Command count is too high! (" + this.CommandCount + ")");
             }
-
         }
 
         internal override void Process()
@@ -93,21 +79,16 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand)Command;
+                        ServerCommand ServerCommand = (ServerCommand) Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
-                            /*if (OriginalCommand.Checksum != ServerCommand.Checksum)
-                            {
-                                return;
-                            }*/
-
                             this.Device.GameMode.CommandManager.ServerCommands.Remove(ServerCommand.Id);
                         }
                         else
                         {
                             this.Reader.BaseStream.Position = 0;
-                            Log();
+                            this.Log();
                             Logging.Error(this.GetType(), this.Device, "Execute command failed! Server Command " + Command.Type + " is not available.");
                             return;
                         }
@@ -117,16 +98,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     {
                         try
                         {
-                            this.Commands.Remove(Command);
                             Command.Execute();
 #if Extra
                             Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
 #endif
-                            continue;
                         }
                         catch (Exception Exception)
                         {
-                            this.Commands.Remove(Command);
                             Logging.Error(Exception.GetType(),
                                 $"Exception while executing a command {Command.Type}. " + Exception.Message +
                                 Environment.NewLine + Exception.StackTrace);
@@ -134,9 +112,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     }
                     else
                     {
-                        this.Commands.Remove(Command);
                         Logging.Error(this.GetType(), this.Device, "Execute command failed! Command should have been executed already. (type=" + Command.Type + ", command_tick=" + Command.ExecuteSubTick + ", server_tick=" + this.SubTick + ")");
                     }
+
+                    this.Commands.Remove(Command);
                 } while (this.Commands.Count > 0);
             }
         }

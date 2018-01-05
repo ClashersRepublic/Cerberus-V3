@@ -1,35 +1,33 @@
-﻿using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Threading.Tasks;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Upgrade_Building : Command
     {
-        internal override int Type => 502;
+        internal int Id;
+        internal bool UseAltResource;
 
         public Upgrade_Building(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 
-        internal int Id;
-        internal bool UseAltResource;
+        internal override int Type => 502;
 
         internal override void Decode()
         {
-            this.Id = Reader.ReadInt32();
-            this.UseAltResource = Reader.ReadBoolean();
+            this.Id = this.Reader.ReadInt32();
+            this.UseAltResource = this.Reader.ReadBoolean();
             base.Decode();
         }
 
         internal override void Execute()
         {
-            var Level = Device.GameMode.Level;
-            var GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
+            Level Level = this.Device.GameMode.Level;
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
             if (GameObject != null)
             {
                 if (GameObject is Building Building)
@@ -38,10 +36,10 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                     {
                         BuildingData Data = (BuildingData) Building.Data;
                         ResourceData ResourceData = this.UseAltResource ? Data.AltBuildResourceData(Building.GetUpgradeLevel() + 1) : Data.BuildResourceData;
-                        
+
                         if (ResourceData != null)
                         {
-                            if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Building.GetUpgradeLevel() + 1])
+                            if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[Building.GetUpgradeLevel() + 1])
                             {
                                 if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {
@@ -51,15 +49,18 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     if (Data.IsTownHall2)
                                     {
                                         if (Level.Player.TownHallLevel2 == 0)
+                                        {
                                             Parallel.ForEach(Level.GameObjectManager.GameObjects[0][1].ToArray(),
                                                 Object =>
                                                 {
-                                                    var b2 = (Building) Object;
-                                                    var bd2 = b2.BuildingData;
+                                                    Building b2 = (Building) Object;
+                                                    BuildingData bd2 = b2.BuildingData;
                                                     if (b2.Locked)
                                                     {
                                                         if (bd2.Locked)
+                                                        {
                                                             return;
+                                                        }
 
 #if DEBUG
                                                         Logging.Info(this.GetType(),
@@ -68,12 +69,12 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                                         b2.Locked = false;
                                                     }
                                                 });
+                                        }
 
                                         Level.Player.TownHallLevel2++;
                                     }
                                     else if (Data.IsAllianceCastle)
                                     {
-
                                         Level.Player.CastleLevel++;
                                         Level.Player.CastleTotalCapacity =
                                             Data.HousingSpace[Level.Player.CastleLevel];
@@ -91,13 +92,19 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                 }
                             }
                             else
-                                Logging.Error(this.GetType(),  "Unable to upgrade the building. The player doesn't have enough resources.");
+                            {
+                                Logging.Error(this.GetType(), "Unable to upgrade the building. The player doesn't have enough resources.");
+                            }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to upgrade the building. The resource data is null");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
+                    }
                 }
                 else if (GameObject is Trap Trap)
                 {
@@ -108,23 +115,28 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                         if (ResourceData != null)
                         {
-                            if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[Trap.GetUpgradeLevel() + 1])
+                            if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[Trap.GetUpgradeLevel() + 1])
                             {
-                                if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0  : Level.WorkerManagerV2.FreeWorkers > 0)
+                                if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                                 {
                                     Level.Player.Resources.Remove(ResourceData, Data.BuildCost[Trap.GetUpgradeLevel() + 1]);
                                     Trap.StartUpgrade();
                                 }
                             }
                             else
+                            {
                                 Logging.Error(this.GetType(), "Unable to upgrade the Trap. The player doesn't have enough resources.");
+                            }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to start upgrade the Trap. The resources data is null.");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
-
+                    }
                 }
                 else if (GameObject is VillageObject VillageObject)
                 {
@@ -133,7 +145,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
 
                     if (ResourceData != null)
                     {
-                        if (Level.Player.Resources.GetCountByData(ResourceData) >=  Data.BuildCost[VillageObject.GetUpgradeLevel() + 1])
+                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Data.BuildCost[VillageObject.GetUpgradeLevel() + 1])
                         {
                             if (Data.VillageType == 0 ? Level.WorkerManager.FreeWorkers > 0 : Level.WorkerManagerV2.FreeWorkers > 0)
                             {
@@ -142,17 +154,24 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                             }
                         }
                         else
-                            Logging.Error(this.GetType(),  "Unable to upgrade the VillageObject. The player doesn't have enough resources.");
+                        {
+                            Logging.Error(this.GetType(), "Unable to upgrade the VillageObject. The player doesn't have enough resources.");
+                        }
                     }
                     else
-                        Logging.Error(this.GetType(),  "Unable to start upgrade the VillageObject. The resources data is null.");
+                    {
+                        Logging.Error(this.GetType(), "Unable to start upgrade the VillageObject. The resources data is null.");
+                    }
                 }
                 else
-                    Logging.Error(this.GetType(),  $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
+                {
+                    Logging.Error(this.GetType(), $"Unable to determined Game Object type. Game Object type {GameObject.Type}.");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to upgrade the gameObject. GameObject is null");
+            }
         }
-        
     }
 }

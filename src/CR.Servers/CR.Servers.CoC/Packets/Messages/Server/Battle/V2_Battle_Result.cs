@@ -1,17 +1,15 @@
-﻿
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Battle;
-using CR.Servers.CoC.Logic.Battle.Slots;
-using CR.Servers.Extensions.List;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Battle
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battle;
+    using CR.Servers.CoC.Logic.Battle.Slots;
+    using CR.Servers.Extensions.List;
+
     internal class V2_Battle_Result : Message
     {
-        internal override short Type => 24371;
         internal Battles_V2 Battle;
-        internal Battle_V2 Home;
         internal Battle_V2 Enemy;
+        internal Battle_V2 Home;
 
         public V2_Battle_Result(Device device, Battles_V2 battle) : base(device)
         {
@@ -19,6 +17,8 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
             this.Home = this.Battle.GetPlayerBattle(this.Device.GameMode.Level.Player.UserId);
             this.Enemy = this.Battle.GetEnemyBattle(this.Device.GameMode.Level.Player.UserId);
         }
+
+        internal override short Type => 24371;
 
         internal override void Encode()
         {
@@ -47,8 +47,8 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
             this.Data.AddVInt(15000);
             this.Data.AddVInt(15000);
             this.Data.AddVInt(0);
-            this.Data.AddVInt((int)this.Enemy.BattleTick); //Opponent time left
-            this.Data.AddBool(this.Enemy.Finished && (this.Home.ReplayInfo.Stats.DestructionPercentage > this.Enemy.ReplayInfo.Stats.DestructionPercentage));
+            this.Data.AddVInt((int) this.Enemy.BattleTick); //Opponent time left
+            this.Data.AddBool(this.Enemy.Finished && this.Home.ReplayInfo.Stats.DestructionPercentage > this.Enemy.ReplayInfo.Stats.DestructionPercentage);
 
             this.Data.AddInt(this.Home.ReplayInfo.Stats.AttackerStars);
             this.Data.AddInt(this.Home.ReplayInfo.Stats.DestructionPercentage); //Home percentage
@@ -64,7 +64,7 @@ namespace CR.Servers.CoC.Packets.Messages.Server.Battle
             this.Data.AddInt(0);
             this.Data.AddInt(0); //Replay High ID
             this.Data.AddInt(8); //Major
-            this.Data.AddInt(24);//Minor
+            this.Data.AddInt(24); //Minor
             this.Data.AddInt(5); //Build
 
             this.Data.AddBool(this.Enemy.Finished);

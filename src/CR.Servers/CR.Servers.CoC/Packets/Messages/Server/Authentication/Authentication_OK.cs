@@ -1,24 +1,23 @@
-﻿
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Authentication
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+
     internal class Authentication_OK : Message
     {
-        internal override short Type => 20104;
-
         public Authentication_OK(Device client) : base(client)
         {
-            Device.State = State.LOGGED;
+            this.Device.State = State.LOGGED;
             this.Version = 1;
         }
 
+        internal override short Type => 20104;
+
         internal override void Encode()
         {
-            var Player = this.Device.Account.Player;
+            Player Player = this.Device.Account.Player;
             this.Data.AddLong(Player.UserId);
             this.Data.AddLong(Player.UserId);
 

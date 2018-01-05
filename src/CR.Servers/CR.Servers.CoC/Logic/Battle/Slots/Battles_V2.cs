@@ -1,17 +1,16 @@
 ﻿namespace CR.Servers.CoC.Logic.Battle.Slots
 {
-    internal class Battles_V2 
+    internal class Battles_V2
     {
+        internal Battle_V2 Battle;
+        internal Battle_V2 Battle1;
         internal int BattleID;
-        internal int Tick;
         internal int Checksum;
-        internal bool Started;
 
         internal Level Player1;
         internal Level Player2;
-
-        internal Battle_V2 Battle;
-        internal Battle_V2 Battle1;
+        internal bool Started;
+        internal int Tick;
 
         internal Timer Timer = new Timer();
 
@@ -22,7 +21,6 @@
             this.Player2 = player2;
             this.Battle = new Battle_V2(player1, player2);
             this.Battle1 = new Battle_V2(player2, player1);
-
         }
 
         internal Level GetPlayer(long userId)
@@ -44,5 +42,5 @@
         {
             return this.Battle1.Attacker.UserId != UserID ? this.Battle1 : this.Battle;
         }
-}
+    }
 }

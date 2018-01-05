@@ -1,18 +1,17 @@
-﻿using CR.Servers.Extensions.Binary;
-using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Toggle_Clan_Filter : Command
     {
-        internal override int Type => 571;
+        internal byte Unknown;
 
         public Toggle_Clan_Filter(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal byte Unknown;
+        internal override int Type => 571;
 
         internal override void Decode()
         {

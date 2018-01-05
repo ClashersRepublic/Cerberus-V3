@@ -1,28 +1,27 @@
-﻿using System;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Speed_Up_Construction : Command
     {
-        internal override int Type => 504;
+        internal int BuildingId;
+        internal int Village;
 
         public Speed_Up_Construction(Device Client, Reader Reader) : base(Client, Reader)
         {
         }
 
-        internal int BuildingId;
-        internal int Village;
+        internal override int Type => 504;
 
         internal override void Decode()
         {
-            this.BuildingId = Reader.ReadInt32();
+            this.BuildingId = this.Reader.ReadInt32();
             this.Village = this.Reader.ReadInt32();
             base.Decode();
         }
-        
+
         internal override void Execute()
         {
             GameObject GameObject = this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
@@ -47,7 +46,9 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                 }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to speed up the construction. The game object doesn't exist.");
+            }
         }
     }
 }

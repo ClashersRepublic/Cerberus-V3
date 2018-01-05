@@ -1,114 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     internal class Player : PlayerBase
     {
         internal Alliance Alliance;
         internal Member AllianceMember;
-
-        [JsonProperty] internal int HighID;
-        [JsonProperty] internal int LowID;
-
-        [JsonProperty] internal string Token;
-        [JsonProperty] internal string Password;
-
-        [JsonProperty] internal int LogSeed;
-
-        [JsonProperty] internal bool RedPackageState;
-        [JsonProperty] internal bool NameSetByUser;
-
-        [JsonProperty] internal int ChangeNameCount;
-
-        [JsonProperty] internal string Name = string.Empty;
-
-        [JsonProperty] internal int ExpLevel = 1;
-        [JsonProperty] internal int ExpPoints;
-
-        [JsonProperty] internal int LastSeasonMonth;
-        [JsonProperty] internal int LastSeasonYear;
-        [JsonProperty] internal int LastSeasonRank;
-        [JsonProperty] internal int LastSeasonScore;
-
-        [JsonProperty] internal int OldSeasonMonth;
-        [JsonProperty] internal int OldSeasonYear;
-        [JsonProperty] internal int OldSeasonRank;
-        [JsonProperty] internal int OldSeasonScore;
-
-        [JsonProperty] internal int Diamonds;
-        [JsonProperty] internal int FreeDiamonds;
-        [JsonProperty] internal int League;
-        [JsonProperty] internal int Score;
-        [JsonProperty] internal int DuelScore;
-        [JsonProperty] internal int ClanWarPreference = 1;
-
-        [JsonProperty] internal int Wins;
-        [JsonProperty] internal int Loses;
-        [JsonProperty] internal int Games;
-
-        [JsonProperty] internal int ObstacleCleaned;
-
-        [JsonProperty] internal int Donation;
-        [JsonProperty] internal int DonationReceived;
-
-        [JsonProperty] internal List<int> Tutorials = new List<int>();
-
-        [JsonProperty] internal bool Locked;
-
-        [JsonProperty] internal Rank Rank = Rank.Player;
-        [JsonProperty] internal Inbox Inbox;
-        [JsonProperty] internal Friends Friends;
-
-        [JsonProperty] internal ModSlot ModSlot;
-
-        [JsonProperty] internal FacebookApi Facebook;
-        /*[JsonProperty] internal Google Google;
-        [JsonProperty] internal Gamecenter Gamecenter;*/
-
-        [JsonProperty] internal DateTime LastTick = DateTime.UtcNow;
-        [JsonProperty] internal DateTime Update = DateTime.UtcNow;
-        [JsonProperty] internal DateTime Created = DateTime.UtcNow;
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
 
         internal long BattleIdV2;
 
-        internal bool Connected
-        {
-            get
-            {
-                if (this.Level?.GameMode != null)
-                {
-                    return this.Level.GameMode.Connected;
-                }
-                return false;
-            }
-        }
+        [JsonProperty] internal int ChangeNameCount;
+        [JsonProperty] internal int ClanWarPreference = 1;
+        [JsonProperty] internal DateTime Created = DateTime.UtcNow;
 
-        internal long UserId => (((long) this.HighID << 32) | (uint) this.LowID);
+        [JsonProperty] internal int Diamonds;
 
-        internal bool Banned => this.BanTime > DateTime.UtcNow;
+        [JsonProperty] internal int Donation;
+        [JsonProperty] internal int DonationReceived;
+        [JsonProperty] internal int DuelScore;
 
-        internal new int Checksum => this.ExpPoints
-                                     + this.ExpLevel
-                                     + this.Diamonds
-                                     + this.FreeDiamonds
-                                     + this.Score
-                                     + this.DuelScore
-                                     + (this.AllianceLowId > 0 ? 13 : 0)
-                                     + base.Checksum;
+        [JsonProperty] internal int ExpLevel = 1;
+        [JsonProperty] internal int ExpPoints;
+
+        [JsonProperty] internal FacebookApi Facebook;
+        [JsonProperty] internal int FreeDiamonds;
+        [JsonProperty] internal Friends Friends;
+        [JsonProperty] internal int Games;
+
+        [JsonProperty] internal int HighID;
+        [JsonProperty] internal Inbox Inbox;
+
+        [JsonProperty] internal int LastSeasonMonth;
+        [JsonProperty] internal int LastSeasonRank;
+        [JsonProperty] internal int LastSeasonScore;
+
+        [JsonProperty] internal int LastSeasonYear;
+        /*[JsonProperty] internal Google Google;
+        [JsonProperty] internal Gamecenter Gamecenter;*/
+
+        [JsonProperty] internal DateTime LastTick = DateTime.UtcNow;
+        [JsonProperty] internal int League;
+
+        [JsonProperty] internal bool Locked;
+
+        [JsonProperty] internal int LogSeed;
+        [JsonProperty] internal int Loses;
+        [JsonProperty] internal int LowID;
+
+        [JsonProperty] internal ModSlot ModSlot;
+
+        [JsonProperty] internal string Name = string.Empty;
+        [JsonProperty] internal bool NameSetByUser;
+
+        [JsonProperty] internal int ObstacleCleaned;
+
+        [JsonProperty] internal int OldSeasonMonth;
+        [JsonProperty] internal int OldSeasonRank;
+        [JsonProperty] internal int OldSeasonScore;
+        [JsonProperty] internal int OldSeasonYear;
+        [JsonProperty] internal string Password;
+
+        [JsonProperty] internal Rank Rank = Rank.Player;
+
+        [JsonProperty] internal bool RedPackageState;
+        [JsonProperty] internal int Score;
+
+        [JsonProperty] internal string Token;
+
+        [JsonProperty] internal List<int> Tutorials = new List<int>();
+        [JsonProperty] internal DateTime Update = DateTime.UtcNow;
+
+        [JsonProperty] internal int Wins;
 
         internal Player()
         {
@@ -150,11 +125,35 @@ namespace CR.Servers.CoC.Logic
             this.ModSlot.Initialize();
         }
 
+        internal bool Connected
+        {
+            get
+            {
+                if (this.Level?.GameMode != null)
+                {
+                    return this.Level.GameMode.Connected;
+                }
+                return false;
+            }
+        }
+
+        internal long UserId => ((long) this.HighID << 32) | (uint) this.LowID;
+
+        internal bool Banned => this.BanTime > DateTime.UtcNow;
+
+        internal override int Checksum => this.ExpPoints
+                                     + this.ExpLevel
+                                     + this.Diamonds
+                                     + this.FreeDiamonds
+                                     + this.Score
+                                     + this.DuelScore
+                                     + (this.AllianceLowId > 0 ? 13 : 0)
+                                     + base.Checksum;
+
         internal void Process()
         {
             this.Friends.VerifyFriend();
             this.VerifyAlliance();
-
         }
 
         internal void AddDiamonds(int Diamonds)
@@ -165,7 +164,7 @@ namespace CR.Servers.CoC.Logic
 
         internal void AddExperience(int ExpPoints)
         {
-            var ExperienceData = (ExperienceLevelData) CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.ExpLevel - 1);
+            ExperienceLevelData ExperienceData = (ExperienceLevelData) CSV.Tables.Get(Gamefile.Experience_Levels).GetDataWithID(this.ExpLevel - 1);
 
             this.ExpPoints += ExpPoints;
 
@@ -180,19 +179,22 @@ namespace CR.Servers.CoC.Logic
         {
             this.Score += Trophies;
 
-            LeagueData LeagueData = (LeagueData)CSV.Tables.Get(Gamefile.Leagues).GetDataWithInstanceID(this.League);
+            LeagueData LeagueData = (LeagueData) CSV.Tables.Get(Gamefile.Leagues).GetDataWithInstanceID(this.League);
 
             if (LeagueData?.PlacementLimitHigh > this.Score)
             {
                 for (int i = LeagueData.GetId(); i < CSV.Tables.Get(Gamefile.Leagues).Datas.Count; i++)
                 {
-                    LeagueData Data = (LeagueData)CSV.Tables.Get(Gamefile.Leagues).Datas[i];
+                    LeagueData Data = (LeagueData) CSV.Tables.Get(Gamefile.Leagues).Datas[i];
 
                     if (this.Score >= Data.PlacementLimitLow)
                     {
                         this.League = i;
                     }
-                    else break;
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -201,10 +203,10 @@ namespace CR.Servers.CoC.Logic
         {
             if (this.Alliance == null)
             {
-                var Clan = Core.Resources.Clans.Get(this.AllianceHighId, this.AllianceLowId);
+                Alliance Clan = Core.Resources.Clans.Get(this.AllianceHighId, this.AllianceLowId);
                 if (Clan != null)
                 {
-                    var Member = Clan.Members.Get(this.UserId);
+                    Member Member = Clan.Members.Get(this.UserId);
                     if (Member != null)
                     {
                         this.SetAlliance(Clan, Member);
@@ -247,7 +249,9 @@ namespace CR.Servers.CoC.Logic
                 _Packet.AddBool(false); //War Id or league id?
             }
             else
+            {
                 _Packet.AddBool(false);
+            }
 
             _Packet.AddInt(0); //Legendary_Trophies
 
@@ -348,14 +352,14 @@ namespace CR.Servers.CoC.Logic
 
             _Packet.AddInt(this.AllianceUnits.Count + this.AllianceSpells.Count);
 
-            foreach (var Unit in this.AllianceUnits)
+            foreach (UnitItem Unit in this.AllianceUnits)
             {
                 _Packet.AddInt(Unit.Data);
                 _Packet.AddInt(Unit.Count);
                 _Packet.AddInt(Unit.Level);
             }
 
-            foreach (var Spell in this.AllianceSpells)
+            foreach (UnitItem Spell in this.AllianceSpells)
             {
                 _Packet.AddInt(Spell.Data);
                 _Packet.AddInt(Spell.Count);
@@ -363,10 +367,12 @@ namespace CR.Servers.CoC.Logic
             }
 
 
-            _Packet.AddInt(Tutorials.Count);
-            foreach (var Tutorial in Tutorials)
+            _Packet.AddInt(this.Tutorials.Count);
+            foreach (int Tutorial in this.Tutorials)
+            {
                 _Packet.AddInt(Tutorial);
-            
+            }
+
             this.Achievements.Encode(_Packet);
             this.AchievementProgress.Encode(_Packet);
 
@@ -383,20 +389,18 @@ namespace CR.Servers.CoC.Logic
             this.UnitPreset1.Encode(_Packet);
             this.UnitPreset2.Encode(_Packet);
             this.UnitPreset3.Encode(_Packet);
-            
+
             _Packet.AddInt(0); // PreviousArmySize
             _Packet.AddInt(0); // UnitCounterForEvent
             this.Units2.Encode(_Packet);
             _Packet.AddInt(0);
             _Packet.AddInt(0);
             //_Packet.AddInt(0);
-
-
         }
 
         internal JObject Save()
         {
-            var Json = new JObject
+            JObject Json = new JObject
             {
                 {"avatar_id_high", this.HighID},
                 {"avatar_id_low", this.LowID},

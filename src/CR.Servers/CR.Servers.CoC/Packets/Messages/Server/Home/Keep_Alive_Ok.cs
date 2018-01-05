@@ -1,13 +1,13 @@
-﻿using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {
+    using CR.Servers.CoC.Logic;
+
     internal class Keep_Alive_Ok : Message
     {
-        internal override short Type => 20108;
-
         public Keep_Alive_Ok(Device device) : base(device)
         {
         }
+
+        internal override short Type => 20108;
     }
 }

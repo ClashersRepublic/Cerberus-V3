@@ -1,18 +1,18 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Core.Network
+﻿namespace CR.Servers.CoC.Core.Network
 {
+    using System;
+    using System.Net;
+    using System.Net.Sockets;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Logic.Enums;
+
     internal class Gateway
     {
-        private Socket _listener;
-        private SocketAsyncEventArgsPool _rcvPool;
-        private SocketAsyncEventArgsPool _sndPool;
+        private readonly Socket _listener;
+        private readonly SocketAsyncEventArgsPool _rcvPool;
+        private readonly SocketAsyncEventArgsPool _sndPool;
+
+        private readonly byte[] _emptyBuffer = new byte[0];
 
         internal Gateway()
         {
@@ -42,6 +42,8 @@ namespace CR.Servers.CoC.Core.Network
 
         internal void Accept(SocketAsyncEventArgs args)
         {
+            args.AcceptSocket = null;
+
             if (!this._listener.AcceptAsync(args))
             {
                 this.OnAcceptCompleted(null, args);
@@ -54,9 +56,6 @@ namespace CR.Servers.CoC.Core.Network
             {
                 this.ProcessAccept(args);
             }
-
-            args.AcceptSocket = null;
-            args.RemoteEndPoint = null;
 
             this.Accept(args);
         }
@@ -71,15 +70,11 @@ namespace CR.Servers.CoC.Core.Network
 
                 if (readArgs == null)
                 {
-                    // Logging.Error(this.GetType(), "Server is full (readArgs == NULL)");
-                    // return;
-
                     readArgs = new SocketAsyncEventArgs();
-                    readArgs.Completed += this.OnReceiveCompleted; 
+                    readArgs.Completed += this.OnReceiveCompleted;
                     readArgs.DisconnectReuseSocket = false;
                     readArgs.SetBuffer(new byte[Constants.ReceiveBuffer], 0, Constants.ReceiveBuffer);
                 }
-
 
                 Device device = new Device();
                 Token token = new Token(readArgs, device, socket);
@@ -100,6 +95,10 @@ namespace CR.Servers.CoC.Core.Network
             {
                 this.ProcessReceive(args);
             }
+            else
+            {
+                this.Disconnect(args);
+            }
         }
 
         private void ProcessReceive(SocketAsyncEventArgs args)
@@ -111,6 +110,7 @@ namespace CR.Servers.CoC.Core.Network
                 if (token.Socket.Connected)
                 {
                     token.SetData();
+
                     try
                     {
                         if (token.Socket.Available == 0)
@@ -152,7 +152,7 @@ namespace CR.Servers.CoC.Core.Network
                 if (sendArgs == null)
                 {
                     sendArgs = new SocketAsyncEventArgs();
-                    sendArgs.Completed += OnSendCompleted;
+                    sendArgs.Completed += this.OnSendCompleted;
                     sendArgs.DisconnectReuseSocket = false;
                 }
 
@@ -167,7 +167,15 @@ namespace CR.Servers.CoC.Core.Network
 
         private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
-            this._sndPool.Enqueue(args);
+            if (args.DisconnectReuseSocket)
+            {
+                args.SetBuffer(this._emptyBuffer, 0, 0);
+                this._sndPool.Enqueue(args);
+            }
+            else
+            {
+                args.Dispose();
+            }
         }
 
         internal void Disconnect(SocketAsyncEventArgs rcvArgs)

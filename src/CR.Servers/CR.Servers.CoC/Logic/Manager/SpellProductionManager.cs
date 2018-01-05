@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Manager
+﻿namespace CR.Servers.CoC.Logic.Manager
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class SpellProductionManager
     {
         internal Level Level;
-        internal Timer Timer;
         internal List<ProductionItem> Productions;
+        internal Timer Timer;
+
+        public SpellProductionManager(Level Level)
+        {
+            this.Level = Level;
+            this.Timer = new Timer();
+            this.Productions = new List<ProductionItem>();
+        }
 
         internal int InProductionCapacity
         {
@@ -20,7 +26,7 @@ namespace CR.Servers.CoC.Logic.Manager
 
                 foreach (ProductionItem Production in this.Productions)
                 {
-                    Space += ((SpellData)Production.ItemData).HousingSpace * Production.Count;
+                    Space += ((SpellData) Production.ItemData).HousingSpace * Production.Count;
                 }
 
                 return Space;
@@ -28,13 +34,6 @@ namespace CR.Servers.CoC.Logic.Manager
         }
 
         internal bool ProduceUnit => this.Productions.Exists(T => !T.Terminate);
-
-        public SpellProductionManager(Level Level)
-        {
-            this.Level = Level;
-            this.Timer = new Timer();
-            this.Productions = new List<ProductionItem>();
-        }
 
         internal void AddUnit(SpellData Data, int Count)
         {
@@ -92,24 +91,26 @@ namespace CR.Servers.CoC.Logic.Manager
 
         internal int GetTrainingTime(SpellData Spell)
         {
-            var SpellForges = (Spell.UnitOfType == 1 ? this.Level.ComponentManager.SpellForge : this.Level.ComponentManager.DarkSpellForge)
+            List<Building> SpellForges = (Spell.UnitOfType == 1 ? this.Level.ComponentManager.SpellForge : this.Level.ComponentManager.DarkSpellForge)
                 .FindAll(SpellForge => SpellForge.GetUpgradeLevel() >= Spell.SpellForgeLevel - 1 && !SpellForge.Constructing);
 
             if (SpellForges.Count != 0)
+            {
                 return Spell.TrainingTime / SpellForges.Count;
+            }
 
             return Spell.TrainingTime;
         }
 
         internal void Load(JToken Json)
         {
-            var Slots = (JArray)Json?["slots"];
+            JArray Slots = (JArray) Json?["slots"];
 
             if (Slots != null)
             {
-                foreach (var Token in Slots)
+                foreach (JToken Token in Slots)
                 {
-                    var Item = new ProductionItem();
+                    ProductionItem Item = new ProductionItem();
                     Item.Load(Token);
                     this.Productions.Add(Item);
                 }
@@ -117,22 +118,28 @@ namespace CR.Servers.CoC.Logic.Manager
                 if (this.Productions.Count > 0)
                 {
                     if (JsonHelper.GetJsonNumber(Json, "t", out int Time))
+                    {
                         this.Timer.StartTimer(this.Level.Player.LastTick, Time);
+                    }
                 }
             }
         }
 
         internal JObject Save()
         {
-            var Json = new JObject();
+            JObject Json = new JObject();
 
             if (this.Timer.Started)
+            {
                 Json.Add("t", this.Timer.GetRemainingSeconds(this.Level.Player.LastTick));
+            }
 
-            var Slots = new JArray();
+            JArray Slots = new JArray();
 
-            foreach (var Production in this.Productions)
+            foreach (ProductionItem Production in this.Productions)
+            {
                 Slots.Add(Production.Save());
+            }
 
             Json.Add("slots", Slots);
 
@@ -143,13 +150,13 @@ namespace CR.Servers.CoC.Logic.Manager
         {
             if (this.Productions.Count > 0)
             {
-                var AvailableStorage = this.Level.ComponentManager.TotalMaxSpellHousing - this.Level.Player.Spells.GetUnitsTotalCapacity();
-                var CanAddProductionInPlayer = true;
+                int AvailableStorage = this.Level.ComponentManager.TotalMaxSpellHousing - this.Level.Player.Spells.GetUnitsTotalCapacity();
+                bool CanAddProductionInPlayer = true;
 
-                for (var i = 0; i < this.Productions.Count; i++)
+                for (int i = 0; i < this.Productions.Count; i++)
                 {
-                    var Production = this.Productions[i];
-                    var Spell = (SpellData)Production.ItemData;
+                    ProductionItem Production = this.Productions[i];
+                    SpellData Spell = (SpellData) Production.ItemData;
 
                     if (Production.Terminate)
                     {
@@ -161,7 +168,7 @@ namespace CR.Servers.CoC.Logic.Manager
                                 {
                                     this.Level.Player.Spells.Add(Spell, 1);
 
-                                    AvailableStorage -= Spell.HousingSpace;//Before +=
+                                    AvailableStorage -= Spell.HousingSpace; //Before +=
 
                                     Production.Count--;
                                 }
@@ -185,7 +192,7 @@ namespace CR.Servers.CoC.Logic.Manager
                                 {
                                     this.Level.Player.Spells.Add(Spell, 1);
 
-                                    AvailableStorage -= Spell.HousingSpace;//Before +=
+                                    AvailableStorage -= Spell.HousingSpace; //Before +=
                                 }
                                 else
                                 {
@@ -223,7 +230,9 @@ namespace CR.Servers.CoC.Logic.Manager
                                 this.Timer.IncreaseTimer(this.GetTrainingTime(Spell));
                             }
                             else
+                            {
                                 break;
+                            }
                         }
 
                         if (Production.Count <= 0)

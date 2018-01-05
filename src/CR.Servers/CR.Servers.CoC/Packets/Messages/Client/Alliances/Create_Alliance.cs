@@ -1,41 +1,39 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.CoC.Packets.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Alliances;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Logic.Enums;
+
     internal class Create_Alliance : Message
     {
-        internal override short Type => 14301;
+        internal int AllianceBadge;
+
+        internal Hiring AllianceType;
+        internal bool AmicalWar;
+        internal string Description;
+
+        internal string Name;
+        internal int Origin;
+
+        internal bool PublicWarLog;
+        internal int RequiredDuelScore;
+        internal int RequiredScore;
+        internal int WarFrequency;
 
         public Create_Alliance(Device Device, Reader Reader) : base(Device, Reader)
         {
         }
 
-        internal string Name;
-        internal string Description;
-
-        internal int AllianceBadge;
-        internal int RequiredScore;
-        internal int RequiredDuelScore;
-        internal int WarFrequency;
-
-        internal Hiring AllianceType;
-        internal int Origin;
-
-        internal bool PublicWarLog;
-        internal bool AmicalWar;
+        internal override short Type => 14301;
 
         internal override void Decode()
         {
@@ -56,7 +54,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (Level.Player.Resources.GetCountByData(Globals.AllianceCreateResourceData) >= Globals.AllianceCreateCost)
             {
                 if (!this.Device.GameMode.Level.Player.InAlliance)
@@ -109,7 +107,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                         {
                                             //Z`if (Foreground != null)
                                             {
-                                                var Alliance = new Alliance
+                                                Alliance Alliance = new Alliance
                                                 {
                                                     Header =
                                                     {
@@ -122,7 +120,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                                         RequiredScore = this.RequiredScore,
                                                         RequiredDuelScore = this.RequiredDuelScore,
                                                         AmicalWar = this.AmicalWar,
-                                                        Origin = this.Origin,
+                                                        Origin = this.Origin
                                                     },
                                                     Description = this.Description
                                                 };
@@ -156,17 +154,22 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     }
                                 }
                                 else
+                                {
                                     new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.NameTooShort}.Send();
+                                }
                             }
                             else
-                                new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName }.Send();
+                            {
+                                new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.InvalidName}.Send();
+                            }
                         }
                         else
-                            new Alliance_Create_Fail(this.Device) { Error = AllianceErrorReason.InvalidName}.Send();
+                        {
+                            new Alliance_Create_Fail(this.Device) {Error = AllianceErrorReason.InvalidName}.Send();
+                        }
                     }
                 }
             }
         }
     }
 }
-

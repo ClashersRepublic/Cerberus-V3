@@ -10,6 +10,6 @@
         WarElixir,
         WarDarkElixir,
         Builder_Gold,
-        Builder_Elixir,
+        Builder_Elixir
     }
 }

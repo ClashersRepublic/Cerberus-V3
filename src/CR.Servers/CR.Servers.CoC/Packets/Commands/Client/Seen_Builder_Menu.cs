@@ -1,19 +1,18 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.Binary;
+
     internal class Seen_Builder_Menu : Command
     {
-        internal override int Type => 604;
+        internal int State;
 
         public Seen_Builder_Menu(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int State;
+        internal override int Type => 604;
 
         internal override void Decode()
         {

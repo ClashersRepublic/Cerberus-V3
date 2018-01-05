@@ -1,27 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class Trap : GameObject
     {
+        internal Timer ConstructionTimer;
+        internal bool NeedRepair;
 
 
         private int UpgradeLevel;
-        internal bool NeedRepair;
 
-        internal Timer ConstructionTimer;
-        internal TrapData TrapData => (TrapData)this.Data;
+        public Trap(Data Data, Level Level) : base(Data, Level)
+        {
+            if (this.TrapData.HasAltMode || this.TrapData.DirectionCount > 0)
+            {
+                this.AddComponent(new CombatComponent(this));
+            }
+        }
+
+        internal TrapData TrapData => (TrapData) this.Data;
 
         internal override int HeightInTiles => this.TrapData.Height;
 
@@ -31,7 +34,7 @@ namespace CR.Servers.CoC.Logic
 
         internal override int VillageType => this.TrapData.VillageType;
 
-        internal int RemainingConstructionTime => ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool Constructing => this.ConstructionTimer != null;
 
@@ -41,7 +44,7 @@ namespace CR.Servers.CoC.Logic
             {
                 if (!this.Constructing)
                 {
-                    var Data = this.TrapData;
+                    TrapData Data = this.TrapData;
 
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
@@ -49,7 +52,7 @@ namespace CR.Servers.CoC.Logic
                         {
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >= Data.TownHallLevel[this.UpgradeLevel + 1];
                         }
-                        return this.Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 >=  Data.TownHallLevel[this.UpgradeLevel + 1];
+                        return this.Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 >= Data.TownHallLevel[this.UpgradeLevel + 1];
                     }
                 }
 
@@ -57,20 +60,15 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent)Component : null;
+        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
 
-        internal int GetUpgradeLevel() => this.UpgradeLevel;
-
-        public Trap(Data Data, Level Level) : base(Data, Level)
+        internal int GetUpgradeLevel()
         {
-            if (this.TrapData.HasAltMode || this.TrapData.DirectionCount > 0)
-            {
-                AddComponent(new CombatComponent(this));
-            }
+            return this.UpgradeLevel;
         }
 
         internal void StartUpgrade()
-        {   
+        {
             int Time = this.TrapData.GetBuildTime(this.UpgradeLevel + 1);
 
             if (!this.Constructing)
@@ -114,7 +112,6 @@ namespace CR.Servers.CoC.Logic
 
         internal void FinishConstruction(bool NoWorker = false)
         {
-
             TrapData Data = this.TrapData;
             if (this.UpgradeLevel + 1 > Data.MaxLevel)
             {
@@ -122,7 +119,9 @@ namespace CR.Servers.CoC.Logic
                 this.SetUpgradeLevel(Data.MaxLevel);
             }
             else
+            {
                 this.SetUpgradeLevel(this.UpgradeLevel + 1);
+            }
 
             if (!NoWorker)
             {
@@ -139,16 +138,15 @@ namespace CR.Servers.CoC.Logic
 
             this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Data.GetBuildTime(this.UpgradeLevel)));
             this.ConstructionTimer = null;
-
         }
 
         internal void CancelConstruction()
         {
             if (this.Constructing)
-            {           
+            {
                 //Alt resource not supported yet
 
-                var resourceCount = (int)((this.TrapData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long)1374389535) >> 32);
+                int resourceCount = (int) ((this.TrapData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long) 1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
 
                 this.Level.Player.Resources.Plus(this.TrapData.GlobalId, resourceCount);
@@ -163,8 +161,10 @@ namespace CR.Servers.CoC.Logic
                 }
 
                 this.ConstructionTimer = null;
-                if (UpgradeLevel == -1)
+                if (this.UpgradeLevel == -1)
+                {
                     this.Level.GameObjectManager.RemoveGameObject(this, this.VillageType); //Should never happend since supercell disable this
+                }
             }
         }
 
@@ -204,22 +204,27 @@ namespace CR.Servers.CoC.Logic
             {
                 if (ConstructionTime > -1)
                 {
-                    var startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
-                    var duration = ConstructionTimeEnd - startTime;
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int duration = ConstructionTimeEnd - startTime;
                     if (duration < 0)
+                    {
                         duration = 0;
+                    }
                     //ConstructionTime = Math.Min(ConstructionTime, Data.GetBuildTime(this.UpgradeLevel + 1));
 
                     this.ConstructionTimer = new Timer();
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, duration);
                     if (this.VillageType == 0)
+                    {
                         this.Level.WorkerManager.AllocateWorker(this);
+                    }
                     else
                     {
                         if (this.UpgradeLevel > -1)
+                        {
                             this.Level.WorkerManagerV2.AllocateWorker(this);
+                        }
                     }
-
                 }
             }
 
@@ -236,7 +241,9 @@ namespace CR.Servers.CoC.Logic
                     this.SetUpgradeLevel(Data.MaxLevel);
                 }
                 else
+                {
                     this.SetUpgradeLevel(Level);
+                }
             }
 
             JsonHelper.GetJsonBoolean(Json, "needs_repair", out this.NeedRepair);

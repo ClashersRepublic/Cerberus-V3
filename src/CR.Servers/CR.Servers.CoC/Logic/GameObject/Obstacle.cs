@@ -1,19 +1,26 @@
-﻿using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using Newtonsoft.Json.Linq;
+
     internal class Obstacle : GameObject
     {
+        internal Timer ClearTimer;
         internal bool Destructed;
 
-        internal Timer ClearTimer;
+        internal int[] GemDrops =
+        {
+            3, 0, 1, 2, 0, 1, 1, 0, 0, 3,
+            1, 0, 2, 2, 0, 0, 3, 0, 1, 0
+        };
+
+        public Obstacle(Data Data, Level Level) : base(Data, Level)
+        {
+        }
 
         internal ObstacleData ObstacleData => (ObstacleData) this.Data;
 
@@ -27,20 +34,9 @@ namespace CR.Servers.CoC.Logic
 
         internal override int VillageType => this.ObstacleData.VillageType;
 
-        internal int RemainingClearingTime => ClearTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingClearingTime => this.ClearTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
 
         internal bool ClearingOnGoing => this.ClearTimer != null;
-
-        internal int[] GemDrops =
-        {
-            3, 0, 1, 2, 0, 1, 1, 0, 0, 3,
-            1, 0, 2, 2, 0, 0, 3, 0, 1, 0
-        };
-
-        public Obstacle(Data Data, Level Level) : base(Data, Level)
-        {
-
-        }
 
         internal bool CanClearing()
         {
@@ -75,23 +71,27 @@ namespace CR.Servers.CoC.Logic
         internal void ClearingFinished()
         {
             Player Player = this.Level.Player;
-            
+
             if (this.VillageType == 0)
             {
-                Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounter++]);
+                Player.AddDiamonds(this.GemDrops[this.Level.GameObjectManager.ObstacleClearCounter++]);
 
-                if (Level.GameObjectManager.ObstacleClearCounter >= GemDrops.Length)
-                    Level.GameObjectManager.ObstacleClearCounter = 0;
+                if (this.Level.GameObjectManager.ObstacleClearCounter >= this.GemDrops.Length)
+                {
+                    this.Level.GameObjectManager.ObstacleClearCounter = 0;
+                }
                 this.Level.WorkerManager.DeallocateWorker(this);
             }
             else
             {
                 if (!this.ObstacleData.TallGrass)
                 {
-                    Player.AddDiamonds(this.GemDrops[Level.GameObjectManager.ObstacleClearCounterV2++]);
+                    Player.AddDiamonds(this.GemDrops[this.Level.GameObjectManager.ObstacleClearCounterV2++]);
 
-                    if (Level.GameObjectManager.ObstacleClearCounterV2 >= GemDrops.Length)
-                        Level.GameObjectManager.ObstacleClearCounterV2 = 0;
+                    if (this.Level.GameObjectManager.ObstacleClearCounterV2 >= this.GemDrops.Length)
+                    {
+                        this.Level.GameObjectManager.ObstacleClearCounterV2 = 0;
+                    }
 
                     this.Level.WorkerManagerV2.DeallocateWorker(this);
                 }
@@ -99,12 +99,12 @@ namespace CR.Servers.CoC.Logic
 
             // LogicAchievementManager::obstacleCleared();
 
-            Player.AddExperience(GamePlayUtil.TimeToXp(ObstacleData.ClearTimeSeconds));
+            Player.AddExperience(GamePlayUtil.TimeToXp(this.ObstacleData.ClearTimeSeconds));
             Player.ObstacleCleaned++;
 
             this.ClearTimer = null;
             this.Destructed = true;
-            this.Level.GameObjectManager.RemoveGameObject(this, VillageType);
+            this.Level.GameObjectManager.RemoveGameObject(this, this.VillageType);
         }
 
         internal void StartClearing()
@@ -142,7 +142,7 @@ namespace CR.Servers.CoC.Logic
             if (this.ClearingOnGoing)
             {
                 this.Level.Player.Resources.Plus(this.ObstacleData.ClearResourceData.GlobalId, this.ObstacleData.ClearCost);
-                
+
                 if (this.VillageType == 0)
                 {
                     this.Level.WorkerManager.DeallocateWorker(this);
@@ -185,18 +185,24 @@ namespace CR.Servers.CoC.Logic
             {
                 if (ClearTime > -1)
                 {
-                    var startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
-                    var duration = ClearTimeEnd - startTime;
+                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int duration = ClearTimeEnd - startTime;
                     if (duration < 0)
+                    {
                         duration = 0;
+                    }
 
                     this.ClearTimer = new Timer();
                     this.ClearTimer.StartTimer(this.Level.Player.LastTick, duration);
 
                     if (this.VillageType == 0)
+                    {
                         this.Level.WorkerManager.AllocateWorker(this);
+                    }
                     else
+                    {
                         this.Level.WorkerManagerV2.AllocateWorker(this);
+                    }
                 }
             }
 

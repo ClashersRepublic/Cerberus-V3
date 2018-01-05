@@ -1,25 +1,25 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Clan;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Commands.Server;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.Extensions.Binary;
+
     internal class Change_Alliance_Member_Role : Message
     {
-        internal override short Type => 14306;
-
-        public Change_Alliance_Member_Role(Device Device, Reader Reader) : base(Device, Reader)
-        {
-            
-        }
-
         internal int HighId;
         internal int LowId;
         internal Role Role;
+
+        public Change_Alliance_Member_Role(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override short Type => 14306;
 
         internal override void Decode()
         {
@@ -30,8 +30,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 
         internal override void Process()
         {
-            var Level = this.Device.GameMode.Level;
-            var Target = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
+            Level Level = this.Device.GameMode.Level;
+            Player Target = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
 
             if (Level.Player.InAlliance)
             {
@@ -39,9 +39,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                 {
                     if (Target.InAlliance)
                     {
-                        var Alliance = Level.Player.Alliance;
-                        var Executer = Level.Player.AllianceMember;
-                        var TargetMember = Target.AllianceMember;
+                        Alliance Alliance = Level.Player.Alliance;
+                        Member Executer = Level.Player.AllianceMember;
+                        Member TargetMember = Target.AllianceMember;
 
                         if (Executer != null)
                         {
@@ -97,22 +97,34 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
                                     }
                                 }
                                 else
+                                {
                                     Logging.Error(this.GetType(), "Unable to change alliance member role. The executer doesn't have proper rank!");
+                                }
                             }
                             else
+                            {
                                 Logging.Error(this.GetType(), "Unable to change alliance member role. The targetmember is null and this is critical is VerifyAlliance() seems to be failing. Please notify server deverloper as soon as possible!");
+                            }
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to change alliance member role. The executer is null and this is critical is VerifyAlliance() seems to be failing. Please notify server deverloper as soon as possible!");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to change alliance member role. The target is not in a clan!");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to change alliance member role. The target is null");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to change alliance member role. The player is not in a clan!");
+            }
         }
     }
 }

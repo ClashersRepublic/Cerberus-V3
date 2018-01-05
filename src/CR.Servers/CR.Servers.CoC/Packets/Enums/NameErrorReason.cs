@@ -7,6 +7,6 @@
         NameTooShort = 2,
         NameInvalid = 3,
         NameAlreadyChanged = 4,
-        TownHallRequiredLevel = 5,
+        TownHallRequiredLevel = 5
     }
 }

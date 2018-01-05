@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Core.Consoles.Colorful;
-
-namespace CR.Servers.CoC.Logic.Chat
+﻿namespace CR.Servers.CoC.Logic.Chat
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+
     internal class Chat
     {
         internal List<Device> Devices;
@@ -31,6 +30,7 @@ namespace CR.Servers.CoC.Logic.Chat
 
             return false;
         }
+
         internal void Quit(Device Device)
         {
             lock (this.Gate)
@@ -51,10 +51,12 @@ namespace CR.Servers.CoC.Logic.Chat
                     {
                         if (Device2.Connected)
                         {
-                            new Global_Chat_Line(Device2, Device.GameMode.Level.Player){Message = Message}.Send();
+                            new Global_Chat_Line(Device2, Device.GameMode.Level.Player) {Message = Message}.Send();
                         }
                         else
+                        {
                             this.Quit(Device2);
+                        }
                     }
 
                     /*if (Device.Connected)

@@ -1,20 +1,20 @@
-﻿using System.Text.RegularExpressions;
-using CR.Servers.CoC.Core.Consoles;
-using CR.Servers.CoC.Core.Database;
-using CR.Servers.CoC.Core.Events;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Extensions.Game;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Logic.Chat;
-using CR.Servers.CoC.Logic.Slots;
-using CR.Servers.CoC.Packets;
-using CR.Servers.Core;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Logic.Enums;
-using NLog;
-
-namespace CR.Servers.CoC.Core
+﻿namespace CR.Servers.CoC.Core
 {
+    using System;
+    using System.Text.RegularExpressions;
+    using CR.Servers.CoC.Core.Consoles;
+    using CR.Servers.CoC.Core.Database;
+    using CR.Servers.CoC.Core.Events;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Extensions.Game;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Logic.Chat;
+    using CR.Servers.CoC.Logic.Slots;
+    using CR.Servers.CoC.Packets;
+    using CR.Servers.Core;
+    using CR.Servers.Logic.Enums;
+    using NLog;
+
     internal class Resources
     {
         internal static Accounts Accounts;
@@ -28,12 +28,13 @@ namespace CR.Servers.CoC.Core
         internal static Timers Timers;
         internal static Test Test;
         internal static Logger Logger;
+        internal static PacketManager PacketManager;
         internal static bool Started;
         internal static bool Closing;
 
         internal static void Initialize()
         {
-            Resources.Logger = LogManager.GetCurrentClassLogger(typeof(Resources));
+            Logger = LogManager.GetCurrentClassLogger(typeof(Resources));
 
             Factory.Initialize();
             CSV.Initialize();
@@ -48,18 +49,19 @@ namespace CR.Servers.CoC.Core
                 Mongo.Initialize();
             }
 
-            Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
-            Resources.Name = new Regex("^[a-zA-Z0-9- ]*$");
+            Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
+            Name = new Regex("^[a-zA-Z0-9- ]*$");
 
+            PacketManager = new PacketManager();
 
-            Resources.Accounts = new Accounts();
-            Resources.Clans = new Clans();
-            Resources.Chats = new Chats();
-            Resources.BattlesV2 = new BattlesV2();
-            Resources.Random = new XorShift();
-            Resources.Gateway = new Gateway();
-            Resources.Timers = new Timers();
-            Resources.Started = true;
+            Accounts = new Accounts();
+            Clans = new Clans();
+            Chats = new Chats();
+            BattlesV2 = new BattlesV2();
+            Random = new XorShift();
+            Gateway = new Gateway();
+            Timers = new Timers();
+            Started = true;
 
             Parser.Initialize();
             EventsHandler.Initialize();
@@ -69,6 +71,5 @@ namespace CR.Servers.CoC.Core
             Resources.Test = new Test();
 #endif
         }
-
     }
 }

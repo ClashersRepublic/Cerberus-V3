@@ -1,21 +1,21 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Move_Building_In_Layout : Command
     {
-        internal override int Type => 546;
-
-        public Move_Building_In_Layout(Device Device, Reader Reader) : base(Device, Reader)
-        {
-            
-        }
+        internal int BuildingId;
+        internal int Layout;
 
         internal int X;
         internal int Y;
-        internal int BuildingId;
-        internal int Layout;
+
+        public Move_Building_In_Layout(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override int Type => 546;
 
         internal override void Decode()
         {

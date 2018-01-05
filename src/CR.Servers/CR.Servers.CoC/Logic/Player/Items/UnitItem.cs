@@ -1,34 +1,33 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Extensions.Binary;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.Extensions.Binary;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     internal class UnitItem : Item
     {
-        [JsonProperty] internal int Level;
         [JsonProperty] internal long DonatorId;
+        [JsonProperty] internal int Level;
 
-        internal override int Checksum => base.Checksum + this.Level;
-
-        public UnitItem() : base()
+        public UnitItem()
         {
-
         }
 
         public UnitItem(int Data, int Count, int Level) : base(Data, Count)
         {
             this.Level = Level;
         }
+
         public UnitItem(int Data, int Count, int Level, long DonatorId) : base(Data, Count)
         {
             this.Level = Level;
             this.DonatorId = DonatorId;
         }
+
+        internal override int Checksum => base.Checksum + this.Level;
 
         internal override void Decode(Reader Reader)
         {
@@ -44,12 +43,14 @@ namespace CR.Servers.CoC.Logic
 
         internal override JObject Save()
         {
-            var Json = base.Save();
+            JObject Json = base.Save();
 
             Json.Add("lvl", this.Level);
 
             if (this.DonatorId > 0)
+            {
                 Json.Add("donator_id", this.DonatorId);
+            }
 
             return Json;
         }

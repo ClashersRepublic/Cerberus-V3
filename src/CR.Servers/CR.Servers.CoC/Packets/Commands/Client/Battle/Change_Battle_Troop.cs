@@ -1,16 +1,15 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client.Battle
+﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Change_Battle_Troop : Command
     {
-        internal override int Type => 711;
-
         public Change_Battle_Troop(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
+
+        internal override int Type => 711;
 
         internal override void Decode()
         {

@@ -1,28 +1,27 @@
-﻿using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.List;
-using CR.Servers.Logic.Enums;
-
-namespace CR.Servers.CoC.Packets.Messages.Server.Home
+﻿namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.List;
+    using CR.Servers.Logic.Enums;
+
     internal class Own_Home_Data : Message
     {
-        internal override short Type => 24101;
-
         public Own_Home_Data(Device Device) : base(Device)
         {
             Device.GameMode.Level.Tick();
         }
 
+        internal override short Type => 24101;
+
         internal override void Encode()
         {
             this.Data.AddInt(0);
             this.Data.AddInt(-1);
-            
+
             this.Device.Account.Home.Encode(this.Data);
             this.Device.Account.Player.Encode(this.Data);
-            this.Data.AddInt(Device.State == State.WAR_EMODE ? 1 : 0);
-            this.Data.AddInt(1);          
+            this.Data.AddInt(this.Device.State == State.WAR_EMODE ? 1 : 0);
+            this.Data.AddInt(1);
             this.Data.AddInt(0);
 
             this.Data.AddLong(1462629754000);

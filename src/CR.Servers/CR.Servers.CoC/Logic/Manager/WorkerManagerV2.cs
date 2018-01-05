@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+
     internal class WorkerManagerV2
     {
-        internal int WorkerCount;
-
         internal List<GameObject> GameObjects;
-
-        internal int FreeWorkers => this.WorkerCount - this.GameObjects.Count;
+        internal int WorkerCount;
 
         public WorkerManagerV2()
         {
             this.GameObjects = new List<GameObject>();
             this.WorkerCount = 1;
         }
+
+        internal int FreeWorkers => this.WorkerCount - this.GameObjects.Count;
 
         internal void AllocateWorker(GameObject GameObject)
         {
@@ -48,7 +47,7 @@ namespace CR.Servers.CoC.Logic
 
                     if (Construction is Building Building)
                     {
-                        var HeroBaseComponent = Building.HeroBaseComponent;
+                        HeroBaseComponent HeroBaseComponent = Building.HeroBaseComponent;
                         if (HeroBaseComponent != null)
                         {
                             if (HeroBaseComponent.Upgrading)
@@ -61,7 +60,9 @@ namespace CR.Servers.CoC.Logic
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to building with remaining construction time 0");
                         }
                         else
+                        {
                             RemainingTime = Building.RemainingConstructionTime;
+                        }
                     }
                     else if (Construction is Obstacle Obstacle)
                     {
@@ -70,7 +71,9 @@ namespace CR.Servers.CoC.Logic
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
                         }
                         else
+                        {
                             RemainingTime = Obstacle.RemainingClearingTime;
+                        }
                     }
                     else if (Construction is Trap Trap)
                     {
@@ -79,7 +82,9 @@ namespace CR.Servers.CoC.Logic
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to Trap with remaining construction time 0");
                         }
                         else
+                        {
                             RemainingTime = Trap.RemainingConstructionTime;
+                        }
                     }
                     else if (Construction is VillageObject VillageObject)
                     {
@@ -88,7 +93,9 @@ namespace CR.Servers.CoC.Logic
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to village object with remaining clearing time 0");
                         }
                         else
+                        {
                             RemainingTime = VillageObject.RemainingConstructionTime;
+                        }
                     }
 
                     if (RemainingTime != -1)
@@ -114,12 +121,12 @@ namespace CR.Servers.CoC.Logic
 
         internal void FinishTaskOfOneWorker()
         {
-            var GameObject = this.GetShortestTaskGO();
+            GameObject GameObject = this.GetShortestTaskGO();
             if (GameObject != null)
             {
                 if (GameObject is Building Building)
                 {
-                    var HeroBaseComponent = Building.HeroBaseComponent;
+                    HeroBaseComponent HeroBaseComponent = Building.HeroBaseComponent;
                     if (Building.Constructing)
                     {
                         Building.SpeedUpConstruction();

@@ -1,18 +1,17 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Boost_Building : Command
     {
-        internal override int Type => 526;
+        internal int Count;
 
         public Boost_Building(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal int Count;
+        internal override int Type => 526;
 
         internal override void Decode()
         {

@@ -1,24 +1,23 @@
-﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Messages.Server.Alliances;
-using CR.Servers.CoC.Packets.Messages.Server.API;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.API
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.API
 {
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.API;
+    using CR.Servers.Extensions.Binary;
+
     internal class Bind_Facebook_Account : Message
     {
-        internal override short Type => 14201;
+        internal string Identifier;
+        internal string Token;
+
+        internal bool Unknown;
 
         public Bind_Facebook_Account(Device Device, Reader Reader) : base(Device, Reader)
         {
-            
         }
 
-        internal bool Unknown;
-        internal string Identifier;
-        internal string Token;
+        internal override short Type => 14201;
 
         internal override void Decode()
         {
@@ -29,10 +28,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.API
 
         internal override void Process()
         {
-            var Level = this.Device.GameMode.Level;
+            Level Level = this.Device.GameMode.Level;
             if (!string.IsNullOrEmpty(this.Identifier))
             {
-                var Player = Resources.Accounts.LoadAccountViaFacebook(this.Identifier)?.Player;
+                Player Player = Resources.Accounts.LoadAccountViaFacebook(this.Identifier)?.Player;
 
                 if (Player != null)
                 {

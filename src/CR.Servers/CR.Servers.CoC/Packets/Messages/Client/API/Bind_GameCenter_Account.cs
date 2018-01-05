@@ -1,26 +1,25 @@
-﻿using CR.Servers.CoC.Logic;
-using CR.Servers.Core.Consoles.Colorful;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.API
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.API
 {
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.Extensions.Binary;
+
     internal class Bind_GameCenter_Account : Message
     {
-        internal override short Type => 14212;
-
-        public Bind_GameCenter_Account(Device Device, Reader Reader) : base(Device, Reader)
-        {
-            
-        }
+        internal string BundleId;
 
         internal bool Force;
         internal string GameCenterId;
-        internal string Url;
-        internal string BundleId;
+        internal byte[] Salt;
 
         internal byte[] Signature;
-        internal byte[] Salt;
         internal byte[] Timestamp;
+        internal string Url;
+
+        public Bind_GameCenter_Account(Device Device, Reader Reader) : base(Device, Reader)
+        {
+        }
+
+        internal override short Type => 14212;
 
         internal override void Decode()
         {

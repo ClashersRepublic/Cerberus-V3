@@ -1,14 +1,14 @@
-﻿using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using Newtonsoft.Json.Linq;
+
     internal class ProductionItem : Item
     {
         internal bool Terminate;
-        
-        public ProductionItem() : base()
+
+        public ProductionItem()
         {
             // ProductionItem.
         }
@@ -37,14 +37,18 @@ namespace CR.Servers.CoC.Logic
         {
             base.Load(Json);
             if (JsonHelper.GetJsonBoolean(Json, "t", out bool Terminate))
+            {
                 this.Terminate = Terminate;
+            }
         }
 
         internal override JObject Save()
         {
             JObject Json = base.Save();
             if (this.Terminate)
+            {
                 Json.Add("t", this.Terminate);
+            }
             return Json;
         }
     }

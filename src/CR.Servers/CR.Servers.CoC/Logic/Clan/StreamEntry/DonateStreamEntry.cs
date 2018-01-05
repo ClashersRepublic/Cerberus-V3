@@ -1,22 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json.Linq;
+
     internal class DonateStreamEntry : StreamEntry
     {
-        internal override AllianceStream Type => AllianceStream.Donate;
+        internal bool HaveMessage;
+        internal int MaxSpell;
+
+        internal int MaxTroop;
+        internal string Message;
+        internal bool New = true;
+        internal AllianceUnitSlots Units;
+        internal int UsedSpell;
+        internal int UsedTroop;
+
+        internal int UsedTroopSend; //Do not save this
 
         public DonateStreamEntry()
         {
@@ -28,16 +34,7 @@ namespace CR.Servers.CoC.Logic.Clan
             this.Units = new AllianceUnitSlots();
         }
 
-        internal int MaxTroop;
-        internal int MaxSpell;
-        internal int UsedTroop;
-        internal int UsedSpell;
-        internal bool HaveMessage;
-        internal string Message;
-        internal bool New = true;
-
-        internal int UsedTroopSend; //Do not save this
-        internal AllianceUnitSlots Units;
+        internal override AllianceStream Type => AllianceStream.Donate;
 
         internal override void Encode(List<byte> Packet)
         {
@@ -79,16 +76,20 @@ namespace CR.Servers.CoC.Logic.Clan
 
             Packet.AddBool(this.HaveMessage);
             if (this.HaveMessage)
+            {
                 Packet.AddString(this.Message);
+            }
 
-             if (this.Units == null)
+            if (this.Units == null)
+            {
                 this.Units = new AllianceUnitSlots();
+            }
 
-            var donatedUnits = this.Units.ToArray();
+            UnitItem[] donatedUnits = this.Units.ToArray();
 
             Packet.AddInt(donatedUnits.Length);
 
-            foreach (var donatedUnit in donatedUnits)
+            foreach (UnitItem donatedUnit in donatedUnits)
             {
                 Packet.AddInt(donatedUnit.Data);
                 Packet.AddInt(donatedUnit.Count);
@@ -116,7 +117,7 @@ namespace CR.Servers.CoC.Logic.Clan
             JsonHelper.GetJsonNumber(Json, "used_troop", out this.UsedTroop);
             JsonHelper.GetJsonNumber(Json, "used_spell", out this.UsedSpell);
 
-            JArray units = (JArray)Json["units"];
+            JArray units = (JArray) Json["units"];
 
             if (units != null)
             {
@@ -148,7 +149,8 @@ namespace CR.Servers.CoC.Logic.Clan
             }
             else
             {
-                Json.Add("units", new JArray());;
+                Json.Add("units", new JArray());
+                ;
             }
             return Json;
         }

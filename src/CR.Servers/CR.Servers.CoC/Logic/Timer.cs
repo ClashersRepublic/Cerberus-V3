@@ -1,33 +1,33 @@
-﻿using CR.Servers.CoC.Extensions;
-using System;
-
-namespace CR.Servers.CoC.Logic
+﻿namespace CR.Servers.CoC.Logic
 {
+    using System;
+    using CR.Servers.CoC.Extensions;
+
     internal class Timer
     {
+        internal int EndTime;
         internal int Seconds;
         internal DateTime StartTime;
-        internal int EndTime;
+
+        internal Timer()
+        {
+            this.StartTime = new DateTime();
+            this.EndTime = 0;
+            this.Seconds = 0;
+        }
 
         internal bool Started => this.EndTime != 0;
 
 
-        internal DateTime GetStartTime => StartTime;
-        internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(EndTime);
+        internal DateTime GetStartTime => this.StartTime;
+        internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(this.EndTime);
 
-        internal Timer()
-        {
-            StartTime = new DateTime();
-            EndTime = 0;
-            Seconds = 0;
-        }
-        
 
         internal void StartTimer(DateTime time, int durationSeconds)
         {
-            StartTime = time;
-            EndTime = (int)TimeUtils.ToUnixTimestamp(time) + durationSeconds;
-            Seconds = durationSeconds;
+            this.StartTime = time;
+            this.EndTime = (int) TimeUtils.ToUnixTimestamp(time) + durationSeconds;
+            this.Seconds = durationSeconds;
         }
 
         internal void StopTimer()
@@ -38,19 +38,19 @@ namespace CR.Servers.CoC.Logic
 
         internal void FastForward(int seconds)
         {
-            Seconds -= seconds;
-            EndTime -= seconds;
+            this.Seconds -= seconds;
+            this.EndTime -= seconds;
         }
 
         internal void IncreaseTimer(int seconds)
         {
-            Seconds += seconds;
-            EndTime += seconds;
+            this.Seconds += seconds;
+            this.EndTime += seconds;
         }
 
         internal int GetRemainingSeconds(DateTime time)
         {
-            int result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
+            int result = this.Seconds - (int) time.Subtract(this.StartTime).TotalSeconds;
             if (result <= 0)
             {
                 result = 0;
@@ -64,22 +64,26 @@ namespace CR.Servers.CoC.Logic
             int result;
             if (!boost)
             {
-                result = Seconds - (int)time.Subtract(StartTime).TotalSeconds;
+                result = this.Seconds - (int) time.Subtract(this.StartTime).TotalSeconds;
             }
             else
             {
                 if (boostEndTime >= time)
-                    result = Seconds - (int)(time.Subtract(StartTime).TotalSeconds * multiplier);
+                {
+                    result = this.Seconds - (int) (time.Subtract(this.StartTime).TotalSeconds * multiplier);
+                }
                 else
                 {
-                    var boostedTime = (float)time.Subtract(StartTime).TotalSeconds - (float)(time - boostEndTime).TotalSeconds;
-                    var notBoostedTime = (float)time.Subtract(StartTime).TotalSeconds - boostedTime;
+                    float boostedTime = (float) time.Subtract(this.StartTime).TotalSeconds - (float) (time - boostEndTime).TotalSeconds;
+                    float notBoostedTime = (float) time.Subtract(this.StartTime).TotalSeconds - boostedTime;
 
-                    result = Seconds - (int)(boostedTime * multiplier + notBoostedTime);
+                    result = this.Seconds - (int) (boostedTime * multiplier + notBoostedTime);
                 }
             }
             if (result <= 0)
+            {
                 result = 0;
+            }
             return result;
         }
     }

@@ -1,49 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Extensions.Helper;
-using CR.Servers.CoC.Logic.Clan.Items;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Extensions.List;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Logic.Clan
+﻿namespace CR.Servers.CoC.Logic.Clan
 {
+    using System;
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Helper;
+    using CR.Servers.CoC.Logic.Clan.Items;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Extensions.List;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     [JsonConverter(typeof(StreamEntryConverter))]
     internal class StreamEntry
     {
-        internal long RequesterId;
+        internal DateTime Created = DateTime.UtcNow;
 
         internal int HighId;
         internal int LowId;
+        internal long RequesterId;
 
         internal int SenderHighId;
-        internal int SenderLowId;
-        internal int SenderLevel;
         internal int SenderLeague;
+        internal int SenderLevel;
+        internal int SenderLowId;
 
         internal string SenderName;
 
         internal Role SenderRole;
-
-        internal DateTime Created = DateTime.UtcNow;
-
-        internal int Age => (int)DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
-
-        internal long StreamId=> (long)this.HighId << 32 | (uint)this.LowId;
-
-        internal virtual AllianceStream Type
-        {
-            get
-            {
-                Logging.Error(this.GetType(), "Type must be overrided");
-                return 0;
-            }
-        }
 
         public StreamEntry()
         {
@@ -60,6 +43,19 @@ namespace CR.Servers.CoC.Logic.Clan
             this.SenderLevel = Member.Player.ExpLevel;
             this.SenderRole = Member.Role;
             this.SenderLeague = Member.Player.League;
+        }
+
+        internal int Age => (int) DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
+
+        internal long StreamId => ((long) this.HighId << 32) | (uint) this.LowId;
+
+        internal virtual AllianceStream Type
+        {
+            get
+            {
+                Logging.Error(this.GetType(), "Type must be overrided");
+                return 0;
+            }
         }
 
         internal virtual void Encode(List<byte> Packet)
@@ -109,10 +105,12 @@ namespace CR.Servers.CoC.Logic.Clan
                 JsonHelper.GetJsonNumber(Base, "sender_role", out int Role);
                 JsonHelper.GetJsonDateTime(Base, "date", out this.Created);
 
-                this.SenderRole = (Role)Role;
+                this.SenderRole = (Role) Role;
             }
             else
+            {
                 Logging.Error(this.GetType(), "Json doesn't contains base object!");
+            }
         }
 
         internal virtual JObject Save()
@@ -132,7 +130,7 @@ namespace CR.Servers.CoC.Logic.Clan
             JObject Json = new JObject
             {
                 {"type", (int) this.Type},
-                { "base", Base}
+                {"base", Base}
             };
 
             return Json;
@@ -141,6 +139,8 @@ namespace CR.Servers.CoC.Logic.Clan
 
     internal class StreamEntryConverter : JsonConverter
     {
+        public override bool CanWrite => true;
+
         public override bool CanConvert(Type Type)
         {
             return Type.BaseType == typeof(StreamEntry) || Type == typeof(StreamEntry);
@@ -153,7 +153,7 @@ namespace CR.Servers.CoC.Logic.Clan
             if (JsonHelper.GetJsonNumber(Token, "type", out int Type))
             {
                 StreamEntry Entry;
-                
+
                 switch (Type)
                 {
                     case 1:
@@ -180,24 +180,23 @@ namespace CR.Servers.CoC.Logic.Clan
 
                 return Entry;
             }
-            else
-                Logging.Info(this.GetType(), "ReadJson() - JsonObject doesn't contains 'type' key.");
+            Logging.Info(this.GetType(), "ReadJson() - JsonObject doesn't contains 'type' key.");
 
             return existingValue;
         }
 
-        public override bool CanWrite => true;
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            StreamEntry StreamEntry = (StreamEntry)value;
-            
+            StreamEntry StreamEntry = (StreamEntry) value;
+
             if (StreamEntry != null)
             {
                 StreamEntry.Save().WriteTo(writer);
             }
             else
+            {
                 writer.WriteNull();
+            }
         }
     }
 }
