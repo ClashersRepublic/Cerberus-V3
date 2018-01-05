@@ -8,79 +8,70 @@ namespace CR.Servers.CoC.Core.Network
     internal class Token : IDisposable
     {
         internal Device Device;
+        internal Socket Socket;
         internal SocketAsyncEventArgs Args;
         internal List<byte> Packet;
-
-        internal byte[] Buffer;
-
+        
         internal bool Aborting;
-        internal bool Disposed;
 
-        internal int Tries;
-
-        internal Token(SocketAsyncEventArgs Args, Device Device)
+        internal bool Connected
         {
+            get
+            {
+                return !this.Aborting && this.Socket.Connected;
+            }
+        }
+
+        internal Token(SocketAsyncEventArgs Args, Device Device, Socket socket)
+        {
+            this.Socket = socket;
+
             this.Device = Device;
             this.Device.Token = this;
 
             this.Args = Args;
             this.Args.UserToken = this;
-
-            this.Buffer = new byte[Constants.ReceiveBuffer];
+            
             this.Packet = new List<byte>(Constants.ReceiveBuffer);
         }
 
         internal void SetData()
         {
-            if (!this.Disposed)
+            if (!this.Aborting)
             {
                 byte[] Data = new byte[this.Args.BytesTransferred];
-                Array.Copy(this.Args.Buffer, 0, Data, 0, this.Args.BytesTransferred);
+                Array.Copy(this.Args.Buffer, Data, this.Args.BytesTransferred);
                 this.Packet.AddRange(Data);
             }
-
-            this.Tries += 1;
         }
 
         internal void Process()
         {
-            if (this.Tries > 10)
+            if (!this.Aborting)
             {
-                Resources.Gateway.Disconnect(this.Args);
-            }
-            else
-            {
-                this.Tries = 0;
-
-                byte[] Data = this.Packet.ToArray();
-                this.Device.Process(Data);
+                this.Device.Process(this.Packet.ToArray());
             }
         }
 
         public void Dispose()
         {
-            this.Buffer = null;
+            if (this.Aborting)
+            {
+                return;
+            }
+
+            this.Aborting = true;
+
+            this.Packet.Clear();
+            this.Device.Dispose();
+
+            if (this.Socket.Connected)
+            {
+                this.Socket.Dispose();
+            }
+
             this.Packet = null;
             this.Device = null;
-
-            this.Tries = 0;
-
-            this.Disposed = true;
-        }
-
-        ~Token()
-        {
-            if (!this.Aborting)
-            {
-                Resources.Gateway.Disconnect(this.Args);
-            }
-
-            if (!this.Disposed)
-            {
-                this.Dispose();
-            }
-
-            GC.SuppressFinalize(this);
         }
     }
 }

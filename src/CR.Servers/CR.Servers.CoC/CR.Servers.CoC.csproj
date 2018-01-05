@@ -183,7 +183,6 @@
     <Compile Include="Core\Events\EventsHandler.cs" />
     <Compile Include="Core\Logging.cs" />
     <Compile Include="Core\Network\Gateway.cs" />
-    <Compile Include="Core\Network\Pool.cs" />
     <Compile Include="Core\Network\Processor.cs" />
     <Compile Include="Core\Network\SocketAsyncEventArgsPool.cs" />
     <Compile Include="Core\Network\Token.cs" />
@@ -429,8 +428,6 @@
     <Compile Include="Packets\Commands\Server\Name_Change_Callback.cs" />
     <Compile Include="Packets\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_All_Training_V2.cs" />
-    <Compile Include="Packets\Cryptography\IEncrypter.cs" />
-    <Compile Include="Packets\Cryptography\RC4Encrypter.cs" />
     <Compile Include="Packets\Debug.cs" />
     <Compile Include="Packets\Debugs\Clear_All_Obstacle.cs" />
     <Compile Include="Packets\Debugs\Elite\Add_Unit.cs" />
@@ -528,6 +525,9 @@
     <Compile Include="Packets\Messages\Server\Home\Own_Home_Data.cs" />
     <Compile Include="Packets\Messages\Server\Home\Visit_Home_Data.cs" />
     <Compile Include="Packets\ServerCommand.cs" />
+    <Compile Include="Packets\Stream\RC4Encrypter.cs" />
+    <Compile Include="Packets\Stream\Scrambler\RC4Scrambler.cs" />
+    <Compile Include="Packets\Stream\StreamEncrypter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />

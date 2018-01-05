@@ -72,8 +72,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                         }
                     }
                 }
-                
-                this.Device.LastGlobalChatEntry = DateTime.Now;
             }
         }
     }

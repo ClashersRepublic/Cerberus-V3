@@ -85,7 +85,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
                                         if (!this.Reader.EndOfStream)
                                         {
-                                            this.Device.Seed = this.Reader.ReadUInt32();
+                                            this.Device.EncryptionSeed = this.Reader.ReadInt32();
                                             if (!this.Reader.EndOfStream)
                                             {
                                                 this.Reader.ReadVInt();
@@ -233,7 +233,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
             var Player = account.Player;
 
-            if (this.Device.ReceiveDecrypter.IsRC4)
+            if (this.Device.UseRC4)
                 new SessionKey(this.Device).Send();
 
             new Authentication_OK(this.Device).Send();

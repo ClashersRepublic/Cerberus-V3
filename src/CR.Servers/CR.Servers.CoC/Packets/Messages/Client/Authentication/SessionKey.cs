@@ -1,6 +1,7 @@
 ﻿using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Packets.Cryptography;
+using CR.Servers.CoC.Packets.Stream;
+using CR.Servers.CoC.Packets.Stream.Scrambler;
 using CR.Servers.Extensions.List;
 using CR.Servers.Library;
 
@@ -26,10 +27,22 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Authentication
 
         internal override void Process()
         {
-            string Nonce = Rjindael.ScrambleNonce(this.Device.Seed, this.Nonce);
+            string scrambledNonce = null;
+            RC4Scrambler rc4Scrambler = new RC4Scrambler(this.Device.EncryptionSeed);
 
-            ((RC4Encrypter)this.Device.ReceiveDecrypter).Init(Factory.RC4Key + Nonce);
-            ((RC4Encrypter)this.Device.SendEncrypter).Init(Factory.RC4Key + Nonce);
+            byte byte100 = 0;
+
+            for (int i = 0; i < 100; i++)
+            {
+                byte100 = (byte) rc4Scrambler.NextInt();
+            }
+
+            for (int i = 0; i < this.Nonce.Length; i++)
+            {
+                scrambledNonce += (char) (this.Nonce[i] ^ ((byte) rc4Scrambler.NextInt() & byte100));
+            }
+
+            this.Device.InitRC4Encrypters(Factory.RC4Key, scrambledNonce);
         }
     }
 }

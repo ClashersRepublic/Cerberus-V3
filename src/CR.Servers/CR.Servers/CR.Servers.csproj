@@ -106,7 +106,6 @@
     <Compile Include="Library\Blake2B\Blake2BCore.cs" />
     <Compile Include="Library\Blake2B\Blake2BHasher.cs" />
     <Compile Include="Library\Blake2B\Blake2BTreeConfig.cs" />
-    <Compile Include="Library\Rjindael.cs" />
     <Compile Include="Library\Zlib\CRC32.cs" />
     <Compile Include="Library\Zlib\Deflate.cs" />
     <Compile Include="Library\Zlib\DeflateStream.cs" />

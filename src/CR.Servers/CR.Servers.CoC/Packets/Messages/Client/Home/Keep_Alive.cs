@@ -1,6 +1,7 @@
 ﻿using System;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Extensions.Binary;
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Home
@@ -15,7 +16,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
         internal override void Process()
         {
-            this.Device.KeepAliveOk.Send();
+            new Keep_Alive_Ok(this.Device).Send();
             this.Device.LastKeepAlive = DateTime.UtcNow;
         }
     }

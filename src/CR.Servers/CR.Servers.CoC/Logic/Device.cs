@@ -1,64 +1,59 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic.Mode;
 using CR.Servers.CoC.Packets;
-using CR.Servers.CoC.Packets.Cryptography;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
+using CR.Servers.CoC.Packets.Stream;
 using CR.Servers.Extensions;
 using CR.Servers.Extensions.Binary;
-using CR.Servers.Library;
 using CR.Servers.Logic.Enums;
 
 namespace CR.Servers.CoC.Logic
 {
     public class Device : IDisposable
     {
-        internal Chat.Chat Chat;
-        internal Token Token;
-        internal Socket Socket;
-        internal DeviceInfo Info;
-        internal GameMode GameMode;
-        internal DateTime LastGlobalChatEntry;
-        internal DateTime LastKeepAlive;
-        internal DateTime LastMessage;
-        internal DateTime Session;
-        internal readonly Keep_Alive_Ok KeepAliveOk;
-
         internal Account Account;
+        internal Chat.Chat Chat;
 
-        internal IEncrypter ReceiveDecrypter;
-        internal IEncrypter SendEncrypter;
-        // internal PepperState PepperState;
+        internal bool Disposed;
+        internal bool UseRC4;
+
+        internal int EncryptionSeed;
+
+        internal GameMode GameMode;
+        internal DeviceInfo Info;
+        internal DateTime LastKeepAlive;
+
+        internal StreamEncrypter ReceiveEncrypter;
+        internal StreamEncrypter SendEncrypter;
+  
+        internal Token Token;
 
         internal State State = State.DISCONNECTED;
 
-        internal bool Disposed;
-
-        internal uint Seed;
-
+        internal Device()
+        {
+            GameMode = new GameMode(this);
+            LastKeepAlive = DateTime.UtcNow;
+        }
+        
         internal int Checksum
         {
             get
             {
-                int Checksum = 0;
+                var Checksum = 0;
 
-                Checksum += this.GameMode.Time.SubTick; 
-                Checksum += this.GameMode.Time.TotalSecs; 
+                Checksum += GameMode.Time.SubTick;
+                Checksum += GameMode.Time.TotalSecs;
 
-                if (this.GameMode.Level.Player != null)
+                if (GameMode.Level.Player != null)
                 {
-                    Checksum += this.GameMode.Level.Player.Checksum;
+                    Checksum += GameMode.Level.Player.Checksum;
 
-                    if (this.GameMode.Level.GameObjectManager != null)
-                    {
-                        Checksum += this.GameMode.Level.GameObjectManager.Checksum;
-                    }
+                    if (GameMode.Level.GameObjectManager != null)
+                        Checksum += GameMode.Level.GameObjectManager.Checksum;
                 }
 
                 // Visitor
@@ -69,206 +64,152 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal long TimeSinceLastKeepAliveMs => (long)DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
+        internal long TimeSinceLastKeepAliveMs => (long) DateTime.UtcNow.Subtract(LastKeepAlive).TotalMilliseconds;
 
+        internal bool Connected => !Disposed && Token.Connected;
 
-        internal Device(Socket Socket)
+        internal string OS => Info.Android ? "Android" : "iOS";
+
+        public void Dispose()
         {
-            this.Socket = Socket;
-            this.GameMode = new GameMode(this);
-            this.KeepAliveOk = new Keep_Alive_Ok(this);
-            this.LastKeepAlive = DateTime.UtcNow;
-        }
-
-        internal Device(Socket Socket, Token Token) : this(Socket)
-        {
-            this.Token = Token;
-        }
-
-        internal bool Connected
-        {
-            get
+            if (!Disposed)
             {
-                if (this.Socket.Connected)
+                Disposed = true;
+                State = State.DISCONNECTED;
+
+                Chat?.Quit(this);
+
+                if (Account != null)
                 {
-                    try
+                    if (Account.Player != null)
                     {
-                        if (!this.Socket.Poll(1000, SelectMode.SelectRead) || this.Socket.Available != 0)
+                        Resources.Accounts.SavePlayer(Account.Player);
+
+                        if (GameMode?.Level != null && Account.Player.BattleIdV2 > 0)
                         {
-                            return true;
+                            Resources.BattlesV2.Dequeue(GameMode.Level);
                         }
+
+                        Account.Player.Alliance?.DecrementTotalConnected();
                     }
-                    catch (Exception)
+
+                    if (Account.Home != null)
                     {
-                        return false;
+                        Resources.Accounts.SaveHome(Account.Home);
                     }
                 }
 
-                return false;
-            }
-        }
-
-        internal string OS => this.Info.Android ? "Android" : "iOS";
-
-        internal void Process(byte[] Buffer)
-        {
-            if (this.State != State.DISCONNECTED)
-            {
-                using (Reader Reader = new Reader(Buffer))
+                if (GameMode?.CommandManager != null)
                 {
-                    short Identifier = Reader.ReadInt16();
-                    int Length = Reader.ReadInt24();
-                    short Version = Reader.ReadInt16();
-
-                    if (Buffer.Length - 7 >= Length)
+                    if (GameMode.CommandManager.ServerCommands != null)
                     {
-                        byte[] Packet;
-                        if (Identifier == 10100)
-                        {
-                            Packet = Reader.ReadBytes(Length);
-                        }
-                        else
-                        {
-                            if (this.ReceiveDecrypter == null)
-                            {
-                                this.InitializeEncrypter(Identifier);
-                            }
-
-                            Packet = this.ReceiveDecrypter.Decrypt(Reader.ReadBytes(Length));
-                        }
-
-                        Message Message = Factory.CreateMessage(Identifier, this, new Reader(Packet));
-
-                        if (Message != null)
-                        {
-                            Message.Length = Length;
-                            Message.Version = Version;
-
-                            //Message.Reader = new Reader(Packet);
-
-                            Logging.Info(this.GetType(), "Packet " + ConsolePad.Padding(Message.GetType().Name) + " received from " + this.Socket.RemoteEndPoint + ".");
-
-                            try
-                            {
-                                Message.Decode();
-                                Message.Process();
-                            }
-                            catch (Exception Exception)
-                            {
-                                Logging.Error(this.GetType(), Exception.GetType().Name + " when handling the following message : ID " + Identifier + ", Length " + Length + ", Version " + Version + ".");
-                                Logging.Error(Exception.GetType(), Exception.Message + " [" + (this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + ":" + this.GameMode.Level.Player.LowID  : "-:-") + ']' + Environment.NewLine + Exception.StackTrace);
-                            }
-
-                            Message.Reader.Dispose();
-                        }
-                        else
-                            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({Identifier}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", Packet);
-
-                        if (this.Token != null)
-                        {
-                            if (!this.Token.Aborting)
-                            {
-                                this.Token.Packet.RemoveRange(0, Length + 7);
-
-                                if (Buffer.Length - 7 - Length >= 7)
-                                {
-                                    this.Process(Reader.ReadBytes(Buffer.Length - 7 - Length));
-                                }
-                            }
-                            else
-                            {
-                                this.Token = null;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //The buffer is not yet complete,So let's handle this packet a bit later
-                        Logging.Info(this.GetType(), "The received buffer length is inferior the header length.");
-                    }
-                }
-            }
-            else
-            {
-                if (this.Connected)
-                {
-                    if (this.Token != null)
-                    {
-                        Resources.Gateway.Disconnect(this.Token.Args);
-                        this.Token = null;
-                    }
-                }
-            }
-        }
-
-        internal void InitializeEncrypter(int FirstMessageType)
-        {
-            //if (FirstMessageType == 10100)
-            {
-                //Pepper
-            }
-            //else if (FirstMessageType == 10101)
-            {
-                this.ReceiveDecrypter = new RC4Encrypter(Factory.RC4Key, "nonce");
-                this.SendEncrypter = new RC4Encrypter(Factory.RC4Key, "nonce");
-            }
-        }
-
-        public async void Dispose()
-        {
-            if (!this.Disposed)
-            {
-                this.Disposed = true;
-                this.State = State.DISCONNECTED;
-                
-                this.Chat?.Quit(this);
-
-                if (this.Account != null)
-                {
-                    if (this.Account.Player != null)
-                    {
-                         Resources.Accounts.SavePlayer(this.Account.Player);
-
-                        if (this.GameMode?.Level != null && this.Account.Player.BattleIdV2 > 0)
-                        {
-                            Resources.BattlesV2.Dequeue(this.GameMode.Level);
-                        }
-
-                        this.Account.Player.Alliance?.DecrementTotalConnected();
-                    }
-
-                    if (this.Account.Home != null)
-                    {
-                         Resources.Accounts.SaveHome(this.Account.Home);
-                    }
-                }
-
-                if (this.GameMode?.CommandManager != null)
-                {
-                    if (this.GameMode.CommandManager.ServerCommands != null)
-                    {
-                        foreach (Command Command in this.GameMode.CommandManager.ServerCommands.Values.ToArray())
+                        foreach (Command Command in GameMode.CommandManager.ServerCommands.Values.ToArray())
                         {
                             Command.Execute();
                         }
                     }
                     else
                     {
-                        Logging.Error(this.GetType(), "CommandManager != null but ServerCommands == null");
+                        Logging.Error(GetType(), "CommandManager != null but ServerCommands == null");
                     }
                 }
-
-                try
-                {
-                    this.Socket.Shutdown(SocketShutdown.Both);
-                }
-                catch (Exception)
-                {
-                    // Already Closed.
-                }
-
-                this.Socket.Close();
             }
+        }
+
+        internal void Process(byte[] buffer)
+        {
+            if (State != State.DISCONNECTED)
+            {
+                if (buffer.Length >= 7)
+                {
+                    var messageType = buffer[1] | (buffer[0] << 8);
+                    var messageLength = buffer[4] | (buffer[3] << 8) | (buffer[2] << 16);
+                    var messageVersion = buffer[6] | (buffer[5] << 8);
+
+                    if (messageLength < 0x800000)
+                    {
+                        if (buffer.Length - 7 >= messageLength)
+                        {
+                            var messageBytes = new byte[messageLength];
+                            Array.Copy(buffer, 7, messageBytes, 0, messageLength);
+
+                            if (ReceiveEncrypter != null)
+                            {
+                                messageBytes = ReceiveEncrypter.Decrypt(messageBytes);
+                            }
+                            else
+                            {
+                                if (messageType == 10101)
+                                {
+                                    UseRC4 = true;
+                                    InitRC4Encrypters(Factory.RC4Key, "nonce");
+                                    messageBytes = ReceiveEncrypter.Decrypt(messageBytes);
+                                }
+                            }
+
+                            //Console.WriteLine("Message " + messageType);
+
+                            if (messageBytes != null)
+                            {
+                                var message = Factory.CreateMessage((short) messageType, this, new Reader(messageBytes));
+
+                                if (message != null)
+                                {
+                                    message.Version = (short) messageVersion;
+
+                                    try
+                                    {
+                                        message.Decode();
+                                        message.Process();
+                                    }
+                                    catch (Exception exception)
+                                    {
+                                        Logging.Error(GetType(),
+                                            "An error has been throwed when the handle of message type " + messageType + ", length: " + messageLength + ". trace: " + exception);
+                                    }
+                                }
+                                else
+                                {
+                                    Logging.Info(GetType(), "Message type " + messageType + " not exist.");
+                                }
+                            }
+                            else
+                            {
+                                Logging.Error(GetType(), "Unable to decrypt message type " + messageType + ". Encrypter: " + ReceiveEncrypter + ".");
+                            }
+
+                            Token.Packet.RemoveRange(0, messageLength + 7);
+
+                            if (buffer.Length - 7 - messageLength >= 7)
+                            {
+                                var nextPacket = new byte[buffer.Length - 7 - messageLength];
+                                Array.Copy(buffer, messageLength + 7, nextPacket, 0, nextPacket.Length);
+                                Process(nextPacket);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Resources.Gateway.Disconnect(this.Token.Args);
+                    }
+                }
+            }
+            else
+            {
+                Resources.Gateway.Disconnect(this.Token.Args);
+            }
+        }
+
+        internal void InitRC4Encrypters(string key, string nonce)
+        {
+            this.ReceiveEncrypter = new RC4Encrypter(key, nonce);
+            this.SendEncrypter = new RC4Encrypter(key, nonce);
+        }
+
+        internal void SetEncrypters(StreamEncrypter rcvEncrypter, StreamEncrypter sndEncrypter)
+        {
+            ReceiveEncrypter = rcvEncrypter;
+            SendEncrypter = sndEncrypter;
         }
 
         internal struct DeviceInfo
@@ -287,16 +228,16 @@ namespace CR.Servers.CoC.Logic
 
             internal int Locale;
 
+            /*
             internal void ShowValues()
             {
-                foreach (FieldInfo Field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-                {
+                foreach (var Field in GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
                     if (Field != null)
-                    {
-                        Logging.Info(this.GetType(), ConsolePad.Padding(Field.Name) + " : " + ConsolePad.Padding(!string.IsNullOrEmpty(Field.Name) ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)") : "(null)", 40));
-                    }
-                }
+                        Logging.Info(GetType(),
+                            ConsolePad.Padding(Field.Name) + " : " +
+                            ConsolePad.Padding(!string.IsNullOrEmpty(Field.Name) ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)") : "(null)", 40));
             }
+            */
         }
     }
 }

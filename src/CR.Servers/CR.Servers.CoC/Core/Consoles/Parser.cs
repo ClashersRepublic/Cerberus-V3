@@ -35,7 +35,6 @@ namespace CR.Servers.CoC.Core.Consoles
                                 Console.WriteLine("# ----------------------------------- #");
                                 Console.WriteLine("# In-Memory Accounts # " + ConsolePad.Padding(Resources.Accounts.Count.ToString(), 15) + " #");
                                 //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
-                                Console.WriteLine("# In-Memory Saea    # " + ConsolePad.Padding(Resources.Gateway.ReadPool.Count + " - " + Resources.Gateway.WritePool.Count, 15) + " #");
                                 Console.WriteLine("# ----------------------------------- #");
                             }
 
