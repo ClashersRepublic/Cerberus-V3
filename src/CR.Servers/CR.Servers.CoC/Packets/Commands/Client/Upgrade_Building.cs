@@ -78,9 +78,7 @@ namespace CR.Servers.CoC.Packets.Commands.Client
                                     else if (Data.IsAllianceCastle)
                                     {
                                         Level.Player.CastleLevel++;
-                                        Console.WriteLine(Level.Player.CastleLevel);
-                                        Console.WriteLine(Data.HousingSpace.Length);
-                                            Level.Player.CastleTotalCapacity = Data.HousingSpace[Level.Player.CastleLevel];
+                                        Level.Player.CastleTotalCapacity = Data.HousingSpace[Level.Player.CastleLevel];
                                         Level.Player.CastleTotalSpellCapacity = Data.HousingSpaceAlt[Level.Player.CastleLevel];
                                     }
                                     else if (Data.IsTownHall)
