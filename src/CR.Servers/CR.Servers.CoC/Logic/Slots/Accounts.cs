@@ -230,6 +230,7 @@
             if (Data != null)
             {
                 long ID = ((long) Data.HighId << 32) | (uint) Data.LowId;
+
                 if (!this.TryGetValue(ID, out Account))
                 {
                     if (!this.Players.TryGetValue(ID, out Player Player))
@@ -259,7 +260,8 @@
                     }
 
                     Account = new Account(Data.HighId, Data.LowId, Player, Home);
-                    this.TryAdd(ID, Account);
+
+                    this.Add(Account);
                 }
 
                 if (Account != null)
@@ -274,12 +276,14 @@
                     }
                 }
             }
+
             return Account;
         }
 
         internal async Task<Account> LoadAccountAsync(int HighID, int LowID, bool Store = true)
         {
             long ID = ((long) HighID << 32) | (uint) LowID;
+
             if (!this.TryGetValue(((long) HighID << 32) | (uint) LowID, out Account Account))
             {
                 Players Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
@@ -309,8 +313,7 @@
 
                     if (Player == null || Home == null)
                     {
-                        Logging.Error(this.GetType(),
-                            "Unable to load account id:" + HighID + "-" + LowID + ".");
+                        Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
                         return Account;
                     }
 
@@ -443,7 +446,6 @@
         {
             Player[] Players = this.Players.Values.ToArray();
             Home[] Homes = this.Homes.Values.ToArray();
-
 
             foreach (Player Player in Players)
             {
