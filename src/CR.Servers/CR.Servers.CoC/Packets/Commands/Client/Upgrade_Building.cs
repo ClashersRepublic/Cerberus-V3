@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Packets.Commands.Client
+﻿using CR.Servers.Core.Consoles.Colorful;
+
+namespace CR.Servers.CoC.Packets.Commands.Client
 {
     using System.Threading.Tasks;
     using CR.Servers.CoC.Core;
@@ -27,7 +29,7 @@
         internal override void Execute()
         {
             Level Level = this.Device.GameMode.Level;
-            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.Id);
             if (GameObject != null)
             {
                 if (GameObject is Building Building)
@@ -76,10 +78,10 @@
                                     else if (Data.IsAllianceCastle)
                                     {
                                         Level.Player.CastleLevel++;
-                                        Level.Player.CastleTotalCapacity =
-                                            Data.HousingSpace[Level.Player.CastleLevel];
-                                        Level.Player.CastleTotalSpellCapacity =
-                                            Data.HousingSpaceAlt[Level.Player.CastleLevel];
+                                        Console.WriteLine(Level.Player.CastleLevel);
+                                        Console.WriteLine(Data.HousingSpace.Length);
+                                            Level.Player.CastleTotalCapacity = Data.HousingSpace[Level.Player.CastleLevel];
+                                        Level.Player.CastleTotalSpellCapacity = Data.HousingSpaceAlt[Level.Player.CastleLevel];
                                     }
                                     else if (Data.IsTownHall)
                                     {

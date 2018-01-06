@@ -91,7 +91,7 @@
             Commands.Add(7, typeof(Diamonds_Added));
             Commands.Add(8, typeof(Changed_Alliance_Role));
 
-            Commands.Add(500, typeof(Buy_Building));
+            Commands.Add(500, typeof(Buy_Building)); // ?
             Commands.Add(501, typeof(Move_Building));
             Commands.Add(502, typeof(Upgrade_Building));
             Commands.Add(503, typeof(Sell_Building));

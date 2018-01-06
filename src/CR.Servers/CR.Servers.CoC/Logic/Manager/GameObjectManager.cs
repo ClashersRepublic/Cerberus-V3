@@ -96,7 +96,7 @@
 
         internal int Map => this.Level.Player?.Map ?? 0;
 
-        internal void AddGameObject(GameObject GameObject, int Map)
+        internal void AddGameObject(GameObject GameObject)
         {
             int GType = GameObject.Type;
 
@@ -131,8 +131,8 @@
                 }
             }
 
-            GameObject.Id = GlobalId.Create(500 + GType, this.GameObjects[GType][Map].Count);
-            this.GameObjects[GType][Map].Add(GameObject);
+            GameObject.Id = GlobalId.Create(500 + GType, this.GameObjects[GType][GameObject.VillageType].Count);
+            this.GameObjects[GType][GameObject.VillageType].Add(GameObject);
             this.Level.TileMap.AddGameObject(GameObject);
         }
 
@@ -423,7 +423,7 @@
             {
                 foreach (JToken Token in Buildings)
                 {
-                    this.LoadGameObject(Token, 0);
+                    this.LoadGameObject(Token);
                 }
             }
             else
@@ -442,7 +442,7 @@
                         this.ObstaclesIndex[0] = Math.Max(this.ObstaclesIndex[0], Id % 1000000);
                     }
 
-                    this.LoadGameObject(Token, 0);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -452,7 +452,7 @@
             {
                 foreach (JToken Token in Traps)
                 {
-                    this.LoadGameObject(Token, 0);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -467,7 +467,7 @@
                         this.DecoIndex[0] = Math.Max(this.DecoIndex[0], Id % 1000000);
                     }
 
-                    this.LoadGameObject(Token, 0);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -477,7 +477,7 @@
             {
                 foreach (JToken Token in VillageObjects)
                 {
-                    this.LoadGameObject(Token, 0);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -491,7 +491,7 @@
             {
                 foreach (JToken Token in Buildings2)
                 {
-                    this.LoadGameObject(Token, 1);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -507,7 +507,7 @@
                         this.ObstaclesIndex[1] = Math.Max(this.ObstaclesIndex[1], Id % 1000000);
                     }
 
-                    this.LoadGameObject(Token, 1);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -517,7 +517,7 @@
             {
                 foreach (JToken Token in Traps2)
                 {
-                    this.LoadGameObject(Token, 1);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -532,7 +532,7 @@
                         this.DecoIndex[1] = Math.Max(this.DecoIndex[1], Id % 1000000);
                     }
 
-                    this.LoadGameObject(Token, 1);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -542,7 +542,7 @@
             {
                 foreach (JToken Token in VillageObjects2)
                 {
-                    this.LoadGameObject(Token, 1);
+                    this.LoadGameObject(Token);
                 }
             }
 
@@ -890,7 +890,7 @@
             Json.Add("last_news_seen", 999999999);
         }
 
-        internal void LoadGameObject(JToken Token, int Map)
+        internal void LoadGameObject(JToken Token)
         {
             if (JsonHelper.GetJsonNumber(Token, "data", out int DataID))
             {
@@ -907,7 +907,7 @@
                 if (GameObject != null)
                 {
                     GameObject.Load(Token);
-                    this.AddGameObject(GameObject, Map);
+                    this.AddGameObject(GameObject);
                 }
             }
             else

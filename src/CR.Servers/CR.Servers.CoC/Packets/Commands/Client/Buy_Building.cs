@@ -247,7 +247,7 @@
                 GameObject.ConstructionTimer.StartTimer(Level.Player.LastTick, this.BuildingData.GetBuildTime(0));
             }
 
-            Level.GameObjectManager.AddGameObject(GameObject, Level.Player.Map);
+            Level.GameObjectManager.AddGameObject(GameObject);
         }
 
         internal void StartConstruction(Level Level, int Time)
@@ -278,7 +278,7 @@
                 GameObject.ConstructionTimer.StartTimer(Level.Player.LastTick, Time);
             }
 
-            Level.GameObjectManager.AddGameObject(GameObject, Level.Player.Map);
+            Level.GameObjectManager.AddGameObject(GameObject);
         }
     }
 }

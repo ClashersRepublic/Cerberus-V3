@@ -65,7 +65,7 @@
 
             GameObject.FinishConstruction(true);
 
-            Level.GameObjectManager.AddGameObject(GameObject, Level.Player.Map);
+            Level.GameObjectManager.AddGameObject(GameObject);
         }
     }
 }

@@ -197,6 +197,10 @@
                 {
                     this._rcvPool.Enqueue(rcvArgs);
                 }
+                else
+                {
+                    rcvArgs.Dispose();
+                }
             }
         }
     }

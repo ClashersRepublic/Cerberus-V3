@@ -131,7 +131,7 @@
 
                     if (Data.MaxLevel > this.UpgradeLevel)
                     {
-                        if (this.Level.Player.Village2) //Shall we check item village type?
+                        if (this.VillageType == 1) //Shall we check item village type?
                         {
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >=
                                    Data.TownHallLevel2[this.UpgradeLevel + 1];
@@ -279,6 +279,7 @@
                 }
 
                 this.ConstructionTimer = null;
+
                 if (this.UpgradeLevel == -1)
                 {
                     this.Level.GameObjectManager.RemoveGameObject(this, this.VillageType); //Should never happend since supercell disable this
