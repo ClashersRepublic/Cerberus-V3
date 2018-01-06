@@ -37,11 +37,11 @@
                     {
                         this.Device.Account.DefenseAccount.InBattle = false;
                         this.Device.Account.DefenseAccount = null;
-
-                        this.Device.State = State.LOGGED;
                     }
 
                     this.Device.Account.InBattle = false;
+
+                    this.Device.State = State.LOGGED;
                 }
 
                 Account rndAccount = Resources.Accounts.LoadRandomAccount();

@@ -27,17 +27,17 @@
 
         internal ConcurrentDictionary<long, Home> Homes;
         internal ConcurrentDictionary<long, Player> Players;
-        
+
         private int Seed;
 
         internal Accounts()
         {
             this.Seed = Mongo.PlayerSeed;
-
+            
             this.Homes = new ConcurrentDictionary<long, Home>();
             this.Players = new ConcurrentDictionary<long, Player>();
         }
-
+        
         internal void Add(Player Player)
         {
             if (!this.Players.ContainsKey(Player.UserId))

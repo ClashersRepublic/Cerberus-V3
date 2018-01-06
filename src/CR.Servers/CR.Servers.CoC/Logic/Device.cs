@@ -85,6 +85,7 @@
                     {
                         this.Account.DefenseAccount.InBattle = false;
                         this.Account.DefenseAccount = null;
+                        this.Account.InBattle = false;
                     }
 
                     if (this.Account.Player != null)

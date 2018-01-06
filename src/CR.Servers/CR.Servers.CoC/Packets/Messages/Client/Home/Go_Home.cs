@@ -46,8 +46,6 @@
 
                             this.Device.Account.DefenseAccount.InBattle = false;
                             this.Device.Account.DefenseAccount = null;
-
-                            Console.WriteLine("Battle Ended");
                         }
                     }
                 }
