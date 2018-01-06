@@ -81,6 +81,12 @@
 
                 if (this.Account != null)
                 {
+                    if (this.Account.DefenseAccount != null)
+                    {
+                        this.Account.DefenseAccount.InBattle = false;
+                        this.Account.DefenseAccount = null;
+                    }
+
                     if (this.Account.Player != null)
                     {
                         Resources.Accounts.SavePlayer(this.Account.Player);
@@ -97,6 +103,8 @@
                     {
                         Resources.Accounts.SaveHome(this.Account.Home);
                     }
+
+                    this.Account.Device = null;
                 }
 
                 if (this.GameMode?.CommandManager != null)
@@ -176,19 +184,11 @@
                                 this.Process(nextPacket);
                             }
                         }
-                        else
-                        {
-                            Console.WriteLine("Invalid length: " + messageType);
-                        }
                     }
                     else
                     {
                         Resources.Gateway.Disconnect(this.Token.Args);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid buffer");
                 }
             }
         }
@@ -197,12 +197,6 @@
         {
             this.ReceiveEncrypter = new RC4Encrypter(key, nonce);
             this.SendEncrypter = new RC4Encrypter(key, nonce);
-        }
-
-        internal void SetEncrypters(StreamEncrypter rcvEncrypter, StreamEncrypter sndEncrypter)
-        {
-            this.ReceiveEncrypter = rcvEncrypter;
-            this.SendEncrypter = sndEncrypter;
         }
 
         internal struct DeviceInfo

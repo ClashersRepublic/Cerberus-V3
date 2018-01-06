@@ -129,41 +129,56 @@
 
             if (this.HighId == 0 && this.LowId == 0 && this.Token == null)
             {
-                Account Account = Resources.Accounts.CreateAccount();
-
-                if (Account.Player != null && Account.Home != null)
-                {
-                    if (Account.Player.Locked)
-                    {
-                        new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
-                    }
-                    else
-                    {
-                        this.Login(Account);
-                    }
-                }
-                else
-                {
-                    new Authentication_Failed(this.Device, LoginFailedReason.Maintenance).Send();
-                }
+                this.Login(Resources.Accounts.CreateAccount());
             }
             else
             {
-                Account Account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
+                Account account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
 
-                if (Account?.Player != null && Account?.Home != null)
+                if (account != null)
                 {
-                    if (string.Equals(this.Token, Account.Player.Token))
+                    if (account.Player != null && account.Home != null)
                     {
-                        if (!Account.Player.Locked)
+                        if (string.Equals(this.Token, account.Player.Token))
                         {
-                            if (!Account.Player.Banned)
+                            if (!account.Player.Locked)
                             {
-                                this.Login(Account);
+                                if (!account.Player.Banned)
+                                {
+                                    if (account.InBattle && account.DefenseAccount == null)
+                                    {
+                                        int totalBattleTimeSecs = (int) DateTime.UtcNow.Subtract(account.StartBattleTime).TotalSeconds;
+
+                                        if (totalBattleTimeSecs < 240)
+                                        {
+                                            new Authentication_Failed(this.Device, LoginFailedReason.Pause).Send();
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            account.InBattle = false;
+                                            account.DefenseAccount = null;
+                                        }
+                                    }
+
+                                    if (account.Device != null)
+                                    {
+                                        if (account.Device.Connected)
+                                        {
+                                            new Disconnected(account.Device).Send();
+                                        }
+                                    }
+
+                                    this.Login(account);
+                                }
+                                else
+                                {
+                                    new Authentication_Failed(this.Device, LoginFailedReason.Banned).Send();
+                                }
                             }
                             else
                             {
-                                new Authentication_Failed(this.Device, LoginFailedReason.Banned).Send();
+                                new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
                             }
                         }
                         else
@@ -175,10 +190,6 @@
                     {
                         new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
                     }
-                }
-                else
-                {
-                    new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
                 }
             }
         }
@@ -199,13 +210,14 @@
                             return false;
                         }
                     }
+
                     return true;
                 }
+
                 new Authentication_Failed(this.Device, LoginFailedReason.Update).Send();
             }
             else
             {
-                //Buggy?
                 Resources.Gateway.Disconnect(this.Device.Token.Args);
             }
 
@@ -226,6 +238,8 @@
 
         internal void Login(Account account)
         {
+            account.Device = this.Device;
+
             this.Device.Account = account;
             this.Device.GameMode.LoadLevel(account.Player.Level);
 

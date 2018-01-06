@@ -1,5 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
+    using System;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
@@ -34,7 +35,23 @@
             }
             else
             {
-                if (this.Device.State == State.IN_1VS1_BATTLE)
+                if (this.Device.State == State.IN_PC_BATTLE)
+                {
+                    if (this.Device.Account.InBattle)
+                    {
+                        if (this.Device.Account.DefenseAccount != null)
+                        {
+                            Resources.Accounts.SavePlayer(this.Device.Account.DefenseAccount.Player);
+                            Resources.Accounts.SaveHome(this.Device.Account.DefenseAccount.Home);
+
+                            this.Device.Account.DefenseAccount.InBattle = false;
+                            this.Device.Account.DefenseAccount = null;
+
+                            Console.WriteLine("Battle Ended");
+                        }
+                    }
+                }
+                else if (this.Device.State == State.IN_1VS1_BATTLE)
                 {
                     long userId = this.Device.GameMode.Level.Player.UserId;
                     long battleId = this.Device.GameMode.Level.Player.BattleIdV2;

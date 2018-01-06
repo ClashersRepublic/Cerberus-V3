@@ -132,6 +132,40 @@
             return account;
         }
 
+        internal Account LoadRandomAccount(bool store = true)
+        {
+            int serverId = Constants.ServerId;
+            int seed = this.Seed;
+            int rnd = 0;
+
+            Account account = null;
+
+            for (int i = 0; i < 50; i++)
+            {
+                rnd = Resources.Random.Next(1, seed);
+
+                if (!this.TryGetValue(rnd, out Account tmp))
+                {
+                    account = this.LoadAccount(serverId, rnd, store);
+
+                    if (account != null)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (!tmp.InBattle)
+                    {
+                        account = tmp;
+                        break;
+                    }
+                }
+            }
+
+            return account;
+        }
+
         internal Account LoadAccount(int HighID, int LowID, bool Store = true)
         {
             long ID = ((long) HighID << 32) | (uint) LowID;
