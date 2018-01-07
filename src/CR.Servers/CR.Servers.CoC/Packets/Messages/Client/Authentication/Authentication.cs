@@ -149,7 +149,7 @@
                                     {
                                         int totalBattleTimeSecs = (int) DateTime.UtcNow.Subtract(account.StartBattleTime).TotalSeconds;
 
-                                        if (totalBattleTimeSecs < 240)
+                                        if (totalBattleTimeSecs < 1800) // 240 causes problems for Magic S1 & S2.
                                         {
                                             new Authentication_Failed(this.Device, LoginFailedReason.Pause).Send();
                                             return;
