@@ -166,10 +166,6 @@
                                     message.Version = (short) messageVersion;
                                     Resources.PacketManager.ReceiveMessageQueue.Enqueue(message);
                                 }
-                                else
-                                {
-                                    Logging.Info(this.GetType(), "Message type " + messageType + " not exist.");
-                                }
                             }
                             else
                             {

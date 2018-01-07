@@ -55,12 +55,7 @@
                     this.Device.Account.DefenseAccount = rndAccount;
                     this.Device.Account.StartBattleTime = DateTime.UtcNow;
 
-                    Level defenseLevel = new Level();
-
-                    defenseLevel.SetPlayer(rndAccount.Player);
-                    defenseLevel.SetHome(rndAccount.Home);
-
-                    new Enemy_Home_Data(this.Device, defenseLevel).Send();
+                    new Enemy_Home_Data(this.Device, rndAccount.Home.Level).Send();
                 }
                 else
                 {
