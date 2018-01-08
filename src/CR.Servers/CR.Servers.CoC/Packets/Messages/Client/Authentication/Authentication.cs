@@ -179,6 +179,10 @@
                         new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
                     }
                 }
+                else
+                {
+                    new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
+                }
             }
         }
 

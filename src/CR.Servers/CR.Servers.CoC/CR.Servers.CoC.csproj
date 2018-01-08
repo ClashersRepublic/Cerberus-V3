@@ -456,6 +456,7 @@
     <Compile Include="Packets\Messages\Client\Authentication\SessionKey.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Set_Device_Token.cs" />
     <Compile Include="Packets\Messages\Client\Authentication\Unlock_Account.cs" />
+    <Compile Include="Packets\Messages\Client\Battle\Search_Battle.cs" />
     <Compile Include="Packets\Messages\Client\Friend\Accept_Friend_Request.cs" />
     <Compile Include="Packets\Messages\Client\Friend\Ask_For_Avatar_Friend_List.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\Ask_For_Avatar_Profile.cs" />
@@ -479,6 +480,7 @@
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Member_State.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\Alliance_Stream_Entry_Removed.cs" />
     <Compile Include="Packets\Messages\Server\API\Bind_Facebook_Account_Ok.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\Battle_Fail.cs" />
     <Compile Include="Packets\Messages\Server\Friend\Friend_List_Entry.cs" />
     <Compile Include="Packets\Messages\Server\Friend\Friend_Online.cs" />
     <Compile Include="Packets\Messages\Server\Friend\Friend_List.cs" />

@@ -55,6 +55,7 @@
             Messages.Add(14102, typeof(End_Client_Turn));
             Messages.Add(14103, typeof(Cancel_V2_Battle));
             Messages.Add(14113, typeof(Ask_Visit_Home));
+            Messages.Add(14123, typeof(Search_Battle));
             Messages.Add(14134, typeof(Attack_Npc));
             Messages.Add(14201, typeof(Bind_Facebook_Account));
             Messages.Add(14212, typeof(Bind_GameCenter_Account));

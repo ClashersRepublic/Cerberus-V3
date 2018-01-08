@@ -51,7 +51,7 @@
                 }
                 else
                 {
-                    Logging.Error(this.GetType(), "Matchmaking Failed.");
+                    new Battle_Fail(this.Device).Send();
                 }
             }
         }
