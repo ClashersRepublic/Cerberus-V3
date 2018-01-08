@@ -145,27 +145,15 @@
                             {
                                 if (!account.Player.Banned)
                                 {
-                                    if (account.InBattle && account.DefenseAccount == null)
-                                    {
-                                        int totalBattleTimeSecs = (int) DateTime.UtcNow.Subtract(account.StartBattleTime).TotalSeconds;
-
-                                        if (totalBattleTimeSecs < 1800) // 240 causes problems for Magic S1 & S2.
-                                        {
-                                            new Authentication_Failed(this.Device, LoginFailedReason.Pause).Send();
-                                            return;
-                                        }
-                                        else
-                                        {
-                                            account.InBattle = false;
-                                            account.DefenseAccount = null;
-                                        }
-                                    }
-
                                     if (account.Device != null)
                                     {
                                         if (account.Device.Connected)
                                         {
                                             new Disconnected(account.Device).Send();
+                                        }
+                                        else
+                                        {
+                                            account.Device = null;
                                         }
                                     }
 
@@ -254,8 +242,33 @@
 
             new Authentication_OK(this.Device).Send();
 
+            if (account.Battle != null)
+            {
+                if (!account.Battle.Ended)
+                {
+                    if (account.Battle.Defender.Home == account.Home)
+                    {
+                        new WaitingToGoHome(this.Device, 240).Send();
+
+                        account.Battle.AddViewer(this.Device);
+                        goto sendAllianceMessage;
+                    }
+                    else
+                    {
+                        account.Battle.EndBattle();
+                        account.Battle = null;
+                    }
+                }
+                else
+                {
+                    account.Battle = null;
+                }
+            }
+
             new Own_Home_Data(this.Device).Send();
             new Avatar_Stream(this.Device).Send();
+
+            sendAllianceMessage:
 
             if (Player.InAlliance)
             {

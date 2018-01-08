@@ -3,8 +3,6 @@
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Logic.Battle.Manager;
-    using CR.Servers.CoC.Logic.Battle.Slots;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
@@ -30,7 +28,9 @@
 
         internal override void Execute()
         {
+            /*
             Level level = this.Device.GameMode.Level;
+
             if (Resources.BattlesV2.Waiting.Count == 0)
             {
                 Resources.BattlesV2.Enqueue(level);
@@ -57,6 +57,7 @@
                 new V2_Battle_Info(enemy.GameMode.Device, level).Send();
                 new V2_Battle_Info(this.Device, enemy).Send();
             }
+            */
         }
     }
 }

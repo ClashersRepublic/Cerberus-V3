@@ -81,21 +81,32 @@
 
                 if (this.Account != null)
                 {
-                    if (this.Account.DefenseAccount != null)
+                    if (this.Account.Battle != null)
                     {
-                        this.Account.DefenseAccount.InBattle = false;
-                        this.Account.DefenseAccount = null;
-                        this.Account.InBattle = false;
+                        if (!this.Account.Battle.Ended)
+                        {
+                            if (this.Account.Battle.Attacker == this.Account.Home.Level)
+                            {
+                                this.Account.Battle.EndBattle();
+                                this.Account.Battle = null;
+                            }
+                        }
+                        else
+                        {
+                            this.Account.Battle = null;
+                        }
                     }
 
                     if (this.Account.Player != null)
                     {
                         Resources.Accounts.SavePlayer(this.Account.Player);
 
+                        /*
                         if (this.GameMode?.Level != null && this.Account.Player.BattleIdV2 > 0)
                         {
                             Resources.BattlesV2.Dequeue(this.GameMode.Level);
                         }
+                        */
 
                         this.Account.Player.Alliance?.DecrementTotalConnected();
                     }

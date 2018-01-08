@@ -87,11 +87,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
-                            /*if (OriginalCommand.Checksum != ServerCommand.Checksum)
-                            {
-                                return;
-                            }*/
-
                             this.Device.GameMode.CommandManager.ServerCommands.Remove(ServerCommand.Id);
                         }
                         else
@@ -110,12 +105,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
                     this.Commands.Remove(Command);
                 } while (this.Commands.Count > 0);
             }
+
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
 
-            if (this.Device.State == State.IN_1VS1_BATTLE)
+            if (this.Device.Account.Battle != null)
             {
-                this.Device.GameMode.Level.BattleManager.Tick();
+                this.Device.Account.Battle.HandleCommands(this.SubTick, this.Commands);
             }
 #if Extra
             //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");

@@ -1,21 +1,18 @@
 ﻿namespace CR.Servers.CoC.Logic
 {
     using System;
+    using CR.Servers.CoC.Logic.Battles;
 
     internal class Account
     {
-        internal bool InBattle;
-
         internal int HighId;
         internal int LowId;
 
         internal Home Home;
         internal Device Device;
         internal Player Player;
-        internal Account DefenseAccount;
-
-        internal DateTime StartBattleTime;
-
+        internal Battle Battle;
+        
         public Account(int HighID, int LowID, Player Player, Home Home)
         {
             this.HighId = HighID;

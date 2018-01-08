@@ -1,10 +1,9 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Logic.Battle;
-    using CR.Servers.CoC.Logic.Battle.Slots;
     using CR.Servers.Extensions.List;
 
+    /*
     internal class V2_Battle_Result : Message
     {
         internal Battles_V2 Battle;
@@ -83,4 +82,5 @@
             this.Data.AddString(this.Enemy.Finished ? this.Enemy.ReplayInfo.Save().ToString() : null);
         }
     }
+    */
 }

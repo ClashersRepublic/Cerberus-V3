@@ -44,7 +44,7 @@
             Packet.AddInt(365 * 86400);
 
             Packet.AddCompressed(this.HomeJSON.ToString());
-            Packet.AddCompressed(Game_Events.Events_Json);
+            Packet.AddCompressed(GameEvents.Events_Json);
             Packet.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
         }
 

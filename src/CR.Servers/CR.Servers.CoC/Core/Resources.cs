@@ -24,7 +24,6 @@
         internal static Gateway Gateway;
         internal static Regex Regex;
         internal static Regex Name;
-        internal static BattlesV2 BattlesV2;
         internal static Timers Timers;
         internal static Test Test;
         internal static Logger Logger;
@@ -39,7 +38,7 @@
             Factory.Initialize();
             CSV.Initialize();
             LevelFile.Initialize();
-            Game_Events.Initialize();
+            GameEvents.Initialize();
             Globals.Initialize();
             Settings.Initialize();
             Fingerprint.Initialize();
@@ -57,7 +56,6 @@
             Accounts = new Accounts();
             Clans = new Clans();
             Chats = new Chats();
-            BattlesV2 = new BattlesV2();
             Random = new XorShift();
             Gateway = new Gateway();
             Timers = new Timers();

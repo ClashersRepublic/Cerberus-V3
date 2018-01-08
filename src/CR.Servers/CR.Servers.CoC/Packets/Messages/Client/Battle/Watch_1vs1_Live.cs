@@ -23,6 +23,7 @@
 
         internal override void Process()
         {
+            /*
             Player Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
 
             if (Player != null)
@@ -32,6 +33,7 @@
                     Player.Level.BattleManager.AddSpectator(this.Device.GameMode.Level);
                 }
             }
+            */
         }
     }
 }

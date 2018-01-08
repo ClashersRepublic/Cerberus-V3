@@ -6,35 +6,34 @@
 
     internal class Live_Replay_Header : Message
     {
-        internal List<Command> InitialCommands;
+        internal int ClientTick;
+        internal string ReplayJSON;
 
-        internal int InitialStreamEndSubTick;
+        internal List<Command> Commands;
 
-        internal string ReplayHeaderJson;
-
-        public Live_Replay_Header(Device Device) : base(Device)
+        public Live_Replay_Header(Device Device, string replayJSON, List<Command> commands, int clientTick) : base(Device)
         {
-            this.Version = 9;
+            this.ClientTick = clientTick;
+            this.ReplayJSON = replayJSON;
+            this.Commands = commands;
         }
 
         internal override short Type => 24118;
 
         internal override void Encode()
         {
-            //Console.WriteLine(this.ReplayHeaderJson);
-
             this.Data.AddString(null);
-            this.Data.AddCompressed(this.ReplayHeaderJson, false);
-            this.Data.AddInt(this.InitialStreamEndSubTick);
-            this.Data.AddInt(this.InitialCommands.Count);
+            this.Data.AddCompressed(this.ReplayJSON, false);
+            this.Data.AddInt(this.ClientTick);
+            this.Data.AddInt(this.Commands.Count);
 
-            this.InitialCommands.ForEach(Command =>
+            this.Commands.ForEach(Command =>
             {
                 this.Data.AddInt(Command.Type);
                 Command.Encode(this.Data);
             });
 
-            this.Data.AddInt(this.InitialCommands.Count);
+            this.Data.AddInt(1);
         }
     }
 }

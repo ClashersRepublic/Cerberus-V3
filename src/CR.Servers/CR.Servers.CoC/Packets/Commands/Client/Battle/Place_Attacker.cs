@@ -5,7 +5,6 @@
     using CR.Servers.CoC.Extensions.Helper;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Logic.Battle;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Extensions.List;
     using CR.Servers.Logic.Enums;
@@ -49,6 +48,7 @@
             if (this.Character != null)
             {
                 Level Level = this.Device.GameMode.Level;
+
                 if (Level.GameObjectManager.Map == 0)
                 {
                     Item Unit = Level.Player.Units.GetByData(this.Character);
@@ -63,6 +63,7 @@
                 }
                 else
                 {
+                    /*
                     if (this.Device.State == State.IN_1VS1_BATTLE)
                     {
                         Battle_V2 Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2, Level.Player.UserId);
@@ -80,6 +81,7 @@
                         Battle.Add(this);
                         Level.BattleManager.BattleCommandManager.StoreCommands(this);
                     }
+                    */
                 }
             }
         }

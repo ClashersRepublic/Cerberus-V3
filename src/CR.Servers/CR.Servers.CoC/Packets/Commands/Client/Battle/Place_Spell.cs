@@ -36,9 +36,11 @@
             if (this.Spell != null)
             {
                 Level Level = this.Device.GameMode.Level;
+
                 if (this.IsAllianceSpell)
                 {
                     Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.UnknownInt);
+
                     if (Unit != null)
                     {
                         if (Unit.Count > 0)
@@ -53,6 +55,7 @@
                 else
                 {
                     Item Unit = Level.Player.Spells.GetByData(this.Spell);
+
                     if (Unit != null)
                     {
                         if (Unit.Count > 0)

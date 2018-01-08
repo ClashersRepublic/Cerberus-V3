@@ -72,14 +72,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 #endif
             if (this.CommandCount > 0)
             {
-                do
+                for (int i = 0; i < this.CommandCount; i++)
                 {
-                    //TODO: Tick stuff
-                    Command Command = this.Commands[0];
+                    Command Command = this.Commands[i];
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand) Command;
+                        ServerCommand ServerCommand = (ServerCommand)Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
@@ -114,9 +113,22 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     {
                         Logging.Error(this.GetType(), this.Device, "Execute command failed! Command should have been executed already. (type=" + Command.Type + ", command_tick=" + Command.ExecuteSubTick + ", server_tick=" + this.SubTick + ")");
                     }
+                }
+            }
 
-                    this.Commands.Remove(Command);
-                } while (this.Commands.Count > 0);
+            if (this.Device.Account.Battle != null)
+            {
+                if (!this.Device.Account.Battle.Ended)
+                {
+                    if (this.Device.Account.Home == this.Device.Account.Battle.Attacker.Home)
+                    {
+                        this.Device.Account.Battle.HandleCommands(this.SubTick, this.Commands);
+                    }
+                }
+                else
+                {
+                    this.Device.Account.Battle = null;
+                }
             }
         }
     }

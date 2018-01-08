@@ -4,7 +4,6 @@
     using CR.Servers.CoC.Extensions.Helper;
     using CR.Servers.CoC.Files;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
-    using CR.Servers.CoC.Logic.Battle.Manager;
     using CR.Servers.CoC.Logic.Enums;
     using CR.Servers.CoC.Logic.Manager;
     using CR.Servers.CoC.Logic.Map;
@@ -18,8 +17,7 @@
 
         internal string[] ArmyNames = {"", "", "", ""};
         //internal CooldownManager CooldownManager;
-
-        internal BattleManager BattleManager;
+        
         internal ComponentManager ComponentManager;
 
         internal bool EditModeShown;

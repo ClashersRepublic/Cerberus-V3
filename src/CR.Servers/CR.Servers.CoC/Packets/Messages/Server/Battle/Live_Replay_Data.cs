@@ -14,7 +14,6 @@
 
         public Live_Replay_Data(Device Device) : base(Device)
         {
-            this.Version = 9;
         }
 
         internal override short Type => 24119;
@@ -25,13 +24,20 @@
             this.Data.AddVInt(this.Spectator1); //Spectator count
             this.Data.AddVInt(this.Spectator); //Spectator on opposite ssite
 
-            this.Data.AddInt(this.Commands.Count);
-
-            this.Commands.ForEach(Command =>
+            if (this.Commands != null)
             {
-                this.Data.AddInt(Command.Type);
-                Command.Encode(this.Data);
-            });
+                this.Data.AddInt(this.Commands.Count);
+
+                this.Commands.ForEach(Command =>
+                {
+                    this.Data.AddInt(Command.Type);
+                    Command.Encode(this.Data);
+                });
+            }
+            else
+            {
+                this.Data.AddInt(0);
+            }
         }
     }
 }

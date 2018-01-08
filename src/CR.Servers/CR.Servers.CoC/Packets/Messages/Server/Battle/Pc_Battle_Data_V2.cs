@@ -26,7 +26,7 @@
             this.Data.AddInt(0);
 
             this.Data.AddCompressed(this.Enemy.BattleV2().ToString());
-            this.Data.AddCompressed(Game_Events.Events_Json);
+            this.Data.AddCompressed(GameEvents.Events_Json);
             this.Data.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
 
             this.Data.AddLong(this.Enemy.Player.UserId);

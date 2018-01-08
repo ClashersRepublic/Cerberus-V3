@@ -4,6 +4,7 @@
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battles;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
@@ -33,29 +34,20 @@
             {
                 if (this.Device.State == State.IN_PC_BATTLE)
                 {
-                    if (this.Device.Account.DefenseAccount != null)
-                    {
-                        this.Device.Account.DefenseAccount.InBattle = false;
-                        this.Device.Account.DefenseAccount = null;
-                    }
-
-                    this.Device.Account.InBattle = false;
-
+                    this.Device.Account.Battle = null;
                     this.Device.State = State.LOGGED;
                 }
 
-                Account rndAccount = Resources.Accounts.LoadRandomAccount();
+                Account rndAccount = Resources.Accounts.LoadRandomOfflineAccount();
 
                 if (rndAccount != null)
                 {
-                    rndAccount.InBattle = true;
-                    rndAccount.StartBattleTime = DateTime.UtcNow;
+                    Battle battle = new Battle(this.Device.GameMode.Level, rndAccount.Home.Level);
 
-                    this.Device.Account.InBattle = true;
-                    this.Device.Account.DefenseAccount = rndAccount;
-                    this.Device.Account.StartBattleTime = DateTime.UtcNow;
+                    this.Device.Account.Battle = battle;
+                    rndAccount.Battle = battle;
 
-                    new Enemy_Home_Data(this.Device, rndAccount.Home.Level).Send();
+                    new Enemy_Home_Data(this.Device, battle.Defender).Send();
                 }
                 else
                 {

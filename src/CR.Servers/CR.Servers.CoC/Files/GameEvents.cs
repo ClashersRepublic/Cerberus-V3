@@ -7,7 +7,7 @@ using CR.Servers.CoC.Logic;
 
 namespace CR.Servers.CoC.Files
 {
-    internal static class Game_Events
+    internal static class GameEvents
     {
         internal static string Events_Json = string.Empty;
         internal static Calendar Events_Calendar = new Calendar();

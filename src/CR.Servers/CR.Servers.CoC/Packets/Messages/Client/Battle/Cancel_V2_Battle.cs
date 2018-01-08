@@ -17,10 +17,12 @@
 
         internal override void Process()
         {
+            /*
             if (this.Device.State == State.SEARCH_BATTLE)
             {
                 Resources.BattlesV2.Dequeue(this.Device.GameMode.Level);
             }
+            */
 
             this.Device.State = State.LOGGED;
             new Own_Home_Data(this.Device).Send();

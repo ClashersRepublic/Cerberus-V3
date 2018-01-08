@@ -132,7 +132,7 @@
             return account;
         }
 
-        internal Account LoadRandomAccount(bool store = true)
+        internal Account LoadRandomOfflineAccount(bool store = true)
         {
             int serverId = Constants.ServerId;
             int seed = this.Seed;
@@ -155,8 +155,16 @@
                 }
                 else
                 {
-                    if (!tmp.InBattle)
+                    if (tmp.Device == null)
                     {
+                        if (tmp.Battle != null)
+                        {
+                            if (!tmp.Battle.Ended)
+                            {
+                                continue;
+                            }
+                        }
+
                         account = tmp;
                         break;
                     }
