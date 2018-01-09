@@ -10,5 +10,15 @@
             this.Battle1 = battle1;
             this.Battle2 = battle2;
         }
+
+        internal Battle GetBattle(Level level)
+        {
+            if (level == this.Battle1.Attacker)
+            {
+                return this.Battle1;
+            }
+
+            return this.Battle2;
+        }
     }
 }

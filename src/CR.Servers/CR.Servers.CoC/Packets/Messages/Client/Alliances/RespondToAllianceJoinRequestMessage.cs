@@ -69,8 +69,14 @@
 
                                                 if (Target.Connected)
                                                 {
-                                                    new AllianceDataMessage(this.Device).Send();
-                                                    new AllianceStreamMessage(this.Device).Send();
+                                                    new AllianceDataMessage(this.Device)
+                                                    {
+                                                        Alliance = Alliance
+                                                    }.Send();
+                                                    new AllianceStreamMessage(this.Device)
+                                                    {
+                                                        Alliance = Alliance
+                                                    }.Send();
 
                                                     Target.Level.GameMode.CommandManager.AddCommand(
                                                         new Joined_Alliance(this.Device)

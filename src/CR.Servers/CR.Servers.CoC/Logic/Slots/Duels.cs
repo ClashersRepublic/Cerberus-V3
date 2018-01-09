@@ -1,5 +1,6 @@
 ﻿namespace CR.Servers.CoC.Logic.Slots
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,6 +19,8 @@
         {
             this.Matchmaking = new Thread(this.MatchmakingTask);
             this.WaitingDeviceQueue = new ConcurrentDictionary<long, Device>();
+
+            this.Matchmaking.Start();
         }
 
         internal void MatchmakingTask()

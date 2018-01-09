@@ -48,7 +48,10 @@
                     Avatar.AllianceHighId = Alliance.HighId;
                     Avatar.AllianceLowId = Alliance.LowId;
 
-                    new AllianceDataMessage(this.Device).Send();
+                    new AllianceDataMessage(this.Device)
+                    {
+                        Alliance = Alliance
+                    }.Send();
                     new AllianceStreamMessage(this.Device)
                     {
                         Alliance = Alliance

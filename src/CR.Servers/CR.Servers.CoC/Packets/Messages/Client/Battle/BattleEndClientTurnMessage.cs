@@ -2,9 +2,11 @@
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
+    using System;
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battles;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
 
@@ -74,16 +76,22 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
         internal override void Process()
         {
+            this.Device.GameMode.Time.SubTick = this.SubTick;
+            this.Device.GameMode.Level.Tick();
+
+#if Extra
+            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
+            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
+#endif
             if (this.CommandCount > 0)
             {
-                do
+                for (int i = 0; i < this.CommandCount; i++)
                 {
-                    //TODO: Tick stuff
-                    Command Command = this.Commands[0];
+                    Command Command = this.Commands[i];
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand) Command;
+                        ServerCommand ServerCommand = (ServerCommand)Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
@@ -93,30 +101,50 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
                         {
                             this.Reader.BaseStream.Position = 0;
                             this.Log();
-                            Logging.Error(this.GetType(), this.Device, "Execute battle command failed! Server Command " + Command.Type + " is not available.");
+                            Logging.Error(this.GetType(), this.Device, "Execute command failed! Server Command " + Command.Type + " is not available.");
                             return;
                         }
                     }
 
-                    Command.Execute();
+                    if (Command.ExecuteSubTick <= this.SubTick)
+                    {
+                        try
+                        {
+                            Command.Execute();
 #if Extra
-                    Logging.Info(this.GetType(), "Battle Command is handled! (" + Command.Type + ")");
+                            Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
 #endif
-                    this.Commands.Remove(Command);
-                } while (this.Commands.Count > 0);
+                        }
+                        catch (Exception Exception)
+                        {
+                            Logging.Error(Exception.GetType(),
+                                $"Exception while executing a command {Command.Type}. " + Exception.Message +
+                                Environment.NewLine + Exception.StackTrace);
+                        }
+                    }
+                    else
+                    {
+                        Logging.Error(this.GetType(), this.Device, "Execute command failed! Command should have been executed already. (type=" + Command.Type + ", command_tick=" + Command.ExecuteSubTick + ", server_tick=" + this.SubTick + ")");
+                    }
+                }
             }
 
-            this.Device.GameMode.Time.SubTick = this.SubTick;
-            this.Device.GameMode.Level.Tick();
-
-            if (this.Device.Account.Battle != null)
+            if (this.Device.Account.DuelBattle != null)
             {
-                this.Device.Account.Battle.HandleCommands(this.SubTick, this.Commands);
+                Battle battle = this.Device.Account.DuelBattle.GetBattle(this.Device.GameMode.Level);
+
+                if (battle != null)
+                {
+                    if (!battle.Ended)
+                    {
+                        battle.HandleCommands(this.SubTick, this.Commands);
+                    }
+                    else
+                    {
+                        this.Device.Account.DuelBattle = null;
+                    }
+                }
             }
-#if Extra
-            //Logging.Info(this.GetType(), "Client Time : MS:" + this.Device.GameMode.Time.TotalMS + "  SECS:" + this.Device.GameMode.Time.TotalSecs + ".");
-            //Logging.Info(this.GetType(), "Client Subtick : " + this.SubTick + ".");
-#endif
         }
     }
 }
