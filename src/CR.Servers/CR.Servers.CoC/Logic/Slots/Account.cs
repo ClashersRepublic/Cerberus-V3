@@ -12,6 +12,7 @@
         internal Device Device;
         internal Player Player;
         internal Battle Battle;
+        internal DuelBattle DuelBattle;
         
         public Account(int HighID, int LowID, Player Player, Home Home)
         {

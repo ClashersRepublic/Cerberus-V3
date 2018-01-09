@@ -142,7 +142,7 @@
 
             for (int i = 0; i < 50; i++)
             {
-                rnd = Resources.Random.Next(1, seed);
+                rnd = Resources.Random.Next(1, seed + 1);
 
                 if (!this.TryGetValue(rnd, out Account tmp))
                 {
@@ -165,6 +165,7 @@
                             }
                         }
 
+                        tmp.Battle = null;
                         account = tmp;
                         break;
                     }
@@ -209,9 +210,8 @@
                         Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
                         return new Account(-1, -1, null, null);
                     }
-
-                    Account = new Account(HighID, LowID, Player, Home);
-                    this.TryAdd(ID, Account);
+                    
+                    this.TryAdd(ID, Account = new Account(HighID, LowID, Player, Home));
                 }
             }
 

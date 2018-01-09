@@ -458,6 +458,7 @@
     <Compile Include="Packets\Messages\Client\Account\SessionKeyMessage.cs" />
     <Compile Include="Packets\Messages\Client\Account\SetDeviceTokenMessage.cs" />
     <Compile Include="Packets\Messages\Client\Account\UnlockAccountMessage.cs" />
+    <Compile Include="Packets\Messages\Client\Battle\SearchOpponentMessage.cs" />
     <Compile Include="Packets\Messages\Client\Friend\AcceptFriendRequestMessage.cs" />
     <Compile Include="Packets\Messages\Client\Friend\AskForAvatarFriendListMessage.cs" />
     <Compile Include="Packets\Messages\Client\Avatar\AskForAvatarProfileMessage.cs" />

@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading;
     using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Logic.Battles;
+    using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     internal class Duels
@@ -32,7 +34,19 @@
 
                         if (this.WaitingDeviceQueue.TryRemove(deviceKeys[++i], out Device attacker2))
                         {
+                            DuelBattle duelBattle = new DuelBattle(new Battle(attacker1.GameMode.Level, attacker2.GameMode.Level), new Battle(attacker2.GameMode.Level, attacker1.GameMode.Level));
 
+                            attacker1.Account.DuelBattle = duelBattle;
+                            attacker2.Account.DuelBattle = duelBattle;
+
+                            new DuelHomeDataMessage(attacker1)
+                            {
+                                Enemy = attacker2.GameMode.Level
+                            }.Send();
+                            new DuelHomeDataMessage(attacker2)
+                            {
+                                Enemy = attacker1.GameMode.Level
+                            }.Send();
                         }
                         else
                         {

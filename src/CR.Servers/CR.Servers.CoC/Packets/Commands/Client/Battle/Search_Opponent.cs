@@ -34,7 +34,9 @@
             {
                 if (this.Device.State == State.IN_PC_BATTLE)
                 {
+                    this.Device.Account.Battle.EndBattle();
                     this.Device.Account.Battle = null;
+
                     this.Device.State = State.LOGGED;
                 }
 
