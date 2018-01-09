@@ -180,7 +180,7 @@
                 }
                 else
                 {
-                    new Authentication_Failed(this.Device, LoginFailedReason.Locked).Send();
+                    new AuthenticationFailedMessage(this.Device, LoginFailedReason.Locked).Send();
                 }
             }
         }

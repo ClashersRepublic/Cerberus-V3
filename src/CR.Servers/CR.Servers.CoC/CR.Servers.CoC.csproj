@@ -480,6 +480,7 @@
     <Compile Include="Packets\Messages\Server\Alliances\AllianceOnlineStatusUpdatedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\AllianceStreamEntryRemovedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Api\FacebookAccountBoundMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\AttackHomeFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendListUpdateMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\UpdateOnlineFriendsMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendListMessage.cs" />

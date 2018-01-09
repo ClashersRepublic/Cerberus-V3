@@ -51,7 +51,7 @@
                 }
                 else
                 {
-                    new Battle_Fail(this.Device).Send();
+                    new AttackHomeFailedMessage(this.Device).Send();
                 }
             }
         }
