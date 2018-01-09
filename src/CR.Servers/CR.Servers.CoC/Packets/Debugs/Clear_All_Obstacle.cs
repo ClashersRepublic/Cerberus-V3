@@ -23,7 +23,7 @@
 
             if (this.Device.Connected)
             {
-                new Own_Home_Data(this.Device).Send();
+                new OwnHomeDataMessage(this.Device).Send();
             }
         }
     }

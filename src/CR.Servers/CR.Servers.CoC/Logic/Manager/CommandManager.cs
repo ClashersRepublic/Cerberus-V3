@@ -32,7 +32,7 @@
                 if (this.Level.GameMode.Connected)
                 {
                     this.ServerCommands.Add(Command.Id = Interlocked.Increment(ref this.NextServerCommandId), Command);
-                    new Available_Server_Command(this.Level.GameMode.Device) {Command = Command}.Send();
+                    new AvailableServerCommandMessage(this.Level.GameMode.Device) {Command = Command}.Send();
                 }
                 else
                 {

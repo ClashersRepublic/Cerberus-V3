@@ -160,7 +160,7 @@
             }
             else
             {
-                new Avatar_Stream_Entry(this.Device)
+                new AvatarStreamEntryMessage(this.Device)
                 {
                     StreamEntry = new ClanMailEntry(this.Device.GameMode.Level.Player)
                     {

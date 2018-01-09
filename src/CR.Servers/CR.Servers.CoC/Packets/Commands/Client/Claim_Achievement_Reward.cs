@@ -26,7 +26,7 @@
             Level Level = this.Device.GameMode.Level;
             if (!Level.Player.AchievementProgress.Claim(this.AchievementId))
             {
-                new Out_Of_Sync(this.Device).Send();
+                new OutOfSyncMessage(this.Device).Send();
             }
         }
     }

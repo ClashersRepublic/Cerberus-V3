@@ -39,7 +39,7 @@
 
         internal void SendChatMessage(string message)
         {
-            new Global_Chat_Line(this.Device, this.Device.GameMode.Level.Player)
+            new GlobalChatLineMessage(this.Device, this.Device.GameMode.Level.Player)
             {
                 Message = message,
                 Name = "[System] Command Manager",

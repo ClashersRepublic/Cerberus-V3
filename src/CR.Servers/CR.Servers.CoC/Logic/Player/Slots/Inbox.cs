@@ -41,7 +41,7 @@
 
                     if (this.Player.Connected)
                     {
-                        new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
+                        new AvatarStreamEntryMessage(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                     }
                 }
             }
@@ -83,7 +83,7 @@
 
                 if (this.Player.Connected)
                 {
-                    new Avatar_Stream_Entry(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
+                    new AvatarStreamEntryMessage(this.Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                 }
             }
         }

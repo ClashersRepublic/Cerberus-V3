@@ -28,7 +28,7 @@
         {
             if (this.Device.GameMode.Level.Player.ModSlot.AIAttack)
             {
-                new Enemy_Home_Data(this.Device).Send();
+                new EnemyHomeDataMessage(this.Device).Send();
             }
             else
             {
@@ -47,7 +47,7 @@
                     this.Device.Account.Battle = battle;
                     rndAccount.Battle = battle;
 
-                    new Enemy_Home_Data(this.Device, battle.Defender).Send();
+                    new EnemyHomeDataMessage(this.Device, battle.Defender).Send();
                 }
                 else
                 {

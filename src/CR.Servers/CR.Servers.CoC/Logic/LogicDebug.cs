@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets.Commands.Server;
+    using CR.Servers.CoC.Packets.Messages.Server.Account;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     internal class LogicDebug
@@ -70,7 +71,7 @@
                         Player.Level.FastForwardTime(1000);
                         if (Player.Connected)
                         {
-                            new Disconnected(Player.Level.GameMode.Device).Send();
+                            new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                         }
                     }
 
@@ -84,7 +85,7 @@
                         Player.Level.FastForwardTime(10000);
                         if (Player.Connected)
                         {
-                            new Disconnected(Player.Level.GameMode.Device).Send();
+                            new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                         }
                     }
                     break;
@@ -97,7 +98,7 @@
                         Player.Level.FastForwardTime(100000);
                         if (Player.Connected)
                         {
-                            new Disconnected(Player.Level.GameMode.Device).Send();
+                            new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                         }
                     }
 
@@ -110,7 +111,7 @@
                         Player.Level.FastForwardTime(100000);
                         if (Player.Connected)
                         {
-                            new Disconnected(Player.Level.GameMode.Device).Send();
+                            new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                         }
                     }
 

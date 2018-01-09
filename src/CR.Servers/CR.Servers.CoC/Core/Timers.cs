@@ -9,6 +9,7 @@
     using CR.Servers.CoC.Extensions;
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Account;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     using Math = System.Math;
@@ -119,7 +120,7 @@
                             {
                                 if (Player.Connected)
                                 {
-                                    new Disconnected(Player.Level.GameMode.Device).Send();
+                                    new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                                 }
                             }
                         }));

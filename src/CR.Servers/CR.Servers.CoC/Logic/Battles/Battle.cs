@@ -43,7 +43,7 @@
             {
                 this.Viewers.Add(device);
 
-                new Live_Replay_Header(device, this.Recorder.Save().ToString(), this.Commands, this.EndSubTick).Send();
+                new LiveReplayMessage(device, this.Recorder.Save().ToString(), this.Commands, this.EndSubTick).Send();
             }
         }
 
@@ -62,13 +62,11 @@
 
             for (int i = 0; i < this.Viewers.Count; i++)
             {
-                new Live_Replay_End(this.Viewers[i]).Send();
-
                 if (this.Viewers[i].Connected)
                 {
                     if (this.Viewers[i].GameMode.Level == this.Defender)
                     {
-                        new Own_Home_Data(this.Viewers[i]).Send();
+                        new OwnHomeDataMessage(this.Viewers[i]).Send();
                     }
                 }
             }
@@ -100,7 +98,7 @@
             {
                 if (this.Viewers[i].Connected)
                 {
-                    new Live_Replay_Data(this.Viewers[i])
+                    new LiveReplayDataMessage(this.Viewers[i])
                     {
                         EndSubTick = subTick,
                         Commands = commands

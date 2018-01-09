@@ -28,36 +28,7 @@
 
         internal override void Execute()
         {
-            /*
-            Level level = this.Device.GameMode.Level;
-
-            if (Resources.BattlesV2.Waiting.Count == 0)
-            {
-                Resources.BattlesV2.Enqueue(level);
-
-                this.Device.State = State.SEARCH_BATTLE;
-            }
-            else
-            {
-                Level enemy = Resources.BattlesV2.Dequeue();
-
-                enemy.Player.BattleIdV2 = Resources.BattlesV2.Seed;
-                level.Player.BattleIdV2 = Resources.BattlesV2.Seed;
-
-                Battles_V2 battle = new Battles_V2(level, enemy);
-
-                Resources.BattlesV2.TryAdd(Resources.BattlesV2.Seed++, battle);
-
-                level.BattleManager = new BattleManager(level, Resources.BattlesV2.GetPlayer(this.Device.GameMode.Level.Player.BattleIdV2, this.Device.GameMode.Level.Player.UserId));
-                enemy.BattleManager = new BattleManager(enemy, Resources.BattlesV2.GetEnemy(this.Device.GameMode.Level.Player.BattleIdV2, this.Device.GameMode.Level.Player.UserId));
-
-                new Pc_Battle_Data_V2(this.Device) {Enemy = enemy}.Send();
-                new Pc_Battle_Data_V2(enemy.GameMode.Device) {Enemy = level}.Send();
-
-                new V2_Battle_Info(enemy.GameMode.Device, level).Send();
-                new V2_Battle_Info(this.Device, enemy).Send();
-            }
-            */
+            Resources.Duels.Join(this.Device);
         }
     }
 }

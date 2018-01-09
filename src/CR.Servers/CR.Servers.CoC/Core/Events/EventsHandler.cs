@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Account;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     internal class EventsHandler
@@ -33,7 +34,7 @@
                 {
                     if (Player.Connected)
                     {
-                        new Disconnected(Player.Level.GameMode.Device).Send();
+                        new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                     }
                 }
             });

@@ -44,7 +44,7 @@
                 {
                     if (Player.Connected)
                     {
-                        new Alliance_Stream_Entry(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
+                        new AllianceStreamEntryMessage(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                     }
                     else
                     {
@@ -79,7 +79,7 @@
             {
                 if (Player.Connected)
                 {
-                    new Alliance_Stream_Entry_Removed(Player.Level.GameMode.Device) {MessageId = StreamEntry.StreamId}.Send();
+                    new AllianceStreamEntryRemovedMessage(Player.Level.GameMode.Device) {MessageId = StreamEntry.StreamId}.Send();
                 }
                 else
                 {
@@ -104,7 +104,7 @@
             {
                 if (Player.Connected)
                 {
-                    new Alliance_Stream_Entry(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
+                    new AllianceStreamEntryMessage(Player.Level.GameMode.Device) {StreamEntry = StreamEntry}.Send();
                 }
                 else
                 {

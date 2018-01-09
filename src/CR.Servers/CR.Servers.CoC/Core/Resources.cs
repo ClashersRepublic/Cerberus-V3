@@ -27,7 +27,9 @@
         internal static Timers Timers;
         internal static Test Test;
         internal static Logger Logger;
+        internal static Duels Duels;
         internal static PacketManager PacketManager;
+
         internal static bool Started;
         internal static bool Closing;
 
@@ -56,6 +58,7 @@
             Accounts = new Accounts();
             Clans = new Clans();
             Chats = new Chats();
+            Duels = new Duels();
             Random = new XorShift();
             Gateway = new Gateway();
             Timers = new Timers();

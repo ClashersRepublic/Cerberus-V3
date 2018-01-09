@@ -51,7 +51,7 @@
                     {
                         if (Device2.Connected)
                         {
-                            new Global_Chat_Line(Device2, Device.GameMode.Level.Player) {Message = Message}.Send();
+                            new GlobalChatLineMessage(Device2, Device.GameMode.Level.Player) {Message = Message}.Send();
                         }
                         else
                         {

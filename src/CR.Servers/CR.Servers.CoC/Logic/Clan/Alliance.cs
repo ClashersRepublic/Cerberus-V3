@@ -72,7 +72,7 @@
 
                     if (Player != null && Player.Connected)
                     {
-                        new Alliance_Online_Member(Player.Level.GameMode.Device)
+                        new AllianceOnlineStatusUpdatedMessage(Player.Level.GameMode.Device)
                         {
                             Connected = Connected,
                             TotalMember = this.Header.NumberOfMembers
@@ -98,7 +98,7 @@
 
                     if (Player != null && Player.Connected)
                     {
-                        new Alliance_Online_Member(Player.Level.GameMode.Device)
+                        new AllianceOnlineStatusUpdatedMessage(Player.Level.GameMode.Device)
                         {
                             Connected = Connected,
                             TotalMember = this.Header.NumberOfMembers
@@ -116,7 +116,7 @@
 
                 if (Player != null && Player.Connected)
                 {
-                    new Alliance_Online_Member(Player.Level.GameMode.Device)
+                    new AllianceOnlineStatusUpdatedMessage(Player.Level.GameMode.Device)
                     {
                         Connected = this.Connected,
                         TotalMember = this.Header.NumberOfMembers
