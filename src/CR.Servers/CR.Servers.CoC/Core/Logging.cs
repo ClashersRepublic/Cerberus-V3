@@ -1,4 +1,4 @@
-﻿// #define Console
+﻿#define Console
 
 namespace CR.Servers.CoC.Core
 {

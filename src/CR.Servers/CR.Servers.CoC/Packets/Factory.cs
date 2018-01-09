@@ -195,7 +195,7 @@
         {
             if (Messages.TryGetValue(Type, out Type MType))
             {
-                return (Message) Activator.CreateInstance(MType, Device, Reader);
+                return (Message)Activator.CreateInstance(MType, Device, Reader);
             }
 
             Logging.Error(typeof(Factory), "Can't handle the following message : ID " + Type + ".");
@@ -207,7 +207,7 @@
         {
             if (Commands.TryGetValue(Type, out Type CType))
             {
-                return (Command) Activator.CreateInstance(CType, Device, Reader);
+                return (Command)Activator.CreateInstance(CType, Device, Reader);
             }
 
             Logging.Error(typeof(Factory), "Command " + Type + " not exist.");
@@ -223,7 +223,7 @@
             if (Debugs.TryGetValue(Parameters[0], out Type DType))
             {
                 string[] args = Parameters.Skip(1).ToArray();
-                Debug Debug = (Debug) Activator.CreateInstance(DType, Device, args);
+                Debug Debug = (Debug)Activator.CreateInstance(DType, Device, args);
 
                 return Debug;
             }
