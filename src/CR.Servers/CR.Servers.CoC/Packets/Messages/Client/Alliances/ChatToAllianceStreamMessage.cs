@@ -13,7 +13,13 @@
         {
         }
 
-        internal override short Type => 14315;
+        internal override short Type
+        {
+            get
+            {
+                return 14315;
+            }
+        }
 
         internal override void Decode()
         {

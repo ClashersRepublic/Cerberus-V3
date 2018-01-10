@@ -1,8 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
     using CR.Servers.CoC.Logic;
-    using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
 
     internal class AttackHomeFailedMessage : Message
     {
@@ -10,6 +8,12 @@
         {
         }
 
-        internal override short Type => 24103;
+        internal override short Type
+        {
+            get
+            {
+                return 24103;
+            }
+        }
     }
 }

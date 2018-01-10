@@ -245,6 +245,7 @@
     <Compile Include="Logic\Clan\StreamEntry\GiftStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\StreamEntry.cs" />
     <Compile Include="Logic\Device.cs" />
+    <Compile Include="Logic\Duel\Entry\Village2AttackEntry.cs" />
     <Compile Include="Logic\Enums\AllianceEvent.cs" />
     <Compile Include="Logic\Enums\AvatarStream.cs" />
     <Compile Include="Logic\Enums\FriendGameState.cs" />
@@ -481,13 +482,16 @@
     <Compile Include="Packets\Messages\Server\Alliances\AllianceOnlineStatusUpdatedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\AllianceStreamEntryRemovedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Api\FacebookAccountBoundMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryRemovedMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Village2AttackTargetsDataMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryUpdateMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\Village2AttackAvatarFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\AttackHomeFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendListUpdateMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\UpdateOnlineFriendsMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendListMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\LiveReplayDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\LiveReplayMessage.cs" />
-    <Compile Include="Packets\Messages\Server\Battle\V2_Battle_Result.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendRequestFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\CreateAllianceFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Alliances\AllianceDataMessage.cs" />
@@ -508,8 +512,7 @@
     <Compile Include="Packets\Messages\Server\Avatar\ChangeAvatarNameFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\EnemyHomeDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\AttackNpcDataMessage.cs" />
-    <Compile Include="Packets\Messages\Server\Battle\DuelHomeDataMessage.cs" />
-    <Compile Include="Packets\Messages\Server\Battle\DuelBattleInfoMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\Village2AttackAvatarDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendRequestRemovedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Home\AvailableServerCommandMessage.cs" />
     <Compile Include="Packets\Messages\Server\Account\DisconnectedMessage.cs" />
@@ -517,8 +520,9 @@
     <Compile Include="Packets\Messages\Server\Home\KeepAliveServerMessage.cs" />
     <Compile Include="Packets\Messages\Server\Home\OutOfSyncMessage.cs" />
     <Compile Include="Packets\Messages\Server\Home\OwnHomeDataMessage.cs" />
-    <Compile Include="Packets\Messages\Server\Home\WaitingToGoHomeMessage.cs" />
     <Compile Include="Packets\Messages\Server\Home\VisitHomeDataMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Home\WaitingToGoHomeMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Home\Village2VisitAvatarDataMessage.cs" />
     <Compile Include="Packets\ServerCommand.cs" />
     <Compile Include="Packets\Stream\RC4Encrypter.cs" />
     <Compile Include="Packets\Stream\Scrambler\RC4Scrambler.cs" />

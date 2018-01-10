@@ -7,9 +7,9 @@
     internal class LiveReplayMessage : Message
     {
         internal int ClientTick;
-        internal string ReplayJSON;
 
         internal List<Command> Commands;
+        internal string ReplayJSON;
 
         public LiveReplayMessage(Device Device, string replayJSON, List<Command> commands, int clientTick) : base(Device)
         {
@@ -18,7 +18,13 @@
             this.Commands = commands;
         }
 
-        internal override short Type => 24118;
+        internal override short Type
+        {
+            get
+            {
+                return 24118;
+            }
+        }
 
         internal override void Encode()
         {

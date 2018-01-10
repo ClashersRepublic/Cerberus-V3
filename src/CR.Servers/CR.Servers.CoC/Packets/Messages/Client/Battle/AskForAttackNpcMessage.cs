@@ -17,7 +17,13 @@
         {
         }
 
-        internal override short Type => 14134;
+        internal override short Type
+        {
+            get
+            {
+                return 14134;
+            }
+        }
 
         internal override void Decode()
         {
@@ -47,6 +53,7 @@
 
                             this.Device.GameMode.Level.Player.NpcMapProgress.Add(this.Npc, 3);
                         }
+
                         new AttackNpcDataMessage(this.Device) {NpcHome = LevelFile.Files[this.Npc.LevelFile], Npc_ID = this.Npc.GlobalId}
                             .Send();
                     }

@@ -15,7 +15,13 @@
             Device.State = State.IN_NPC_BATTLE;
         }
 
-        internal override short Type => 24133;
+        internal override short Type
+        {
+            get
+            {
+                return 24133;
+            }
+        }
 
         internal override void Encode()
         {

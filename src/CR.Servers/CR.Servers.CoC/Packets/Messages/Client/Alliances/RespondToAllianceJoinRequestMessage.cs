@@ -1,6 +1,5 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Client.Alliances
 {
-    using System;
     using System.Linq;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
@@ -22,7 +21,13 @@
         {
         }
 
-        internal override short Type => 14321;
+        internal override short Type
+        {
+            get
+            {
+                return 14321;
+            }
+        }
 
         internal override void Decode()
         {

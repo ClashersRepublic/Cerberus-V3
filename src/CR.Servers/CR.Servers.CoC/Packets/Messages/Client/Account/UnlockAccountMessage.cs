@@ -22,7 +22,13 @@
             this.Device.State = State.UNLOCK_ACC;
         }
 
-        internal override short Type => 10121;
+        internal override short Type
+        {
+            get
+            {
+                return 10121;
+            }
+        }
 
         internal override void Decode()
         {

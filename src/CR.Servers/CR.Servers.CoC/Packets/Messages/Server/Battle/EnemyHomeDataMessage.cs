@@ -24,7 +24,13 @@
             this.Device.GameMode.Level.Tick();
         }
 
-        internal override short Type => 24107;
+        internal override short Type
+        {
+            get
+            {
+                return 24107;
+            }
+        }
 
         internal override void Encode()
         {

@@ -6,9 +6,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Logic.Battles;
     using CR.Servers.Extensions.Binary;
-    using CR.Servers.Logic.Enums;
 
     internal class BattleEndClientTurnMessage : Message
     {
@@ -23,7 +21,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
             // Execute_Battle_Command.
         }
 
-        internal override short Type => 14510;
+        internal override short Type
+        {
+            get
+            {
+                return 14510;
+            }
+        }
 
         internal override void Decode()
         {
@@ -91,7 +95,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand)Command;
+                        ServerCommand ServerCommand = (ServerCommand) Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {
@@ -131,19 +135,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
             if (this.Device.Account.DuelBattle != null)
             {
-                Battle battle = this.Device.Account.DuelBattle.GetBattle(this.Device.GameMode.Level);
-
-                if (battle != null)
-                {
-                    if (!battle.Ended)
-                    {
-                        battle.HandleCommands(this.SubTick, this.Commands);
-                    }
-                    else
-                    {
-                        this.Device.Account.DuelBattle = null;
-                    }
-                }
+                this.Device.Account.DuelBattle.HandleCommands(this.SubTick, this.Commands, this.Device);
             }
         }
     }

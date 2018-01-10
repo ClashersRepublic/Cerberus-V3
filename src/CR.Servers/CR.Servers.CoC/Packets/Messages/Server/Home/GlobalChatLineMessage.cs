@@ -28,7 +28,13 @@
             this.UserId = this.Player.UserId;
         }
 
-        internal override short Type => 24715;
+        internal override short Type
+        {
+            get
+            {
+                return 24715;
+            }
+        }
 
         internal override void Encode()
         {

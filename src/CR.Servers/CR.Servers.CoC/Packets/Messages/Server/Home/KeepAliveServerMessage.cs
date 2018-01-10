@@ -8,6 +8,12 @@
         {
         }
 
-        internal override short Type => 20108;
+        internal override short Type
+        {
+            get
+            {
+                return 20108;
+            }
+        }
     }
 }

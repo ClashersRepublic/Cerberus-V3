@@ -1,20 +1,27 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
+    using CR.Servers.CoC.Extensions;
     using CR.Servers.CoC.Files;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.List;
     using CR.Servers.Logic.Enums;
 
-    internal class DuelHomeDataMessage : Message
+    internal class Village2AttackAvatarDataMessage : Message
     {
         internal Level Enemy;
 
-        public DuelHomeDataMessage(Device Device) : base(Device)
+        public Village2AttackAvatarDataMessage(Device Device) : base(Device)
         {
             this.Device.State = State.IN_1VS1_BATTLE;
         }
 
-        internal override short Type => 25023;
+        internal override short Type
+        {
+            get
+            {
+                return 25023;
+            }
+        }
 
         internal override void Encode()
         {
@@ -30,7 +37,7 @@
             this.Data.AddCompressed("{\"Village2\":{\"TownHallMaxLevel\":8}}");
 
             this.Data.AddLong(this.Enemy.Player.UserId);
-            this.Data.AddHexa("592FA598".Replace(" ", ""));
+            this.Data.AddInt(TimeUtils.UnixUtcNow);
         }
     }
 }

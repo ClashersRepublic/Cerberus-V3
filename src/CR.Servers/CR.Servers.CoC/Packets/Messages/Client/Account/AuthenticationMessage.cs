@@ -30,7 +30,13 @@
             this.Device.State = State.LOGIN;
         }
 
-        internal override short Type => 10101;
+        internal override short Type
+        {
+            get
+            {
+                return 10101;
+            }
+        }
 
         internal override void Decode()
         {
@@ -224,6 +230,7 @@
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -256,11 +263,9 @@
                         account.Battle.AddViewer(this.Device);
                         goto sendAllianceMessage;
                     }
-                    else
-                    {
-                        account.Battle.EndBattle();
-                        account.Battle = null;
-                    }
+
+                    account.Battle.EndBattle();
+                    account.Battle = null;
                 }
                 else
                 {

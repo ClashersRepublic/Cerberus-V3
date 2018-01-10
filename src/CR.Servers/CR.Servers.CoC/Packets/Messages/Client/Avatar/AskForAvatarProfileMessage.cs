@@ -15,7 +15,13 @@
         {
         }
 
-        internal override short Type => 14325;
+        internal override short Type
+        {
+            get
+            {
+                return 14325;
+            }
+        }
 
         internal override void Decode()
         {
@@ -27,6 +33,7 @@
                 this.Reader.ReadInt32(); //HomeHighId
                 this.Reader.ReadInt32(); //HomeLowId
             }
+
             this.Reader.ReadBooleanV2();
         }
 
@@ -35,6 +42,7 @@
             if (this.AvatarHighId >= 0 && this.AvatarLowId > 0)
             {
                 Player Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId)?.Player;
+
                 if (Player?.Level != null)
                 {
                     new AvatarProfileMessage(this.Device, Player.Level).Send();

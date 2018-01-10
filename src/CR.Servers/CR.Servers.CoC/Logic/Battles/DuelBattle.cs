@@ -1,5 +1,10 @@
 ﻿namespace CR.Servers.CoC.Logic.Battles
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets;
+    using CR.Servers.CoC.Packets.Messages.Server.Battle;
+
     internal class DuelBattle
     {
         internal Battle Battle1;
@@ -19,6 +24,22 @@
             }
 
             return this.Battle2;
+        }
+
+        internal void HandleCommands(int subTick, List<Command> commands, Device device)
+        {
+            Battle battle = this.GetBattle(device.GameMode.Level);
+
+            if (battle != null)
+            {
+                battle.HandleCommands(subTick, commands);
+            }
+
+            this.SendDuelBattleInfoMessage();
+        }
+
+        internal void SendDuelBattleInfoMessage()
+        {
         }
     }
 }
