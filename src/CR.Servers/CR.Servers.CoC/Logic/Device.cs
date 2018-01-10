@@ -1,7 +1,6 @@
 ﻿namespace CR.Servers.CoC.Logic
 {
     using System;
-    using System.IO;
     using System.Linq;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
@@ -65,11 +64,29 @@
             }
         }
 
-        internal long TimeSinceLastKeepAliveMs => (long) DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
+        internal long TimeSinceLastKeepAliveMs
+        {
+            get
+            {
+                return (long) DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
+            }
+        }
 
-        internal bool Connected => !this.Disposed && this.Token.Connected;
+        internal bool Connected
+        {
+            get
+            {
+                return !this.Disposed && this.Token.Connected;
+            }
+        }
 
-        internal string OS => this.Info.Android ? "Android" : "iOS";
+        internal string OS
+        {
+            get
+            {
+                return this.Info.Android ? "Android" : "iOS";
+            }
+        }
 
         public void Dispose()
         {
@@ -178,6 +195,7 @@
                                     message.Version = (short) messageVersion;
                                     Resources.PacketManager.ReceiveMessageQueue.Enqueue(message);
                                 }
+
                                 /*else
                                 {
                                     File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({messageType}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", messageBytes);

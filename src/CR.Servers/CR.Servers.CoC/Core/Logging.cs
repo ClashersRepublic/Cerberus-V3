@@ -32,7 +32,7 @@ namespace CR.Servers.CoC.Core
 
         internal static void Error(Type Type, Device Device, string Message, bool ServerError = true)
         {
-            Error(Type, Message);
+            Logging.Error(Type, Message);
 
             if (ServerError)
             {

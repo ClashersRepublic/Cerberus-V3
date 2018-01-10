@@ -82,71 +82,155 @@
             this.UnitPreset3 = new UnitSlots();
         }
 
-        internal long AllianceId => ((long) this.AllianceHighId << 32) | (uint) this.AllianceLowId;
+        internal long AllianceId
+        {
+            get
+            {
+                return ((long) this.AllianceHighId << 32) | (uint) this.AllianceLowId;
+            }
+        }
 
-        internal bool InAlliance => this.AllianceId > 0;
+        internal bool InAlliance
+        {
+            get
+            {
+                return this.AllianceId > 0;
+            }
+        }
 
         //Testing
         internal bool Village2
         {
-            get => this.Variables.GetCountByGlobalId(37000012) == 1;
-            set => this.Variables.Set(37000012, Convert.ToInt32(value));
+            get
+            {
+                return this.Variables.GetCountByGlobalId(37000012) == 1;
+            }
+            set
+            {
+                this.Variables.Set(37000012, Convert.ToInt32(value));
+            }
         }
 
         internal int Map
         {
-            get => this.Variables.GetCountByGlobalId(37000012);
-            set => this.Variables.Set(37000012, value);
+            get
+            {
+                return this.Variables.GetCountByGlobalId(37000012);
+            }
+            set
+            {
+                this.Variables.Set(37000012, value);
+            }
         }
 
         internal int Gold
         {
-            get => this.Resources.GetCountByGlobalId(3000001);
-            set => this.Resources.Set(3000001, value);
+            get
+            {
+                return this.Resources.GetCountByGlobalId(3000001);
+            }
+            set
+            {
+                this.Resources.Set(3000001, value);
+            }
         }
 
         internal int Elixir
         {
-            get => this.Resources.GetCountByGlobalId(3000002);
-            set => this.Resources.Set(3000002, value);
+            get
+            {
+                return this.Resources.GetCountByGlobalId(3000002);
+            }
+            set
+            {
+                this.Resources.Set(3000002, value);
+            }
         }
 
         internal int DarkElixir
         {
-            get => this.Resources.GetCountByGlobalId(3000003);
-            set => this.Resources.Set(3000003, value);
+            get
+            {
+                return this.Resources.GetCountByGlobalId(3000003);
+            }
+            set
+            {
+                this.Resources.Set(3000003, value);
+            }
         }
 
         internal int Gold2
         {
-            get => this.Resources.GetCountByGlobalId(3000007);
-            set => this.Resources.Set(3000007, value);
+            get
+            {
+                return this.Resources.GetCountByGlobalId(3000007);
+            }
+            set
+            {
+                this.Resources.Set(3000007, value);
+            }
         }
 
         internal int Elixir2
         {
-            get => this.Resources.GetCountByGlobalId(3000008);
-            set => this.Resources.Set(3000008, value);
+            get
+            {
+                return this.Resources.GetCountByGlobalId(3000008);
+            }
+            set
+            {
+                this.Resources.Set(3000008, value);
+            }
         }
 
-        internal TownhallLevelData TownhallLevelData => (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel);
+        internal TownhallLevelData TownhallLevelData
+        {
+            get
+            {
+                return (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel);
+            }
+        }
 
-        internal TownhallLevelData TownhallLevel2Data => (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel2);
+        internal TownhallLevelData TownhallLevel2Data
+        {
+            get
+            {
+                return (TownhallLevelData) CSV.Tables.Get(Gamefile.Townhall_Levels).GetDataWithInstanceID(this.TownHallLevel2);
+            }
+        }
 
-        internal virtual int Checksum => this.Resources.Checksum
-                                 + this.ResourceCaps.Checksum // OutOfSync
-                                 + this.Units.Checksum
-                                 + this.Spells.Checksum
-                                 + this.AllianceUnits.Checksum
-                                 + this.UnitUpgrades.Checksum
-                                 + this.SpellUpgrades.Checksum
-                                 + this.Units2.Checksum
-                                 + this.TownHallLevel
-                                 + this.TownHallLevel2;
+        internal virtual int Checksum
+        {
+            get
+            {
+                return this.Resources.Checksum
+                       + this.ResourceCaps.Checksum // OutOfSync
+                       + this.Units.Checksum
+                       + this.Spells.Checksum
+                       + this.AllianceUnits.Checksum
+                       + this.UnitUpgrades.Checksum
+                       + this.SpellUpgrades.Checksum
+                       + this.Units2.Checksum
+                       + this.TownHallLevel
+                       + this.TownHallLevel2;
+            }
+        }
 
-        internal virtual bool ClientPlayer => false;
+        internal virtual bool ClientPlayer
+        {
+            get
+            {
+                return false;
+            }
+        }
 
-        internal virtual bool NpcPlayer => false;
+        internal virtual bool NpcPlayer
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         internal int GetUnitUpgradeLevel(Data Data)
         {

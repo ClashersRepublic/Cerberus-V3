@@ -18,9 +18,21 @@
         {
         }
 
-        internal override bool IsServerCommand => true;
+        internal override bool IsServerCommand
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-        internal virtual ChecksumEncoder Checksum => null;
+        internal virtual ChecksumEncoder Checksum
+        {
+            get
+            {
+                return null;
+            }
+        }
 
         internal override void Decode()
         {

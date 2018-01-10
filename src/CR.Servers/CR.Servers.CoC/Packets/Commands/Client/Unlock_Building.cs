@@ -13,7 +13,13 @@
         {
         }
 
-        internal override int Type => 520;
+        internal override int Type
+        {
+            get
+            {
+                return 520;
+            }
+        }
 
         internal override void Decode()
         {
@@ -45,6 +51,7 @@
                                     level.Player.CastleTotalCapacity = data.HousingSpace[level.Player.CastleLevel];
                                     level.Player.CastleTotalSpellCapacity = data.HousingSpaceAlt[level.Player.CastleLevel];
                                 }
+
                                 building.Locked = false;
                             }
                             else

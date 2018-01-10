@@ -26,7 +26,13 @@
             this.Packet = new List<byte>(Constants.ReceiveBuffer);
         }
 
-        internal bool Connected => !this.Aborting && this.Socket.Connected;
+        internal bool Connected
+        {
+            get
+            {
+                return !this.Aborting && this.Socket.Connected;
+            }
+        }
 
         public void Dispose()
         {

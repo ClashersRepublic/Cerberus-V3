@@ -7,8 +7,14 @@
 
         internal bool SelfAttack
         {
-            get => this.GetCountByGlobalId(0) == 1;
-            set => this.Set(0, value ? 1 : 0);
+            get
+            {
+                return this.GetCountByGlobalId(0) == 1;
+            }
+            set
+            {
+                this.Set(0, value ? 1 : 0);
+            }
         }
 
         internal void Initialize()

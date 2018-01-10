@@ -1,15 +1,15 @@
-﻿using System;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Extensions.Helper
+﻿namespace CR.Servers.CoC.Extensions.Helper
 {
+    using System;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using Newtonsoft.Json.Linq;
+
     public class JsonHelper
     {
         internal static bool GetJsonArray(JToken Token, string Key, out JArray JArray)
         {
-            return (JArray = (JArray)Token[Key]) != null;
+            return (JArray = (JArray) Token[Key]) != null;
         }
 
         internal static bool GetJsonObject(JToken Token, string Key, out JToken JToken)
@@ -19,7 +19,7 @@ namespace CR.Servers.CoC.Extensions.Helper
 
         internal static bool GetJsonString(JToken Token, string Key, out string String)
         {
-            return (String = (string)Token[Key]) != null;
+            return (String = (string) Token[Key]) != null;
         }
 
         internal static bool GetJsonData(JToken Token, string Key, out Data Data)
@@ -38,11 +38,11 @@ namespace CR.Servers.CoC.Extensions.Helper
 
             if (KeyValue != null)
             {
-                Bool = (bool)KeyValue;
+                Bool = (bool) KeyValue;
                 return true;
             }
-            else
-                Bool = false;
+
+            Bool = false;
 
             return false;
         }
@@ -53,11 +53,11 @@ namespace CR.Servers.CoC.Extensions.Helper
 
             if (KeyValue != null)
             {
-                Int = (int)KeyValue;
+                Int = (int) KeyValue;
                 return true;
             }
-            else
-                Int = -1;
+
+            Int = -1;
 
             return false;
         }
@@ -68,11 +68,11 @@ namespace CR.Servers.CoC.Extensions.Helper
 
             if (KeyValue != null)
             {
-                Long = (long)KeyValue;
+                Long = (long) KeyValue;
                 return true;
             }
-            else
-                Long = -1;
+
+            Long = -1;
 
             return false;
         }
@@ -83,11 +83,11 @@ namespace CR.Servers.CoC.Extensions.Helper
 
             if (KeyValue != null)
             {
-                Byte = (byte)KeyValue;
+                Byte = (byte) KeyValue;
                 return true;
             }
-            else
-                Byte = 0;
+
+            Byte = 0;
 
             return false;
         }
@@ -98,11 +98,11 @@ namespace CR.Servers.CoC.Extensions.Helper
 
             if (KeyValue != null)
             {
-                Time = (DateTime)KeyValue;
+                Time = (DateTime) KeyValue;
                 return true;
             }
-            else
-                Time = DateTime.UtcNow;
+
+            Time = DateTime.UtcNow;
 
             return false;
         }

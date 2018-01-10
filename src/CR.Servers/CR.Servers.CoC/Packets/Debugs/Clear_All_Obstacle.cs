@@ -11,7 +11,13 @@
         {
         }
 
-        internal override Rank RequiredRank => Rank.Player;
+        internal override Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Player;
+            }
+        }
 
         internal override void Process()
         {

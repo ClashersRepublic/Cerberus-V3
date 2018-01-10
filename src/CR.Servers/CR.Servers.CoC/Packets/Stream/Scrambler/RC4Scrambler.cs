@@ -32,12 +32,12 @@
             {
                 for (int i = 1, j = 0; i <= this._seeds.Length; i++, j++)
                 {
-                    int v4 = (this._seeds[i % this._seeds.Length] & LOWER_MASK) + (this._seeds[j] & UPPER_MASK);
+                    int v4 = (this._seeds[i % this._seeds.Length] & RC4Scrambler.LOWER_MASK) + (this._seeds[j] & RC4Scrambler.UPPER_MASK);
                     int v6 = (v4 >> 1) ^ this._seeds[(i + 396) % this._seeds.Length];
 
                     if ((v4 & 1) == 1)
                     {
-                        v6 ^= MATRIX_A;
+                        v6 ^= RC4Scrambler.MATRIX_A;
                     }
 
                     this._seeds[j] = v6;
@@ -46,8 +46,8 @@
 
             int val = this._seeds[this._ix];
 
-            val ^= (val >> 11) ^ (((val ^ (val >> 11)) << 7) & TEMPERING_MASK_B);
-            val = ((val ^ ((val << 15) & TEMPERING_MASK_C)) >> 18) ^ val ^ ((val << 15) & TEMPERING_MASK_C);
+            val ^= (val >> 11) ^ (((val ^ (val >> 11)) << 7) & RC4Scrambler.TEMPERING_MASK_B);
+            val = ((val ^ ((val << 15) & RC4Scrambler.TEMPERING_MASK_C)) >> 18) ^ val ^ ((val << 15) & RC4Scrambler.TEMPERING_MASK_C);
 
             this._ix = (this._ix + 1) % this._seeds.Length;
 

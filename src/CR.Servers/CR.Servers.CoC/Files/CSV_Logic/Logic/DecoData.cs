@@ -1,27 +1,16 @@
-﻿using System;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
-    internal class DecoData :  Data
+    using System;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
+    internal class DecoData : Data
     {
         internal ResourceData BuildResourceData;
 
         public DecoData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-
-        }
-
-        internal override void Process()
-        {
-            this.BuildResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
-
-            if (this.BuildResourceData == null)
-            {
-                throw new Exception("Buildings.csv: Build Resource is invalid!.");
-            }
         }
 
         public override string Name { get; set; }
@@ -54,10 +43,19 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
             get
             {
-                var calculation = (int) ((this.BuildCost * (long) 1717986919) >> 32);
+                int calculation = (int) ((this.BuildCost * (long) 1717986919) >> 32);
                 return (calculation >> 2) + (calculation >> 31);
             }
         }
 
+        internal override void Process()
+        {
+            this.BuildResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
+
+            if (this.BuildResourceData == null)
+            {
+                throw new Exception("Buildings.csv: Build Resource is invalid!.");
+            }
+        }
     }
 }

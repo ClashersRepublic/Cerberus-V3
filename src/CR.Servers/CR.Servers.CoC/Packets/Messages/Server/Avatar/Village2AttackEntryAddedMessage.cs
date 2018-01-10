@@ -22,7 +22,6 @@
 
         internal override void Encode()
         {
-            
         }
     }
 }

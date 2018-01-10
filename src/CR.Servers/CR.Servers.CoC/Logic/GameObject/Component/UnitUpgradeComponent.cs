@@ -22,9 +22,21 @@
             // UnitUpgradeComponent.
         }
 
-        internal override int Type => 9;
+        internal override int Type
+        {
+            get
+            {
+                return 9;
+            }
+        }
 
-        internal bool UpgradeOnGoing => this.Timer != null;
+        internal bool UpgradeOnGoing
+        {
+            get
+            {
+                return this.Timer != null;
+            }
+        }
 
         internal void CancelUpgrade()
         {

@@ -1,9 +1,7 @@
 ﻿namespace CR.Servers.CoC.Logic.Battles
 {
     using System.Collections.Generic;
-    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets;
-    using CR.Servers.CoC.Packets.Messages.Server.Battle;
 
     internal class DuelBattle
     {

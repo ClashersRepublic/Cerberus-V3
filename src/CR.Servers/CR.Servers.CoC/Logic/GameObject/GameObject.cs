@@ -23,13 +23,37 @@
             this.Components = new List<Component>(16);
         }
 
-        internal int TileX => this.Position.X >> 9;
+        internal int TileX
+        {
+            get
+            {
+                return this.Position.X >> 9;
+            }
+        }
 
-        internal int TileY => this.Position.Y >> 9;
+        internal int TileY
+        {
+            get
+            {
+                return this.Position.Y >> 9;
+            }
+        }
 
-        internal int MidX => this.Position.X >> 8;
+        internal int MidX
+        {
+            get
+            {
+                return this.Position.X >> 8;
+            }
+        }
 
-        internal int MidY => this.Position.Y >> 8;
+        internal int MidY
+        {
+            get
+            {
+                return this.Position.Y >> 8;
+            }
+        }
 
         internal virtual int Checksum
         {
@@ -43,13 +67,37 @@
             }
         }
 
-        internal virtual int HeightInTiles => 1;
+        internal virtual int HeightInTiles
+        {
+            get
+            {
+                return 1;
+            }
+        }
 
-        internal virtual int WidthInTiles => 1;
+        internal virtual int WidthInTiles
+        {
+            get
+            {
+                return 1;
+            }
+        }
 
-        internal virtual int VillageType => 0;
+        internal virtual int VillageType
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-        internal virtual int Type => 0;
+        internal virtual int Type
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
         internal void AddComponent(Component Component)
         {

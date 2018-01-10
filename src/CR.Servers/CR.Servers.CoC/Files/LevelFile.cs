@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Files
+﻿namespace CR.Servers.CoC.Files
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
     public class LevelFile
     {
         internal static JObject StartingHome;

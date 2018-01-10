@@ -37,8 +37,21 @@
             this.Reader = Reader;
         }
 
-        internal virtual int Type => 0;
-        internal virtual bool IsServerCommand => false;
+        internal virtual int Type
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        internal virtual bool IsServerCommand
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         internal virtual void Decode()
         {
@@ -97,7 +110,13 @@
 
     internal class CommandConverter : JsonConverter
     {
-        public override bool CanWrite => true;
+        public override bool CanWrite
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public override bool CanConvert(Type Type)
         {
@@ -126,6 +145,7 @@
 
                 return Entry;
             }
+
             Logging.Error(this.GetType(), "ReadJson() - JsonObject doesn't contains 'ct' key.");
 
             return existingValue;

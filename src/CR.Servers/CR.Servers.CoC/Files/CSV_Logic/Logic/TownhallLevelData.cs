@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class TownhallLevelData : Data
     {
         internal Dictionary<Data, int> Caps;
@@ -37,7 +36,7 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         {
             Table.Datas.ForEach(Data =>
             {
-                string Value = Row.GetValue(Data.Name, this.DataTable.Datas.Count);
+                string Value = this.Row.GetValue(Data.Name, this.DataTable.Datas.Count);
                 if (!string.IsNullOrEmpty(Value))
                 {
                     if (int.TryParse(Value, out int Count))
@@ -45,8 +44,10 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
                         //Logging.Error(this.GetType(), $"Value for {Data.Name} is {Count}. Value {Value}");
                         this.Caps.Add(Data, Count);
                     }
-                     else
+                    else
+                    {
                         Logging.Error(this.GetType(), "Value " + Value + " is not int value.");
+                    }
                 }
                 else if (this.DataTable.Datas.Count > 0)
                 {
@@ -70,6 +71,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
                 }
             });
         }
-
     }
 }

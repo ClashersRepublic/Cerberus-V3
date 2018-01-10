@@ -11,7 +11,13 @@
         {
         }
 
-        internal override int Type => 526;
+        internal override int Type
+        {
+            get
+            {
+                return 526;
+            }
+        }
 
         internal override void Decode()
         {
@@ -20,6 +26,7 @@
             {
                 this.Reader.ReadInt32();
             }
+
             base.Decode();
         }
     }

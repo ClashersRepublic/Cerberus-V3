@@ -28,7 +28,13 @@
             this.Event = Event;
         }
 
-        internal override AllianceStream Type => AllianceStream.AllianceEvent;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.AllianceEvent;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

@@ -8,14 +8,20 @@
     internal class Free_Worker : Command
     {
         internal Command Command;
-        internal bool EmbedCommand;      
+        internal bool EmbedCommand;
         internal int VillageWorker;
 
         public Free_Worker(Device device, Reader reader) : base(device, reader)
         {
         }
 
-        internal override int Type => 521;
+        internal override int Type
+        {
+            get
+            {
+                return 521;
+            }
+        }
 
         internal override void Decode()
         {

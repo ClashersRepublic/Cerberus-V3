@@ -13,7 +13,13 @@
         {
         }
 
-        internal override int Type => 591;
+        internal override int Type
+        {
+            get
+            {
+                return 591;
+            }
+        }
 
         internal override void Decode()
         {

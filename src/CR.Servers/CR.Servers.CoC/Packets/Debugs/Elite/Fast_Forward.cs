@@ -15,7 +15,13 @@
         {
         }
 
-        internal override Rank RequiredRank => Rank.Elite;
+        internal override Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Elite;
+            }
+        }
 
         internal override void Process()
         {
@@ -42,6 +48,7 @@
                     this.Help.AppendLine("Time exceed the limit!");
                     this.SendChatMessage(this.Help.ToString());
                 }
+
                 //Time bust be at least 1
             }
         }

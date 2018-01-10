@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Reader
+﻿namespace CR.Servers.CoC.Files.CSV_Reader
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class Gamefiles
     {
         internal readonly Dictionary<int, DataTable> DataTables;
@@ -22,7 +21,7 @@ namespace CR.Servers.CoC.Files.CSV_Reader
 
         internal DataTable Get(Gamefile _Index)
         {
-            return this.DataTables[(int)_Index];
+            return this.DataTables[(int) _Index];
         }
 
         internal Data GetWithGlobalId(int GlobalId)

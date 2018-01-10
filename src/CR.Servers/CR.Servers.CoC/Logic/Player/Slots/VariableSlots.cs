@@ -11,8 +11,14 @@
 
         internal int Village2BarrackLevel
         {
-            get => this.GetCountByGlobalId((int) Variable.Village2BarrackLevel);
-            set => this.Set(Variable.Village2BarrackLevel, value);
+            get
+            {
+                return this.GetCountByGlobalId((int) Variable.Village2BarrackLevel);
+            }
+            set
+            {
+                this.Set(Variable.Village2BarrackLevel, value);
+            }
         }
 
 

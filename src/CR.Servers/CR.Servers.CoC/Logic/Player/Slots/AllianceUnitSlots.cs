@@ -118,6 +118,7 @@
                     Current.Count = 0;
                 }
             }
+
             //else
             //Logging.Info(this.GetType(), "Remove() - DataSlot doesn't exist. This should never happen, check existing before remove.");
         }

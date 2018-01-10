@@ -1,6 +1,7 @@
-﻿using System;
-namespace CR.Servers.CoC.Files.CSV_Helpers
+﻿namespace CR.Servers.CoC.Files.CSV_Helpers
 {
+    using System;
+
     internal static class GlobalId
     {
         internal static int GetType(int GlobalID)
@@ -12,7 +13,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         {
             return GlobalID % 1000000;
         }
-        
+
         internal static int Create(int Type, int ID)
         {
             return Type * 1000000 + ID;
@@ -22,7 +23,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         [Obsolete]
         internal static int GetTypeOld(int GlobalID)
         {
-            GlobalID = (int)((1125899907 * (long)GlobalID) >> 32);
+            GlobalID = (int) ((1125899907 * (long) GlobalID) >> 32);
             return (GlobalID >> 18) + (GlobalID >> 31);
         }
 
@@ -30,7 +31,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         internal static int GetIDOld(int GlobalID)
         {
             int ReferenceT = 0;
-            ReferenceT = (int)((1125899907 * (long)GlobalID) >> 32);
+            ReferenceT = (int) ((1125899907 * (long) GlobalID) >> 32);
             return GlobalID - 1000000 * ((ReferenceT >> 18) + (ReferenceT >> 31));
         }
     }

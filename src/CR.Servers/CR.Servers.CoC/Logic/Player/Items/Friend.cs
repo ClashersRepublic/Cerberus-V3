@@ -24,7 +24,13 @@
             this.Player = Player;
         }
 
-        internal long PlayerId => ((long) this.HighId << 32) | (uint) this.LowId;
+        internal long PlayerId
+        {
+            get
+            {
+                return ((long) this.HighId << 32) | (uint) this.LowId;
+            }
+        }
 
         internal Player Player { get; set; }
 

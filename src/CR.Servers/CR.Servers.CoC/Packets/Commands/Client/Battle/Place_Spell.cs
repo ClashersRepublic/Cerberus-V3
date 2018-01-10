@@ -9,8 +9,8 @@
     internal class Place_Spell : Command
     {
         internal bool IsAllianceSpell;
-        internal SpellData Spell;
         internal int Level;
+        internal SpellData Spell;
 
         internal int X;
         internal int Y;
@@ -19,7 +19,13 @@
         {
         }
 
-        internal override int Type => 704;
+        internal override int Type
+        {
+            get
+            {
+                return 704;
+            }
+        }
 
         internal override void Decode()
         {

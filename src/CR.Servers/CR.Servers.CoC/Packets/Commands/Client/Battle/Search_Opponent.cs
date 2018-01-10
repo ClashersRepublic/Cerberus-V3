@@ -1,6 +1,5 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
-    using System;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
@@ -15,7 +14,13 @@
         {
         }
 
-        internal override int Type => 800;
+        internal override int Type
+        {
+            get
+            {
+                return 800;
+            }
+        }
 
         internal override void Decode()
         {

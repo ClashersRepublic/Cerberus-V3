@@ -1,20 +1,15 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class ObstacleData : Data
     {
-        public ObstacleData(Row Row, DataTable DataTable) : base(Row, DataTable)
-        {
-        }
-
         internal ResourceData ClearResourceData;
 
-        internal override void Process()
+        public ObstacleData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-            this.ClearResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.ClearResource);
         }
 
         public override string Name { get; set; }
@@ -60,5 +55,10 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool TallGrassSpawnPoint { get; set; }
         public int LootHighlightPercentage { get; set; }
         public string HighlightExportName { get; set; }
+
+        internal override void Process()
+        {
+            this.ClearResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.ClearResource);
+        }
     }
 }

@@ -75,6 +75,7 @@
                     Tiles.Add(this.Tiles[GameObject.VillageType][50 * (i + X) + j + Y]);
                 }
             }
+
             return Tiles;
         }
     }

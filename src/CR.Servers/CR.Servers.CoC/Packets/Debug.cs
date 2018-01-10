@@ -23,9 +23,21 @@
             this.Parameters = Parameters;
         }
 
-        internal string NextParameter => this.ParameterOffset >= this.Parameters.Length ? this.Parameters[this.ParameterOffset++] : null;
+        internal string NextParameter
+        {
+            get
+            {
+                return this.ParameterOffset >= this.Parameters.Length ? this.Parameters[this.ParameterOffset++] : null;
+            }
+        }
 
-        internal virtual Rank RequiredRank => Rank.Player;
+        internal virtual Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Player;
+            }
+        }
 
         public void Dispose()
         {

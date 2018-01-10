@@ -1,35 +1,18 @@
-﻿using System;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using System;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class BuildingData : Data
     {
+        internal BuildingClassData BuildingClassData;
         internal ResourceData BuildResourceData;
         internal ResourceData ProducesResourceData;
-        internal BuildingClassData BuildingClassData;
 
         public BuildingData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-        }
-
-        internal override void Process()
-        {
-            this.BuildingClassData = (BuildingClassData)CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingClass);
-            this.BuildResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
-            this.ProducesResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.ProducesResource);
-
-            if (this.BuildingClassData == null)
-            {
-                throw new Exception("Buildings.csv: Building Class does not exist.");
-            }
-
-            if (this.BuildResourceData == null)
-            {
-                throw new Exception("Buildings.csv: Build Resource is invalid!.");
-            }
         }
 
 
@@ -222,54 +205,188 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public int[] GearUpCost { get; set; }
         public int[] GearUpTime { get; set; }
 
-        internal int MaxLevel => this.BuildCost.Length - 1;
+        internal int MaxLevel
+        {
+            get
+            {
+                return this.BuildCost.Length - 1;
+            }
+        }
 
-        internal bool IsTownHall => this.BuildingClass == "Town Hall";
+        internal bool IsTownHall
+        {
+            get
+            {
+                return this.BuildingClass == "Town Hall";
+            }
+        }
 
-        internal bool IsTownHall2 => this.BuildingClass == "Town Hall2";
+        internal bool IsTownHall2
+        {
+            get
+            {
+                return this.BuildingClass == "Town Hall2";
+            }
+        }
 
-        internal bool IsWorker => this.BuildingClass == "Worker";
+        internal bool IsWorker
+        {
+            get
+            {
+                return this.BuildingClass == "Worker";
+            }
+        }
 
-        internal bool IsWorker2 => this.BuildingClass == "Worker2";
+        internal bool IsWorker2
+        {
+            get
+            {
+                return this.BuildingClass == "Worker2";
+            }
+        }
 
-        internal bool IsDefense => this.BuildingClass == "Defense";
+        internal bool IsDefense
+        {
+            get
+            {
+                return this.BuildingClass == "Defense";
+            }
+        }
 
-        internal bool IsSpellForge => this.ForgesSpells && this.ProducesUnitsOfType == 1;
+        internal bool IsSpellForge
+        {
+            get
+            {
+                return this.ForgesSpells && this.ProducesUnitsOfType == 1;
+            }
+        }
 
-        internal bool IsMiniSpellForge => this.ForgesMiniSpells && this.ProducesUnitsOfType == 2;
+        internal bool IsMiniSpellForge
+        {
+            get
+            {
+                return this.ForgesMiniSpells && this.ProducesUnitsOfType == 2;
+            }
+        }
 
-        internal bool IsLaboratory => this.UpgradesUnits;
+        internal bool IsLaboratory
+        {
+            get
+            {
+                return this.UpgradesUnits;
+            }
+        }
 
-        internal bool IsBarrack => this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 1 && !this.ForgesSpells;
+        internal bool IsBarrack
+        {
+            get
+            {
+                return this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 1 && !this.ForgesSpells;
+            }
+        }
 
-        internal bool IsDarkBarrack => this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 2 && !this.ForgesSpells;
+        internal bool IsDarkBarrack
+        {
+            get
+            {
+                return this.UnitProduction[0] > 0 && this.ProducesUnitsOfType == 2 && !this.ForgesSpells;
+            }
+        }
 
-        internal bool IsBarrack2 => this.Name == "Barrack2";
+        internal bool IsBarrack2
+        {
+            get
+            {
+                return this.Name == "Barrack2";
+            }
+        }
 
-        internal bool IsTrainingHousing => this.HousingSpace[0] > 0 && !this.Bunker;
+        internal bool IsTrainingHousing
+        {
+            get
+            {
+                return this.HousingSpace[0] > 0 && !this.Bunker;
+            }
+        }
 
-        internal bool IsAllianceCastle => this.Name == "Alliance Castle";
+        internal bool IsAllianceCastle
+        {
+            get
+            {
+                return this.Name == "Alliance Castle";
+            }
+        }
 
-        internal bool IsTroopHousingV2 => this.Name == "Troop Housing2";
+        internal bool IsTroopHousingV2
+        {
+            get
+            {
+                return this.Name == "Troop Housing2";
+            }
+        }
 
-        internal bool IsWallStraight => this.Name == "WallStraight";
+        internal bool IsWallStraight
+        {
+            get
+            {
+                return this.Name == "WallStraight";
+            }
+        }
 
-        internal bool CanStoreResources => this.MaxStoredGold[0] > 0
-                                           || this.MaxStoredElixir[0] > 0
-                                           || this.MaxStoredDarkElixir[0] > 0
-                                           || this.MaxStoredWarGold[0] > 0
-                                           || this.MaxStoredWarElixir[0] > 0
-                                           || this.MaxStoredWarDarkElixir[0] > 0
-                                           || this.MaxStoredGold2[0] > 0
-                                           || this.MaxStoredElixir2[0] > 0;
+        internal bool CanStoreResources
+        {
+            get
+            {
+                return this.MaxStoredGold[0] > 0
+                       || this.MaxStoredElixir[0] > 0
+                       || this.MaxStoredDarkElixir[0] > 0
+                       || this.MaxStoredWarGold[0] > 0
+                       || this.MaxStoredWarElixir[0] > 0
+                       || this.MaxStoredWarDarkElixir[0] > 0
+                       || this.MaxStoredGold2[0] > 0
+                       || this.MaxStoredElixir2[0] > 0;
+            }
+        }
 
-        internal int GetBuildTime(int Level) => this.BuildTimeD[Level] * 86400 + this.BuildTimeH[Level] * 3600 + this.BuildTimeM[Level] * 60 + this.BuildTimeS[Level];
+        internal ResourceData GearUpResourceData
+        {
+            get
+            {
+                return (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.GearUpResource);
+            }
+        }
 
-        internal int GetGearUpTime(int Level) => this.GearUpTime[Level] * 60;
+        internal override void Process()
+        {
+            this.BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingClass);
+            this.BuildResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
+            this.ProducesResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.ProducesResource);
 
-        internal ResourceData GearUpResourceData => (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.GearUpResource);
+            if (this.BuildingClassData == null)
+            {
+                throw new Exception("Buildings.csv: Building Class does not exist.");
+            }
 
-        internal ResourceData AltBuildResourceData(int Level) => (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.AltBuildResource[Level]);
+            if (this.BuildResourceData == null)
+            {
+                throw new Exception("Buildings.csv: Build Resource is invalid!.");
+            }
+        }
+
+        internal int GetBuildTime(int Level)
+        {
+            return this.BuildTimeD[Level] * 86400 + this.BuildTimeH[Level] * 3600 + this.BuildTimeM[Level] * 60 + this.BuildTimeS[Level];
+        }
+
+        internal int GetGearUpTime(int Level)
+        {
+            return this.GearUpTime[Level] * 60;
+        }
+
+        internal ResourceData AltBuildResourceData(int Level)
+        {
+            return (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.AltBuildResource[Level]);
+        }
 
         internal int[] GetResourceMaxArray(int Level)
         {

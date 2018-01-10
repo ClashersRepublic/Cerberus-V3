@@ -11,7 +11,13 @@
             // ResourceStorageComponent.
         }
 
-        internal override int Type => 6;
+        internal override int Type
+        {
+            get
+            {
+                return 6;
+            }
+        }
 
         internal int GetMax(int ResourceID)
         {

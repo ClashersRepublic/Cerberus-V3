@@ -33,11 +33,11 @@
         internal Accounts()
         {
             this.Seed = Mongo.PlayerSeed;
-            
+
             this.Homes = new ConcurrentDictionary<long, Home>();
             this.Players = new ConcurrentDictionary<long, Player>();
         }
-        
+
         internal void Add(Player Player)
         {
             if (!this.Players.ContainsKey(Player.UserId))
@@ -107,7 +107,7 @@
             };
 
             Home Home = new Home(Constants.ServerId, LowID) {LastSave = LevelFile.StartingHome};
-            
+
             Mongo.Players.InsertOne(new Players
             {
                 HighId = Constants.ServerId,
@@ -210,7 +210,7 @@
                         Logging.Error(this.GetType(), "Unable to load account id:" + HighID + "-" + LowID + ".");
                         return new Account(-1, -1, null, null);
                     }
-                    
+
                     this.TryAdd(ID, Account = new Account(HighID, LowID, Player, Home));
                 }
             }
@@ -381,6 +381,7 @@
                     }
                 }
             }
+
             return Player;
         }
 
@@ -418,6 +419,7 @@
                     }
                 }
             }
+
             return Home;
         }
 

@@ -19,7 +19,13 @@
             this.SetStorage();
         }
 
-        internal override int Type => 11;
+        internal override int Type
+        {
+            get
+            {
+                return 11;
+            }
+        }
 
         internal int TotalUsedHousing
         {
@@ -38,6 +44,7 @@
                         }
                     }
                 }
+
                 return Housing;
             }
         }
@@ -139,6 +146,7 @@
                         unit.Count
                     };
                 }
+
                 units.Add("unit", unitsArray);
             }
 

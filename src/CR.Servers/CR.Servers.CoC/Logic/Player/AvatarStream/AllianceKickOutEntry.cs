@@ -28,7 +28,13 @@
             this.AllianceLowId = Alliance.LowId;
         }
 
-        internal override AvatarStream Type => AvatarStream.KickedFromClan;
+        internal override AvatarStream Type
+        {
+            get
+            {
+                return AvatarStream.KickedFromClan;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

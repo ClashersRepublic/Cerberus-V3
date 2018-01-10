@@ -133,22 +133,41 @@
                 {
                     return this.Level.GameMode.Connected;
                 }
+
                 return false;
             }
         }
 
-        internal long UserId => ((long) this.HighID << 32) | (uint) this.LowID;
+        internal long UserId
+        {
+            get
+            {
+                return ((long) this.HighID << 32) | (uint) this.LowID;
+            }
+        }
 
-        internal bool Banned => this.BanTime > DateTime.UtcNow;
+        internal bool Banned
+        {
+            get
+            {
+                return this.BanTime > DateTime.UtcNow;
+            }
+        }
 
-        internal override int Checksum => this.ExpPoints
-                                     + this.ExpLevel
-                                     + this.Diamonds
-                                     + this.FreeDiamonds
-                                     + this.Score
-                                     + this.DuelScore
-                                     + (this.AllianceLowId > 0 ? 13 : 0)
-                                     + base.Checksum;
+        internal override int Checksum
+        {
+            get
+            {
+                return this.ExpPoints
+                       + this.ExpLevel
+                       + this.Diamonds
+                       + this.FreeDiamonds
+                       + this.Score
+                       + this.DuelScore
+                       + (this.AllianceLowId > 0 ? 13 : 0)
+                       + base.Checksum;
+            }
+        }
 
         internal void Process()
         {
@@ -456,6 +475,7 @@
             {
                 Json.Add("red_package_state", this.RedPackageState);
             }
+
             return Json;
         }
 

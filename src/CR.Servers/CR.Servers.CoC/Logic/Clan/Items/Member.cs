@@ -31,9 +31,29 @@
             this.Role = Role.Member;
         }
 
-        internal long PlayerId => ((long) this.HighId << 32) | (uint) this.LowId;
-        internal int New => this.Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
-        internal int TimeSinceJoined => (int) DateTime.UtcNow.Subtract(this.Joined).TotalSeconds;
+        internal long PlayerId
+        {
+            get
+            {
+                return ((long) this.HighId << 32) | (uint) this.LowId;
+            }
+        }
+
+        internal int New
+        {
+            get
+            {
+                return this.Joined >= DateTime.UtcNow.AddDays(-3) ? 1 : 0;
+            }
+        }
+
+        internal int TimeSinceJoined
+        {
+            get
+            {
+                return (int) DateTime.UtcNow.Subtract(this.Joined).TotalSeconds;
+            }
+        }
 
         internal Player Player
         {
@@ -53,7 +73,10 @@
 
                 return this._Player;
             }
-            set => this._Player = value;
+            set
+            {
+                this._Player = value;
+            }
         }
     }
 }

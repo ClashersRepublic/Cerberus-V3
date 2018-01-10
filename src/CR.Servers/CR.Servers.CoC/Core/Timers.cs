@@ -4,14 +4,11 @@
     using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading.Tasks;
-
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Extensions;
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Logic.Enums;
     using CR.Servers.CoC.Packets.Messages.Server.Account;
-    using CR.Servers.CoC.Packets.Messages.Server.Home;
-
     using Math = System.Math;
     using Timer = System.Timers.Timer;
 
@@ -53,7 +50,7 @@
                 }
             }
         }
-        
+
         internal void Save()
         {
             Timer Timer = new Timer

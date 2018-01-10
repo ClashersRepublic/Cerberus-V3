@@ -54,13 +54,26 @@
                 {
                     return (int) (360000L * this.ResourceMax / this.ResourcePer100Hours);
                 }
+
                 return 0;
             }
         }
 
-        internal override int Checksum => this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) + this.ResourceMax + this.ResourcePer100Hours;
+        internal override int Checksum
+        {
+            get
+            {
+                return this.Timer.GetRemainingSeconds(this.Parent.Level.Player.LastTick) + this.ResourceMax + this.ResourcePer100Hours;
+            }
+        }
 
-        internal override int Type => 5;
+        internal override int Type
+        {
+            get
+            {
+                return 5;
+            }
+        }
 
         internal void CollectResources()
         {

@@ -13,7 +13,13 @@
             this.SetProductionType(go);
         }
 
-        internal override int Type => 3;
+        internal override int Type
+        {
+            get
+            {
+                return 3;
+            }
+        }
 
         public void SetProductionType(GameObject go)
         {
@@ -32,6 +38,7 @@
                     this.IsSpellForge = IsSpellForge;
                 }
             }
+
             base.Load(Json);
         }
 

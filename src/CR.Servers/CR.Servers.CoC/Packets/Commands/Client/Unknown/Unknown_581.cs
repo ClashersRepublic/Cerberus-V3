@@ -12,7 +12,13 @@
             //Seems to be war related
         }
 
-        internal override int Type => 581;
+        internal override int Type
+        {
+            get
+            {
+                return 581;
+            }
+        }
 
         internal override void Decode()
         {
@@ -22,6 +28,7 @@
             {
                 this.Reader.ReadInt64();
             }
+
             this.Reader.ReadInt64();
             this.Reader.ReadInt32();
             this.Reader.ReadInt32();

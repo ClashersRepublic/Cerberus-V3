@@ -11,9 +11,21 @@
             this.Parent = GameObject;
         }
 
-        internal virtual int Checksum => 0;
+        internal virtual int Checksum
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-        internal virtual int Type => 0;
+        internal virtual int Type
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
         internal virtual void FastForwardTime(int Secs)
         {

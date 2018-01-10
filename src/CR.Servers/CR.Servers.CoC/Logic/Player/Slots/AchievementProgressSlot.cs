@@ -85,6 +85,7 @@
                                         this.Set(Achievement.GlobalId, Building ? 1 : 0);
                                     }
                                 }
+
                                 break;
                             }
 
@@ -166,6 +167,7 @@
                                         }
                                     }
                                 }
+
                                 break;
                             }
                         }

@@ -1,7 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Server.Battle
 {
     using CR.Servers.CoC.Extensions;
-    using CR.Servers.CoC.Files;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.List;
     using CR.Servers.Logic.Enums;

@@ -13,7 +13,13 @@
         {
         }
 
-        internal override int Type => 598;
+        internal override int Type
+        {
+            get
+            {
+                return 598;
+            }
+        }
 
         internal override void Decode()
         {
@@ -30,6 +36,7 @@
                     Id = this.Reader.ReadInt32()
                 });
             }
+
             base.Decode();
         }
     }

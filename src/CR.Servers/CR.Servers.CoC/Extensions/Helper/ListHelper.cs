@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CR.Servers.CoC.Extensions.Helper
+﻿namespace CR.Servers.CoC.Extensions.Helper
 {
+    using System;
+    using System.Collections.Generic;
+
     internal static class ListHelper
     {
         internal static bool TryGet<T>(this List<T> List, Predicate<T> Match, out T Item)

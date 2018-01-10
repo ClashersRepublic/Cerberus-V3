@@ -1,13 +1,11 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
     using System.Collections.Generic;
-    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Extensions.Helper;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
     using Newtonsoft.Json.Linq;
 
     internal class Place_Hero : Command
@@ -21,7 +19,13 @@
         {
         }
 
-        internal override int Type => 705;
+        internal override int Type
+        {
+            get
+            {
+                return 705;
+            }
+        }
 
         internal override void Decode()
         {

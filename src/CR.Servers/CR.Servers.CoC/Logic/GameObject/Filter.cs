@@ -41,6 +41,7 @@
 
                 Logging.Info(this.GetType(), "GameObject id " + Id + " not exist.");
             }
+
             return null;
         }
 
@@ -91,6 +92,9 @@
             return 0;
         }
 
-        internal GameObject[] GetGameObjects(int Class, int Village) => this.GameObjectManager.GameObjects[Class][Village].ToArray();
+        internal GameObject[] GetGameObjects(int Class, int Village)
+        {
+            return this.GameObjectManager.GameObjects[Class][Village].ToArray();
+        }
     }
 }

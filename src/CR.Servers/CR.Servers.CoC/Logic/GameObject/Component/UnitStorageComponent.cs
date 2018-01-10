@@ -66,7 +66,13 @@
             }
         }
 
-        internal override int Type => 0;
+        internal override int Type
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
         internal void AddUnit(Data Data)
         {
@@ -176,6 +182,7 @@
                     }
                 }
             }
+
             base.Load(Json);
         }
 

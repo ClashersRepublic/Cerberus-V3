@@ -1,26 +1,16 @@
-﻿using System;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using System;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class TrapData : Data
     {
         internal ResourceData BuildResourceData;
 
         public TrapData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-        }
-
-        internal override void Process()
-        {
-            this.BuildResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
-
-            if (this.BuildResourceData == null)
-            {
-                throw new Exception("Traps.csv: Build Resource is invalid!.");
-            }
         }
 
         public override string Name { get; set; }
@@ -89,7 +79,27 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public int DirectionCount { get; set; }
         public bool HasAltMode { get; set; }
 
-        internal int MaxLevel => this.BuildCost.Length - 1;
-        internal int GetBuildTime(int Level) => this.BuildTimeD[Level] * 86400 + this.BuildTimeH[Level] * 3600 + this.BuildTimeM[Level] * 60;
+        internal int MaxLevel
+        {
+            get
+            {
+                return this.BuildCost.Length - 1;
+            }
+        }
+
+        internal override void Process()
+        {
+            this.BuildResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
+
+            if (this.BuildResourceData == null)
+            {
+                throw new Exception("Traps.csv: Build Resource is invalid!.");
+            }
+        }
+
+        internal int GetBuildTime(int Level)
+        {
+            return this.BuildTimeD[Level] * 86400 + this.BuildTimeH[Level] * 3600 + this.BuildTimeM[Level] * 60;
+        }
     }
 }

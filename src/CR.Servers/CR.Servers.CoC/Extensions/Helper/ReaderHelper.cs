@@ -1,12 +1,11 @@
-﻿using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Extensions.Binary;
-
-namespace CR.Servers.CoC.Extensions.Helper
+﻿namespace CR.Servers.CoC.Extensions.Helper
 {
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Extensions.Binary;
+
     public static class ReaderHelper
     {
-
         internal static Data ReadData(this Reader Reader)
         {
             int GlobalID = Reader.ReadInt32();

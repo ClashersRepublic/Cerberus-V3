@@ -19,7 +19,13 @@
         {
         }
 
-        internal override AllianceStream Type => AllianceStream.FriendChallenge;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.FriendChallenge;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

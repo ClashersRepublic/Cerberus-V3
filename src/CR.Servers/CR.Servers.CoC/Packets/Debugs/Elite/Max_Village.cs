@@ -1,15 +1,13 @@
-﻿using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-
-namespace CR.Servers.CoC.Packets.Debugs
+﻿namespace CR.Servers.CoC.Packets.Debugs
 {
     using System.Text;
+    using System.Threading.Tasks;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
     internal class Max_Village : Debug
@@ -22,7 +20,13 @@ namespace CR.Servers.CoC.Packets.Debugs
         {
         }
 
-        internal override Rank RequiredRank => Rank.Elite;
+        internal override Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Elite;
+            }
+        }
 
         internal override void Process()
         {
@@ -30,24 +34,30 @@ namespace CR.Servers.CoC.Packets.Debugs
             {
                 if (int.TryParse(this.Parameters[0], out this.VillageID))
                 {
-                    var Player = this.Device.GameMode.Level.Player;
+                    Player Player = this.Device.GameMode.Level.Player;
                     switch (this.VillageID)
                     {
                         case 0:
                         {
                             Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(0, 0), GameObject =>
                             {
-                                var Building = (Building) GameObject;
-                                var Data = (BuildingData) Building.BuildingData;
+                                Building Building = (Building) GameObject;
+                                BuildingData Data = Building.BuildingData;
 
                                 if (Building.Locked)
+                                {
                                     Building.Locked = false;
+                                }
 
                                 if (Building.Constructing)
+                                {
                                     Building.ConstructionTimer = null;
+                                }
 
                                 if (Data.IsTownHall)
+                                {
                                     Player.TownHallLevel = Data.MaxLevel;
+                                }
 
                                 if (Data.IsAllianceCastle)
                                 {
@@ -61,11 +71,13 @@ namespace CR.Servers.CoC.Packets.Debugs
 
                             Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(4, 0), GameObject =>
                             {
-                                var Trap = (Trap) GameObject;
-                                var Data = (TrapData) Trap.Data;
+                                Trap Trap = (Trap) GameObject;
+                                TrapData Data = (TrapData) Trap.Data;
 
                                 if (Trap.Constructing)
+                                {
                                     Trap.ConstructionTimer = null;
+                                }
 
                                 Trap.SetUpgradeLevel(Data.MaxLevel);
                             });
@@ -83,8 +95,8 @@ namespace CR.Servers.CoC.Packets.Debugs
                             {
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(0, 1), GameObject =>
                                 {
-                                    var Building = (Building) GameObject;
-                                    var Data = (BuildingData) Building.BuildingData;
+                                    Building Building = (Building) GameObject;
+                                    BuildingData Data = Building.BuildingData;
 
                                     if (Building.Locked)
                                     {
@@ -109,24 +121,32 @@ namespace CR.Servers.CoC.Packets.Debugs
                                     }
 
                                     if (Building.Constructing)
+                                    {
                                         Building.ConstructionTimer = null;
+                                    }
 
                                     if (Data.IsTownHall2)
+                                    {
                                         Player.TownHallLevel2 = Data.MaxLevel;
+                                    }
 
                                     if (Data.IsBarrack2)
+                                    {
                                         Player.Variables.Village2BarrackLevel = Data.MaxLevel;
+                                    }
 
                                     Building.SetUpgradeLevel(Data.MaxLevel);
                                 });
 
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(4, 1), GameObject =>
                                 {
-                                    var Trap = (Trap) GameObject;
-                                    var Data = (TrapData) Trap.Data;
+                                    Trap Trap = (Trap) GameObject;
+                                    TrapData Data = (TrapData) Trap.Data;
 
                                     if (Trap.Constructing)
+                                    {
                                         Trap.ConstructionTimer = null;
+                                    }
 
                                     Trap.SetUpgradeLevel(Data.MaxLevel);
                                 });
@@ -134,7 +154,6 @@ namespace CR.Servers.CoC.Packets.Debugs
                                 this.SendChatMessage("Successfully maxed your builder village, Enjoy!");
 
                                 new OwnHomeDataMessage(this.Device).Send();
-
                             }
                             else
                             {
@@ -151,17 +170,23 @@ namespace CR.Servers.CoC.Packets.Debugs
                             {
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(0, 0), GameObject =>
                                 {
-                                    var Building = (Building) GameObject;
-                                    var Data = (BuildingData) Building.BuildingData;
+                                    Building Building = (Building) GameObject;
+                                    BuildingData Data = Building.BuildingData;
 
                                     if (Building.Locked)
+                                    {
                                         Building.Locked = false;
+                                    }
 
                                     if (Building.Constructing)
+                                    {
                                         Building.ConstructionTimer = null;
+                                    }
 
                                     if (Data.IsTownHall)
+                                    {
                                         Player.TownHallLevel = Data.MaxLevel;
+                                    }
 
                                     if (Data.IsAllianceCastle)
                                     {
@@ -175,8 +200,8 @@ namespace CR.Servers.CoC.Packets.Debugs
 
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(0, 1), GameObject =>
                                 {
-                                    var Building = (Building) GameObject;
-                                    var Data = (BuildingData) Building.BuildingData;
+                                    Building Building = (Building) GameObject;
+                                    BuildingData Data = Building.BuildingData;
 
                                     if (Building.Locked)
                                     {
@@ -201,35 +226,45 @@ namespace CR.Servers.CoC.Packets.Debugs
                                     }
 
                                     if (Building.Constructing)
+                                    {
                                         Building.ConstructionTimer = null;
+                                    }
 
                                     if (Data.IsTownHall2)
+                                    {
                                         Player.TownHallLevel2 = Data.MaxLevel;
+                                    }
 
                                     if (Data.IsBarrack2)
+                                    {
                                         Player.Variables.Village2BarrackLevel = Data.MaxLevel;
+                                    }
 
                                     Building.SetUpgradeLevel(Data.MaxLevel);
                                 });
 
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(4, 0), GameObject =>
                                 {
-                                    var Trap = (Trap) GameObject;
-                                    var Data = (TrapData) Trap.Data;
+                                    Trap Trap = (Trap) GameObject;
+                                    TrapData Data = (TrapData) Trap.Data;
 
                                     if (Trap.Constructing)
+                                    {
                                         Trap.ConstructionTimer = null;
+                                    }
 
                                     Trap.SetUpgradeLevel(Data.MaxLevel);
                                 });
 
                                 Parallel.ForEach(this.Device.GameMode.Level.GameObjectManager.Filter.GetGameObjects(4, 1), GameObject =>
                                 {
-                                    var Trap = (Trap) GameObject;
-                                    var Data = (TrapData) Trap.Data;
+                                    Trap Trap = (Trap) GameObject;
+                                    TrapData Data = (TrapData) Trap.Data;
 
                                     if (Trap.Constructing)
+                                    {
                                         Trap.ConstructionTimer = null;
+                                    }
 
                                     Trap.SetUpgradeLevel(Data.MaxLevel);
                                 });
@@ -237,12 +272,12 @@ namespace CR.Servers.CoC.Packets.Debugs
                                 this.SendChatMessage("Successfully maxed your both of village, Enjoy!");
 
                                 new OwnHomeDataMessage(this.Device).Send();
-
                             }
                             else
                             {
                                 this.SendChatMessage("Please visit the builder village first before running this mode!");
                             }
+
                             break;
                         }
 
@@ -250,7 +285,7 @@ namespace CR.Servers.CoC.Packets.Debugs
                             this.Help = new StringBuilder();
                             this.Help.AppendLine("Available village types:\n\t0 = Normal Village\n\t1 = Builder Village (Make sure you have unlocked the builder base first!)\n\t2 = All Village (Make sure you have unlocked the builder base first!)");
                             this.Help.AppendLine("Command:\n\t/maxvillage {village-id");
-                            this.SendChatMessage(Help.ToString());
+                            this.SendChatMessage(this.Help.ToString());
                             this.Help = null;
                             break;
                     }
@@ -260,7 +295,7 @@ namespace CR.Servers.CoC.Packets.Debugs
                     this.Help = new StringBuilder();
                     this.Help.AppendLine("Available village types:\n\t0 = Normal Village\n\t1 = Builder Village (Make sure you have unlocked the builder base first!)\n\t2 = All Village (Make sure you have unlocked the builder base first!)");
                     this.Help.AppendLine("Command:\n\t/maxvillage {village-id");
-                    this.SendChatMessage(Help.ToString());
+                    this.SendChatMessage(this.Help.ToString());
                     this.Help = null;
                 }
             }
@@ -269,7 +304,7 @@ namespace CR.Servers.CoC.Packets.Debugs
                 this.Help = new StringBuilder();
                 this.Help.AppendLine("Available village types:\n\t0 = Normal Village\n\t1 = Builder Village (Make sure you have unlocked the builder base first!)\n\t2 = All Village (Make sure you have unlocked the builder base first!)");
                 this.Help.AppendLine("Command:\n\t/maxvillage {village-id");
-                this.SendChatMessage(Help.ToString());
+                this.SendChatMessage(this.Help.ToString());
                 this.Help = null;
             }
         }

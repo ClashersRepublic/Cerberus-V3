@@ -22,21 +22,69 @@
         {
         }
 
-        internal ObstacleData ObstacleData => (ObstacleData) this.Data;
+        internal ObstacleData ObstacleData
+        {
+            get
+            {
+                return (ObstacleData) this.Data;
+            }
+        }
 
-        internal override int Type => 3;
+        internal override int Type
+        {
+            get
+            {
+                return 3;
+            }
+        }
 
-        internal override int Checksum => 0;
+        internal override int Checksum
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-        internal override int WidthInTiles => this.ObstacleData.Width;
+        internal override int WidthInTiles
+        {
+            get
+            {
+                return this.ObstacleData.Width;
+            }
+        }
 
-        internal override int HeightInTiles => this.ObstacleData.Height;
+        internal override int HeightInTiles
+        {
+            get
+            {
+                return this.ObstacleData.Height;
+            }
+        }
 
-        internal override int VillageType => this.ObstacleData.VillageType;
+        internal override int VillageType
+        {
+            get
+            {
+                return this.ObstacleData.VillageType;
+            }
+        }
 
-        internal int RemainingClearingTime => this.ClearTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingClearingTime
+        {
+            get
+            {
+                return this.ClearTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+            }
+        }
 
-        internal bool ClearingOnGoing => this.ClearTimer != null;
+        internal bool ClearingOnGoing
+        {
+            get
+            {
+                return this.ClearTimer != null;
+            }
+        }
 
         internal bool CanClearing()
         {
@@ -80,6 +128,7 @@
                 {
                     this.Level.GameObjectManager.ObstacleClearCounter = 0;
                 }
+
                 this.Level.WorkerManager.DeallocateWorker(this);
             }
             else

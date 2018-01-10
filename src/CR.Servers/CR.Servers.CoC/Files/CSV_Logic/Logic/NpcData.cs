@@ -1,8 +1,8 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class NpcData : Data
     {
         public NpcData(Row Row, DataTable DataTable) : base(Row, DataTable)
@@ -24,6 +24,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public string PlayerName { get; set; }
         public string AllianceName { get; set; }
         public int AllianceBadge { get; set; }
-
     }
 }

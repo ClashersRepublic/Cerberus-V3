@@ -32,7 +32,13 @@
             this.AllianceLowId = Alliance.LowId;
         }
 
-        internal override AvatarStream Type => AvatarStream.ClanMail;
+        internal override AvatarStream Type
+        {
+            get
+            {
+                return AvatarStream.ClanMail;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

@@ -5,16 +5,16 @@
 
     internal class BattleRecorder
     {
-        internal Battle Battle;
-
-        internal JObject Level;
         internal JObject Attacker;
-        internal JObject Defender;
-        internal JObject Globals;
-        internal JToken PreparationSkip;
+        internal Battle Battle;
         internal JArray Commands;
+        internal JObject Defender;
 
         internal int EndTick;
+        internal JObject Globals;
+
+        internal JObject Level;
+        internal JToken PreparationSkip;
         internal int Timestamp;
 
         internal BattleRecorder(Battle battle)

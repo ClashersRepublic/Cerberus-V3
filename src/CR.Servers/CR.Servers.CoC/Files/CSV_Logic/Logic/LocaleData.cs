@@ -1,8 +1,8 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class LocaleData : Data
     {
         public LocaleData(Row Row, DataTable DataTable) : base(Row, DataTable)
@@ -25,6 +25,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public string BoomboxUrl { get; set; }
         public string BoomboxStagingUrl { get; set; }
         public string HelpshiftLanguageTagOverride { get; set; }
-
     }
 }

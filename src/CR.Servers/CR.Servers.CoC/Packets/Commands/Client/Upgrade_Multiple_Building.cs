@@ -17,7 +17,13 @@
         {
         }
 
-        internal override int Type => 549;
+        internal override int Type
+        {
+            get
+            {
+                return 549;
+            }
+        }
 
         internal override void Decode()
         {
@@ -66,6 +72,7 @@
                                 Logging.Error(this.GetType(), "Unable to upgrade the building. The resource data is null.");
                             }
                         }
+
                         //else
                         //Logging.Error(this.GetType(), "Unable to upgrade the building. UpgradeAvailable returened false.");
                     }

@@ -116,6 +116,7 @@
                     }
                 }
             }
+
             return Clan;
         }
 
@@ -138,6 +139,7 @@
                     Clans.Add(Clan);
                 }
             }
+
             return Clans;
         }
 

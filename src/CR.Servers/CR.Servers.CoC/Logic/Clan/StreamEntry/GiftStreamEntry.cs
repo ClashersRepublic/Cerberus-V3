@@ -22,7 +22,13 @@
         {
         }
 
-        internal override AllianceStream Type => AllianceStream.Gift;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.Gift;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

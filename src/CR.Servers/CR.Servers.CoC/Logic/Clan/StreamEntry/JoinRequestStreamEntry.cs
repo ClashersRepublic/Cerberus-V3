@@ -22,7 +22,13 @@
         {
         }
 
-        internal override AllianceStream Type => AllianceStream.JoinRequest;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.JoinRequest;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

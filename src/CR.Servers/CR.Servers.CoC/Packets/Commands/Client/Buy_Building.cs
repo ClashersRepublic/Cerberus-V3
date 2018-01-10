@@ -22,7 +22,13 @@
         {
         }
 
-        internal override int Type => 500;
+        internal override int Type
+        {
+            get
+            {
+                return 500;
+            }
+        }
 
 
         internal override void Decode()
@@ -83,6 +89,7 @@
                                             Level.Player.UseDiamonds(Cost);
                                             this.StartConstruction(Level);
                                         }
+
                                         return;
                                     }
 
@@ -94,6 +101,7 @@
                                             Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                             this.StartConstruction(Level);
                                         }
+
                                         //else
                                         //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                     }
@@ -132,9 +140,11 @@
                                                 Level.Player.Resources.Remove(ResourceData, Cost);
                                                 this.StartConstruction(Level, Time);
                                             }
+
                                             //else
                                             // Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                         }
+
                                         return;
                                     }
 
@@ -167,6 +177,7 @@
                                             Level.Player.UseDiamonds(Cost);
                                             this.StartConstruction(Level);
                                         }
+
                                         return;
                                     }
 
@@ -177,6 +188,7 @@
                                             Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
                                             this.StartConstruction(Level);
                                         }
+
                                         //else
                                         //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                     }

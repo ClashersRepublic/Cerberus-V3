@@ -16,11 +16,30 @@
             this.Seconds = 0;
         }
 
-        internal bool Started => this.EndTime != 0;
+        internal bool Started
+        {
+            get
+            {
+                return this.EndTime != 0;
+            }
+        }
 
 
-        internal DateTime GetStartTime => this.StartTime;
-        internal DateTime GetEndTime => TimeUtils.FromUnixTimestamp(this.EndTime);
+        internal DateTime GetStartTime
+        {
+            get
+            {
+                return this.StartTime;
+            }
+        }
+
+        internal DateTime GetEndTime
+        {
+            get
+            {
+                return TimeUtils.FromUnixTimestamp(this.EndTime);
+            }
+        }
 
 
         internal void StartTimer(DateTime time, int durationSeconds)
@@ -55,6 +74,7 @@
             {
                 result = 0;
             }
+
             return result;
         }
 
@@ -80,10 +100,12 @@
                     result = this.Seconds - (int) (boostedTime * multiplier + notBoostedTime);
                 }
             }
+
             if (result <= 0)
             {
                 result = 0;
             }
+
             return result;
         }
     }

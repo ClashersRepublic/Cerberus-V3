@@ -19,7 +19,13 @@
         {
         }
 
-        internal override AllianceStream Type => AllianceStream.Chat;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.Chat;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {

@@ -1,21 +1,16 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class HeroData : Data
     {
+        internal ResourceData UpgradeResourceData;
+
         public HeroData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
             // HeroData.
-        }
-
-        internal ResourceData UpgradeResourceData;
-
-        internal override void Process()
-        {
-            UpgradeResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
         }
 
         public override string Name { get; set; }
@@ -127,12 +122,22 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public int VillageType { get; set; }
         public bool NoDefence { get; set; }
 
+        internal int MaxLevel
+        {
+            get
+            {
+                return this.UpgradeCost.Length - 1;
+            }
+        }
+
+        internal override void Process()
+        {
+            this.UpgradeResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
+        }
+
         internal int GetUpgradeTime(int Level)
         {
             return this.UpgradeTimeH[Level] * 3600;
         }
-
-        internal int MaxLevel => this.UpgradeCost.Length - 1;
-
     }
 }

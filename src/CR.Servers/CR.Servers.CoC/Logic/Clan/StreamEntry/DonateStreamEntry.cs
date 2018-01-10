@@ -34,7 +34,13 @@
             this.Units = new AllianceUnitSlots();
         }
 
-        internal override AllianceStream Type => AllianceStream.Donate;
+        internal override AllianceStream Type
+        {
+            get
+            {
+                return AllianceStream.Donate;
+            }
+        }
 
         internal override void Encode(List<byte> Packet)
         {
@@ -152,6 +158,7 @@
                 Json.Add("units", new JArray());
                 ;
             }
+
             return Json;
         }
 

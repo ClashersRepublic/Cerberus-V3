@@ -45,9 +45,21 @@
             this.SenderLeague = Member.Player.League;
         }
 
-        internal int Age => (int) DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
+        internal int Age
+        {
+            get
+            {
+                return (int) DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
+            }
+        }
 
-        internal long StreamId => ((long) this.HighId << 32) | (uint) this.LowId;
+        internal long StreamId
+        {
+            get
+            {
+                return ((long) this.HighId << 32) | (uint) this.LowId;
+            }
+        }
 
         internal virtual AllianceStream Type
         {
@@ -139,7 +151,13 @@
 
     internal class StreamEntryConverter : JsonConverter
     {
-        public override bool CanWrite => true;
+        public override bool CanWrite
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public override bool CanConvert(Type Type)
         {
@@ -180,6 +198,7 @@
 
                 return Entry;
             }
+
             Logging.Info(this.GetType(), "ReadJson() - JsonObject doesn't contains 'type' key.");
 
             return existingValue;

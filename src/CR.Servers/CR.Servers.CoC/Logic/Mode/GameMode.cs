@@ -22,7 +22,13 @@
         /*
         internal GameLogManager GameLogManager;*/
 
-        internal bool Connected => this.Device != null && this.Device.Connected;
+        internal bool Connected
+        {
+            get
+            {
+                return this.Device != null && this.Device.Connected;
+            }
+        }
 
         internal void LoadLevel(Level Level)
         {

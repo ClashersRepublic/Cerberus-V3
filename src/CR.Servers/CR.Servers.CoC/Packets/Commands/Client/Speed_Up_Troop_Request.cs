@@ -11,7 +11,13 @@
         {
         }
 
-        internal override int Type => 541;
+        internal override int Type
+        {
+            get
+            {
+                return 541;
+            }
+        }
 
         internal override void Execute()
         {

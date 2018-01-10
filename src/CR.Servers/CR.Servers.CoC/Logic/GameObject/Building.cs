@@ -78,16 +78,46 @@
             }
         }
 
-        internal BuildingData BuildingData => (BuildingData) this.Data;
+        internal BuildingData BuildingData
+        {
+            get
+            {
+                return (BuildingData) this.Data;
+            }
+        }
 
 
-        internal override int HeightInTiles => this.BuildingData.Height;
+        internal override int HeightInTiles
+        {
+            get
+            {
+                return this.BuildingData.Height;
+            }
+        }
 
-        internal override int WidthInTiles => this.BuildingData.Width;
+        internal override int WidthInTiles
+        {
+            get
+            {
+                return this.BuildingData.Width;
+            }
+        }
 
-        internal override int Type => 0;
+        internal override int Type
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-        internal override int VillageType => this.BuildingData.VillageType;
+        internal override int VillageType
+        {
+            get
+            {
+                return this.BuildingData.VillageType;
+            }
+        }
 
         internal override int Checksum
         {
@@ -115,11 +145,29 @@
             }
         }
 
-        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingConstructionTime
+        {
+            get
+            {
+                return this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+            }
+        }
 
-        internal bool Boosted => this.BoostTimer != null;
+        internal bool Boosted
+        {
+            get
+            {
+                return this.BoostTimer != null;
+            }
+        }
 
-        internal bool Constructing => this.ConstructionTimer != null;
+        internal bool Constructing
+        {
+            get
+            {
+                return this.ConstructionTimer != null;
+            }
+        }
 
         internal bool UpgradeAvailable
         {
@@ -136,22 +184,79 @@
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >=
                                    Data.TownHallLevel2[this.UpgradeLevel + 1];
                         }
+
                         return this.Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 >=
                                Data.TownHallLevel[this.UpgradeLevel + 1];
                     }
                 }
+
                 return false;
             }
         }
 
-        internal UnitStorageComponent UnitStorageComponent => this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent) Component : null;
-        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
-        internal ResourceProductionComponent ResourceProductionComponent => this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent) Component : null;
-        internal ResourceStorageComponent ResourceStorageComponent => this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent) Component : null;
-        internal BunkerComponent BunkerComponent => this.TryGetComponent(7, out Component Component) ? (BunkerComponent) Component : null;
-        internal UnitUpgradeComponent UnitUpgradeComponent => this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent) Component : null;
-        internal HeroBaseComponent HeroBaseComponent => this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent) Component : null;
-        internal UnitStorageV2Component UnitStorageV2Component => this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component) Component : null;
+        internal UnitStorageComponent UnitStorageComponent
+        {
+            get
+            {
+                return this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent) Component : null;
+            }
+        }
+
+        internal CombatComponent CombatComponent
+        {
+            get
+            {
+                return this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+            }
+        }
+
+        internal ResourceProductionComponent ResourceProductionComponent
+        {
+            get
+            {
+                return this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent) Component : null;
+            }
+        }
+
+        internal ResourceStorageComponent ResourceStorageComponent
+        {
+            get
+            {
+                return this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent) Component : null;
+            }
+        }
+
+        internal BunkerComponent BunkerComponent
+        {
+            get
+            {
+                return this.TryGetComponent(7, out Component Component) ? (BunkerComponent) Component : null;
+            }
+        }
+
+        internal UnitUpgradeComponent UnitUpgradeComponent
+        {
+            get
+            {
+                return this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent) Component : null;
+            }
+        }
+
+        internal HeroBaseComponent HeroBaseComponent
+        {
+            get
+            {
+                return this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent) Component : null;
+            }
+        }
+
+        internal UnitStorageV2Component UnitStorageV2Component
+        {
+            get
+            {
+                return this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component) Component : null;
+            }
+        }
 
 
         internal int GetUpgradeLevel()
@@ -234,6 +339,7 @@
                             Time = Globals.TroopHousingV2BuildTimeSeconds[4];
                             break;
                     }
+
                     this.Level.Player.AddExperience(GamePlayUtil.TimeToXp(Time));
                 }
                 else
@@ -488,6 +594,7 @@
                     {
                         duration = 0;
                     }
+
                     this.BoostTimer = new Timer();
                     this.BoostTimer.StartTimer(this.Level.Player.LastTick, duration);
                 }

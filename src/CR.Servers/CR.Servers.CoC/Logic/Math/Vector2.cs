@@ -22,7 +22,13 @@
             this.Y = Y;
         }
 
-        internal int HashCode => this.Y + 31 * this.X;
+        internal int HashCode
+        {
+            get
+            {
+                return this.Y + 31 * this.X;
+            }
+        }
 
         /// <summary>
         ///     Adds a vector2.

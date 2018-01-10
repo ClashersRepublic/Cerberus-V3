@@ -4,6 +4,7 @@
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Helpers;
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Logic.Enums;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
@@ -15,11 +16,17 @@
         {
         }
 
-        internal override Rank RequiredRank => Rank.Player;
+        internal override Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Player;
+            }
+        }
 
         internal override void Process()
         {
-            var Player = this.Device.GameMode.Level.Player;
+            Player Player = this.Device.GameMode.Level.Player;
 
             GameObjectManager GameObjectManager = this.Device.GameMode.Level.GameObjectManager;
 
@@ -50,16 +57,16 @@
                     Player.AllianceSpells.Clear();
                 }
 
-                var TownHall = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001);
-                var Castle = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000014);
-                var Builder = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000015);
+                Data TownHall = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001);
+                Data Castle = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000014);
+                Data Builder = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000015);
 
                 GameObjectManager.AddGameObject(new Building(TownHall, this.Device.GameMode.Level)
                 {
                     Position =
                     {
                         X = 24 << 9,
-                        Y = 23 << 9,
+                        Y = 23 << 9
                     }
                 });
 
@@ -68,7 +75,7 @@
                     Position =
                     {
                         X = 28 << 9,
-                        Y = 35 << 9,
+                        Y = 35 << 9
                     },
                     Locked = true
                 });
@@ -78,7 +85,7 @@
                     Position =
                     {
                         X = 21 << 9,
-                        Y = 23 << 9,
+                        Y = 23 << 9
                     }
                 });
 
@@ -87,7 +94,7 @@
             }
             catch (Exception Exception)
             {
-                Logging.Error(Exception.GetType(), "Unable to flatten the village for " + (this.Device.GameMode.Level.Player.UserId) + Environment.NewLine + Exception.StackTrace);
+                Logging.Error(Exception.GetType(), "Unable to flatten the village for " + this.Device.GameMode.Level.Player.UserId + Environment.NewLine + Exception.StackTrace);
                 this.SendChatMessage($"Failed to flatten the village, Error code {Exception.GetType()}");
             }
         }

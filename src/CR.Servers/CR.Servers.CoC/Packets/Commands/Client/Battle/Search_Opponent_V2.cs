@@ -1,11 +1,8 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
     using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.Extensions.Binary;
-    using CR.Servers.Logic.Enums;
 
     internal class Search_Opponent_V2 : Command
     {
@@ -17,7 +14,13 @@
         {
         }
 
-        internal override int Type => 601;
+        internal override int Type
+        {
+            get
+            {
+                return 601;
+            }
+        }
 
         internal override void Decode()
         {

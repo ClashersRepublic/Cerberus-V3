@@ -29,23 +29,35 @@
             }
         }
 
-        internal bool Connected => this.Filled && this.FBClient != null;
+        internal bool Connected
+        {
+            get
+            {
+                return this.Filled && this.FBClient != null;
+            }
+        }
 
-        internal bool Filled => !string.IsNullOrEmpty(this.Identifier) && !string.IsNullOrEmpty(this.Token);
+        internal bool Filled
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.Identifier) && !string.IsNullOrEmpty(this.Token);
+            }
+        }
 
         internal void Connect()
         {
             this.FBClient = new FacebookClient(this.Token)
             {
-                AppId = ApplicationId,
-                AppSecret = ApplicationSecret,
-                Version = ApplicationVersion
+                AppId = FacebookApi.ApplicationId,
+                AppSecret = FacebookApi.ApplicationSecret,
+                Version = FacebookApi.ApplicationVersion
             };
         }
 
         internal object Get(string Path, bool IncludeIdentifier = true)
         {
-            return this.Connected ? this.FBClient.Get("https://graph.facebook.com/v" + ApplicationVersion + "/" + (IncludeIdentifier ? this.Identifier + '/' + Path : Path)) : null;
+            return this.Connected ? this.FBClient.Get("https://graph.facebook.com/v" + FacebookApi.ApplicationVersion + "/" + (IncludeIdentifier ? this.Identifier + '/' + Path : Path)) : null;
         }
     }
 }

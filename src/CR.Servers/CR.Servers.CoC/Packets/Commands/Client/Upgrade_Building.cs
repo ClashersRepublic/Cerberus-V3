@@ -1,6 +1,4 @@
-﻿using CR.Servers.Core.Consoles.Colorful;
-
-namespace CR.Servers.CoC.Packets.Commands.Client
+﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
     using System.Threading.Tasks;
     using CR.Servers.CoC.Core;
@@ -17,7 +15,13 @@ namespace CR.Servers.CoC.Packets.Commands.Client
         {
         }
 
-        internal override int Type => 502;
+        internal override int Type
+        {
+            get
+            {
+                return 502;
+            }
+        }
 
         internal override void Decode()
         {

@@ -35,7 +35,7 @@
 
         internal static void Initialize()
         {
-            Logger = LogManager.GetCurrentClassLogger(typeof(Resources));
+            Resources.Logger = LogManager.GetCurrentClassLogger(typeof(Resources));
 
             Factory.Initialize();
             CSV.Initialize();
@@ -50,19 +50,19 @@
                 Mongo.Initialize();
             }
 
-            Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
-            Name = new Regex("^[a-zA-Z0-9- ]*$");
+            Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
+            Resources.Name = new Regex("^[a-zA-Z0-9- ]*$");
 
-            PacketManager = new PacketManager();
+            Resources.PacketManager = new PacketManager();
 
-            Accounts = new Accounts();
-            Clans = new Clans();
-            Chats = new Chats();
-            Duels = new Duels();
-            Random = new XorShift();
-            Gateway = new Gateway();
-            Timers = new Timers();
-            Started = true;
+            Resources.Accounts = new Accounts();
+            Resources.Clans = new Clans();
+            Resources.Chats = new Chats();
+            Resources.Duels = new Duels();
+            Resources.Random = new XorShift();
+            Resources.Gateway = new Gateway();
+            Resources.Timers = new Timers();
+            Resources.Started = true;
 
             Parser.Initialize();
             EventsHandler.Initialize();

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using CR.Servers.CoC.Extensions;
     using CR.Servers.CoC.Extensions.Helper;
     using CR.Servers.CoC.Files;
     using CR.Servers.Extensions.List;
@@ -31,7 +30,13 @@
             this.LowID = LowID;
         }
 
-        internal JToken HomeJSON => this.Level != null ? this.Level.Save() : this.LastSave;
+        internal JToken HomeJSON
+        {
+            get
+            {
+                return this.Level != null ? this.Level.Save() : this.LastSave;
+            }
+        }
 
         internal void Encode(List<byte> Packet)
         {
@@ -69,8 +74,21 @@
 
     internal class HomeConverter : JsonConverter
     {
-        public override bool CanRead => true;
-        public override bool CanWrite => true;
+        public override bool CanRead
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override bool CanWrite
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

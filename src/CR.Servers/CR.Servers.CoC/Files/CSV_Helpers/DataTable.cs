@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Helpers
+﻿namespace CR.Servers.CoC.Files.CSV_Helpers
 {
+    using System.Collections.Generic;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class DataTable
     {
         internal List<Data> Datas;
@@ -12,20 +12,20 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
 
         internal DataTable()
         {
-            Datas = new List<Data>();
+            this.Datas = new List<Data>();
         }
 
         internal DataTable(Table Table, int Index)
         {
             this.Index = Index;
-            Datas = new List<Data>();
+            this.Datas = new List<Data>();
 
             for (int i = 0; i < Table.GetRowCount(); i++)
             {
                 Row Row = Table.GetRowAt(i);
-                Data Data = Create(Row);
+                Data Data = this.Create(Row);
 
-                Datas.Add(Data);
+                this.Datas.Add(Data);
             }
         }
 
@@ -33,7 +33,7 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         {
             Data _Data;
 
-            switch ((Gamefile) Index)
+            switch ((Gamefile) this.Index)
             {
                 case Gamefile.Buildings:
                     _Data = new BuildingData(_Row, this);
@@ -112,17 +112,17 @@ namespace CR.Servers.CoC.Files.CSV_Helpers
         internal Data GetDataWithID(int ID)
         {
             int InstanceID = GlobalId.GetID(ID);
-            return Datas[InstanceID];
+            return this.Datas[InstanceID];
         }
 
         internal Data GetDataWithInstanceID(int ID)
         {
-            return Datas[ID];
+            return this.Datas[ID];
         }
 
         internal Data GetData(string _Name)
         {
-            return Datas.Find(_Data => _Data.Row.Name == _Name);
+            return this.Datas.Find(_Data => _Data.Row.Name == _Name);
         }
     }
 }

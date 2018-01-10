@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using CR.Servers.CoC.Logic;
-
-namespace CR.Servers.CoC.Files
+﻿namespace CR.Servers.CoC.Files
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using CR.Servers.CoC.Logic;
+    using Newtonsoft.Json;
+
     internal static class GameEvents
     {
         internal static string Events_Json = string.Empty;
@@ -16,13 +16,17 @@ namespace CR.Servers.CoC.Files
         internal static void Initialize()
         {
             if (!Directory.Exists("Gamefiles/"))
+            {
                 throw new DirectoryNotFoundException("Directory Gamefiles does not exist!");
+            }
 
-            if (!File.Exists(JsonPath))
-                throw new Exception($"{JsonPath} does not exist in current directory!");
+            if (!File.Exists(GameEvents.JsonPath))
+            {
+                throw new Exception($"{GameEvents.JsonPath} does not exist in current directory!");
+            }
 
-            Events_Json = Regex.Replace(File.ReadAllText(JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
-            JsonConvert.PopulateObject(Events_Json, Events_Calendar);
+            GameEvents.Events_Json = Regex.Replace(File.ReadAllText(GameEvents.JsonPath, Encoding.UTF8), "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+            JsonConvert.PopulateObject(GameEvents.Events_Json, GameEvents.Events_Calendar);
             Console.WriteLine("Game Events successfully loaded and stored in memory.");
         }
     }

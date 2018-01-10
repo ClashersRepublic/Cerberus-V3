@@ -14,7 +14,13 @@
             this.WorkerCount = 1;
         }
 
-        internal int FreeWorkers => this.WorkerCount - this.GameObjects.Count;
+        internal int FreeWorkers
+        {
+            get
+            {
+                return this.WorkerCount - this.GameObjects.Count;
+            }
+        }
 
         internal void AllocateWorker(GameObject GameObject)
         {

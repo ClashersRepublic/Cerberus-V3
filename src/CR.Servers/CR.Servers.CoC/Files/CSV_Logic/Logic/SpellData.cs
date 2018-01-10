@@ -1,22 +1,16 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class SpellData : Data
     {
-        public SpellData(Row Row, DataTable DataTable) : base(Row, DataTable)
-        {
-        }
-
         internal ResourceData TrainingResourceData;
         internal ResourceData UpgradeResourceData;
 
-        internal override void Process()
+        public SpellData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-            TrainingResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
-            UpgradeResourceData = (ResourceData)CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
         }
 
 
@@ -102,6 +96,12 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool ScaleByTH { get; set; }
         public bool EnabledByCalendar { get; set; }
         public int VillageType { get; set; }
+
+        internal override void Process()
+        {
+            this.TrainingResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
+            this.UpgradeResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
+        }
 
         internal int GetUpgradeTime(int Level)
         {

@@ -19,7 +19,13 @@
         {
         }
 
-        internal override int Type => 7;
+        internal override int Type
+        {
+            get
+            {
+                return 7;
+            }
+        }
 
         //internal BillingPackageData BillingPackageData;
         //internal GemBundleData GemBundleData;

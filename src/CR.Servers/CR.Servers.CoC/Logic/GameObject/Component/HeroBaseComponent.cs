@@ -18,12 +18,45 @@
             this.HeroData = HeroData;
         }
 
-        internal override int Type => 10;
+        internal override int Type
+        {
+            get
+            {
+                return 10;
+            }
+        }
 
-        internal int RemainingUpgradeTime => this.UpgradeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) ?? 0;
-        internal int UpgradeLevel => this.Parent.Level.Player.GetHeroUpgradeLevel(this.HeroData);
-        internal int VillageType => this.HeroData.VillageType;
-        internal bool Upgrading => this.UpgradeTimer != null;
+        internal int RemainingUpgradeTime
+        {
+            get
+            {
+                return this.UpgradeTimer?.GetRemainingSeconds(this.Parent.Level.Player.LastTick) ?? 0;
+            }
+        }
+
+        internal int UpgradeLevel
+        {
+            get
+            {
+                return this.Parent.Level.Player.GetHeroUpgradeLevel(this.HeroData);
+            }
+        }
+
+        internal int VillageType
+        {
+            get
+            {
+                return this.HeroData.VillageType;
+            }
+        }
+
+        internal bool Upgrading
+        {
+            get
+            {
+                return this.UpgradeTimer != null;
+            }
+        }
 
         internal bool UpgradeAvailable
         {
@@ -39,6 +72,7 @@
                         return (this.VillageType == 1 ? Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 : Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1) >= Data.RequiredTownHallLevel[this.UpgradeLevel + 1];
                     }
                 }
+
                 return false;
             }
         }

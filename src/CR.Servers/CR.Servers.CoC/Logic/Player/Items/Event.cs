@@ -15,17 +15,21 @@
         [JsonProperty("functions")] internal List<Functions> Functions = new List<Functions>();
         [JsonProperty("id")] internal int ID;
 
-        [JsonProperty("image", DefaultValueHandling = DefaultValueHandling.Ignore)] internal string Image = string.Empty;
+        [JsonProperty("image", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        internal string Image = string.Empty;
 
         [JsonProperty("inboxEntryId")] internal int InboxEntryID;
 
-        [JsonProperty("localization", DefaultValueHandling = DefaultValueHandling.Ignore)] internal string Localization = string.Empty;
+        [JsonProperty("localization", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        internal string Localization = string.Empty;
 
         [JsonProperty("name")] internal string Name = string.Empty;
 
-        [JsonProperty("notification", DefaultValueHandling = DefaultValueHandling.Ignore)] internal string Notification = string.Empty;
+        [JsonProperty("notification", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        internal string Notification = string.Empty;
 
-        [JsonProperty("sc", DefaultValueHandling = DefaultValueHandling.Ignore)] internal string SCFile = string.Empty;
+        [JsonProperty("sc", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        internal string SCFile = string.Empty;
 
         [JsonProperty("showUpcoming")] internal int ShowUpcoming = 1;
 

@@ -33,7 +33,13 @@
             }
         }
 
-        internal bool ProduceUnit => this.Productions.Exists(T => !T.Terminate);
+        internal bool ProduceUnit
+        {
+            get
+            {
+                return this.Productions.Exists(T => !T.Terminate);
+            }
+        }
 
         internal void AddUnit(CharacterData Data, int Count)
         {

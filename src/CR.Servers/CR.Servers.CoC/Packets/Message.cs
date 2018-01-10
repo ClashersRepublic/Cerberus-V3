@@ -10,8 +10,6 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Extensions;
     using CR.Servers.Extensions.Binary;
-    using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
 
     internal abstract class Message
     {
@@ -38,7 +36,7 @@
         }
 
         internal abstract short Type { get; }
-        
+
         internal virtual void Decode()
         {
             //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Decoding.");
@@ -53,7 +51,7 @@
         {
             //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Processing.");
         }
-        
+
         internal virtual void SendChatMessage(string message)
         {
             new GlobalChatLineMessage(this.Device, this.Device.GameMode.Level.Player)

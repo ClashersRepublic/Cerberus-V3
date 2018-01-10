@@ -1,13 +1,11 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
     using System.Collections.Generic;
-    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Extensions.Helper;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
     using Newtonsoft.Json.Linq;
 
     internal class Place_Attacker : Command
@@ -25,7 +23,13 @@
         {
         }
 
-        internal override int Type => 700;
+        internal override int Type
+        {
+            get
+            {
+                return 700;
+            }
+        }
 
         internal override void Decode()
         {
@@ -60,28 +64,6 @@
                             Unit.Count--;
                         }
                     }
-                }
-                else
-                {
-                    /*
-                    if (this.Device.State == State.IN_1VS1_BATTLE)
-                    {
-                        Battle_V2 Battle = Resources.BattlesV2.GetPlayer(Level.Player.BattleIdV2, Level.Player.UserId);
-
-                        int Index = Battle.ReplayInfo.Units.FindIndex(T => T[0] == this.Character.GlobalId);
-                        if (Index > -1)
-                        {
-                            Battle.ReplayInfo.Units[Index][1]++;
-                        }
-                        else
-                        {
-                            Battle.ReplayInfo.Units.Add(new[] {this.Character.GlobalId, 1});
-                        }
-
-                        Battle.Add(this);
-                        Level.BattleManager.BattleCommandManager.StoreCommands(this);
-                    }
-                    */
                 }
             }
         }

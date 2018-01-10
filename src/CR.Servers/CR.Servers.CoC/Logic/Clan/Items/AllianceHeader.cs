@@ -37,7 +37,13 @@
             this.Alliance = Alliance;
         }
 
-        internal int TypeinInt => (int) this.Type;
+        internal int TypeinInt
+        {
+            get
+            {
+                return (int) this.Type;
+            }
+        }
 
         internal int DuelScore
         {

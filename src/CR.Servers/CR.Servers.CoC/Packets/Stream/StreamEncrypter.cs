@@ -2,7 +2,13 @@
 {
     internal class StreamEncrypter
     {
-        internal int OverheadEncryptionLength => 0;
+        internal int OverheadEncryptionLength
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
         internal virtual byte[] Decrypt(byte[] input)
         {

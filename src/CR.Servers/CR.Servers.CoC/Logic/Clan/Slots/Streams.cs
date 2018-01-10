@@ -51,6 +51,7 @@
                         this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                     }
                 }
+
                 return true;
             }
 

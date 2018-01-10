@@ -38,7 +38,13 @@
             this.LowId = LowID;
         }
 
-        internal long AllianceId => ((long) this.HighId << 32) | (uint) this.LowId;
+        internal long AllianceId
+        {
+            get
+            {
+                return ((long) this.HighId << 32) | (uint) this.LowId;
+            }
+        }
 
         internal void Encode(List<byte> Packet)
         {

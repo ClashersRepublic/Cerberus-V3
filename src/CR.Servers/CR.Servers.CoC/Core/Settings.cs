@@ -13,12 +13,12 @@
 
         public static void Initialize()
         {
-            PatchServer = Extension.ParseConfigString("Game:PatchURL");
-            UpdateServer = Extension.ParseConfigString("Game:UpdateURL");
-            EventServer = Extension.ParseConfigString("Game:EventURL");
-            GameAssetsServer = Extension.ParseConfigString("Game:GameAssetsURL");
-            ClientMajorVersion = Extension.ParseConfigString("Game:ClientMajorVersion");
-            ClientMinorVersion = Extension.ParseConfigString("Game:ClientMinorVersion");
+            Settings.PatchServer = Extension.ParseConfigString("Game:PatchURL");
+            Settings.UpdateServer = Extension.ParseConfigString("Game:UpdateURL");
+            Settings.EventServer = Extension.ParseConfigString("Game:EventURL");
+            Settings.GameAssetsServer = Extension.ParseConfigString("Game:GameAssetsURL");
+            Settings.ClientMajorVersion = Extension.ParseConfigString("Game:ClientMajorVersion");
+            Settings.ClientMinorVersion = Extension.ParseConfigString("Game:ClientMinorVersion");
         }
     }
 }

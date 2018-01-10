@@ -1,9 +1,9 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
-    internal class ResourceData  : Data
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
+    internal class ResourceData : Data
     {
         public ResourceData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
@@ -28,6 +28,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public string WarRefResource { get; set; }
         public string BundleIconExportName { get; set; }
         public int VillageType { get; set; }
-
     }
 }

@@ -7,7 +7,6 @@
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Packets.Messages.Server.Account;
-    using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     internal class EventsHandler
     {
@@ -18,8 +17,8 @@
 
         internal static void Initialize()
         {
-            EHandler += Process;
-            SetConsoleCtrlHandler(EHandler, true);
+            EventsHandler.EHandler += EventsHandler.Process;
+            EventsHandler.SetConsoleCtrlHandler(EventsHandler.EHandler, true);
         }
 
         internal static void Process()

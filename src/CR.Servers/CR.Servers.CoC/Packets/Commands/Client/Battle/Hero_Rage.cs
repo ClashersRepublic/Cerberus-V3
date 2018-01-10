@@ -1,13 +1,9 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client.Battle
 {
     using System.Collections.Generic;
-
-    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
-
     using Newtonsoft.Json.Linq;
 
     internal class Hero_Rage : Command
@@ -18,7 +14,13 @@
         {
         }
 
-        internal override int Type => 706;
+        internal override int Type
+        {
+            get
+            {
+                return 706;
+            }
+        }
 
         internal override void Decode()
         {

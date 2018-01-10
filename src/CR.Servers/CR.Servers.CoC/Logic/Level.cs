@@ -17,7 +17,7 @@
 
         internal string[] ArmyNames = {"", "", "", ""};
         //internal CooldownManager CooldownManager;
-        
+
         internal ComponentManager ComponentManager;
 
         internal bool EditModeShown;
@@ -76,12 +76,37 @@
             this.Home = new Home();
         }
 
-        internal int WidthInTiles => 50;
+        internal int WidthInTiles
+        {
+            get
+            {
+                return 50;
+            }
+        }
 
-        internal int HeightInTiles => 50;
+        internal int HeightInTiles
+        {
+            get
+            {
+                return 50;
+            }
+        }
 
-        internal Time Time => this.GameMode.Time;
-        internal State State => this.GameMode.Device.State;
+        internal Time Time
+        {
+            get
+            {
+                return this.GameMode.Time;
+            }
+        }
+
+        internal State State
+        {
+            get
+            {
+                return this.GameMode.Device.State;
+            }
+        }
 
         internal int TombStoneCount
         {

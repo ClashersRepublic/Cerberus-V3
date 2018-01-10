@@ -17,15 +17,61 @@
         {
         }
 
-        internal VillageObjectData VillageObjectData => (VillageObjectData) this.Data;
+        internal VillageObjectData VillageObjectData
+        {
+            get
+            {
+                return (VillageObjectData) this.Data;
+            }
+        }
 
-        internal override int Type => 8;
-        internal override int VillageType => this.VillageObjectData.VillageType;
-        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
-        internal bool Constructing => this.ConstructionTimer != null;
-        internal override int HeightInTiles => 0;
+        internal override int Type
+        {
+            get
+            {
+                return 8;
+            }
+        }
 
-        internal override int WidthInTiles => 0;
+        internal override int VillageType
+        {
+            get
+            {
+                return this.VillageObjectData.VillageType;
+            }
+        }
+
+        internal int RemainingConstructionTime
+        {
+            get
+            {
+                return this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+            }
+        }
+
+        internal bool Constructing
+        {
+            get
+            {
+                return this.ConstructionTimer != null;
+            }
+        }
+
+        internal override int HeightInTiles
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        internal override int WidthInTiles
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
         internal int GetUpgradeLevel()
         {

@@ -34,8 +34,8 @@
                                 Console.WriteLine("# " + DateTime.Now.ToString("d") + " ---- STATS ---- " + DateTime.Now.ToString("T") + " #");
                                 Console.WriteLine("# ----------------------------------- #");
                                 Console.WriteLine("# In-Memory Accounts # " + ConsolePad.Padding(Resources.Accounts.Count.ToString(), 15) + " #");
-                                Console.WriteLine("# Message Queues     # " + ConsolePad.Padding(Resources.PacketManager.ReceiveMessageQueue.Count.ToString() + "-" + Resources.PacketManager.SendMessageQueue.Count.ToString(), 15) + " #");
-                                    //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
+                                Console.WriteLine("# Message Queues     # " + ConsolePad.Padding(Resources.PacketManager.ReceiveMessageQueue.Count + "-" + Resources.PacketManager.SendMessageQueue.Count, 15) + " #");
+                                //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
                                 Console.WriteLine("# ----------------------------------- #");
                             }
 

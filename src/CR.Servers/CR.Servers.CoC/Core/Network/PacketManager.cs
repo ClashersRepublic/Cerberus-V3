@@ -8,14 +8,14 @@
 
     internal class PacketManager
     {
-        internal ConcurrentQueue<Message> SendMessageQueue;
         internal ConcurrentQueue<Message> ReceiveMessageQueue;
 
         internal Thread ReceiveThread;
+        internal ConcurrentQueue<Message> SendMessageQueue;
         internal Thread SendThread;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PacketManager"/> class.
+        ///     Initializes a new instance of the <see cref="PacketManager" /> class.
         /// </summary>
         internal PacketManager()
         {
@@ -112,14 +112,14 @@
 
                     byte[] packet = new byte[messageBytes.Length + 7];
 
-                    packet[1] = (byte) (message.Type);
+                    packet[1] = (byte) message.Type;
                     packet[0] = (byte) (message.Type >> 8);
 
-                    packet[4] = (byte) (messageBytes.Length);
+                    packet[4] = (byte) messageBytes.Length;
                     packet[3] = (byte) (messageBytes.Length >> 8);
                     packet[2] = (byte) (messageBytes.Length >> 16);
 
-                    packet[6] = (byte) (message.Version);
+                    packet[6] = (byte) message.Version;
                     packet[5] = (byte) (message.Version >> 8);
 
                     Array.Copy(messageBytes, 0, packet, 7, messageBytes.Length);

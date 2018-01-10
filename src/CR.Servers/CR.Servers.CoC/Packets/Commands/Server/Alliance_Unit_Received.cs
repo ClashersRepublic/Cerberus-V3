@@ -20,7 +20,13 @@
         {
         }
 
-        internal override int Type => 5;
+        internal override int Type
+        {
+            get
+            {
+                return 5;
+            }
+        }
 
         internal override void Encode(List<byte> Data)
         {

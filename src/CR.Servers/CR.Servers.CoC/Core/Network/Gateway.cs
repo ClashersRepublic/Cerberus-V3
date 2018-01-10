@@ -8,11 +8,10 @@
 
     internal class Gateway
     {
+        private readonly byte[] _emptyBuffer = new byte[0];
         private readonly Socket _listener;
         private readonly SocketAsyncEventArgsPool _rcvPool;
         private readonly SocketAsyncEventArgsPool _sndPool;
-
-        private readonly byte[] _emptyBuffer = new byte[0];
 
         internal Gateway()
         {

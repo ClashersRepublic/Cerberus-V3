@@ -27,11 +27,23 @@
 
         internal Data ItemData
         {
-            get => this._data ?? (this._data = CSV.Tables.GetWithGlobalId(this.Data));
-            set => this._data = value;
+            get
+            {
+                return this._data ?? (this._data = CSV.Tables.GetWithGlobalId(this.Data));
+            }
+            set
+            {
+                this._data = value;
+            }
         }
 
-        internal virtual int Checksum => this.Data + this.Count;
+        internal virtual int Checksum
+        {
+            get
+            {
+                return this.Data + this.Count;
+            }
+        }
 
         internal virtual void Decode(Reader Reader)
         {

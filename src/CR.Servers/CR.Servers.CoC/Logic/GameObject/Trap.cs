@@ -24,19 +24,61 @@
             }
         }
 
-        internal TrapData TrapData => (TrapData) this.Data;
+        internal TrapData TrapData
+        {
+            get
+            {
+                return (TrapData) this.Data;
+            }
+        }
 
-        internal override int HeightInTiles => this.TrapData.Height;
+        internal override int HeightInTiles
+        {
+            get
+            {
+                return this.TrapData.Height;
+            }
+        }
 
-        internal override int WidthInTiles => this.TrapData.Width;
+        internal override int WidthInTiles
+        {
+            get
+            {
+                return this.TrapData.Width;
+            }
+        }
 
-        internal override int Type => 4;
+        internal override int Type
+        {
+            get
+            {
+                return 4;
+            }
+        }
 
-        internal override int VillageType => this.TrapData.VillageType;
+        internal override int VillageType
+        {
+            get
+            {
+                return this.TrapData.VillageType;
+            }
+        }
 
-        internal int RemainingConstructionTime => this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+        internal int RemainingConstructionTime
+        {
+            get
+            {
+                return this.ConstructionTimer?.GetRemainingSeconds(this.Level.Player.LastTick) ?? 0;
+            }
+        }
 
-        internal bool Constructing => this.ConstructionTimer != null;
+        internal bool Constructing
+        {
+            get
+            {
+                return this.ConstructionTimer != null;
+            }
+        }
 
         internal bool UpgradeAvailable
         {
@@ -52,6 +94,7 @@
                         {
                             return this.Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1 >= Data.TownHallLevel[this.UpgradeLevel + 1];
                         }
+
                         return this.Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1 >= Data.TownHallLevel[this.UpgradeLevel + 1];
                     }
                 }
@@ -60,7 +103,13 @@
             }
         }
 
-        internal CombatComponent CombatComponent => this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+        internal CombatComponent CombatComponent
+        {
+            get
+            {
+                return this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+            }
+        }
 
         internal int GetUpgradeLevel()
         {

@@ -9,6 +9,12 @@
         {
         }
 
-        internal override int Type => 593;
+        internal override int Type
+        {
+            get
+            {
+                return 593;
+            }
+        }
     }
 }

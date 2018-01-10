@@ -17,7 +17,13 @@
         {
         }
 
-        internal override int Type => 511;
+        internal override int Type
+        {
+            get
+            {
+                return 511;
+            }
+        }
 
         internal override void Decode()
         {
@@ -37,17 +43,17 @@
 
             if (Player.InAlliance)
             {
-                var Bunker = this.Device.GameMode.Level.GameObjectManager.Bunker;
+                Building Bunker = this.Device.GameMode.Level.GameObjectManager.Bunker;
                 if (Bunker != null)
                 {
-                    var BunkerComponent = Bunker.BunkerComponent;
+                    BunkerComponent BunkerComponent = Bunker.BunkerComponent;
                     if (BunkerComponent != null)
                     {
                         if (BunkerComponent.CanSendUnitRequest)
                         {
-                            var Alliance = Player.Alliance;
+                            Alliance Alliance = Player.Alliance;
 
-                            foreach (var entry in Alliance.Streams.Slots.Values.Where(T => T.SenderHighId == Player.HighID && T.SenderLowId == Player.LowID && T.Type == AllianceStream.Donate).ToArray())
+                            foreach (StreamEntry entry in Alliance.Streams.Slots.Values.Where(T => T.SenderHighId == Player.HighID && T.SenderLowId == Player.LowID && T.Type == AllianceStream.Donate).ToArray())
                             {
                                 Alliance.Streams.Remove(entry);
                             }
@@ -68,16 +74,24 @@
                             BunkerComponent.UnitRequestTimer.StartTimer(Player.LastTick, Globals.AllianceTroopRequestCooldown);
                         }
                         else
+                        {
                             Logging.Error(this.GetType(), "Unable to request troop. The player BunkerComponent.CanSendUnitRequest returned false!");
+                        }
                     }
                     else
+                    {
                         Logging.Error(this.GetType(), "Unable to request troop. The player BunkerComponent is null!");
+                    }
                 }
                 else
+                {
                     Logging.Error(this.GetType(), "Unable to request troop. The player doesn't have a bunker!");
+                }
             }
             else
+            {
                 Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");
+            }
         }
     }
 }

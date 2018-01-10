@@ -9,14 +9,44 @@
         {
         }
 
-        internal DecoData DecoData => (DecoData) this.Data;
+        internal DecoData DecoData
+        {
+            get
+            {
+                return (DecoData) this.Data;
+            }
+        }
 
-        internal override int HeightInTiles => this.DecoData.Height;
+        internal override int HeightInTiles
+        {
+            get
+            {
+                return this.DecoData.Height;
+            }
+        }
 
-        internal override int WidthInTiles => this.DecoData.Width;
+        internal override int WidthInTiles
+        {
+            get
+            {
+                return this.DecoData.Width;
+            }
+        }
 
-        internal override int Type => 6;
+        internal override int Type
+        {
+            get
+            {
+                return 6;
+            }
+        }
 
-        internal override int VillageType => this.DecoData.VillageType;
+        internal override int VillageType
+        {
+            get
+            {
+                return this.DecoData.VillageType;
+            }
+        }
     }
 }

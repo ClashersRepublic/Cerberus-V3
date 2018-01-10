@@ -87,6 +87,7 @@
                     {
                         Checksum += gameObject[1][j].Checksum;
                     }
+
                     c++;
                 }
 
@@ -94,7 +95,13 @@
             }
         }
 
-        internal int Map => this.Level.Player?.Map ?? 0;
+        internal int Map
+        {
+            get
+            {
+                return this.Level.Player?.Map ?? 0;
+            }
+        }
 
         internal void AddGameObject(GameObject GameObject)
         {
@@ -304,6 +311,7 @@
                     Obstacle.Id = GlobalId.Create(503, obstacleIndex++);
                 }
             }
+
             int obstacle2Index = 0;
 
             for (int i = 0; i < this.GameObjects[3][1].Count; i++)

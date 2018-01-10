@@ -1,13 +1,12 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class AchievementData : Data
     {
         public AchievementData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-            
         }
 
         public override string Name { get; set; }
@@ -25,6 +24,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public string CompletedTID { get; set; }
         public bool ShowValue { get; set; }
         public string AndroidID { get; set; }
-
     }
 }

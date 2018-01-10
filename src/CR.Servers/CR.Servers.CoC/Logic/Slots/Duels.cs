@@ -1,6 +1,5 @@
 ﻿namespace CR.Servers.CoC.Logic.Slots
 {
-    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
@@ -41,7 +40,7 @@
 
                             attacker1.Account.DuelBattle = duelBattle;
                             attacker2.Account.DuelBattle = duelBattle;
-                            
+
                             new Village2AttackAvatarDataMessage(attacker1)
                             {
                                 Enemy = attacker2.GameMode.Level
@@ -57,10 +56,8 @@
                             {
                                 goto retry;
                             }
-                            else
-                            {
-                                this.WaitingDeviceQueue.TryAdd(deviceKeys[i], attacker1);
-                            }
+
+                            this.WaitingDeviceQueue.TryAdd(deviceKeys[i], attacker1);
                         }
                     }
                 }

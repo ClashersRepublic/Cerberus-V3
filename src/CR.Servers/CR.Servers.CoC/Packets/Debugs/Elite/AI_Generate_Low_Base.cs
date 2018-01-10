@@ -25,7 +25,13 @@
             this.TileMap = new TileMap(50, 50);
         }
 
-        internal override Rank RequiredRank => Rank.Elite;
+        internal override Rank RequiredRank
+        {
+            get
+            {
+                return Rank.Elite;
+            }
+        }
 
         internal override void Process()
         {

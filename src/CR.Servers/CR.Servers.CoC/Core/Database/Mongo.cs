@@ -15,7 +15,7 @@
         {
             get
             {
-                Clans last = Clans.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Clans>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
+                Clans last = Mongo.Clans.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Clans>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
 
                 return last?.LowId ?? 0;
             }
@@ -25,7 +25,7 @@
         {
             get
             {
-                Players last = Players.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Players>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
+                Players last = Mongo.Players.Find(T => T.HighId == Constants.ServerId).Sort(Builders<Players>.Sort.Descending(T => T.LowId)).Limit(1).SingleOrDefault();
 
                 return last?.LowId ?? 0;
             }
@@ -33,11 +33,11 @@
 
         internal static void Initialize()
         {
-            Client = new MongoClient("mongodb://127.0.0.1:27017");
-            Database = Client.GetDatabase("ClashOfClans");
+            Mongo.Client = new MongoClient("mongodb://127.0.0.1:27017");
+            Mongo.Database = Mongo.Client.GetDatabase("ClashOfClans");
 
-            Clans = Database.GetCollection<Clans>("Clans");
-            Players = Database.GetCollection<Players>("Players");
+            Mongo.Clans = Mongo.Database.GetCollection<Clans>("Clans");
+            Mongo.Players = Mongo.Database.GetCollection<Players>("Players");
         }
     }
 }

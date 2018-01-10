@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using CR.Servers.CoC.Core;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Files
+﻿namespace CR.Servers.CoC.Files
 {
+    using System;
+    using System.IO;
+    using CR.Servers.CoC.Core;
+    using Newtonsoft.Json.Linq;
+
     public class Fingerprint
     {
         public static string Json;
@@ -17,7 +17,7 @@ namespace CR.Servers.CoC.Files
         {
             try
             {
-                if (!Patches())
+                if (!Fingerprint.Patches())
                 {
                     if (File.Exists(@"Gamefiles\fingerprint.json"))
                     {
@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Files
                         Fingerprint.Sha = _Json["sha"].ToObject<string>();
                         Fingerprint.Version = _Json["version"].ToObject<string>().Split('.');
 
-                       Logging.Info(typeof(Fingerprint), "The Fingerprint has been loaded, with version " + string.Join(".", Fingerprint.Version) + ".");
+                        Logging.Info(typeof(Fingerprint), "The Fingerprint has been loaded, with version " + string.Join(".", Fingerprint.Version) + ".");
                     }
                     else
                     {

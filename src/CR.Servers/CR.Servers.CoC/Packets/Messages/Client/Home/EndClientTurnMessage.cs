@@ -5,9 +5,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
     using System;
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
     using CR.Servers.Extensions.Binary;
 
     internal class EndClientTurnMessage : Message

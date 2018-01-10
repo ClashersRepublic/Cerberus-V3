@@ -60,6 +60,7 @@
             {
                 return -a;
             }
+
             return a;
         }
 
@@ -73,6 +74,7 @@
             {
                 return b;
             }
+
             return a;
         }
 
@@ -85,6 +87,7 @@
             {
                 return b;
             }
+
             return a;
         }
 
@@ -107,7 +110,7 @@
                     }
                     else
                     {
-                        Result = SQRT_TABLE[Value] >> 4;
+                        Result = Math.SQRT_TABLE[Value] >> 4;
                     }
                 }
                 else
@@ -116,20 +119,20 @@
                     {
                         if (Value < 1024)
                         {
-                            v9 = (SQRT_TABLE[Value >> 2] >> 3) + 1;
+                            v9 = (Math.SQRT_TABLE[Value >> 2] >> 3) + 1;
                         }
                         else
                         {
-                            v9 = (SQRT_TABLE[Value >> 4] >> 2) + 1;
+                            v9 = (Math.SQRT_TABLE[Value >> 4] >> 2) + 1;
                         }
                     }
                     else if (Value < 0x4000)
                     {
-                        v9 = (SQRT_TABLE[Value >> 6] >> 1) + 1;
+                        v9 = (Math.SQRT_TABLE[Value >> 6] >> 1) + 1;
                     }
                     else
                     {
-                        v9 = SQRT_TABLE[Value >> 8] + 1;
+                        v9 = Math.SQRT_TABLE[Value >> 8] + 1;
                     }
 
                     Result = v9 * v9 <= Value ? v9 : v9 - 1;
@@ -141,20 +144,20 @@
                 {
                     if (Value < 0x40000)
                     {
-                        v9 = 2 * SQRT_TABLE[Value >> 10];
+                        v9 = 2 * Math.SQRT_TABLE[Value >> 10];
                     }
                     else
                     {
-                        v9 = 4 * SQRT_TABLE[Value >> 12];
+                        v9 = 4 * Math.SQRT_TABLE[Value >> 12];
                     }
                 }
                 else if (Value < 0x400000)
                 {
-                    v9 = 8 * SQRT_TABLE[Value >> 14];
+                    v9 = 8 * Math.SQRT_TABLE[Value >> 14];
                 }
                 else
                 {
-                    v9 = 16 * SQRT_TABLE[Value >> 16];
+                    v9 = 16 * Math.SQRT_TABLE[Value >> 16];
                 }
 
                 v6 = (Value / v9 + v9 + 1) >> 1;
@@ -166,16 +169,16 @@
                 {
                     if (Value < 0x4000000)
                     {
-                        v9 = 32 * SQRT_TABLE[Value >> 18];
+                        v9 = 32 * Math.SQRT_TABLE[Value >> 18];
                     }
                     else
                     {
-                        v9 = SQRT_TABLE[Value >> 20] << 6;
+                        v9 = Math.SQRT_TABLE[Value >> 20] << 6;
                     }
                 }
                 else if (Value < 0x40000000)
                 {
-                    v9 = SQRT_TABLE[Value >> 22] << 7;
+                    v9 = Math.SQRT_TABLE[Value >> 22] << 7;
                 }
                 else
                 {
@@ -183,7 +186,8 @@
                     {
                         return 0xFFFF;
                     }
-                    v9 = SQRT_TABLE[Value >> 24] << 8;
+
+                    v9 = Math.SQRT_TABLE[Value >> 24] << 8;
                 }
 
                 v6 = (Value / ((Value / v9 + v9 + 1) >> 1) + ((Value / v9 + v9 + 1) >> 1) + 1) >> 1;
@@ -209,7 +213,7 @@
                     v8 = 360 - v6;
                 }
 
-                SinValue = -SIN_TABLE[v8];
+                SinValue = -Math.SIN_TABLE[v8];
             }
             else
             {
@@ -218,7 +222,7 @@
                     v6 = 180 - v6;
                 }
 
-                SinValue = SIN_TABLE[v6];
+                SinValue = Math.SIN_TABLE[v6];
             }
 
             int v9 = X * SinValue;
@@ -232,7 +236,7 @@
                     v12 = 360 - v10;
                 }
 
-                SinValue = -SIN_TABLE[v12];
+                SinValue = -Math.SIN_TABLE[v12];
             }
             else
             {
@@ -241,7 +245,7 @@
                     v10 = 180 - v10;
                 }
 
-                SinValue = SIN_TABLE[v10];
+                SinValue = Math.SIN_TABLE[v10];
             }
 
             return (v9 - SinValue * Y) >> 10;
@@ -267,7 +271,7 @@
                     v6 = 360 - v4;
                 }
 
-                SinValue = -SIN_TABLE[v6];
+                SinValue = -Math.SIN_TABLE[v6];
             }
             else
             {
@@ -276,7 +280,7 @@
                     v4 = 180 - v4;
                 }
 
-                SinValue = SIN_TABLE[v4];
+                SinValue = Math.SIN_TABLE[v4];
             }
 
             int v7 = X * SinValue;
@@ -291,7 +295,7 @@
                     v10 = 360 - v8;
                 }
 
-                SinValue = -SIN_TABLE[v10];
+                SinValue = -Math.SIN_TABLE[v10];
             }
             else
             {
@@ -300,8 +304,9 @@
                     v8 = 180 - v8;
                 }
 
-                SinValue = SIN_TABLE[v8];
+                SinValue = Math.SIN_TABLE[v8];
             }
+
             return (v7 + SinValue * Y) >> 10;
         }
     }

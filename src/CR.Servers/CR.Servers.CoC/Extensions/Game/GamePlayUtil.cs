@@ -1,12 +1,12 @@
-﻿using System;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using Math = CR.Servers.CoC.Logic.Math;
-
-namespace CR.Servers.CoC.Extensions.Game
+﻿namespace CR.Servers.CoC.Extensions.Game
 {
+    using System;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using Math = CR.Servers.CoC.Logic.Math;
+
     internal static class GamePlayUtil
     {
         public static int TimeToXp(int BuildTime)
@@ -91,12 +91,12 @@ namespace CR.Servers.CoC.Extensions.Game
                             return ResourceDiamondCost1000 + ((ResourceDiamondCost10000 - ResourceDiamondCost1000) * (Count - 1000) + 4500) / 9000;
                         }
 
-                        return (int)((uint)(((ulong)(-1851608123L * ((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100) + 450)) >> 32)
-                                            + (ulong)((ResourceDiamondCost100 - ResourceDiamondCost1000) * (Count - 100))
-                                            + 450) >> 31)
-                               + ((int)(((ulong)(-1851608123L * ((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100) + 450)) >> 32)
-                                        + (ulong)((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100))
-                                        + 450) >> 9);
+                        return (int) ((uint) (((ulong) (-1851608123L * ((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100) + 450)) >> 32)
+                                              + (ulong) ((ResourceDiamondCost100 - ResourceDiamondCost1000) * (Count - 100))
+                                              + 450) >> 31)
+                               + ((int) (((ulong) (-1851608123L * ((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100) + 450)) >> 32)
+                                         + (ulong) ((ResourceDiamondCost1000 - ResourceDiamondCost100) * (Count - 100))
+                                         + 450) >> 9);
                     }
 
                     return ResourceDiamondCost100;
@@ -118,9 +118,9 @@ namespace CR.Servers.CoC.Extensions.Game
                             if (Count > 9999)
                             {
                                 InfCost = Globals.DarkElixirDiamondCost10000;
-                                uint v11 = (uint)((ulong)(1563749871L * ((Globals.DarkElixirDiamondCost100000 - InfCost) * (Count - 10000) + 45000)) >> 32);
+                                uint v11 = (uint) ((ulong) (1563749871L * ((Globals.DarkElixirDiamondCost100000 - InfCost) * (Count - 10000) + 45000)) >> 32);
                                 Cost = v11 >> 31;
-                                Var1 = (int)v11 >> 15;
+                                Var1 = (int) v11 >> 15;
 
                                 goto End;
                             }
@@ -130,30 +130,30 @@ namespace CR.Servers.CoC.Extensions.Game
 
                         InfCost = Globals.DarkElixirDiamondCost100;
                         Var3 = (Globals.ResourceDiamondCost1000 - InfCost) * (Count - 100);
-                        Var2 = (uint)(((ulong)(-1851608123L * (Var3 + 450)) >> 32) + (ulong)Var3 + 450);
+                        Var2 = (uint) (((ulong) (-1851608123L * (Var3 + 450)) >> 32) + (ulong) Var3 + 450);
                         Cost = Var2 >> 31;
-                        Var1 = (int)Cost >> 9;
+                        Var1 = (int) Cost >> 9;
 
                         goto End;
                     }
 
                     InfCost = Globals.DarkElixirDiamondCost10;
                     Var3 = (Globals.ResourceDiamondCost100 - InfCost) * (Count - 10);
-                    Var2 = (uint)(((ulong)(-1240768329L * (Var3 + 45)) >> 32) + (ulong)Var3 + 45);
+                    Var2 = (uint) (((ulong) (-1240768329L * (Var3 + 45)) >> 32) + (ulong) Var3 + 45);
                     Cost = Var2 >> 31;
-                    Var1 = (int)Var2 >> 6;
+                    Var1 = (int) Var2 >> 6;
 
                     goto End;
                 }
 
                 InfCost = Globals.DarkElixirDiamondCost1;
-                Var2 = (uint)((ulong)(954437177L * ((Globals.DarkElixirDiamondCost10 - InfCost) * (Count - 1) + 4)) >> 32);
+                Var2 = (uint) ((ulong) (954437177L * ((Globals.DarkElixirDiamondCost10 - InfCost) * (Count - 1) + 4)) >> 32);
                 Cost = Var2 >> 31;
-                Var1 = (int)Var2 >> 1;
+                Var1 = (int) Var2 >> 1;
 
                 End:
 
-                return (int)(InfCost + Cost + Var1);
+                return (int) (InfCost + Cost + Var1);
             }
 
             return 0;
@@ -222,21 +222,22 @@ namespace CR.Servers.CoC.Extensions.Game
         {
             if (Player.Tutorials.FindIndex(M => M == Global_ID) < 0)
             {
-                var Mission = CSV.Tables.Get(Gamefile.Missions).GetDataWithID(Global_ID) as MissionData;
+                MissionData Mission = CSV.Tables.Get(Gamefile.Missions).GetDataWithID(Global_ID) as MissionData;
 
 #if DEBUG
                 Console.WriteLine($"Mission received {Mission.Name} marked as finished");
 #endif
                 if (!string.IsNullOrEmpty(Mission.RewardResource))
                 {
-                    var CSV_Resources =
+                    ResourceData CSV_Resources =
                         CSV.Tables.Get(Gamefile.Resources).GetData(Mission.RewardResource) as ResourceData;
 
                     Player.Resources.Plus(CSV_Resources.GlobalId, Mission.RewardResourceCount);
                 }
+
                 if (!string.IsNullOrEmpty(Mission.RewardTroop))
                 {
-                    var CSV_Characters =
+                    CharacterData CSV_Characters =
                         CSV.Tables.Get(Gamefile.Characters).GetData(Mission.RewardTroop) as CharacterData;
 
 #if DEBUG
@@ -247,25 +248,27 @@ namespace CR.Servers.CoC.Extensions.Game
 
                 if (!string.IsNullOrEmpty(Mission.Dependencies))
                 {
-                    var DependenciesID = CSV.Tables.Get(Gamefile.Missions).GetData(Mission.Dependencies).GlobalId;
+                    int DependenciesID = CSV.Tables.Get(Gamefile.Missions).GetData(Mission.Dependencies).GlobalId;
                     if (Player.Tutorials.FindIndex(M => M == DependenciesID) < 0)
                     {
 #if DEBUG
                         Console.WriteLine($"Mission Dependencies {(CSV.Tables.Get(Gamefile.Missions).GetDataWithID(DependenciesID) as MissionData).Name} marked as finished");
 #endif
-                        Mission_Finish(Player, DependenciesID);
+                        Player.Mission_Finish(DependenciesID);
                     }
                 }
+
                 if (!string.IsNullOrEmpty(Mission.AttackNPC))
                 {
-                    var CSV_Npcs = CSV.Tables.Get(Gamefile.Npcs).GetData(Mission.AttackNPC) as NpcData;
-                    
+                    NpcData CSV_Npcs = CSV.Tables.Get(Gamefile.Npcs).GetData(Mission.AttackNPC) as NpcData;
+
                     if (Player.NpcMapProgress.FindIndex(N => N.Data == CSV_Npcs.GlobalId) > -1)
                     {
                         Player.Resources.Plus(Resource.Gold, CSV_Npcs.Gold);
                         Player.Resources.Plus(Resource.Elixir, CSV_Npcs.Elixir);
                     }
                 }
+
                 if (Mission.ChangeName)
                 {
                     Player.Resources.Plus(Resource.Gold, 900);
@@ -276,6 +279,7 @@ namespace CR.Servers.CoC.Extensions.Game
                 Player.Tutorials.Add(Mission.GlobalId);
                 return true;
             }
+
             return false;
         }
     }

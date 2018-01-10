@@ -49,6 +49,7 @@
             {
                 Json.Add("t", this.Terminate);
             }
+
             return Json;
         }
     }

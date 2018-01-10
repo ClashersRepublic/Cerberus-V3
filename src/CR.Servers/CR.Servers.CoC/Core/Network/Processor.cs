@@ -1,8 +1,6 @@
 ﻿namespace CR.Servers.CoC.Core.Network
 {
     using CR.Servers.CoC.Packets;
-    using CR.Servers.Extensions;
-    using CR.Servers.Logic.Enums;
 
     internal static class Processor
     {

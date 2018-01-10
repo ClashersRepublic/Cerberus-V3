@@ -27,7 +27,13 @@
             this.DonatorId = DonatorId;
         }
 
-        internal override int Checksum => base.Checksum + this.Level;
+        internal override int Checksum
+        {
+            get
+            {
+                return base.Checksum + this.Level;
+            }
+        }
 
         internal override void Decode(Reader Reader)
         {

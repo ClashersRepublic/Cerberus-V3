@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets;
@@ -11,22 +10,21 @@
 
     internal class Battle
     {
-        internal Device Device;
-        internal DateTime LastClientTurn;
-
         internal Level Attacker;
+        internal List<Command> Commands;
         internal Level Defender;
-        internal BattleRecorder Recorder;
-
-        internal int EndSubTick;
+        internal Device Device;
         internal bool Ended;
 
+        internal int EndSubTick;
+        internal DateTime LastClientTurn;
+        internal BattleRecorder Recorder;
+
         internal List<Device> Viewers;
-        internal List<Command> Commands;
 
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Battle"/> class.
+        ///     Initializes a new instance of the <see cref="Battle" /> class.
         /// </summary>
         internal Battle(Device device, Level attacker, Level defender)
         {
@@ -38,7 +36,7 @@
             this.Commands = new List<Command>(64);
             this.Viewers = new List<Device>(32);
         }
-        
+
         internal void AddViewer(Device device)
         {
             if (!this.Viewers.Contains(device) && !this.Ended)

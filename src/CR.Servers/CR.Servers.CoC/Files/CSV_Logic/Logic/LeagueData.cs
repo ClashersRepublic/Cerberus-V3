@@ -1,14 +1,14 @@
-﻿using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
-namespace CR.Servers.CoC.Files.CSV_Logic.Logic
+﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class LeagueData : Data
     {
         public LeagueData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
-            
         }
+
         public override string Name { get; set; }
         public string TID { get; set; }
         public string TIDShort { get; set; }
@@ -37,6 +37,5 @@ namespace CR.Servers.CoC.Files.CSV_Logic.Logic
         public bool PromoteEnabled { get; set; }
         public int AllocateAmount { get; set; }
         public int SaverCount { get; set; }
-
     }
 }

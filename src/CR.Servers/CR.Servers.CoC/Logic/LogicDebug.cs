@@ -5,7 +5,6 @@
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets.Commands.Server;
     using CR.Servers.CoC.Packets.Messages.Server.Account;
-    using CR.Servers.CoC.Packets.Messages.Server.Home;
 
     internal class LogicDebug
     {
@@ -88,6 +87,7 @@
                             new DisconnectedMessage(Player.Level.GameMode.Device).Send();
                         }
                     }
+
                     break;
                 }
 

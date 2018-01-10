@@ -65,7 +65,13 @@
             }
         }
 
-        internal override int Type => 1;
+        internal override int Type
+        {
+            get
+            {
+                return 1;
+            }
+        }
 
         internal void FillAmmo()
         {
