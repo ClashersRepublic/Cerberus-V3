@@ -431,6 +431,7 @@
     <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
     <Compile Include="Packets\Debugs\Elite\AI_Generate_Base.cs" />
     <Compile Include="Packets\Debugs\Elite\Max_Village.cs" />
+    <Compile Include="Packets\Debugs\Remove_All_Building.cs" />
     <Compile Include="Packets\Enums\AddFriendErrorReason.cs" />
     <Compile Include="Packets\Enums\AllianceErrorReason.cs" />
     <Compile Include="Packets\Enums\FriendListType.cs" />

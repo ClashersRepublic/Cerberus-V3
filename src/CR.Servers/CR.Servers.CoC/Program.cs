@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Threading;
 using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Clan.Items;
+using CR.Servers.CoC.Packets;
 using CR.Servers.Core.Consoles;
 using CR.Servers.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +26,6 @@ namespace CR.Servers.CoC
 
         private static void Main()
         {
-
             Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("Config.json").Build();
             Console.Title =  $"Clashers Republic - {Assembly.GetExecutingAssembly().GetName().Name} - {DateTime.Now.Year} ©";
 

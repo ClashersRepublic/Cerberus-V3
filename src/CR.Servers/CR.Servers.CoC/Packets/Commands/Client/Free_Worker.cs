@@ -8,9 +8,7 @@
     internal class Free_Worker : Command
     {
         internal Command Command;
-        internal bool EmbedCommand;
-
-        internal int TimeLeft;
+        internal bool EmbedCommand;      
         internal int VillageWorker;
 
         public Free_Worker(Device device, Reader reader) : base(device, reader)
@@ -21,7 +19,7 @@
 
         internal override void Decode()
         {
-            this.TimeLeft = this.Reader.ReadInt32();
+            base.Decode();
             this.VillageWorker = this.Reader.ReadInt32();
             this.EmbedCommand = this.Reader.ReadBoolean();
 

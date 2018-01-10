@@ -190,6 +190,7 @@
             Debugs.Add("AddUnit", typeof(Add_Unit));
             Debugs.Add("ClearObstacle", typeof(Clear_All_Obstacle));
             Debugs.Add("FastForward", typeof(Fast_Forward));
+            Debugs.Add("FlattenVillage", typeof(Remove_All_Building));
             Debugs.Add("MaxVillage", typeof(Max_Village));
         }
 
