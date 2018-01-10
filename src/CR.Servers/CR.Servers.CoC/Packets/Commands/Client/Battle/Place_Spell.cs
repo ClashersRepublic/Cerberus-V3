@@ -10,7 +10,7 @@
     {
         internal bool IsAllianceSpell;
         internal SpellData Spell;
-        internal int UnknownInt;
+        internal int Level;
 
         internal int X;
         internal int Y;
@@ -27,7 +27,7 @@
             this.Y = this.Reader.ReadInt32();
             this.Spell = this.Reader.ReadData<SpellData>();
             this.IsAllianceSpell = this.Reader.ReadBoolean();
-            this.UnknownInt = this.Reader.ReadInt32();
+            this.Level = this.Reader.ReadInt32();
             base.Decode();
         }
 
@@ -39,7 +39,7 @@
 
                 if (this.IsAllianceSpell)
                 {
-                    Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.UnknownInt);
+                    Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.Level);
 
                     if (Unit != null)
                     {

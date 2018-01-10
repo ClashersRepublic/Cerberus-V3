@@ -430,10 +430,11 @@
     <Compile Include="Packets\Debugs\Elite\AI_Generate_Low_Base.cs" />
     <Compile Include="Packets\Debugs\Elite\Fast_Forward.cs" />
     <Compile Include="Packets\Debugs\Elite\AI_Generate_Base.cs" />
-    <Compile Include="Packets\Debugs\Max_Village.cs" />
+    <Compile Include="Packets\Debugs\Elite\Max_Village.cs" />
     <Compile Include="Packets\Enums\AddFriendErrorReason.cs" />
     <Compile Include="Packets\Enums\AllianceErrorReason.cs" />
     <Compile Include="Packets\Enums\FriendListType.cs" />
+    <Compile Include="Packets\Enums\LiveReplayErrorReason.cs" />
     <Compile Include="Packets\Enums\LoginFailedReason.cs" />
     <Compile Include="Packets\Enums\NameErrorReason.cs" />
     <Compile Include="Packets\Enums\UnlockAccountReason.cs" />
@@ -487,6 +488,7 @@
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryAddedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackTargetsDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryUpdateMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\LiveReplayErrorMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Village2AttackAvatarFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\AttackHomeFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendListUpdateMessage.cs" />

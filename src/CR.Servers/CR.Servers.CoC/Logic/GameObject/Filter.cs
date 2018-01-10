@@ -90,5 +90,7 @@
 
             return 0;
         }
+
+        internal GameObject[] GetGameObjects(int Class, int Village) => this.GameObjectManager.GameObjects[Class][Village].ToArray();
     }
 }

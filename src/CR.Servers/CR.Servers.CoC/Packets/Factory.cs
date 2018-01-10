@@ -185,11 +185,12 @@
 
         private static void LoadDebugs()
         {
-            Debugs.Add("addunit", typeof(Add_Unit));
-            Debugs.Add("fastforward", typeof(Fast_Forward));
-            Debugs.Add("clearobstacle", typeof(Clear_All_Obstacle));
-            Debugs.Add("aibase", typeof(AI_Generate_Base));
-            Debugs.Add("ailowbase", typeof(AI_Generate_Low_Base));
+            Debugs.Add("AiBase", typeof(AI_Generate_Base));
+            Debugs.Add("AiLowBase", typeof(AI_Generate_Low_Base));
+            Debugs.Add("AddUnit", typeof(Add_Unit));
+            Debugs.Add("ClearObstacle", typeof(Clear_All_Obstacle));
+            Debugs.Add("FastForward", typeof(Fast_Forward));
+            Debugs.Add("MaxVillage", typeof(Max_Village));
         }
 
 
