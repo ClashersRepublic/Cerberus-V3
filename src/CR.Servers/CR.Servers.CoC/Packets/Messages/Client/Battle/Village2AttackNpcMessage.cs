@@ -22,8 +22,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
         {
 
         }
-
-        internal override short Type => 14135;
+        
+        internal override short Type
+        {
+            get
+            {
+                return 14135;
+            }
+        }
 
         internal override void Decode()
         {
@@ -41,7 +47,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 
                         this.Device.GameMode.Level.Player.Mission_Finish(21000022);
 
-                        new AttackNpcDataMessage(this.Device) { NpcHome = LevelFile.Files[this.Npc.LevelFile], Npc_ID = this.Npc.GlobalId, Village2 = true }.Send();
+                        new NpcDataMessage(this.Device) { NpcHome = LevelFile.Files[this.Npc.LevelFile], Npc_ID = this.Npc.GlobalId, Village2 = true }.Send();
                     }
                 }
             }
