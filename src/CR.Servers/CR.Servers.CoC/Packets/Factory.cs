@@ -57,6 +57,7 @@
             Messages.Add(14113, typeof(VisitHomeMessage));
             Messages.Add(14123, typeof(SearchOpponentMessage));
             Messages.Add(14134, typeof(AskForAttackNpcMessage));
+            Messages.Add(14135, typeof(Village2AttackNpcMessage));
             Messages.Add(14201, typeof(BindFacebookAccountMessage));
             Messages.Add(14212, typeof(BindGamecenterAccountMessage));
             Messages.Add(14301, typeof(CreateAllianceMessage));

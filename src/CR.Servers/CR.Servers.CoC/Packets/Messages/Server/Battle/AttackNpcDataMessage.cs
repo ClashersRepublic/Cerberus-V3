@@ -10,6 +10,8 @@
 
         internal Home NpcHome;
 
+        internal bool Village2;
+
         public AttackNpcDataMessage(Device Device) : base(Device)
         {
             Device.State = State.IN_NPC_BATTLE;
@@ -25,7 +27,7 @@
 
             this.Data.AddInt(this.Npc_ID);
 
-            this.Data.Add(0);
+            this.Data.AddBool(this.Village2);
         }
     }
 }

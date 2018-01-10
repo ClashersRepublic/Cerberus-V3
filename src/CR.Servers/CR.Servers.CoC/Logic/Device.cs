@@ -1,6 +1,7 @@
 ﻿namespace CR.Servers.CoC.Logic
 {
     using System;
+    using System.IO;
     using System.Linq;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
@@ -177,6 +178,11 @@
                                     message.Version = (short) messageVersion;
                                     Resources.PacketManager.ReceiveMessageQueue.Enqueue(message);
                                 }
+                                /*else
+                                {
+                                    File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"Unknown Message ({messageType}) - UserId ({(this.GameMode?.Level?.Player != null ? this.GameMode.Level.Player.HighID + "-" + this.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", messageBytes);
+
+                                }*/
                             }
                             else
                             {
