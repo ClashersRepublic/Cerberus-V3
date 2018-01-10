@@ -10,7 +10,13 @@
             // Out_Of_Sync_Message.
         }
 
-        internal override short Type => 24104;
+        internal override short Type
+        {
+            get
+            {
+                return 24104;
+            }
+        }
 
         internal override void Process()
         {

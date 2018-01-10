@@ -11,7 +11,13 @@
         {
         }
 
-        internal override short Type => 10504;
+        internal override short Type
+        {
+            get
+            {
+                return 10504;
+            }
+        }
 
         internal override void Process()
         {

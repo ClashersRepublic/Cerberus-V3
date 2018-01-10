@@ -26,7 +26,13 @@
             Device.State = State.SESSION;
         }
 
-        internal override short Type => 10100;
+        internal override short Type
+        {
+            get
+            {
+                return 10100;
+            }
+        }
 
         internal override void Decode()
         {

@@ -13,7 +13,13 @@
             this.Player.Tick();
         }
 
-        internal override short Type => 24334;
+        internal override short Type
+        {
+            get
+            {
+                return 24334;
+            }
+        }
 
         internal override void Encode()
         {

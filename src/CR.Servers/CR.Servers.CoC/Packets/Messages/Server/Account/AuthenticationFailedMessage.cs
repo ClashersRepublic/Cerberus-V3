@@ -19,8 +19,21 @@
             this.Version = 9;
         }
 
-        internal override short Type => 20103;
-        internal string PatchingHost => Fingerprint.Custom ? Settings.PatchServer : "https://www.clashersrepublic.com/game-content/projectmagic/";
+        internal override short Type
+        {
+            get
+            {
+                return 20103;
+            }
+        }
+
+        internal string PatchingHost
+        {
+            get
+            {
+                return Fingerprint.Custom ? Settings.PatchServer : "https://www.clashersrepublic.com/game-content/projectmagic/";
+            }
+        }
 
         internal override void Encode()
         {

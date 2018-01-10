@@ -13,7 +13,13 @@
             this.Version = 1;
         }
 
-        internal override short Type => 20133;
+        internal override short Type
+        {
+            get
+            {
+                return 20133;
+            }
+        }
 
         internal override void Encode()
         {

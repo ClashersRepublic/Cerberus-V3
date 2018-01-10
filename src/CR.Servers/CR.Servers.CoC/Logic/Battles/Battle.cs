@@ -2,15 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
-    using Newtonsoft.Json;
 
     internal class Battle
     {
+        internal Device Device;
         internal DateTime LastClientTurn;
 
         internal Level Attacker;
@@ -27,8 +28,9 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="Battle"/> class.
         /// </summary>
-        internal Battle(Level attacker, Level defender)
+        internal Battle(Device device, Level attacker, Level defender)
         {
+            this.Device = device;
             this.Attacker = attacker;
             this.Defender = defender;
 
@@ -72,6 +74,7 @@
             }
 
             this.Ended = true;
+            this.Device.Account.Battle = null;
         }
 
         internal bool RemoveViewer(Device device)

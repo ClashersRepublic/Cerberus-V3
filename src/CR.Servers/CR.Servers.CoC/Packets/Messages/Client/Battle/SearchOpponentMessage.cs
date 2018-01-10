@@ -14,8 +14,14 @@
         {
         }
 
-        internal override short Type => 14123;
-        
+        internal override short Type
+        {
+            get
+            {
+                return 14123;
+            }
+        }
+
         internal override void Process()
         {
             if (this.Device.State == State.IN_PC_BATTLE)
@@ -30,7 +36,7 @@
 
             if (rndAccount != null)
             {
-                Battle battle = new Battle(this.Device.GameMode.Level, rndAccount.Home.Level);
+                Battle battle = new Battle(this.Device, this.Device.GameMode.Level, rndAccount.Home.Level);
 
                 this.Device.Account.Battle = battle;
                 rndAccount.Battle = battle;

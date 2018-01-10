@@ -35,7 +35,6 @@
 
         internal void Encode(List<byte> Packet)
         {
-            Packet.AddInt((int) TimeUtils.ToUnixTimestamp(this.Timestamp));
             Packet.AddInt(this.HighID);
             Packet.AddInt(this.LowID);
 

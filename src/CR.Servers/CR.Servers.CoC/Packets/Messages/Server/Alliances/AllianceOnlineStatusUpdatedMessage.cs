@@ -12,7 +12,13 @@
         {
         }
 
-        internal override short Type => 20207;
+        internal override short Type
+        {
+            get
+            {
+                return 20207;
+            }
+        }
 
         internal override void Encode()
         {

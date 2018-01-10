@@ -1,6 +1,11 @@
 ﻿namespace CR.Servers.CoC.Packets.Commands.Client
 {
+    using System.Linq;
+    using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Extensions.Game;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Clan;
+    using CR.Servers.CoC.Logic.Enums;
     using CR.Servers.Extensions.Binary;
 
     internal class Troop_Request : Command
@@ -30,7 +35,7 @@
         {
             Player Player = this.Device.GameMode.Level.Player;
 
-            /*if (Player.InAlliance)
+            if (Player.InAlliance)
             {
                 var Bunker = this.Device.GameMode.Level.GameObjectManager.Bunker;
                 if (Bunker != null)
@@ -72,7 +77,7 @@
                     Logging.Error(this.GetType(), "Unable to request troop. The player doesn't have a bunker!");
             }
             else
-                Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");*/
+                Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");
         }
     }
 }

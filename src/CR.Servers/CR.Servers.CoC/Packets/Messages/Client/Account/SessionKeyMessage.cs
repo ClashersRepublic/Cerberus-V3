@@ -15,7 +15,13 @@
             Resources.Random.NextBytes(this.Nonce);
         }
 
-        internal override short Type => 20000;
+        internal override short Type
+        {
+            get
+            {
+                return 20000;
+            }
+        }
 
         internal override void Encode()
         {

@@ -37,16 +37,16 @@
 
                         if (this.WaitingDeviceQueue.TryRemove(deviceKeys[++i], out Device attacker2))
                         {
-                            DuelBattle duelBattle = new DuelBattle(new Battle(attacker1.GameMode.Level, attacker2.GameMode.Level), new Battle(attacker2.GameMode.Level, attacker1.GameMode.Level));
+                            DuelBattle duelBattle = new DuelBattle(new Battle(attacker1, attacker1.GameMode.Level, attacker2.GameMode.Level), new Battle(attacker2, attacker2.GameMode.Level, attacker1.GameMode.Level));
 
                             attacker1.Account.DuelBattle = duelBattle;
                             attacker2.Account.DuelBattle = duelBattle;
-
-                            new DuelHomeDataMessage(attacker1)
+                            
+                            new Village2AttackAvatarDataMessage(attacker1)
                             {
                                 Enemy = attacker2.GameMode.Level
                             }.Send();
-                            new DuelHomeDataMessage(attacker2)
+                            new Village2AttackAvatarDataMessage(attacker2)
                             {
                                 Enemy = attacker1.GameMode.Level
                             }.Send();

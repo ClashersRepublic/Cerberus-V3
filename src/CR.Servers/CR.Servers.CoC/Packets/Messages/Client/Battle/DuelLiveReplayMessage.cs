@@ -1,6 +1,5 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
-    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.Binary;
 
@@ -13,7 +12,13 @@
         {
         }
 
-        internal override short Type => 15110;
+        internal override short Type
+        {
+            get
+            {
+                return 15110;
+            }
+        }
 
         internal override void Decode()
         {

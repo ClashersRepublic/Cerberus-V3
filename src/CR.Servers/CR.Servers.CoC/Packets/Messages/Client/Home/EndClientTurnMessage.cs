@@ -5,7 +5,9 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
     using System;
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
     using CR.Servers.Extensions.Binary;
 
     internal class EndClientTurnMessage : Message
@@ -21,8 +23,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             // End_Client_Turn.
         }
 
-        internal override short Type => 14102;
-        
+        internal override short Type
+        {
+            get
+            {
+                return 14102;
+            }
+        }
+
         internal override void Decode()
         {
             this.SubTick = this.Reader.ReadInt32();
@@ -78,7 +86,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand)Command;
+                        ServerCommand ServerCommand = (ServerCommand) Command;
 
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
                         {

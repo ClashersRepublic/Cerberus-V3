@@ -2,7 +2,6 @@
 {
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.List;
-    using CR.Servers.Logic.Enums;
 
     internal class WaitingToGoHomeMessage : Message
     {
@@ -13,7 +12,13 @@
             this.EstimatedTime = estimatedTime;
         }
 
-        internal override short Type => 24112;
+        internal override short Type
+        {
+            get
+            {
+                return 24112;
+            }
+        }
 
         internal override void Encode()
         {
