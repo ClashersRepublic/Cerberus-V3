@@ -124,7 +124,7 @@
             this.Variables.Initialize();
             this.ModSlot.Initialize();
 
-            this.Units2.Add(CSV.Village2StartUnit, 5);
+            this.Units2.Add(CSV.Village2StartUnit, CSV.Village2StartUnit.UnitsInCamp[0]);
         }
 
         internal bool Connected
@@ -418,7 +418,7 @@
             _Packet.AddInt(0);
             //_Packet.AddInt(0);
         }
-
+        
         internal JObject Save()
         {
             JObject Json = new JObject
