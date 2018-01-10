@@ -483,6 +483,7 @@
     <Compile Include="Packets\Messages\Server\Alliances\AllianceStreamEntryRemovedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Api\FacebookAccountBoundMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryRemovedMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryAddedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackTargetsDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\Village2AttackEntryUpdateMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Village2AttackAvatarFailedMessage.cs" />
@@ -511,7 +512,7 @@
     <Compile Include="Packets\Messages\Server\Avatar\AvatarStreamEntryMessage.cs" />
     <Compile Include="Packets\Messages\Server\Avatar\ChangeAvatarNameFailedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\EnemyHomeDataMessage.cs" />
-    <Compile Include="Packets\Messages\Server\Battle\AttackNpcDataMessage.cs" />
+    <Compile Include="Packets\Messages\Server\Battle\NpcDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Battle\Village2AttackAvatarDataMessage.cs" />
     <Compile Include="Packets\Messages\Server\Friend\FriendRequestRemovedMessage.cs" />
     <Compile Include="Packets\Messages\Server\Home\AvailableServerCommandMessage.cs" />

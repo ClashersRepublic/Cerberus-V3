@@ -54,7 +54,7 @@
                             this.Device.GameMode.Level.Player.NpcMapProgress.Add(this.Npc, 3);
                         }
 
-                        new AttackNpcDataMessage(this.Device) {NpcHome = LevelFile.Files[this.Npc.LevelFile], Npc_ID = this.Npc.GlobalId}
+                        new NpcDataMessage(this.Device) {NpcHome = LevelFile.Files[this.Npc.LevelFile], Npc_ID = this.Npc.GlobalId}
                             .Send();
                     }
                 }

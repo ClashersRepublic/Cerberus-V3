@@ -9,5 +9,10 @@
         {
 
         }
+
+        internal virtual int GetEntryType()
+        {
+            return 0;
+        }
     }
 }

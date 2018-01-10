@@ -1,5 +1,6 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Server.Home
 {
+    using CR.Servers.CoC.Extensions;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.List;
     using CR.Servers.Logic.Enums;
@@ -26,6 +27,7 @@
         internal override void Encode()
         {
             this.Data.AddInt(0);
+            this.Data.AddInt(TimeUtils.UnixUtcNow);
             this.Visit.Home.Encode(this.Data);
             this.Visit.Player.Encode(this.Data);
             this.Data.AddInt(0);
