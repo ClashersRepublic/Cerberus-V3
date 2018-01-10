@@ -16,6 +16,7 @@
         internal static readonly Dictionary<int, string> Gamefiles = new Dictionary<int, string>();
 
         internal static Gamefiles Tables;
+        internal static CharacterData Village2StartUnit;
 
         internal static void Initialize()
         {
@@ -63,6 +64,8 @@
                     data.Process();
                 }
             }
+
+            CSV.Village2StartUnit = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("VILLAGE2_START_UNIT")).TextValue);
 
             List<Data> Buildings = CSV.Tables.Get(Gamefile.Buildings).Datas;
             StringBuilder Help = new StringBuilder();

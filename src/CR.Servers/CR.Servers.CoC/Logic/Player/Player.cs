@@ -123,6 +123,8 @@
             this.Resources.Initialize();
             this.Variables.Initialize();
             this.ModSlot.Initialize();
+
+            this.Units2.Add(CSV.Village2StartUnit, 5);
         }
 
         internal bool Connected
