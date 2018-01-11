@@ -175,7 +175,7 @@
             Factory.Commands.Add(605, typeof(Unknown_605));
             Factory.Commands.Add(700, typeof(Place_Attacker));
             Factory.Commands.Add(701, typeof(Place_Alliance_Portal));
-            Factory.Commands.Add(702, typeof(Place_Alliance_Portal));
+            Factory.Commands.Add(702, typeof(End_Attack_Preparation));
             Factory.Commands.Add(703, typeof(Surrender_Attack));
             Factory.Commands.Add(704, typeof(Place_Spell));
             Factory.Commands.Add(705, typeof(Place_Hero));

@@ -194,7 +194,7 @@ namespace CR.Servers.CoC.Logic.Battles
             }
 
             this.Timer = new Timer();
-            this.Timer.Interval = 3000;
+            this.Timer.Interval = 2000;
             this.Timer.AutoReset = true;
             this.Timer.Elapsed += (Aidid, Mike) =>
             {

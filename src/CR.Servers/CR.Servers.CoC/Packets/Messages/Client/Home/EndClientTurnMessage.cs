@@ -144,7 +144,14 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             {
                 if (this.Device.Account.BattleEnd)
                 {
-                    Resources.Gateway.Disconnect(this.Device.Token.Args);
+                    if (this.Device.TimeSinceLastKeepAliveMs > 5000)
+                    {
+                        Resources.Gateway.Disconnect(this.Device.Token.Args);
+                    }
+                    else
+                    {
+                        this.Device.Account.BattleEnd = false;
+                    }
                 }
             }
         }
