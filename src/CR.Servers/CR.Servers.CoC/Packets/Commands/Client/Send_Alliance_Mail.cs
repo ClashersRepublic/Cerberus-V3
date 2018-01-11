@@ -55,7 +55,7 @@
                                     foreach (Member Member in Level.Player.Alliance.Members.Slots.Values.ToArray())
                                     {
                                         Member.Player.Inbox.Add(
-                                            new ClanMailEntry(Level.Player, Level.Player.Alliance)
+                                            new AllianceMailAvatarStreamEntry(Level.Player, Level.Player.Alliance)
                                             {
                                                 Message = this.Message
                                             });

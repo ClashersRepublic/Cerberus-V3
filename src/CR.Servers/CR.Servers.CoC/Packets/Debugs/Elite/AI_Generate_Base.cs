@@ -168,7 +168,7 @@
             {
                 new AvatarStreamEntryMessage(this.Device)
                 {
-                    StreamEntry = new ClanMailEntry(this.Device.GameMode.Level.Player)
+                    StreamEntry = new AllianceMailAvatarStreamEntry(this.Device.GameMode.Level.Player)
                     {
                         LowId = (int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
                         SenderName = "[System] Command Manager",

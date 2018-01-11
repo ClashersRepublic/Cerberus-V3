@@ -4,7 +4,7 @@
 
     internal class AvatarStreamEntryMessage : Message
     {
-        internal MailEntry StreamEntry;
+        internal AvatarStreamEntry StreamEntry;
 
         public AvatarStreamEntryMessage(Device Device) : base(Device)
         {

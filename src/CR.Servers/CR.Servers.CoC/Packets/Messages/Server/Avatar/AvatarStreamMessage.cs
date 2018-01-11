@@ -25,9 +25,9 @@
 
         internal override void Process()
         {
-            MailEntry[] Streams = this.Device.GameMode.Level.Player.Inbox.Entries.Values.Where(T => T.New == 2).ToArray();
+            AvatarStreamEntry[] Streams = this.Device.GameMode.Level.Player.Inbox.Entries.Values.Where(T => T.New == 2).ToArray();
 
-            foreach (MailEntry Stream in Streams)
+            foreach (AvatarStreamEntry Stream in Streams)
             {
                 Stream.New = 0;
             }

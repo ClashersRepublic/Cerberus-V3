@@ -5,6 +5,7 @@
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets;
+    using CR.Servers.CoC.Packets.Commands.Client.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
 
@@ -14,10 +15,12 @@
         internal List<Command> Commands;
         internal Level Defender;
         internal Device Device;
+        internal bool Started;
         internal bool Ended;
 
         internal int EndSubTick;
         internal DateTime LastClientTurn;
+        internal BattleLog BattleLog;
         internal BattleRecorder Recorder;
 
         internal List<Device> Viewers;
@@ -32,6 +35,7 @@
             this.Attacker = attacker;
             this.Defender = defender;
 
+            this.BattleLog = new BattleLog(this);
             this.Recorder = new BattleRecorder(this);
             this.Commands = new List<Command>(64);
             this.Viewers = new List<Device>(32);
@@ -54,10 +58,18 @@
                 return;
             }
 
-            if (this.Commands.Count > 0)
+            if (this.Started)
             {
-                Resources.Accounts.SavePlayer(this.Defender.Player);
-                Resources.Accounts.SaveHome(this.Defender.Home);
+                var replay = Resources.Battles.Save(this);
+
+                this.Defender.Player.Inbox.Add(new BattleReportStreamEntry(this.Attacker.Player, this, (long) replay.HighId << 32 | (uint) replay.LowId, 2));
+                this.Attacker.Player.Inbox.Add(new BattleReportStreamEntry(this.Defender.Player, this, (long) replay.HighId << 32 | (uint) replay.LowId, 7));
+
+                if (this.Commands.Count > 0)
+                {
+                    Resources.Accounts.SavePlayer(this.Defender.Player);
+                    Resources.Accounts.SaveHome(this.Defender.Home);
+                }
             }
 
             for (int i = 0; i < this.Viewers.Count; i++)
@@ -116,12 +128,47 @@
 
             if (commands != null)
             {
+                if (!this.Started)
+                {
+                    this.Started = commands.Count > 0;
+                }
+
                 for (int i = 0; i < commands.Count; i++)
                 {
-                    if (commands[i].Type == 703)
+                    switch (commands[i].Type)
                     {
-                        this.EndBattle();
-                        break;
+                        case 700:
+                        {
+                            Place_Attacker placeAttacker = (Place_Attacker) commands[i];
+                            this.BattleLog.IncrementUnit(placeAttacker.Character);
+                            break;
+                        }
+
+                        case 701:
+                        {
+                            this.BattleLog.AlliancePortalDeployed();
+                            break;
+                        }
+
+                        case 703:
+                        {
+                            this.EndBattle();
+                            break;
+                        }
+
+                        case 704:
+                        {
+                            Place_Spell placeSpell = (Place_Spell)commands[i];
+                            this.BattleLog.IncrementSpell(placeSpell.Spell);
+                            break;
+                        }
+
+                        case 705:
+                        {
+                            Place_Hero placeHero = (Place_Hero)commands[i];
+                            this.BattleLog.HeroDeployed(placeHero.Hero);
+                            break;
+                        }
                     }
                 }
             }

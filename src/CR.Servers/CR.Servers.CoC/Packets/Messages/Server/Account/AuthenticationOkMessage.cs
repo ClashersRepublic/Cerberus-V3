@@ -34,9 +34,9 @@
 
             this.Data.AddInt(9);
             this.Data.AddInt(256);
-            this.Data.AddInt(0); // Content Version
+            this.Data.AddInt(12); // Content Version
 
-            this.Data.AddString("stage");
+            this.Data.AddString("prod");
 
             this.Data.AddInt(1); // Total Session
             this.Data.AddInt(0); // Play Time Seconds

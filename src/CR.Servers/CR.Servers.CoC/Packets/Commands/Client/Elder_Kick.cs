@@ -97,7 +97,7 @@
                                                 }
 
                                                 Target.Inbox.Add(
-                                                    new AllianceKickOutEntry(Level.Player, Alliance)
+                                                    new AllianceKickOutStreamEntry(Level.Player, Alliance)
                                                     {
                                                         Message = this.Message
                                                     });
@@ -145,7 +145,7 @@
                                                             }
 
                                                             Target.Inbox.Add(
-                                                                new AllianceKickOutEntry(Level.Player, Alliance)
+                                                                new AllianceKickOutStreamEntry(Level.Player, Alliance)
                                                                 {
                                                                     Message = this.Message
                                                                 });

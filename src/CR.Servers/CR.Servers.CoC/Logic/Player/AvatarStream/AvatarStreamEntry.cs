@@ -9,8 +9,8 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    [JsonConverter(typeof(MailConverter))]
-    internal class MailEntry
+    [JsonConverter(typeof(AvatarStreamEntryConverter))]
+    internal class AvatarStreamEntry
     {
         internal DateTime Created = DateTime.UtcNow;
         internal int HighId;
@@ -25,12 +25,12 @@
 
         internal string SenderName;
 
-        public MailEntry()
+        public AvatarStreamEntry()
         {
-            // MailEntry.
+            // AvatarStreamEntry.
         }
 
-        public MailEntry(Player Player)
+        public AvatarStreamEntry(Player Player)
         {
             this.SenderHighId = Player.HighID;
             this.SenderLowId = Player.LowID;
@@ -72,10 +72,12 @@
             Packet.AddInt(this.HighId);
             Packet.AddInt(this.LowId);
 
-            Packet.AddByte(1);
+            Packet.AddBool(true);
+            {
+                Packet.AddInt(this.SenderHighId);
+                Packet.AddInt(this.SenderLowId);
+            }
 
-            Packet.AddInt(this.SenderHighId);
-            Packet.AddInt(this.SenderLowId);
             Packet.AddString(this.SenderName);
             Packet.AddInt(this.SenderLevel);
             Packet.AddInt(this.SenderLeague);
@@ -138,7 +140,7 @@
         }
     }
 
-    internal class MailConverter : JsonConverter
+    internal class AvatarStreamEntryConverter : JsonConverter
     {
         public override bool CanWrite
         {
@@ -150,7 +152,7 @@
 
         public override bool CanConvert(Type Type)
         {
-            return Type.BaseType == typeof(MailEntry) || Type == typeof(MailEntry);
+            return Type.BaseType == typeof(AvatarStreamEntry) || Type == typeof(AvatarStreamEntry);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -159,18 +161,24 @@
 
             if (JsonHelper.GetJsonNumber(Token, "type", out int Type))
             {
-                MailEntry Entry;
+                AvatarStreamEntry Entry;
 
                 switch (Type)
                 {
+                    case 2:
+                        Entry = new BattleReportStreamEntry(2);
+                        break;
                     case 5:
-                        Entry = new AllianceKickOutEntry();
+                        Entry = new AllianceKickOutStreamEntry();
                         break;
                     case 6:
-                        Entry = new ClanMailEntry();
+                        Entry = new AllianceMailAvatarStreamEntry();
+                        break;
+                    case 7:
+                        Entry = new BattleReportStreamEntry(7);
                         break;
                     default:
-                        Entry = new MailEntry();
+                        Entry = new AvatarStreamEntry();
                         break;
                 }
 
@@ -186,7 +194,7 @@
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            MailEntry Mail = (MailEntry) value;
+            AvatarStreamEntry Mail = (AvatarStreamEntry) value;
 
             if (Mail != null)
             {

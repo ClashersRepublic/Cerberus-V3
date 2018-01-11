@@ -25,8 +25,7 @@
         public Building(Data Data, Level Level) : base(Data, Level)
         {
             BuildingData BuildingData = this.BuildingData;
-
-
+            
             if (BuildingData.IsTrainingHousing)
             {
                 this.AddComponent(new UnitStorageComponent(this));

@@ -177,6 +177,7 @@
   <ItemGroup>
     <Compile Include="Core\Consoles\Parser.cs" />
     <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\Database\Models\Mongo\Battles.cs" />
     <Compile Include="Core\Database\Models\Mongo\Clans.cs" />
     <Compile Include="Core\Database\Models\Mongo\Players.cs" />
     <Compile Include="Core\Database\Mongo.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Files\GameEvents.cs" />
     <Compile Include="Files\LevelFile.cs" />
     <Compile Include="Logic\Battles\Battle.cs" />
+    <Compile Include="Logic\Battles\BattleLog.cs" />
     <Compile Include="Logic\Battles\BattleRecorder.cs" />
     <Compile Include="Logic\Battles\DuelBattle.cs" />
     <Compile Include="Logic\Chat\Chat.cs" />
@@ -293,14 +295,15 @@
     <Compile Include="Logic\Math\Vector2.cs" />
     <Compile Include="Logic\Mode\GameMode.cs" />
     <Compile Include="Logic\Player\Api\FacebookApi.cs" />
-    <Compile Include="Logic\Player\AvatarStream\AllianceKickOutEntry.cs" />
-    <Compile Include="Logic\Player\AvatarStream\ClanMailEntry.cs" />
+    <Compile Include="Logic\Player\AvatarStream\BattleReportStreamEntry.cs" />
+    <Compile Include="Logic\Player\AvatarStream\AllianceKickOutStreamEntry.cs" />
+    <Compile Include="Logic\Player\AvatarStream\AllianceMailAvatarStreamEntry.cs" />
     <Compile Include="Logic\Player\Items\Cooldown.cs" />
     <Compile Include="Logic\Player\Items\Event.cs" />
     <Compile Include="Logic\Player\Items\Friend.cs" />
     <Compile Include="Logic\Player\Items\Functions.cs" />
     <Compile Include="Logic\Player\Items\Item.cs" />
-    <Compile Include="Logic\Player\AvatarStream\MailEntry.cs" />
+    <Compile Include="Logic\Player\AvatarStream\AvatarStreamEntry.cs" />
     <Compile Include="Logic\Player\Items\UnitItem.cs" />
     <Compile Include="Logic\Player\Player.cs" />
     <Compile Include="Logic\Player\PlayerBase.cs" />
@@ -319,6 +322,7 @@
     <Compile Include="Logic\Player\Items\ProductionItem.cs" />
     <Compile Include="Logic\Random.cs" />
     <Compile Include="Logic\Slots\Account.cs" />
+    <Compile Include="Logic\Slots\Battles.cs" />
     <Compile Include="Logic\Slots\Accounts.cs" />
     <Compile Include="Logic\Slots\Clans.cs" />
     <Compile Include="Logic\Slots\Duels.cs" />

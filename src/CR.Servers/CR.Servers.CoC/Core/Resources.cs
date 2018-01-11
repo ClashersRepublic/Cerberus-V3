@@ -18,6 +18,7 @@
     internal class Resources
     {
         internal static Accounts Accounts;
+        internal static Battles Battles;
         internal static Clans Clans;
         internal static Chats Chats;
         internal static XorShift Random;
@@ -56,6 +57,7 @@
             Resources.PacketManager = new PacketManager();
 
             Resources.Accounts = new Accounts();
+            Resources.Battles = new Battles();
             Resources.Clans = new Clans();
             Resources.Chats = new Chats();
             Resources.Duels = new Duels();

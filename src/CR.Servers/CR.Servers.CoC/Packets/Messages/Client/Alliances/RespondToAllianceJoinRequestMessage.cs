@@ -61,7 +61,7 @@
                                     {
                                         if (Target.AllianceId == 0)
                                         {
-                                            foreach (MailEntry entry in Target.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
+                                            foreach (AvatarStreamEntry entry in Target.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
                                             {
                                                 Target.Inbox.Remove(entry);
                                             }

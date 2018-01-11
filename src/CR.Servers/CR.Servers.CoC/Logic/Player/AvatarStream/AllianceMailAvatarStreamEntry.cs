@@ -8,7 +8,7 @@
     using CR.Servers.Extensions.List;
     using Newtonsoft.Json.Linq;
 
-    internal class AllianceKickOutEntry : MailEntry
+    internal class AllianceMailAvatarStreamEntry : AvatarStreamEntry
     {
         internal Alliance Alliance;
 
@@ -17,11 +17,15 @@
 
         internal string Message;
 
-        public AllianceKickOutEntry()
+        public AllianceMailAvatarStreamEntry()
         {
         }
 
-        public AllianceKickOutEntry(Player Player, Alliance Alliance) : base(Player)
+        public AllianceMailAvatarStreamEntry(Player Player) : base(Player)
+        {
+        }
+
+        public AllianceMailAvatarStreamEntry(Player Player, Alliance Alliance) : base(Player)
         {
             this.Alliance = Alliance;
             this.AllianceHighId = Alliance.HighId;
@@ -32,22 +36,21 @@
         {
             get
             {
-                return AvatarStream.KickedFromClan;
+                return AvatarStream.ClanMail;
             }
         }
 
         internal override void Encode(List<byte> Packet)
         {
             base.Encode(Packet);
-
             Packet.AddString(this.Message);
-            Packet.AddInt(this.AllianceHighId);
-            Packet.AddInt(this.AllianceLowId);
-            Packet.AddString(this.Alliance.Header.Name);
-            Packet.AddInt(this.Alliance.Header.Badge);
             Packet.AddBool(true);
             Packet.AddInt(this.SenderHighId);
             Packet.AddInt(this.SenderLowId);
+            Packet.AddInt(this.AllianceHighId);
+            Packet.AddInt(this.AllianceLowId);
+            Packet.AddString(this.Alliance != null ? this.Alliance.Header.Name : "[System] Command Manager");
+            Packet.AddInt(this.Alliance != null ? this.Alliance.Header.Badge : 1526733402);
         }
 
         internal override void Load(JToken Json)

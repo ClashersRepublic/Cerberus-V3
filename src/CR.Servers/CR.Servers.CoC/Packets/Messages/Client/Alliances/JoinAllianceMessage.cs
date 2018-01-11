@@ -42,7 +42,7 @@
             {
                 Player Avatar = this.Device.GameMode.Level.Player;
 
-                foreach (MailEntry entry in Avatar.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
+                foreach (AvatarStreamEntry entry in Avatar.Inbox.Entries.Values.Where(T => T.Type == AvatarStream.Invitation).ToArray())
                 {
                     Avatar.Inbox.Remove(entry);
                 }

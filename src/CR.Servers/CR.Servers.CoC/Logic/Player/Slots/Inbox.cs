@@ -12,7 +12,7 @@
 
     internal class Inbox
     {
-        [JsonProperty] internal ConcurrentDictionary<long, MailEntry> Entries;
+        [JsonProperty] internal ConcurrentDictionary<long, AvatarStreamEntry> Entries;
         internal Player Player;
 
         [JsonProperty] internal int Seed;
@@ -20,10 +20,10 @@
         public Inbox(Player Player)
         {
             this.Player = Player;
-            this.Entries = new ConcurrentDictionary<long, MailEntry>();
+            this.Entries = new ConcurrentDictionary<long, AvatarStreamEntry>();
         }
 
-        internal void Add(MailEntry StreamEntry)
+        internal void Add(AvatarStreamEntry StreamEntry)
         {
             if ((int) StreamEntry.Type != -1)
             {
@@ -33,7 +33,7 @@
                 {
                     if (this.Entries.Count > 50)
                     {
-                        if (this.Entries.TryRemove(this.Entries.Keys.First(), out MailEntry Removed))
+                        if (this.Entries.TryRemove(this.Entries.Keys.First(), out AvatarStreamEntry Removed))
                         {
                             this.RemoveEntry(Removed);
                         }
@@ -51,9 +51,9 @@
             }
         }
 
-        internal void Remove(MailEntry MailEntry)
+        internal void Remove(AvatarStreamEntry MailEntry)
         {
-            if (this.Entries.TryRemove(MailEntry.StreamId, out MailEntry Removed))
+            if (this.Entries.TryRemove(MailEntry.StreamId, out AvatarStreamEntry Removed))
             {
                 this.RemoveEntry(Removed);
             }
@@ -61,13 +61,13 @@
 
         internal void Remove(int StreamId)
         {
-            if (this.Entries.TryRemove(StreamId, out MailEntry Removed))
+            if (this.Entries.TryRemove(StreamId, out AvatarStreamEntry Removed))
             {
                 this.RemoveEntry(Removed);
             }
         }
 
-        internal void RemoveEntry(MailEntry StreamEntry)
+        internal void RemoveEntry(AvatarStreamEntry StreamEntry)
         {
             if (this.Player.Connected)
             {
@@ -75,7 +75,7 @@
             }
         }
 
-        internal void Update(MailEntry StreamEntry)
+        internal void Update(AvatarStreamEntry StreamEntry)
         {
             if (this.Entries.ContainsKey(StreamEntry.StreamId))
             {
@@ -90,10 +90,10 @@
 
         internal void Encode(List<byte> Packet)
         {
-            MailEntry[] Streams = this.Entries.Values.ToArray();
+            AvatarStreamEntry[] Streams = this.Entries.Values.ToArray();
             Packet.AddInt(Streams.Length);
 
-            foreach (MailEntry Stream in Streams)
+            foreach (AvatarStreamEntry Stream in Streams)
             {
                 Stream.Encode(Packet);
             }
@@ -102,7 +102,7 @@
 
         internal void Tick()
         {
-            foreach (MailEntry StreamEntry in this.Entries.Values.ToArray())
+            foreach (AvatarStreamEntry StreamEntry in this.Entries.Values.ToArray())
             {
                 if (StreamEntry.Age >= 86400 * 30)
                 {

@@ -108,7 +108,7 @@
 
             Home Home = new Home(Constants.ServerId, LowID) {LastSave = LevelFile.StartingHome};
 
-            Mongo.Players.InsertOne(new Players
+            Mongo.Players.InsertOneAsync(new Players
             {
                 HighId = Constants.ServerId,
                 LowId = LowID,
