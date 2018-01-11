@@ -12,7 +12,6 @@
 
         internal int HighId;
         internal int LowId;
-        internal bool BattleEnd;
 
         public Account(int HighID, int LowID, Player Player, Home Home)
         {

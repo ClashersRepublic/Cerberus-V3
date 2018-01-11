@@ -91,7 +91,6 @@ namespace CR.Servers.CoC.Logic.Battles
 
             this.Ended = true;
             this.Device.Account.Battle = null;
-            this.Device.Account.BattleEnd = true;
         }
 
         internal bool RemoveViewer(Device device)
@@ -189,7 +188,6 @@ namespace CR.Servers.CoC.Logic.Battles
         {
             if (this.Ended)
             {
-                this.Timer.Stop();
                 return;
             }
 
@@ -202,6 +200,13 @@ namespace CR.Servers.CoC.Logic.Battles
                 if (LastClientTurnSeconds > 5)
                 {
                     this.EndBattle();
+
+                    if (this.Device.TimeSinceLastKeepAlive > 5)
+                    {
+                        Resources.Gateway.Disconnect(this.Device.Token.Args);
+                    }
+
+                    this.Timer.Stop();
                 }
             };
 

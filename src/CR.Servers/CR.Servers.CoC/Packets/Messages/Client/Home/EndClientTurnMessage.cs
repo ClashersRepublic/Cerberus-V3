@@ -140,20 +140,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     this.Device.Account.Battle = null;
                 }
             }
-            else
-            {
-                if (this.Device.Account.BattleEnd)
-                {
-                    if (this.Device.TimeSinceLastKeepAliveMs > 5000)
-                    {
-                        Resources.Gateway.Disconnect(this.Device.Token.Args);
-                    }
-                    else
-                    {
-                        this.Device.Account.BattleEnd = false;
-                    }
-                }
-            }
         }
     }
 }

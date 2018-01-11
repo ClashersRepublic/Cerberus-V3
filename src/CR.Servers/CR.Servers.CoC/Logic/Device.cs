@@ -71,6 +71,13 @@
                 return (long) DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
             }
         }
+        internal long TimeSinceLastKeepAlive
+        {
+            get
+            {
+                return (long)DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalSeconds;
+            }
+        }
 
         internal bool Connected
         {
@@ -113,10 +120,6 @@
                         {
                             this.Account.Battle = null;
                         }
-                    }
-                    else
-                    {
-                        this.Account.BattleEnd = false;
                     }
 
                     if (this.Account.Player != null)

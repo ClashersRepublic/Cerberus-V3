@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Core.Network
+﻿using System.Runtime.CompilerServices;
+
+namespace CR.Servers.CoC.Core.Network
 {
     using System;
     using System.Net;
@@ -177,8 +179,9 @@
             }
         }
 
-        internal void Disconnect(SocketAsyncEventArgs rcvArgs)
+        internal void Disconnect(SocketAsyncEventArgs rcvArgs, [CallerMemberName] string callerName = "")
         {
+            Console.WriteLine(callerName);
             Program.Disconnected();
 
             if (rcvArgs.UserToken != null)
