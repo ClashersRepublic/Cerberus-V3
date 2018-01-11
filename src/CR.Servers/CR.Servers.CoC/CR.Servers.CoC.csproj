@@ -332,6 +332,7 @@
     <Compile Include="Packets\Commands\Client\Account_Bound.cs" />
     <Compile Include="Packets\Commands\Client\Add_Quick_Train.cs" />
     <Compile Include="Packets\Commands\Client\Battle\Change_Battle_Troop.cs" />
+    <Compile Include="Packets\Commands\Client\Battle\End_Attack_Preparation.cs" />
     <Compile Include="Packets\Commands\Client\Boost_Building.cs" />
     <Compile Include="Packets\Commands\Client\Boost_Buildings_Of_Type.cs" />
     <Compile Include="Packets\Commands\Client\Buy_Deco.cs" />

@@ -256,7 +256,7 @@
             {
                 if (!account.Battle.Ended)
                 {
-                    if (account.Battle.Defender.Home == account.Home)
+                    if (account.Battle.Defender.Home.LowID == account.Home.LowID)
                     {
                         new WaitingToGoHomeMessage(this.Device, 240).Send();
 

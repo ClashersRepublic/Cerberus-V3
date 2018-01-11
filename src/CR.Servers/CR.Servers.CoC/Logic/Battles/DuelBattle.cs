@@ -16,7 +16,7 @@
 
         internal Battle GetBattle(Level level)
         {
-            if (level == this.Battle1.Attacker)
+            if (level.Player.UserId == this.Battle1.Attacker.Player.UserId)
             {
                 return this.Battle1;
             }

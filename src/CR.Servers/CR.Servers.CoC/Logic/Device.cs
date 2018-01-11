@@ -114,6 +114,10 @@
                             this.Account.Battle = null;
                         }
                     }
+                    else
+                    {
+                        this.Account.BattleEnd = false;
+                    }
 
                     if (this.Account.Player != null)
                     {

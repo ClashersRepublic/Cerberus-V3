@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Logic.Battles
+﻿using CR.Servers.CoC.Packets.Messages.Server.Account;
+
+namespace CR.Servers.CoC.Logic.Battles
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +10,7 @@
     using CR.Servers.CoC.Packets.Commands.Client.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using Timer = System.Timers.Timer;
 
     internal class Battle
     {
@@ -25,6 +28,8 @@
 
         internal List<Device> Viewers;
 
+        internal Timer Timer;
+
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Battle" /> class.
@@ -39,6 +44,7 @@
             this.Recorder = new BattleRecorder(this);
             this.Commands = new List<Command>(64);
             this.Viewers = new List<Device>(32);
+            this.EndClientTurn();
         }
 
         internal void AddViewer(Device device)
@@ -76,7 +82,7 @@
             {
                 if (this.Viewers[i].Connected)
                 {
-                    if (this.Viewers[i].GameMode.Level == this.Defender)
+                    if (this.Viewers[i].GameMode.Level.Player.UserId == this.Defender.Player.UserId)
                     {
                         new OwnHomeDataMessage(this.Viewers[i]).Send();
                     }
@@ -85,6 +91,7 @@
 
             this.Ended = true;
             this.Device.Account.Battle = null;
+            this.Device.Account.BattleEnd = true;
         }
 
         internal bool RemoveViewer(Device device)
@@ -102,8 +109,11 @@
             {
                 for (int i = 0; i < commands.Count; i++)
                 {
-                    this.Recorder.Commands.Add(commands[i].Save());
-                    this.Commands.Add(commands[i]);
+                    if (commands[i].Type != 800)
+                    {
+                        this.Recorder.Commands.Add(commands[i].Save());
+                        this.Commands.Add(commands[i]);
+                    }
                 }
             }
 
@@ -114,7 +124,8 @@
                     new LiveReplayDataMessage(this.Viewers[i])
                     {
                         EndSubTick = subTick,
-                        Commands = commands
+                        Commands = commands,
+                        //SpectatorTeam1 = this.Viewers.Count
                     }.Send();
                 }
                 else
@@ -158,20 +169,43 @@
 
                         case 704:
                         {
-                            Place_Spell placeSpell = (Place_Spell)commands[i];
+                            Place_Spell placeSpell = (Place_Spell) commands[i];
                             this.BattleLog.IncrementSpell(placeSpell.Spell);
                             break;
                         }
 
                         case 705:
                         {
-                            Place_Hero placeHero = (Place_Hero)commands[i];
+                            Place_Hero placeHero = (Place_Hero) commands[i];
                             this.BattleLog.HeroDeployed(placeHero.Hero);
                             break;
                         }
                     }
                 }
             }
+        }
+
+        internal void EndClientTurn()
+        {
+            if (this.Ended)
+            {
+                this.Timer.Stop();
+                return;
+            }
+
+            this.Timer = new Timer();
+            this.Timer.Interval = 3000;
+            this.Timer.AutoReset = true;
+            this.Timer.Elapsed += (Aidid, Mike) =>
+            {
+                int LastClientTurnSeconds = (int) DateTime.UtcNow.Subtract(this.LastClientTurn).TotalSeconds;
+                if (LastClientTurnSeconds > 5)
+                {
+                    this.EndBattle();
+                }
+            };
+
+            this.Timer.Start();
         }
     }
 }

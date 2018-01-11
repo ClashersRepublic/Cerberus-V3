@@ -7,11 +7,12 @@
         internal Battle Battle;
         internal Device Device;
         internal DuelBattle DuelBattle;
-        internal int HighId;
-
         internal Home Home;
-        internal int LowId;
         internal Player Player;
+
+        internal int HighId;
+        internal int LowId;
+        internal bool BattleEnd;
 
         public Account(int HighID, int LowID, Player Player, Home Home)
         {

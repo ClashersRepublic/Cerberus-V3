@@ -39,6 +39,8 @@
             {
                 if (this.Device.State == State.IN_PC_BATTLE)
                 {
+                    this.Device.Account.Battle.Timer.Stop();
+                    this.Device.Account.Battle.Timer.Dispose();
                     this.Device.Account.Battle.EndBattle();
                     this.Device.Account.Battle = null;
 

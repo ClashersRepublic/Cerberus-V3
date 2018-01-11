@@ -1,5 +1,9 @@
 ﻿#define Extra
 
+using CR.Servers.CoC.Core.Network;
+using CR.Servers.CoC.Packets.Messages.Server.Account;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
+
 namespace CR.Servers.CoC.Packets.Messages.Client.Home
 {
     using System;
@@ -134,6 +138,13 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                 else
                 {
                     this.Device.Account.Battle = null;
+                }
+            }
+            else
+            {
+                if (this.Device.Account.BattleEnd)
+                {
+                    Resources.Gateway.Disconnect(this.Device.Token.Args);
                 }
             }
         }
