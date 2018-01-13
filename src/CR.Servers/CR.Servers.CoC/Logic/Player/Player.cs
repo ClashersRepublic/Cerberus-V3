@@ -173,7 +173,7 @@
 
         internal void Process()
         {
-            this.Friends.VerifyFriend();
+            //this.Friends.VerifyFriend(); // Causes StackOverFlowException at the moment.
             this.VerifyAlliance();
         }
 
