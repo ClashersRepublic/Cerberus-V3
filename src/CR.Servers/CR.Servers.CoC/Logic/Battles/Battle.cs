@@ -64,6 +64,8 @@ namespace CR.Servers.CoC.Logic.Battles
                 return;
             }
 
+            this.Timer.Dispose();
+
             if (this.Started)
             {
                 var replay = Resources.Battles.Save(this);
@@ -110,6 +112,11 @@ namespace CR.Servers.CoC.Logic.Battles
                 {
                     if (commands[i].Type != 800)
                     {
+                        if (!this.Started)
+                        {
+                            this.Started = true;
+                        }
+
                         this.Recorder.Commands.Add(commands[i].Save());
                         this.Commands.Add(commands[i]);
                     }
@@ -138,11 +145,6 @@ namespace CR.Servers.CoC.Logic.Battles
 
             if (commands != null)
             {
-                if (!this.Started)
-                {
-                    this.Started = commands.Count > 0;
-                }
-
                 for (int i = 0; i < commands.Count; i++)
                 {
                     switch (commands[i].Type)

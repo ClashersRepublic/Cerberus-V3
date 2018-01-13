@@ -55,7 +55,7 @@
             Factory.Messages.Add(14102, typeof(EndClientTurnMessage));
             Factory.Messages.Add(14103, typeof(CancelDuelMatchmakeMessage));
             Factory.Messages.Add(14113, typeof(VisitHomeMessage));
-            Factory.Messages.Add(14123, typeof(SearchOpponentMessage));
+            Factory.Messages.Add(14123, typeof(AttackMatchedHomeMessage));
             Factory.Messages.Add(14134, typeof(AskForAttackNpcMessage));
             Factory.Messages.Add(14135, typeof(Village2AttackNpcMessage));
             Factory.Messages.Add(14201, typeof(BindFacebookAccountMessage));

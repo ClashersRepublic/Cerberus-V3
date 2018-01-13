@@ -179,9 +179,8 @@ namespace CR.Servers.CoC.Core.Network
             }
         }
 
-        internal void Disconnect(SocketAsyncEventArgs rcvArgs, [CallerMemberName] string callerName = "")
+        internal void Disconnect(SocketAsyncEventArgs rcvArgs)
         {
-            Console.WriteLine(callerName);
             Program.Disconnected();
 
             if (rcvArgs.UserToken != null)
