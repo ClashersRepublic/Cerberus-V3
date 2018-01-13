@@ -48,7 +48,7 @@
 
             if (this.Socket.Connected)
             {
-                this.Socket.Dispose();
+                this.Socket.Close();
             }
 
             this.Packet = null;

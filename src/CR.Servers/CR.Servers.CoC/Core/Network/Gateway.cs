@@ -170,7 +170,6 @@ namespace CR.Servers.CoC.Core.Network
         {
             if (args.DisconnectReuseSocket)
             {
-                args.SetBuffer(this._emptyBuffer, 0, 0);
                 this._sndPool.Enqueue(args);
             }
             else
