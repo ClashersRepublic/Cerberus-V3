@@ -77,6 +77,10 @@
         internal static int Village2DoNotAllowClearObstacleTh;
         internal static int TallGrassRespawnSeconds;
 
+        internal static int AttackLength;
+        internal static int AttackPrepartionLength;
+        internal static int AttackPrepartionLength2;
+
         internal static void Initialize()
         {
             Globals.AllianceCreateResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("ALLIANCE_CREATE_RESOURCE")).TextValue);
@@ -150,6 +154,10 @@
 
             Globals.Village2DoNotAllowClearObstacleTh = ((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("VILLAGE2_DO_NOT_ALLOW_CLEAR_OBSTACLE_TH")).NumberValue;
             Globals.TallGrassRespawnSeconds = ((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("TALLGRASS_RESPAWN_SECONDS")).NumberValue;
+
+            Globals.AttackLength = ((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("ATTACK_LENGTH_SEC")).NumberValue;
+            Globals.AttackPrepartionLength = ((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("ATTACK_PREPARATION_LENGTH_SEC")).NumberValue;
+            Globals.AttackPrepartionLength2 = ((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("ATTACK_PREPARATION_LENGTH_VILLAGE2_SEC")).NumberValue;
         }
     }
 }

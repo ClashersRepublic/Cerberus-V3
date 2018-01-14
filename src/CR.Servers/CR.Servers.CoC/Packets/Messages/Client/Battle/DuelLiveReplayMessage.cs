@@ -1,12 +1,13 @@
 ﻿namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {
+    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Battles;
     using CR.Servers.Extensions.Binary;
 
     internal class DuelLiveReplayMessage : Message
     {
-        internal int HighId;
-        internal int LowId;
+        internal long LiveId;
 
         public DuelLiveReplayMessage(Device Device, Reader Reader) : base(Device, Reader)
         {
@@ -22,23 +23,20 @@
 
         internal override void Decode()
         {
-            this.HighId = this.Reader.ReadInt32();
-            this.LowId = this.Reader.ReadInt32();
+            this.LiveId = this.Reader.ReadInt64();
         }
 
         internal override void Process()
         {
-            /*
-            Player Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
-
-            if (Player != null)
+            if (Resources.Duels.DuelBattles.TryGetValue(this.LiveId, out DuelBattle duel))
             {
-                if (Player.Level?.BattleManager != null)
+                Battle battle = duel.GetEnemyBattle(this.Device.GameMode.Level);
+
+                if (battle != null)
                 {
-                    Player.Level.BattleManager.AddSpectator(this.Device.GameMode.Level);
+                    battle.AddViewer(this.Device);
                 }
             }
-            */
         }
     }
 }

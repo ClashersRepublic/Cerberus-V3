@@ -1,12 +1,11 @@
-﻿using CR.Servers.CoC.Packets.Messages.Server.Account;
-
-namespace CR.Servers.CoC.Logic.Battles
+﻿namespace CR.Servers.CoC.Logic.Battles
 {
     using System;
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Database.Models.Mongo;
     using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Extensions.Game;
     using CR.Servers.CoC.Packets;
     using CR.Servers.CoC.Packets.Commands.Client.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
@@ -33,12 +32,25 @@ namespace CR.Servers.CoC.Logic.Battles
 
         internal Timer Timer;
 
+        internal int AttackTime;
+        internal int PreparationTime;
+        internal int RemainingBattleTime;
 
+        internal int RemainingBattleTimeSecs
+        {
+            get
+            {
+                return 16 * this.RemainingBattleTime / 1000;
+            }
+        }
+        
         /// <summary>
         ///     Initializes a new instance of the <see cref="Battle" /> class.
         /// </summary>
-        internal Battle(Device device, Level attacker, Level defender)
+        internal Battle(Device device, Level attacker, Level defender, bool duel)
         {
+            this.Duel = duel;
+
             this.Device = device;
             this.Attacker = attacker;
             this.Defender = defender;
@@ -47,6 +59,12 @@ namespace CR.Servers.CoC.Logic.Battles
             this.Recorder = new BattleRecorder(this);
             this.Commands = new List<Command>(64);
             this.Viewers = new List<Device>(32);
+
+            this.AttackTime = Globals.AttackLength;
+            this.PreparationTime = duel ? Globals.AttackPrepartionLength2 : Globals.AttackPrepartionLength;
+
+            this.RemainingBattleTime = 1000 * (this.AttackTime + this.PreparationTime) / 16;
+
             this.EndClientTurn();
         }
 
@@ -107,10 +125,12 @@ namespace CR.Servers.CoC.Logic.Battles
 
         internal void HandleCommands(int subTick, List<Command> commands)
         {
+            this.RemainingBattleTime -= subTick - this.EndSubTick;
+
             this.EndSubTick = subTick;
             this.Recorder.EndTick = subTick;
             this.LastClientTurn = DateTime.UtcNow;
-
+            
             if (commands != null)
             {
                 for (int i = 0; i < commands.Count; i++)
@@ -120,6 +140,11 @@ namespace CR.Servers.CoC.Logic.Battles
                         if (!this.Started)
                         {
                             this.Started = true;
+
+                            if (this.RemainingBattleTime > this.AttackTime)
+                            {
+                                this.RemainingBattleTime = 1000 * this.AttackTime / 16;
+                            }
                         }
 
                         this.Recorder.Commands.Add(commands[i].Save());

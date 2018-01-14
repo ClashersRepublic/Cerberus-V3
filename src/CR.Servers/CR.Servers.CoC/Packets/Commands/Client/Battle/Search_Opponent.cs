@@ -63,7 +63,7 @@
 
                 if (rndAccount != null)
                 {
-                    Battle battle = new Battle(this.Device, this.Device.GameMode.Level, rndAccount.Home.Level);
+                    Battle battle = new Battle(this.Device, this.Device.GameMode.Level, rndAccount.Home.Level, false);
 
                     this.Device.Account.Battle = battle;
                     rndAccount.Battle = battle;

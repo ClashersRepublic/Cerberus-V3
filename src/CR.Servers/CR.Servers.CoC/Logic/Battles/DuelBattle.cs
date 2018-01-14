@@ -9,6 +9,8 @@
 
     internal class DuelBattle
     {
+        internal int BattleId;
+
         internal bool Ended;
 
         internal Battle Battle1;
@@ -18,9 +20,6 @@
         {
             this.Battle1 = battle1;
             this.Battle2 = battle2;
-
-            this.Battle1.Duel = true;
-            this.Battle2.Duel = true;
         }
 
         internal Battle GetBattle(Level level)
@@ -31,6 +30,16 @@
             }
 
             return level.Player.UserId == this.Battle2.Attacker.Player.UserId ? this.Battle2 : null;
+        }
+
+        internal Battle GetEnemyBattle(Level level)
+        {
+            if (level.Player.UserId == this.Battle1.Attacker.Player.UserId)
+            {
+                return this.Battle2;
+            }
+
+            return level.Player.UserId == this.Battle2.Attacker.Player.UserId ? this.Battle1 : null;
         }
 
         internal void HandleCommands(int subTick, List<Command> commands, Device device)
@@ -53,8 +62,8 @@
                 {
                     if (this.Battle2.Ended)
                     {
-                        new Village2AttackEntryUpdateMessage(this.Battle1.Device, new Village2AttackProgressEntry(1, this.Battle2, this.Battle1)).Send();
-                        new Village2AttackEntryUpdateMessage(this.Battle2.Device, new Village2AttackProgressEntry(1, this.Battle1, this.Battle2)).Send();
+                        new Village2AttackEntryUpdateMessage(this.Battle1.Device, new Village2AttackProgressEntry(this.BattleId, this.Battle2, this.Battle1)).Send();
+                        new Village2AttackEntryUpdateMessage(this.Battle2.Device, new Village2AttackProgressEntry(this.BattleId, this.Battle1, this.Battle2)).Send();
 
                         this.Ended = true;
 
@@ -62,8 +71,8 @@
                     }
                 }
 
-                new Village2AttackEntryAddedMessage(this.Battle1.Device, new Village2AttackProgressEntry(1, this.Battle2, this.Battle1)).Send();
-                new Village2AttackEntryAddedMessage(this.Battle2.Device, new Village2AttackProgressEntry(1, this.Battle1, this.Battle2)).Send();
+                new Village2AttackEntryAddedMessage(this.Battle1.Device, new Village2AttackProgressEntry(this.BattleId, this.Battle2, this.Battle1)).Send();
+                new Village2AttackEntryAddedMessage(this.Battle2.Device, new Village2AttackProgressEntry(this.BattleId, this.Battle1, this.Battle2)).Send();
             }
         }
     }

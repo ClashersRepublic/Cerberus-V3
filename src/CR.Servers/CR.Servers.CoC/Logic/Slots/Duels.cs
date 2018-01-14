@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic.Battles;
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
@@ -11,12 +12,16 @@
 
     internal class Duels
     {
+        internal int Seed;
+
         internal Thread Matchmaking;
+        internal ConcurrentDictionary<long, DuelBattle> DuelBattles;
         internal ConcurrentDictionary<long, Device> WaitingDeviceQueue;
 
         internal Duels()
         {
             this.Matchmaking = new Thread(this.MatchmakingTask);
+            this.DuelBattles = new ConcurrentDictionary<long, DuelBattle>();
             this.WaitingDeviceQueue = new ConcurrentDictionary<long, Device>();
 
             this.Matchmaking.Start();
@@ -36,20 +41,29 @@
 
                         if (this.WaitingDeviceQueue.TryRemove(deviceKeys[++i], out Device attacker2))
                         {
-                            DuelBattle duelBattle = new DuelBattle(new Battle(attacker1, attacker1.GameMode.Level, attacker2.GameMode.Level), new Battle(attacker2, attacker2.GameMode.Level, attacker1.GameMode.Level));
+                            DuelBattle duelBattle = new DuelBattle(new Battle(attacker1, attacker1.GameMode.Level, attacker2.GameMode.Level, true), new Battle(attacker2, attacker2.GameMode.Level, attacker1.GameMode.Level, true));
 
                             attacker1.Account.DuelBattle = duelBattle;
                             attacker2.Account.DuelBattle = duelBattle;
 
-                            new Village2AttackAvatarDataMessage(attacker1)
-                            {
-                                Enemy = attacker2.GameMode.Level
-                            }.Send();
+                            duelBattle.BattleId = Interlocked.Increment(ref this.Seed);
 
-                            new Village2AttackAvatarDataMessage(attacker2)
+                            if (this.DuelBattles.TryAdd(duelBattle.BattleId, duelBattle))
                             {
-                                Enemy = attacker1.GameMode.Level
-                            }.Send();
+                                new Village2AttackAvatarDataMessage(attacker1)
+                                {
+                                    Enemy = attacker2.GameMode.Level
+                                }.Send();
+
+                                new Village2AttackAvatarDataMessage(attacker2)
+                                {
+                                    Enemy = attacker1.GameMode.Level
+                                }.Send();
+                            }
+                            else
+                            {
+                                Logging.Error(this.GetType(), "Unable to start duel battle.");
+                            }
                         }
                         else
                         {

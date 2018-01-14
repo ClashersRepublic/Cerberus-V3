@@ -57,7 +57,7 @@
                 packet.AddVInt(15000);
                 packet.AddVInt(15000);
                 packet.AddBool(false);
-                packet.AddVInt(this.RemainingTime);
+                packet.AddVInt(this.Battle.RemainingBattleTimeSecs);
             }
         }
     }
