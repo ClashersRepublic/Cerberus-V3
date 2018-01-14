@@ -1,10 +1,14 @@
 ﻿namespace CR.Servers.CoC.Core.Consoles
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using CR.Servers.CoC.Core.Events;
+    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Duel.Entry;
+    using CR.Servers.CoC.Packets.Messages.Server.Avatar;
     using CR.Servers.Extensions;
 
     internal class Parser

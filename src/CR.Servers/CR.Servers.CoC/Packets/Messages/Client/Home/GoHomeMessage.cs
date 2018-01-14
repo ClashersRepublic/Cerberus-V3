@@ -45,6 +45,13 @@
                     }
                 }
 
+                if (this.Device.Account.DuelBattle != null)
+                {
+                    this.Device.Account.DuelBattle.GetBattle(this.Device.GameMode.Level)?.EndBattle();
+                    this.Device.Account.DuelBattle.SendDuelBattleInfoMessage();
+                    this.Device.Account.DuelBattle = null;
+                }
+
                 this.Device.State = State.LOGGED;
             }
 

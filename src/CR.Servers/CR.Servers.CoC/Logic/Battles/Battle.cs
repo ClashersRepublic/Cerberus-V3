@@ -5,6 +5,7 @@ namespace CR.Servers.CoC.Logic.Battles
     using System;
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
+    using CR.Servers.CoC.Core.Database.Models.Mongo;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets;
     using CR.Servers.CoC.Packets.Commands.Client.Battle;
@@ -14,12 +15,14 @@ namespace CR.Servers.CoC.Logic.Battles
 
     internal class Battle
     {
+        internal Battles Replay;
         internal Level Attacker;
         internal List<Command> Commands;
         internal Level Defender;
         internal Device Device;
         internal bool Started;
         internal bool Ended;
+        internal bool Duel;
 
         internal int EndSubTick;
         internal DateTime LastClientTurn;
@@ -68,10 +71,13 @@ namespace CR.Servers.CoC.Logic.Battles
 
             if (this.Started)
             {
-                var replay = Resources.Battles.Save(this);
+                this.Replay = Resources.Battles.Save(this);
 
-                this.Defender.Player.Inbox.Add(new BattleReportStreamEntry(this.Attacker.Player, this, (long) replay.HighId << 32 | (uint) replay.LowId, 2));
-                this.Attacker.Player.Inbox.Add(new BattleReportStreamEntry(this.Defender.Player, this, (long) replay.HighId << 32 | (uint) replay.LowId, 7));
+                if (!this.Duel)
+                {
+                    this.Defender.Player.Inbox.Add(new BattleReportStreamEntry(this.Attacker.Player, this, (long) this.Replay.HighId << 32 | (uint)this.Replay.LowId, 2));
+                    this.Attacker.Player.Inbox.Add(new BattleReportStreamEntry(this.Defender.Player, this, (long)this.Replay.HighId << 32 | (uint)this.Replay.LowId, 7));
+                }
 
                 if (this.Commands.Count > 0)
                 {
@@ -92,7 +98,6 @@ namespace CR.Servers.CoC.Logic.Battles
             }
 
             this.Ended = true;
-            this.Device.Account.Battle = null;
         }
 
         internal bool RemoveViewer(Device device)

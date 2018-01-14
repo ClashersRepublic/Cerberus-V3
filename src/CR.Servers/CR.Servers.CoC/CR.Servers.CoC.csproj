@@ -247,6 +247,7 @@
     <Compile Include="Logic\Clan\StreamEntry\GiftStreamEntry.cs" />
     <Compile Include="Logic\Clan\StreamEntry\StreamEntry.cs" />
     <Compile Include="Logic\Device.cs" />
+    <Compile Include="Logic\Duel\Entry\Village2AttackProgressEntry.cs" />
     <Compile Include="Logic\Duel\Entry\Village2AttackEntry.cs" />
     <Compile Include="Logic\Enums\AllianceEvent.cs" />
     <Compile Include="Logic\Enums\AvatarStream.cs" />

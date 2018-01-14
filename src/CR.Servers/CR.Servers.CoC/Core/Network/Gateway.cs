@@ -156,7 +156,7 @@ namespace CR.Servers.CoC.Core.Network
         {
             if (!token.Aborting)
             {
-                if (!token.Socket.Connected)
+                if (token.Socket.Connected)
                 {
                     SocketAsyncEventArgs sendArgs = this._sndPool.Dequeue();
 

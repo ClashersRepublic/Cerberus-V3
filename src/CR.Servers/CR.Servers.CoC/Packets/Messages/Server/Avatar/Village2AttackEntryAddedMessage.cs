@@ -2,6 +2,7 @@
 {
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Logic.Duel.Entry;
+    using CR.Servers.Extensions.List;
 
     internal class Village2AttackEntryAddedMessage : Message
     {
@@ -22,6 +23,8 @@
 
         internal override void Encode()
         {
+            this.Data.AddInt(this.Entry.GetEntryType());
+            this.Entry.Encode(this.Data);
         }
     }
 }
