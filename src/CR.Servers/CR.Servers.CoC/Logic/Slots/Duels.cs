@@ -45,6 +45,7 @@
                             {
                                 Enemy = attacker2.GameMode.Level
                             }.Send();
+
                             new Village2AttackAvatarDataMessage(attacker2)
                             {
                                 Enemy = attacker1.GameMode.Level
