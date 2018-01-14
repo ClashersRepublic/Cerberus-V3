@@ -39,7 +39,7 @@
 
         internal override void Execute()
         {
-            Player Player = this.Device.GameMode.Level.Player;
+           /* Player Player = this.Device.GameMode.Level.Player;
 
             if (Player.InAlliance)
             {
@@ -91,7 +91,7 @@
             else
             {
                 Logging.Error(this.GetType(), "Unable to request troop. The player is not in a clan!");
-            }
+            }*/
         }
     }
 }

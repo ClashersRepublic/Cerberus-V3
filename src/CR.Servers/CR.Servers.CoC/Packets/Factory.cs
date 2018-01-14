@@ -186,15 +186,15 @@
 
         private static void LoadDebugs()
         {
-            Factory.Debugs.Add("aibase", typeof(AI_Generate_Base));
+            Factory.Debugs.Add("AiBase", typeof(AI_Generate_Base));
+            Factory.Debugs.Add("AiLowbase", typeof(AI_Generate_Low_Base));
             Factory.Debugs.Add("id", typeof(PrintAccountIDDebugCommand));
             Factory.Debugs.Add("help", typeof(HelpDebugCommand));
-            Factory.Debugs.Add("ailowbase", typeof(AI_Generate_Low_Base));
-            Factory.Debugs.Add("addunit", typeof(Add_Unit));
-            Factory.Debugs.Add("clear-obstacles", typeof(Clear_All_Obstacle));
-            Factory.Debugs.Add("fastforward", typeof(Fast_Forward));
-            Factory.Debugs.Add("clear-buildings", typeof(Remove_All_Building));
-            Factory.Debugs.Add("max-bases", typeof(Max_Village));
+            Factory.Debugs.Add("Addunit", typeof(Add_Unit));
+            Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
+            Factory.Debugs.Add("FastForward", typeof(Fast_Forward));
+            Factory.Debugs.Add("ClearBuildings", typeof(Remove_All_Building));
+            Factory.Debugs.Add("MaxVillage", typeof(Max_Village));
         }
 
 

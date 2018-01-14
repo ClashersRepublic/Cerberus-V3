@@ -5,7 +5,7 @@
     "EventURL": "http://cocbetatest1.ddns.net/events/",
     "GameAssetsURL": "http://cocbetatest1.ddns.net/patch/",
     "ClientMajorVersion": "9",
-    "ClientMinorVersion": "434",
+    "ClientMinorVersion": "256",
     "StartingResources": {
       "FetchFromCSV": false,
       "Diamonds": 10000,

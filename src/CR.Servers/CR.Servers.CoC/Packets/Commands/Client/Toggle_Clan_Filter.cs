@@ -21,8 +21,8 @@
 
         internal override void Decode()
         {
-            this.Unknown = this.Reader.ReadByte();
             base.Decode();
+            this.Unknown = this.Reader.ReadByte();
         }
     }
 }
