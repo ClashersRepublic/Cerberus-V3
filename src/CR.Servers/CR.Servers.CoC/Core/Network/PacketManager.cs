@@ -123,7 +123,7 @@
                     packet[5] = (byte) (message.Version >> 8);
 
                     Array.Copy(messageBytes, 0, packet, 7, messageBytes.Length);
-                    Resources.Gateway.Send(packet, message.Device.Token.Socket);
+                    Resources.Gateway.Send(packet, message.Device.Token);
 
                     Logging.Info(this.GetType(), "Message " + message.GetType().Name + " sent.");
                 }
