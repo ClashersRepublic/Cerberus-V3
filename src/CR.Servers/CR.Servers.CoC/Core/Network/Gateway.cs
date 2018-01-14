@@ -77,11 +77,12 @@ namespace CR.Servers.CoC.Core.Network
                     readArgs.SetBuffer(new byte[Constants.ReceiveBuffer], 0, Constants.ReceiveBuffer);
                 }
 
+                Program.Connected();
+
                 Device device = new Device();
                 Token token = new Token(readArgs, device, socket);
 
                 device.State = State.SESSION;
-                Program.Connected();
 
                 if (!socket.ReceiveAsync(readArgs))
                 {
@@ -108,28 +109,35 @@ namespace CR.Servers.CoC.Core.Network
             {
                 Token token = (Token) args.UserToken;
 
-                if (token.Socket.Connected)
+                if (!token.Aborting)
                 {
-                    token.SetData();
-
-                    try
+                    if (token.Socket.Connected)
                     {
-                        if (token.Socket.Available == 0)
-                        {
-                            token.Process();
-                        }
+                        token.SetData();
 
-                        if (!token.Aborting)
+                        try
                         {
-                            if (!token.Socket.ReceiveAsync(args))
+                            if (token.Socket.Available == 0)
                             {
-                                this.ProcessReceive(args);
+                                token.Process();
+                            }
+
+                            if (!token.Aborting)
+                            {
+                                if (!token.Socket.ReceiveAsync(args))
+                                {
+                                    this.ProcessReceive(args);
+                                }
                             }
                         }
+                        catch (Exception exception)
+                        {
+                            Logging.Error(this.GetType(), "An error has been throwed when the handle of data. trace: " + exception);
+                            this.Disconnect(args);
+                        }
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        Logging.Error(this.GetType(), "An error has been throwed when the handle of data. trace: " + exception);
                         this.Disconnect(args);
                     }
                 }
@@ -144,24 +152,27 @@ namespace CR.Servers.CoC.Core.Network
             }
         }
 
-        internal void Send(byte[] packet, Socket socket)
+        internal void Send(byte[] packet, Token token)
         {
-            if (socket.Connected)
+            if (!token.Aborting)
             {
-                SocketAsyncEventArgs sendArgs = this._sndPool.Dequeue();
-
-                if (sendArgs == null)
+                if (!token.Socket.Connected)
                 {
-                    sendArgs = new SocketAsyncEventArgs();
-                    sendArgs.Completed += this.OnSendCompleted;
-                    sendArgs.DisconnectReuseSocket = false;
-                }
+                    SocketAsyncEventArgs sendArgs = this._sndPool.Dequeue();
 
-                sendArgs.SetBuffer(packet, 0, packet.Length);
+                    if (sendArgs == null)
+                    {
+                        sendArgs = new SocketAsyncEventArgs();
+                        sendArgs.Completed += this.OnSendCompleted;
+                        sendArgs.DisconnectReuseSocket = false;
+                    }
 
-                if (!socket.SendAsync(sendArgs))
-                {
-                    this.OnSendCompleted(null, sendArgs);
+                    sendArgs.SetBuffer(packet, 0, packet.Length);
+
+                    if (!token.Socket.SendAsync(sendArgs))
+                    {
+                        this.OnSendCompleted(null, sendArgs);
+                    }
                 }
             }
         }
@@ -186,20 +197,14 @@ namespace CR.Servers.CoC.Core.Network
             {
                 Token token = (Token) rcvArgs.UserToken;
 
-                if (!token.Aborting)
+                if (token != null)
                 {
-                    token.Dispose();
-                }
+                    if (!token.Aborting)
+                    {
+                        token.Dispose();
+                    }
 
-                rcvArgs.UserToken = null;
-
-                if (rcvArgs.DisconnectReuseSocket)
-                {
                     this._rcvPool.Enqueue(rcvArgs);
-                }
-                else
-                {
-                    rcvArgs.Dispose();
                 }
             }
         }

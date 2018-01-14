@@ -24,13 +24,24 @@
 
         internal SocketAsyncEventArgs Dequeue()
         {
-            this.TryPop(out SocketAsyncEventArgs args);
-            return args;
+            if (this.TryPop(out SocketAsyncEventArgs asyncEvent))
+            {
+                return asyncEvent;
+            }
+
+            return null;
         }
 
-        internal void Enqueue(SocketAsyncEventArgs args)
+        internal void Enqueue(SocketAsyncEventArgs asyncEvent)
         {
-            this.Push(args);
+            asyncEvent.AcceptSocket = null;
+            asyncEvent.RemoteEndPoint = null;
+            asyncEvent.UserToken = null;
+
+            if (asyncEvent.DisconnectReuseSocket)
+            {
+                this.Push(asyncEvent);
+            }
         }
     }
 }
