@@ -17,12 +17,14 @@
             SendChatMessage("~ Available Server Commands ~ \n" +
                 "/help (lists available server commands) \n" +
                 "/id (prints your Account ID) \n" +
-                "/own-base (attack yourself) \n" +
-                "/clear-obstacles (clears all of your existing obstacles) \n" +
-                "/clear-buildings (clears all of your existing buildings) \n" +
-                "/max-buildings (maximize your existing buildings' level) \n" +
-                "/max-resources (refills your storages) \n" +
-                "/max-bases (maximizes your bases)");
+                "/addunits (adds 500 of all units) \n" +
+                "/addspells (adds 500 of all spells) \n" +
+                //"/own-base (attack yourself) \n" +
+                "/clearobstacles (clears all of your existing obstacles) \n" +
+                "/resetbase (clears all of your existing buildings and resets your base) \n" +
+                "/maxlevels (maximize your existing buildings' level) \n" +
+                "/maxresources (refills your storages) \n");
+                //"/maxbases (maximizes your bases)");
         }
     }
 }

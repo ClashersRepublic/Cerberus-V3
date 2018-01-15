@@ -9,11 +9,11 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
-    internal class Add_Unit : Debug
+    internal class AddSpells : Debug
     {
         internal StringBuilder Help;
 
-        public Add_Unit(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public AddSpells(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
         }
 
@@ -21,19 +21,19 @@
         {
             get
             {
-                return Rank.Elite;
+                return Rank.Player;
             }
         }
 
         internal override void Process()
         {
-            foreach (CharacterData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
+            foreach (SpellData Data in CSV.Tables.Get(Gamefile.Spells).Datas)
             {
                 if (!Data.DisableProduction)
                 {
                     if (Data.VillageType == 0)
                     {
-                        this.Device.GameMode.Level.Player.Units.Add(Data, 500);
+                        this.Device.GameMode.Level.Player.Spells.Add(Data, 500);
                     }
                 }
             }

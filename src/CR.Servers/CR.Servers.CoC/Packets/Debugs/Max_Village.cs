@@ -24,7 +24,7 @@
         {
             get
             {
-                return Rank.Elite;
+                return Rank.Player;
             }
         }
 
