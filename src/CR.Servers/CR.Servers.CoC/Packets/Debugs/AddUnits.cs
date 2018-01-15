@@ -27,13 +27,13 @@
 
         internal override void Process()
         {
-            foreach (SpellData Data in CSV.Tables.Get(Gamefile.Spells).Datas)
+            foreach (SpellData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
             {
                 if (!Data.DisableProduction)
                 {
                     if (Data.VillageType == 0)
                     {
-                        this.Device.GameMode.Level.Player.Spells.Add(Data, 500);
+                        this.Device.GameMode.Level.Player.Units.Add(Data, 500);
                     }
                 }
             }
