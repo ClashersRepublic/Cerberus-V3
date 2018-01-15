@@ -191,7 +191,7 @@
             Factory.Debugs.Add("id", typeof(PrintAccountIDDebugCommand));
             Factory.Debugs.Add("help", typeof(HelpDebugCommand));
             Factory.Debugs.Add("MaxResources", typeof(MaxResources));
-            Factory.Debugs.Add("AddUnits", typeof(AddUnit));
+            Factory.Debugs.Add("AddUnits", typeof(AddUnits));
             Factory.Debugs.Add("AddSpells", typeof(AddSpells));
             Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
             Factory.Debugs.Add("FastForward", typeof(Fast_Forward));

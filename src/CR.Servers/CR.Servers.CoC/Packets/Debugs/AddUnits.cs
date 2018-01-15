@@ -9,11 +9,11 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
-    internal class AddSpells : Debug
+    internal class AddUnits : Debug
     {
         internal StringBuilder Help;
 
-        public AddSpells(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public AddUnits(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
         }
 
