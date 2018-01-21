@@ -12,10 +12,12 @@
     {
         internal static JObject StartingHome;
         internal static Dictionary<string, Home> Files;
+        internal static Dictionary<int, JObject> TownHallTemplate;
 
         internal static void Initialize()
         {
             LevelFile.Files = new Dictionary<string, Home>(200);
+            LevelFile.TownHallTemplate = new Dictionary<int, JObject>(200);
             LevelFile.StartingHome = JObject.Parse(File.ReadAllText("Gamefiles/level/starting_home.json", Encoding.UTF8));
 
             foreach (NpcData Data in CSV.Tables.Get(Gamefile.Npcs).Datas)

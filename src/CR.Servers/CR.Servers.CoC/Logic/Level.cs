@@ -240,8 +240,12 @@
 
             JsonHelper.GetJsonNumber(Json, "last_league_rank", out this.LastLeagueRank);
             JsonHelper.GetJsonNumber(Json, "last_league_shuffle", out this.LastLeagueShuffleInfo);
+
             JsonHelper.GetJsonBoolean(Json, "edit_mode_shown", out this.EditModeShown);
+
             JsonHelper.GetJsonString(Json, "troop_req_msg", out this.TroopRequestMessage);
+            JsonHelper.GetJsonString(Json, "war_req_msg", out this.WarRequestMessage);
+
             if (JsonHelper.GetJsonArray(Json, "army_names", out JArray Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();

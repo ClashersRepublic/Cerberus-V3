@@ -58,7 +58,7 @@
             return false;
         }
 
-        internal void VerifyFriend([CallerMemberName] string callerName = "")
+        internal async void VerifyFriend([CallerMemberName] string callerName = "")
         {
             if (this.Slots != null)
             {
@@ -66,10 +66,11 @@
                 {
                     if (Friend.Player == null)
                     {
-                        Player Player = Resources.Accounts.LoadAccount(Friend.HighId, Friend.LowId)?.Player;
-                        if (Player != null)
+                        Account Account = await Resources.Accounts.LoadAccountAsync(Friend.HighId, Friend.LowId);
+                        
+                        if (Account.Player != null)
                         {
-                            Friend.Player = Player;
+                            Friend.Player = Account.Player;
                         }
                         else
                         {

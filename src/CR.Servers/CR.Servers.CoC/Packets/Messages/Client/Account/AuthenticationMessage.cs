@@ -1,4 +1,6 @@
-﻿namespace CR.Servers.CoC.Packets.Messages.Client.Account
+﻿using System;
+
+namespace CR.Servers.CoC.Packets.Messages.Client.Account
 {
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
@@ -119,7 +121,7 @@
             }
         }
 
-        internal override void Process()
+        internal override async void Process()
         {
             if (!this.CheckClient())
             {
@@ -138,7 +140,7 @@
             }
             else
             {
-                Account account = Resources.Accounts.LoadAccount(this.HighId, this.LowId);
+                Account account = await Resources.Accounts.LoadAccountAsync(this.HighId, this.LowId);
 
                 if (account != null)
                 {
@@ -258,7 +260,7 @@
                 {
                     if (account.Battle.Defender.Home.LowID == account.Home.LowID)
                     {
-                        new WaitingToGoHomeMessage(this.Device, 240).Send();
+                        new WaitingToGoHomeMessage(this.Device, account.Battle.RemainingBattleTimeSecs).Send();
 
                         account.Battle.AddViewer(this.Device);
                         goto sendAllianceMessage;
@@ -294,7 +296,15 @@
                 Player.Alliance.IncrementTotalConnected();
             }
 
-            new FriendListMessage(this.Device).Send();
+            try
+            {
+                new FriendListMessage(this.Device).Send();
+            }
+            catch (Exception Exception)
+            {
+                this.Device.GameMode.Level.Player.Friends.Slots.Clear();
+                Logging.Error(Exception.GetType(), "Exception while sending FriendListMessage");
+            }
 
             if (this.Device.Chat == null)
             {

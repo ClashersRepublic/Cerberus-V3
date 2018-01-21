@@ -49,26 +49,31 @@
                     if (Valid)
                     {
                         this.Device.GameMode.Level.Player.ModSlot.AILevel = new Level(true);
-                        Level AI = this.Device.GameMode.Level.Player.ModSlot.AILevel; /*
-                        var TownHallData = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001) as BuildingData;
+                        Level AI = this.Device.GameMode.Level.Player.ModSlot.AILevel; 
 
-                        Building TownHall = new Building(TownHallData, AI)
-                        {
-                            Position =
-                            {
-                                X = (24) << 9,
-                                Y = (24) << 9,
-                            },
-                            Id = GlobalId.Create(500, this.Buildings.Count),
-                        };
-
-                        TownHall.SetUpgradeLevel(TownHallData.MaxLevel);
-
-                        this.Buildings.Add(TownHall);
-                        this.TileMap.AddGameObject(TownHall);
-                        */
+                        
                         if (CSV.Tables.Get(Gamefile.Buildings).GetDataWithInstanceID(Id) is BuildingData BuildingData)
                         {
+                            if (BuildingData.IsWall)
+                            {
+                                var TownHallData = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001) as BuildingData;
+
+                                Building TownHall = new Building(TownHallData, AI)
+                                {
+                                    Position =
+                                    {
+                                        X = (24) << 9,
+                                        Y = (24) << 9,
+                                    },
+                                    Id = GlobalId.Create(500, this.Buildings.Count),
+                                };
+
+                                TownHall.SetUpgradeLevel(TownHallData.MaxLevel);
+
+                                this.Buildings.Add(TownHall);
+                                this.TileMap.AddGameObject(TownHall);
+                            }
+
                             if (this.Parameters.Length < 2 || !AltMode || BuildingData.AltAttackMode)
                             {
                                 for (int X = 3; X <= 46;)
@@ -113,7 +118,7 @@
                                             }
 
                                             this.Buildings.Add(Building);
-                                            this.TileMap.AddGameObject(Building);
+                                            this.TileMap.AddGameObject(Building, 0);
 
                                             //Logging.Info(this.GetType(), "X:" + X + "   Y:" + Y);
                                             break;
@@ -231,7 +236,7 @@
                         {
                             for (int j = 0; j < Height; j++)
                             {
-                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
+                                Tile Tile = this.TileMap[X + i, Y + j, 0];
 
                                 if (Tile != null)
                                 {

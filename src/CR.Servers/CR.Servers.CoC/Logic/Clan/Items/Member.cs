@@ -64,7 +64,7 @@
                     return this._Player;
                 }
 
-                this._Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
+                this._Player = Resources.Accounts.LoadAccountAsync(this.HighId, this.LowId).Result?.Player;
 
                 if (this._Player == null)
                 {

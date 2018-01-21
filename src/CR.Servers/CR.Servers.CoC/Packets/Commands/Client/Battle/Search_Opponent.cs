@@ -12,9 +12,8 @@
 
     internal class Search_Opponent : Command
     {
-        public Search_Opponent()
+        public Search_Opponent(Device Device) : base(Device)
         {
-
         }
 
         public Search_Opponent(Device Device, Reader Reader) : base(Device, Reader)
@@ -47,7 +46,17 @@
         {
             if (this.Device.GameMode.Level.Player.ModSlot.AIAttack)
             {
-                new EnemyHomeDataMessage(this.Device).Send();
+                new EnemyHomeDataMessage(this.Device)
+                {
+                    Enemy = this.Device.GameMode.Level.Player.ModSlot.AILevel
+                }.Send();
+            }
+            else if (this.Device.GameMode.Level.Player.ModSlot.SelfAttack)
+            {
+                new EnemyHomeDataMessage(this.Device)
+                {
+                    Enemy = this.Device.GameMode.Level
+                }.Send();
             }
             else
             {
@@ -68,7 +77,10 @@
                     this.Device.Account.Battle = battle;
                     rndAccount.Battle = battle;
 
-                    new EnemyHomeDataMessage(this.Device, battle.Defender).Send();
+                    new EnemyHomeDataMessage(this.Device, battle.Defender)
+                    {
+                        NextButton = true
+                    }.Send();
                 }
                 else
                 {

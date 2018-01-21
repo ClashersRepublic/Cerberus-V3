@@ -253,6 +253,14 @@
             }
         }
 
+        internal bool IsWall
+        {
+            get
+            {
+                return this.BuildingClass == "Wall";
+            }
+        }
+
         internal bool IsSpellForge
         {
             get

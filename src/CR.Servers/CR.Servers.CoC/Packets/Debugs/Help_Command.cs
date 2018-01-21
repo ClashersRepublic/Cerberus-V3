@@ -3,11 +3,11 @@
     using CR.Servers.CoC.Logic;
     using CR.Servers.Logic.Enums;
 
-    internal class HelpDebugCommand : Debug
+    internal class Help_Command : Debug
     {
-        public HelpDebugCommand(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Help_Command(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
-            // HelpDebugCommand
+            // Help_Command
         }
 
         internal override Rank RequiredRank => Rank.Player;
@@ -22,9 +22,9 @@
                 //"/own-base (attack yourself) \n" +
                 "/clearobstacles (clears all of your existing obstacles) \n" +
                 "/resetbase (clears all of your existing buildings and resets your base) \n" +
-                "/maxlevels (maximize your existing buildings' level) \n" +
-                "/maxresources (refills your storages) \n");
-                //"/maxbases (maximizes your bases)");
+                "/maxvillage (maximize your existing buildings' level) \n" +
+                "/maxresources (refills your storages) \n" + 
+                "/maxbases (maximizes your bases)");
         }
     }
 }

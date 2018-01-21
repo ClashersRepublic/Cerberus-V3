@@ -9,6 +9,7 @@
     {
         internal Level Enemy;
         internal Player Player;
+        internal bool NextButton;
 
         public EnemyHomeDataMessage(Device Device, Level Enemy) : base(Device)
         {
@@ -40,20 +41,12 @@
 
             this.Data.AddInt(TimeUtils.UnixUtcNow);
 
-            if (this.Player.ModSlot.AIAttack)
-            {
-                this.Player.ModSlot.AILevel.Home.Encode(this.Data);
-                this.Player.ModSlot.AILevel.Player.Encode(this.Data);
-            }
-            else
-            {
-                this.Enemy.Home.Encode(this.Data);
-                this.Enemy.Player.Encode(this.Data);
-            }
+            this.Enemy.Home.Encode(this.Data);
+            this.Enemy.Player.Encode(this.Data);
 
             this.Device.GameMode.Level.Player.Encode(this.Data);
 
-            this.Data.AddInt(this.Player.ModSlot.AIAttack ? 2 : 3);
+            this.Data.AddInt(this.NextButton ? 3 : 2);
             this.Data.AddInt(0);
             this.Data.AddByte(0);
         }

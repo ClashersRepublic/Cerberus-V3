@@ -7,11 +7,11 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
-    internal class MaxResources : Debug
+    internal class Max_Resources : Debug
     {
-        public MaxResources(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Max_Resources(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
-            // MaxResources
+            // Max_Resources
         }
 
         internal override Rank RequiredRank => Rank.Player;

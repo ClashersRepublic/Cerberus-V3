@@ -32,6 +32,7 @@
         internal Random TgRandom;
         internal Building TownHall;
         internal Building TownHall2;
+        internal VillageObject Boat;
         internal Random V2Random;
         internal Random VRandom;
 
@@ -135,6 +136,16 @@
                 if (Data.IsAllianceCastle)
                 {
                     this.Bunker = Building;
+                }
+            }
+            else if (GType == 8)
+            {
+                VillageObject VillageObject = (VillageObject)GameObject;
+                VillageObjectData Data = VillageObject.VillageObjectData;
+
+                if (Data.GlobalId == 39000000)
+                {
+                    this.Boat = VillageObject;
                 }
             }
 

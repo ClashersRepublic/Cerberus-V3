@@ -46,6 +46,17 @@
             }
         }
 
+        internal void AddGameObject(GameObject GameObject, int VillageType)
+        {
+            for (int i = 0; i < GameObject.WidthInTiles; i++)
+            {
+                for (int j = 0; j < GameObject.HeightInTiles; j++)
+                {
+                    this.Tiles[VillageType][50 * (i + GameObject.TileX) + j + GameObject.TileY].AddGameObject(GameObject);
+                }
+            }
+        }
+
         internal void GameObjectMoved(GameObject GameObject, int OldX, int OldY)
         {
             for (int i = 0; i < GameObject.WidthInTiles; i++)

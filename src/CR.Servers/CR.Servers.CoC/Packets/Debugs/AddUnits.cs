@@ -27,7 +27,7 @@
 
         internal override void Process()
         {
-            foreach (SpellData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
+            foreach (CharacterData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
             {
                 if (!Data.DisableProduction)
                 {

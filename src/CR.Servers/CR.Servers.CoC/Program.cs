@@ -8,6 +8,7 @@ using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Clan.Items;
 using CR.Servers.CoC.Packets;
+using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.Core.Consoles;
 using CR.Servers.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -50,7 +51,7 @@ namespace CR.Servers.CoC
             Console.WriteLine(@"Clashers Republic does NOT own 'Clash of Clans', 'Boom Beach', 'Clash Royale'.");
             Console.WriteLine();
             Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name + " is now starting..." +  Environment.NewLine);
-
+            
             Resources.Initialize();
             Thread.Sleep(-1);
         }

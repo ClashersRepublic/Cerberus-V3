@@ -188,15 +188,18 @@
         {
             Factory.Debugs.Add("AiBase", typeof(AI_Generate_Base));
             Factory.Debugs.Add("AiLowbase", typeof(AI_Generate_Low_Base));
+
             Factory.Debugs.Add("id", typeof(PrintAccountIDDebugCommand));
-            Factory.Debugs.Add("help", typeof(HelpDebugCommand));
-            Factory.Debugs.Add("MaxResources", typeof(MaxResources));
+            Factory.Debugs.Add("help", typeof(Help_Command));
             Factory.Debugs.Add("AddUnits", typeof(AddUnits));
             Factory.Debugs.Add("AddSpells", typeof(AddSpells));
-            Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
             Factory.Debugs.Add("FastForward", typeof(Fast_Forward));
-            Factory.Debugs.Add("ResetBase", typeof(Remove_All_Building));
-            Factory.Debugs.Add("MaxLevels", typeof(Max_Village));
+
+            Factory.Debugs.Add("MaxVillage", typeof(Max_Village));
+            Factory.Debugs.Add("MaxBase", typeof(Max_Base));
+            Factory.Debugs.Add("MaxResources", typeof(Max_Resources));
+            Factory.Debugs.Add("ResetVillage", typeof(Remove_All_Building));
+            Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
         }
 
 
