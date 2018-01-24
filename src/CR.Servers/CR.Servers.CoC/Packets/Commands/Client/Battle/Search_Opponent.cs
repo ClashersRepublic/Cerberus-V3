@@ -57,6 +57,7 @@
                 {
                     Enemy = this.Device.GameMode.Level
                 }.Send();
+                this.Device.GameMode.Level.Player.ModSlot.SelfAttack = false;
             }
             else
             {

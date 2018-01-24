@@ -23,21 +23,13 @@ namespace CR.Servers.CoC.Packets.Debugs
 
         internal override void Process()
         {
-            if (this.Device.GameMode.Level.Player.ModSlot.SelfAttack)
-            {
-                this.Device.GameMode.Level.Player.ModSlot.SelfAttack = false;
-                this.SendChatMessage("Own village attack disabled!");
-            }
-            else
-            {
-                this.Device.GameMode.Level.Player.ModSlot.SelfAttack = true;
-                this.SendChatMessage("Own village attack enabled!");
+            this.Device.GameMode.Level.Player.ModSlot.SelfAttack = true;
+            this.SendChatMessage("Own village attack incoming!");
 
-                new AvailableServerCommandMessage(this.Device)
-                {
-                    Command = new Search_Opponent(this.Device)
-                }.Send();
-            }
+            new AvailableServerCommandMessage(this.Device)
+            {
+                Command = new Search_Opponent(this.Device)
+            }.Send();
         }
     }
 }
