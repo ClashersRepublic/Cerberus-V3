@@ -200,6 +200,8 @@
             Factory.Debugs.Add("MaxResources", typeof(Max_Resources));
             Factory.Debugs.Add("ResetVillage", typeof(Remove_All_Building));
             Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
+
+            Factory.Debugs.Add("OwnBaseAttack", typeof(Own_Base_Attack));
         }
 
 

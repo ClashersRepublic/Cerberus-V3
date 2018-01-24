@@ -441,6 +441,7 @@
     <Compile Include="Packets\Debugs\Max_Resources.cs" />
     <Compile Include="Packets\Debugs\Max_Base.cs" />
     <Compile Include="Packets\Debugs\Max_Village.cs" />
+    <Compile Include="Packets\Debugs\Own_Base_Attack.cs" />
     <Compile Include="Packets\Debugs\PrintAccountIDDebugCommand.cs" />
     <Compile Include="Packets\Debugs\Remove_All_Building.cs" />
     <Compile Include="Packets\Enums\AddFriendErrorReason.cs" />

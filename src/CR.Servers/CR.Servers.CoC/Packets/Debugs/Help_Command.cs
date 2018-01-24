@@ -19,7 +19,7 @@
                 "/id (prints your Account ID) \n" +
                 "/addunits (adds 500 of all units) \n" +
                 "/addspells (adds 500 of all spells) \n" +
-                //"/own-base (attack yourself) \n" +
+                "/ownbaseattack (attack yourself) \n" +
                 "/clearobstacles (clears all of your existing obstacles) \n" +
                 "/resetbase (clears all of your existing buildings and resets your base) \n" +
                 "/maxvillage (maximize your existing buildings' level) \n" +
