@@ -31,6 +31,8 @@ namespace CR.Servers.CoC.Core.Network
             }
 
             this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            this._listener.NoDelay = true;
+            this._listener.Blocking = false;
             this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
             this._listener.Listen(500);
 
@@ -84,9 +86,17 @@ namespace CR.Servers.CoC.Core.Network
 
                 device.State = State.SESSION;
 
-                if (!socket.ReceiveAsync(readArgs))
+                try
                 {
-                    this.OnReceiveCompleted(null, readArgs);
+
+                    if (!socket.ReceiveAsync(readArgs))
+                    {
+                        this.OnReceiveCompleted(null, readArgs);
+                    }
+                }
+                catch (Exception Exception)
+                {
+                    Logging.Error(this.GetType(), "Exception while starting to receive in ProcessAccept. trace: " + Exception);
                 }
             }
         }
@@ -105,34 +115,48 @@ namespace CR.Servers.CoC.Core.Network
 
         private void ProcessReceive(SocketAsyncEventArgs args)
         {
-            if (args.BytesTransferred > 0)
+            try
             {
-                Token token = (Token) args.UserToken;
-
-                if (!token.Aborting)
+                if (args.BytesTransferred > 0)
                 {
-                    if (token.Socket.Connected)
+                    Token token = (Token) args.UserToken;
+
+                    if (!token.Aborting)
                     {
-                        token.SetData();
-
-                        try
+                        if (token.Socket.Connected)
                         {
-                            if (token.Socket.Available == 0)
-                            {
-                                token.Process();
-                            }
+                            token.SetData();
 
-                            if (!token.Aborting)
+                            try
                             {
-                                if (!token.Socket.ReceiveAsync(args))
+                                if (token.Socket.Available == 0)
                                 {
-                                    this.ProcessReceive(args);
+                                    token.Process();
+                                }
+
+                                if (!token.Aborting)
+                                {
+                                    try
+                                    {
+                                        if (!token.Socket.ReceiveAsync(args))
+                                        {
+                                            this.ProcessReceive(args);
+                                        }
+                                    }
+                                    catch (Exception Exception)
+                                    {
+                                        Logging.Error(this.GetType(), "Exception while starting to receive in ProcessReceive. trace: " + Exception);
+                                    }
                                 }
                             }
+                            catch (Exception exception)
+                            {
+                                Logging.Error(this.GetType(), "An error has been throwed when the handle of data. trace: " + exception);
+                                this.Disconnect(args);
+                            }
                         }
-                        catch (Exception exception)
+                        else
                         {
-                            Logging.Error(this.GetType(), "An error has been throwed when the handle of data. trace: " + exception);
                             this.Disconnect(args);
                         }
                     }
@@ -146,9 +170,9 @@ namespace CR.Servers.CoC.Core.Network
                     this.Disconnect(args);
                 }
             }
-            else
+            catch (Exception Exception)
             {
-                this.Disconnect(args);
+                Logging.Error(this.GetType(), "Exception in ProcessReceive. trace: " + Exception);
             }
         }
 

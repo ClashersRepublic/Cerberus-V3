@@ -39,7 +39,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             this.Checksum = this.Reader.ReadInt32();
             this.CommandCount = this.Reader.ReadInt32();
 
-            if (this.CommandCount <= 512)
+            if (this.CommandCount <= 1028)
             {
                 if (this.CommandCount > 0)
                 {

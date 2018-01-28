@@ -12,10 +12,6 @@
 
     internal class Search_Opponent : Command
     {
-        public Search_Opponent(Device Device) : base(Device)
-        {
-        }
-
         public Search_Opponent(Device Device, Reader Reader) : base(Device, Reader)
         {
         }
@@ -57,14 +53,22 @@
                 {
                     Enemy = this.Device.GameMode.Level
                 }.Send();
+
                 this.Device.GameMode.Level.Player.ModSlot.SelfAttack = false;
             }
             else
             {
                 if (this.Device.State == State.IN_PC_BATTLE)
                 {
-                    this.Device.Account.Battle.EndBattle();
-                    this.Device.Account.Battle = null;
+                    if (this.Device.Account.Battle != null)
+                    {
+                        this.Device.Account.Battle.EndBattle();
+                        this.Device.Account.Battle = null;
+                    }
+                    else
+                    {
+                        Logging.Error(this.GetType(), "Yo boss, Check this out...Battle is null but player state is IN_PC_BATTLE");
+                    }
 
                     this.Device.State = State.LOGGED;
                 }

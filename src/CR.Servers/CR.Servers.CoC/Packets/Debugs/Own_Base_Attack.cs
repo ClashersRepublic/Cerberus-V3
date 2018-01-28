@@ -28,7 +28,7 @@ namespace CR.Servers.CoC.Packets.Debugs
 
             new AvailableServerCommandMessage(this.Device)
             {
-                Command = new Search_Opponent(this.Device)
+                Command = new Search_Opponent(this.Device, null)
             }.Send();
         }
     }

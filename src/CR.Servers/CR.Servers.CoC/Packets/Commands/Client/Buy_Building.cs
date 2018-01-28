@@ -57,8 +57,7 @@
                         {
                             if (this.BuildingData.VillageType == 0)
                             {
-                                if (this.BuildingData.TownHallLevel[0] <=
-                                    Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
+                                if (this.BuildingData.TownHallLevel[0] <= Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
                                 {
                                     if (this.BuildingData.IsWorker)
                                     {

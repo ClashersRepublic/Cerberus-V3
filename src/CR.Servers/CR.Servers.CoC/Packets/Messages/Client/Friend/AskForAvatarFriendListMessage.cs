@@ -21,7 +21,7 @@
 
         internal override void Process()
         {
-            new FriendListMessage(this.Device).Send();
+            //new FriendListMessage(this.Device).Send();
         }
     }
 }

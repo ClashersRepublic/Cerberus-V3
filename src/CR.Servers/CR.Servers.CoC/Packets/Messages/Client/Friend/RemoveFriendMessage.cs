@@ -30,7 +30,7 @@
 
         internal override void Process()
         {
-            Level Level = this.Device.GameMode.Level;
+            /*Level Level = this.Device.GameMode.Level;
             Friend Friend = Level.Player.Friends.Get(this.UserId);
 
             if (Friend != null)
@@ -71,7 +71,7 @@
             else
             {
                 Logging.Error(this.GetType(), $"Unexpected issue while removing friend. Friend is null!");
-            }
+            }*/
         }
     }
 }

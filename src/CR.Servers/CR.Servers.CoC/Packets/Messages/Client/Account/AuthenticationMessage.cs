@@ -296,7 +296,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Account
                 Player.Alliance.IncrementTotalConnected();
             }
 
-            try
+            /*try
             {
                 new FriendListMessage(this.Device).Send();
             }
@@ -304,7 +304,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Account
             {
                 this.Device.GameMode.Level.Player.Friends.Slots.Clear();
                 Logging.Error(Exception.GetType(), "Exception while sending FriendListMessage");
-            }
+            }*/
 
             if (this.Device.Chat == null)
             {

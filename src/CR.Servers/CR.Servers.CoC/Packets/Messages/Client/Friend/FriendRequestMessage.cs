@@ -33,7 +33,7 @@
 
         internal override void Process()
         {
-            Level Level = this.Device.GameMode.Level;
+            /*Level Level = this.Device.GameMode.Level;
             Player Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId)?.Player;
 
             if (Player != null)
@@ -95,7 +95,7 @@
                 {
                     Reason = AddFriendErrorReason.DoesNotExist
                 }.Send();
-            }
+            }*/
         }
     }
 }
