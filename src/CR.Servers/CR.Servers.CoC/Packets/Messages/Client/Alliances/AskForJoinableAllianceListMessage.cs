@@ -24,16 +24,17 @@
 
         internal override void Process()
         {
-            new JoinableAllianceListMessage(this.Device)
+            /*new JoinableAllianceListMessage(this.Device)
             {
-                Alliances = Resources.Clans.Values.Where(T =>
+               
+                /*Alliances = Resources.Clans.Values.Where(T =>
                         T.Header.Type != Hiring.CLOSED &&
                         T.Header.NumberOfMembers > 0 &&
                         T.Header.NumberOfMembers < 50 &&
                         T.Header.RequiredScore <= this.Device.GameMode.Level.Player.Score &&
                         T.Header.DuelScore <= this.Device.GameMode.Level.Player.DuelScore)
                     .Take(64).OrderByDescending(T => T.Header.Score).ToArray()
-            }.Send();
+            }.Send();*/
         }
     }
 }

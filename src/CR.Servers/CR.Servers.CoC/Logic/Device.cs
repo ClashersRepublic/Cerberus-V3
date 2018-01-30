@@ -1,6 +1,7 @@
 ﻿namespace CR.Servers.CoC.Logic
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Core.Network;
@@ -200,6 +201,8 @@
                                 if (message != null)
                                 {
                                     message.Version = (short) messageVersion;
+                                    message.Timer = new Stopwatch();
+                                    message.Timer.Start();
                                     Resources.PacketManager.ReceiveMessageQueue.Enqueue(message);
                                 }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using CR.Servers.CoC.Core;
@@ -13,6 +14,7 @@
 
     internal abstract class Message
     {
+        internal Stopwatch Timer;
         internal List<byte> Data;
 
         internal Device Device;

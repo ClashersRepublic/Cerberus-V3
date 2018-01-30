@@ -61,7 +61,12 @@
                     message.Decode();
                     message.Process();
 
-                    Logging.Info(this.GetType(), "Message " + message.GetType().Name + " received.");
+                    if (message.Timer.ElapsedMilliseconds >= TimeSpan.FromSeconds(0.5).TotalMilliseconds)
+                    {
+                        Console.WriteLine("Message " + message.GetType().Name + $" received ({message.Timer.ElapsedMilliseconds}).");
+                    }
+                    //Logging.Info(this.GetType(), "Message " + message.GetType().Name + $" received ({message.Timer.ElapsedMilliseconds}).");
+                    message.Timer.Stop();
                 }
                 catch (Exception exception)
                 {
