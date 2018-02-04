@@ -22,8 +22,15 @@
             this.SendMessageQueue = new ConcurrentQueue<Message>();
             this.ReceiveMessageQueue = new ConcurrentQueue<Message>();
 
-            this.ReceiveThread = new Thread(this.HandleMessageTask);
-            this.SendThread = new Thread(this.SendMessageTask);
+            this.ReceiveThread = new Thread(this.HandleMessageTask)
+            {
+                Priority = ThreadPriority.AboveNormal
+            };
+
+            this.SendThread = new Thread(this.SendMessageTask)
+            {
+                Priority = ThreadPriority.AboveNormal
+            };
 
             this.ReceiveThread.Start();
             this.SendThread.Start();
@@ -36,14 +43,12 @@
         {
             while (true)
             {
-                if (this.ReceiveMessageQueue.TryDequeue(out Message message))
+                while (this.ReceiveMessageQueue.TryDequeue(out Message message))
                 {
                     this.HandleMessage(message);
                 }
-                else
-                {
-                    Thread.Sleep(10);
-                }
+
+                Thread.Sleep(1);
             }
         }
 
@@ -82,14 +87,12 @@
         {
             while (true)
             {
-                if (this.SendMessageQueue.TryDequeue(out Message message))
+                while (SendMessageQueue.TryDequeue(out Message message))               
                 {
                     this.SendMessage(message);
                 }
-                else
-                {
-                    Thread.Sleep(10);
-                }
+
+                Thread.Sleep(1);
             }
         }
 
@@ -111,9 +114,7 @@
                     if (device.SendEncrypter != null)
                     {
                         messageBytes = device.SendEncrypter.Encrypt(messageBytes);
-                    }
-
-                    message.Process();
+                    }                 
 
                     byte[] packet = new byte[messageBytes.Length + 7];
 
@@ -129,6 +130,8 @@
 
                     Array.Copy(messageBytes, 0, packet, 7, messageBytes.Length);
                     Resources.Gateway.Send(packet, message.Device.Token);
+
+                    message.Process();
 
                     Logging.Info(this.GetType(), "Message " + message.GetType().Name + " sent.");
                 }

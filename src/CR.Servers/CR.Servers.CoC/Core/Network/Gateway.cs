@@ -12,15 +12,15 @@ namespace CR.Servers.CoC.Core.Network
     {
         private readonly byte[] _emptyBuffer = new byte[0];
         private readonly Socket _listener;
-        private readonly SocketAsyncEventArgsPool _rcvPool;
-        private readonly SocketAsyncEventArgsPool _sndPool;
+       // private readonly SocketAsyncEventArgsPool _rcvPool;
+        //private readonly SocketAsyncEventArgsPool _sndPool;
 
         internal Gateway()
         {
-            this._rcvPool = new SocketAsyncEventArgsPool(false);
-            this._sndPool = new SocketAsyncEventArgsPool(true);
+            //this._rcvPool = new SocketAsyncEventArgsPool(false);
+            //this._sndPool = new SocketAsyncEventArgsPool(true);
 
-            foreach (SocketAsyncEventArgs rcvArgs in this._rcvPool)
+            /*foreach (SocketAsyncEventArgs rcvArgs in this._rcvPool)
             {
                 rcvArgs.Completed += this.OnReceiveCompleted;
             }
@@ -28,11 +28,9 @@ namespace CR.Servers.CoC.Core.Network
             foreach (SocketAsyncEventArgs sndArgs in this._sndPool)
             {
                 sndArgs.Completed += this.OnSendCompleted;
-            }
+            }*/
 
             this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this._listener.NoDelay = true;
-            this._listener.Blocking = false;
             this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
             this._listener.Listen(500);
 
@@ -69,29 +67,24 @@ namespace CR.Servers.CoC.Core.Network
 
             if (socket != null && socket.Connected)
             {
-                SocketAsyncEventArgs readArgs = this._rcvPool.Dequeue();
-
-                if (readArgs == null)
-                {
-                    readArgs = new SocketAsyncEventArgs();
-                    readArgs.Completed += this.OnReceiveCompleted;
-                    readArgs.DisconnectReuseSocket = false;
-                    readArgs.SetBuffer(new byte[Constants.ReceiveBuffer], 0, Constants.ReceiveBuffer);
-                }
+                SocketAsyncEventArgs readEvent = new SocketAsyncEventArgs();
+                readEvent.SetBuffer(new byte[Constants.ReceiveBuffer], 0, Constants.ReceiveBuffer);
+                readEvent.Completed += this.OnReceiveCompleted;
+                readEvent.DisconnectReuseSocket = false;
 
                 Program.Connected();
 
                 Device device = new Device();
-                Token token = new Token(readArgs, device, socket);
+                Token token = new Token(readEvent, device, socket);
 
                 device.State = State.SESSION;
 
                 try
                 {
 
-                    if (!socket.ReceiveAsync(readArgs))
+                    if (!socket.ReceiveAsync(readEvent))
                     {
-                        this.OnReceiveCompleted(null, readArgs);
+                        this.OnReceiveCompleted(null, readEvent);
                     }
                 }
                 catch (Exception Exception)
@@ -182,20 +175,16 @@ namespace CR.Servers.CoC.Core.Network
             {
                 if (token.Socket.Connected)
                 {
-                    SocketAsyncEventArgs sendArgs = this._sndPool.Dequeue();
+                    SocketAsyncEventArgs writeEvent = new SocketAsyncEventArgs();
 
-                    if (sendArgs == null)
+                    writeEvent.Completed += this.OnSendCompleted;
+                    writeEvent.UserToken = token;
+                    writeEvent.SetBuffer(packet, 0, packet.Length);
+                   
+
+                    if (!token.Socket.SendAsync(writeEvent))
                     {
-                        sendArgs = new SocketAsyncEventArgs();
-                        sendArgs.Completed += this.OnSendCompleted;
-                        sendArgs.DisconnectReuseSocket = false;
-                    }
-
-                    sendArgs.SetBuffer(packet, 0, packet.Length);
-
-                    if (!token.Socket.SendAsync(sendArgs))
-                    {
-                        this.OnSendCompleted(null, sendArgs);
+                        this.OnSendCompleted(null, writeEvent);
                     }
                 }
             }
@@ -203,14 +192,7 @@ namespace CR.Servers.CoC.Core.Network
 
         private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
-            if (args.DisconnectReuseSocket)
-            {
-                this._sndPool.Enqueue(args);
-            }
-            else
-            {
-                args.Dispose();
-            }
+            args.Dispose();
         }
 
         internal void Disconnect(SocketAsyncEventArgs rcvArgs)
@@ -228,7 +210,8 @@ namespace CR.Servers.CoC.Core.Network
                         token.Dispose();
                     }
 
-                    this._rcvPool.Enqueue(rcvArgs);
+                    rcvArgs.UserToken = null;
+                    rcvArgs.Dispose();
                 }
             }
         }

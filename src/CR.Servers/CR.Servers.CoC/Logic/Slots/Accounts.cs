@@ -27,6 +27,10 @@
 
         internal ConcurrentDictionary<long, Home> Homes;
         internal ConcurrentDictionary<long, Player> Players;
+        private static Thread _savePlayerThread;
+        private static Thread _saveHomeThread;
+        private static ConcurrentQueue<Player> _savePlayerQueue;
+        private static ConcurrentQueue<Home> _saveHomeQueue;
 
         private int Seed;
 
@@ -36,6 +40,20 @@
 
             this.Homes = new ConcurrentDictionary<long, Home>();
             this.Players = new ConcurrentDictionary<long, Player>();
+
+            _savePlayerQueue = new ConcurrentQueue<Player>();
+            _saveHomeQueue = new ConcurrentQueue<Home>();
+            _savePlayerThread = new Thread(SavePlayerTask)
+            {
+
+                Priority = ThreadPriority.Highest
+            };
+            _saveHomeThread = new Thread(SaveHomeTask)
+            {
+                Priority = ThreadPriority.Highest
+            };
+            _savePlayerThread.Start();
+            _saveHomeThread.Start();
         }
 
         internal void Add(Player Player)
@@ -452,59 +470,55 @@
                     BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))));
         }
 
-        internal async Task Saves()
+        internal void Saves()
         {
             Player[] Players = this.Players.Values.ToArray();
             Home[] Homes = this.Homes.Values.ToArray();
 
             foreach (Player Player in Players)
             {
-                try
-                {
-                    await this.SavePlayer(Player);
-                }
-                catch (Exception Exception)
-                {
-                    Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + " due to " + Exception + ".");
-                }
+
+                _savePlayerQueue.Enqueue(Player);
             }
 
             foreach (Home Home in Homes)
             {
-                try
-                {
-                    await this.SaveHome(Home);
-                }
-                catch (Exception Exception)
-                {
-                    Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + " due to " + Exception + ".");
-                }
+                _saveHomeQueue.Enqueue(Home);
             }
+        }
 
+        private static void SavePlayerTask()
+        {
+            while (true)
+            {
+                while (_savePlayerQueue.TryDequeue(out Player Player))
+                {
+                    Mongo.Players.UpdateOne(Save => Save.HighId == Player.HighID && Save.LowId == Player.LowID,
+                        Builders<Players>
+                            .Update.Set(Save => Save.Player,
+                                BsonDocument.Parse(JsonConvert.SerializeObject(Player, Resources.Accounts.Settings))));
+                    //Mongo.Players.ReplaceOne(T => T. == account.UserId, BsonDocument.Parse(JsonConvert.SerializeObject(account, Accounts.Settings)));
+                }
 
-            /* Parallel.ForEach(Players, async Player =>
-             {
-                 try
-                 {
-                     await this.SavePlayer(Player);
-                 }
-                 catch (Exception Exception)
-                 {
-                     Logging.Error(this.GetType(), "An error has been throwed when the save of the player id " + Player.HighID + "-" + Player.LowID + ".");
-                 }
-             });
+                Thread.Sleep(5);
+            }
+        }
 
-             Parallel.ForEach(Homes, async Home =>
-             {
-                 try
-                 {
-                     await this.SaveHome(Home);
-                 }
-                 catch (Exception Exception)
-                 {
-                     Logging.Error(this.GetType(), "An error has been throwed when the save of the home id " + Home.HighID + "-" + Home.LowID + ".");
-                 }
-             });*/
+        private static void SaveHomeTask()
+        {
+            while (true)
+            {
+                while (_saveHomeQueue.TryDequeue(out Home Home))
+                {
+                    Mongo.Players.UpdateOne(Save => Save.HighId == Home.HighID && Save.LowId == Home.LowID,
+                        Builders<Players>
+                            .Update.Set(Save => Save.Home,
+                                BsonDocument.Parse(JsonConvert.SerializeObject(Home, Resources.Accounts.Settings))));
+                    //Mongo.Players.ReplaceOne(T => T. == account.UserId, BsonDocument.Parse(JsonConvert.SerializeObject(account, Accounts.Settings)));
+                }
+
+                Thread.Sleep(5);
+            }
         }
     }
 }

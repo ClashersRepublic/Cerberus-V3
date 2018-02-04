@@ -61,7 +61,7 @@
 
             Timer.Elapsed += async (_Sender, _Args) =>
             {
-                await Task.WhenAll(Resources.Accounts.Saves());
+                Resources.Accounts.Saves();
                 await Task.WhenAll(Resources.Clans.Saves());
 
                 Logging.Info(typeof(Timers), "Sucessfuly saved players and clans at " + DateTime.Now.ToString("T"));
@@ -122,7 +122,7 @@
                             }
                         }));
 
-                        await Task.WhenAll(Resources.Accounts.Saves());
+                        Resources.Accounts.Saves();
                         await Task.WhenAll(Resources.Clans.Saves());
                     }
                     catch (Exception Exception)

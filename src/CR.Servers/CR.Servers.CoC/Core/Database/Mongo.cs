@@ -50,6 +50,27 @@
             Mongo.Clans = Mongo.Database.GetCollection<Clans>("Clans");
             Mongo.Battles = Mongo.Database.GetCollection<Battles>("Battles");
             Mongo.Players = Mongo.Database.GetCollection<Players>("Players");
+
+            Mongo.Players.Indexes.CreateOne(Builders<Players>.IndexKeys.Combine(Builders<Players>.IndexKeys.Ascending(T => T.HighId), Builders<Players>.IndexKeys.Descending(T => T.LowId)),
+                new CreateIndexOptions
+                {
+                    Name = "entityIds",
+                    Background = true
+                });
+
+            Mongo.Battles.Indexes.CreateOne(Builders<Battles>.IndexKeys.Combine(Builders<Battles>.IndexKeys.Ascending(T => T.HighId), Builders<Battles>.IndexKeys.Descending(T => T.LowId)),
+                new CreateIndexOptions
+                {
+                    Name = "entityIds",
+                    Background = true
+                });
+
+            Mongo.Clans.Indexes.CreateOne(Builders<Clans>.IndexKeys.Combine(Builders<Clans>.IndexKeys.Ascending(T => T.HighId), Builders<Clans>.IndexKeys.Descending(T => T.LowId)),
+                new CreateIndexOptions
+                {
+                    Name = "entityIds",
+                    Background = true
+                });
         }
     }
 }
