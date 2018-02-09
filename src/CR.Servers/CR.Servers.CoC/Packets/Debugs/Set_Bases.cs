@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Files;
-using CR.Servers.CoC.Files.CSV_Logic.Logic;
-using CR.Servers.CoC.Logic;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-using CR.Servers.Logic.Enums;
-using Newtonsoft.Json.Linq;
-
-namespace CR.Servers.CoC.Packets.Debugs
+﻿namespace CR.Servers.CoC.Packets.Debugs
 {
-    internal class Max_Base : Debug
+    using System.IO;
+    using System.Text;
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Files;
+    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+    using CR.Servers.CoC.Logic;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using CR.Servers.Logic.Enums;
+    using Newtonsoft.Json.Linq;
+
+    internal class Set_Bases : Debug
     {
         internal int Level;
-        public Max_Base(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Set_Bases(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
+            // Set_Bases
         }
 
         internal override Rank RequiredRank
@@ -33,8 +30,8 @@ namespace CR.Servers.CoC.Packets.Debugs
         internal override void Process()
         {
             Player Player = this.Device.GameMode.Level.Player;
-
             GameObjectManager GameObjectManager = this.Device.GameMode.Level.GameObjectManager;
+
             if (this.Parameters.Length >= 1)
             {
                 if (int.TryParse(this.Parameters[0], out this.Level))
@@ -50,7 +47,7 @@ namespace CR.Servers.CoC.Packets.Debugs
                             }
                             else
                             {
-                                this.SendChatMessage("There is no fucking village with that id nigger");
+                                this.SendChatMessage("TH11 is the max!");
                                 return;
                             }
                         }
@@ -75,7 +72,6 @@ namespace CR.Servers.CoC.Packets.Debugs
                         Player.TownHallLevel2 = GameObjectManager.TownHall2.GetUpgradeLevel();
                         Player.CastleLevel = GameObjectManager.Bunker.GetUpgradeLevel();
 
-
                         Player.CastleTotalCapacity = GameObjectManager.Bunker.BuildingData.HousingSpace[Player.CastleLevel];
                         Player.CastleTotalSpellCapacity = GameObjectManager.Bunker.BuildingData.HousingSpaceAlt[Player.CastleLevel];
 
@@ -84,9 +80,9 @@ namespace CR.Servers.CoC.Packets.Debugs
                             GameObjectManager.Boat.SetUpgradeLevel(GameObjectManager.Boat.VillageObjectData.MaxLevel);
                         }
 
-                        foreach (var GameObject in GameObjectManager.Filter.GetGameObjects(0, 0))
+                        foreach (GameObject GameObject in GameObjectManager.Filter.GetGameObjects(0, 0))
                         {
-                            var Building = (Building) GameObject;
+                            Building Building = (Building) GameObject;
                             if (Building.HeroBaseComponent != null)
                             {
                                 if (CSV.Tables.Get(Gamefile.Heroes).GetData(Building.BuildingData.HeroType) is HeroData HeroData)
@@ -95,6 +91,7 @@ namespace CR.Servers.CoC.Packets.Debugs
                                     {
                                         Player.HeroUpgrades.Set(HeroData, 0);
                                         Player.HeroStates.Set(HeroData, 3);
+
                                         if (HeroData.HasAltMode)
                                         {
                                             Player.HeroModes.Set(HeroData, 0);
@@ -104,9 +101,9 @@ namespace CR.Servers.CoC.Packets.Debugs
                             }
                         }
 
-                        foreach (var GameObject in GameObjectManager.Filter.GetGameObjects(0, 1))
+                        foreach (GameObject GameObject in GameObjectManager.Filter.GetGameObjects(0, 1))
                         {
-                            var Building = (Building) GameObject;
+                            Building Building = (Building) GameObject;
 
                             if (Building.UnitStorageV2Component != null)
                             {
@@ -114,8 +111,8 @@ namespace CR.Servers.CoC.Packets.Debugs
                                 {
                                     if (CSV.Tables.GetWithGlobalId(Building.UnitStorageV2Component.Units[0].Data) is CharacterData UnitData)
                                     {
-                                        var UnitLevel = Player.GetUnitUpgradeLevel(UnitData);
-                                        var UnitCount = UnitData.UnitsInCamp[UnitLevel];
+                                        int UnitLevel = Player.GetUnitUpgradeLevel(UnitData);
+                                        int UnitCount = UnitData.UnitsInCamp[UnitLevel];
                                         Player.Units2.Add(UnitData, UnitCount);
                                         Building.UnitStorageV2Component.Units[0].Count = UnitCount;
                                     }
@@ -151,12 +148,12 @@ namespace CR.Servers.CoC.Packets.Debugs
                 }
                 else
                 {
-                    this.SendChatMessage("You entered some shit!");
+                    this.SendChatMessage("Invalid parameters! Usage: /setbases <TH_LEVEL>");
                 }
             }
             else
             {
-                this.SendChatMessage("Where is your parameters asshole!");
+                this.SendChatMessage("Missing parameters! Usage: /setbases <TH_LEVEL>");
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿namespace CR.Servers.CoC.Packets.Debugs.Elite
 {
-    using System.Text;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Files;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
@@ -9,12 +8,11 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
-    internal class AddUnits : Debug
+    internal class Add_Units : Debug
     {
-        internal StringBuilder Help;
-
-        public AddUnits(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Add_Units(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
+            // Add_Units
         }
 
         internal override Rank RequiredRank

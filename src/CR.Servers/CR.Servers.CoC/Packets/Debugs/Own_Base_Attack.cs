@@ -1,9 +1,8 @@
-﻿using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Commands.Client.Battle;
-using CR.Servers.CoC.Packets.Messages.Server.Home;
-
-namespace CR.Servers.CoC.Packets.Debugs
+﻿namespace CR.Servers.CoC.Packets.Debugs
 {
+    using CR.Servers.CoC.Core.Network;
+    using CR.Servers.CoC.Packets.Commands.Client.Battle;
+    using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Logic.Enums;
 
@@ -11,6 +10,7 @@ namespace CR.Servers.CoC.Packets.Debugs
     {
         public Own_Base_Attack(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
+            // Own_Base_Attack
         }
 
         internal override Rank RequiredRank
@@ -24,11 +24,10 @@ namespace CR.Servers.CoC.Packets.Debugs
         internal override void Process()
         {
             this.Device.GameMode.Level.Player.ModSlot.SelfAttack = true;
-            this.SendChatMessage("Own village attack incoming!");
 
             new AvailableServerCommandMessage(this.Device)
             {
-                Command = new Search_Opponent(this.Device, null)
+                Command = new Search_Opponent(this.Device)
             }.Send();
         }
     }

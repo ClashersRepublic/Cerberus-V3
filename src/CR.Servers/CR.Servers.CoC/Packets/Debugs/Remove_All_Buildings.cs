@@ -10,10 +10,11 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Logic.Enums;
 
-    internal class Remove_All_Building : Debug
+    internal class Remove_All_Buildings : Debug
     {
-        public Remove_All_Building(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Remove_All_Buildings(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
+            // Remove_All_Buildings
         }
 
         internal override Rank RequiredRank
@@ -89,13 +90,14 @@
                     }
                 });
 
-                this.SendChatMessage("Successfully flatten your main village, Enjoy!");
+                this.SendChatMessage("Successfully cleaned your main village. Enjoy!");
+
                 new OwnHomeDataMessage(this.Device).Send();
             }
             catch (Exception Exception)
             {
-                Logging.Error(Exception.GetType(), "Unable to flatten the village for " + this.Device.GameMode.Level.Player.UserId + Environment.NewLine + Exception.StackTrace);
-                this.SendChatMessage($"Failed to flatten the village, Error code {Exception.GetType()}");
+                Logging.Error(Exception.GetType(), "Unable to clean the village for user with ID: " + this.Device.GameMode.Level.Player.UserId + Environment.NewLine + Exception.StackTrace);
+                this.SendChatMessage($"Failed to clean the village! Error code: {Exception.GetType()}");
             }
         }
     }

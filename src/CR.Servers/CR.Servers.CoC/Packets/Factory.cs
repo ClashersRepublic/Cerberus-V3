@@ -186,21 +186,23 @@
 
         private static void LoadDebugs()
         {
-            Factory.Debugs.Add("AiBase", typeof(AI_Generate_Base));
-            Factory.Debugs.Add("AiLowbase", typeof(AI_Generate_Low_Base));
-
-            Factory.Debugs.Add("id", typeof(PrintAccountIDDebugCommand));
-            Factory.Debugs.Add("help", typeof(Help_Command));
-            Factory.Debugs.Add("AddUnits", typeof(AddUnits));
-            Factory.Debugs.Add("AddSpells", typeof(AddSpells));
+            Factory.Debugs.Add("AddSpells", typeof(Add_Spells));
+            Factory.Debugs.Add("AddUnits", typeof(Add_Units));
+            Factory.Debugs.Add("AiBase", typeof(AI_Generate_Base)); // Elite Command.
+            Factory.Debugs.Add("AiLowBase", typeof(AI_Generate_Low_Base)); // Elite Command.
+            Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacles));
+            Factory.Debugs.Add("ClearUnits", typeof(Clear_All_Units));
+            Factory.Debugs.Add("ClearSpells", typeof(Clear_All_Spells));
             Factory.Debugs.Add("FastForward", typeof(Fast_Forward));
-
-            Factory.Debugs.Add("MaxVillage", typeof(Max_Village));
-            Factory.Debugs.Add("MaxBase", typeof(Max_Base));
+            Factory.Debugs.Add("Help", typeof(Help_Command));
+            Factory.Debugs.Add("Id", typeof(Print_Account_ID));
+            Factory.Debugs.Add("MaxLevels", typeof(Max_Levels));
             Factory.Debugs.Add("MaxResources", typeof(Max_Resources));
-            Factory.Debugs.Add("ResetVillage", typeof(Remove_All_Building));
-            Factory.Debugs.Add("ClearObstacles", typeof(Clear_All_Obstacle));
-
+            Factory.Debugs.Add("ResetBase", typeof(Remove_All_Buildings));
+            Factory.Debugs.Add("SetBases", typeof(Set_Bases));
+            Factory.Debugs.Add("SetLevel", typeof(Set_Exp_Level));
+            Factory.Debugs.Add("SetScore", typeof(Set_Score));
+            Factory.Debugs.Add("Status", typeof(Server_Status));
             Factory.Debugs.Add("OwnBaseAttack", typeof(Own_Base_Attack));
         }
 
