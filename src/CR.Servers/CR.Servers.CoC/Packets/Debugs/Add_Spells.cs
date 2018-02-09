@@ -10,7 +10,7 @@
 
     internal class Add_Spells : Debug
     {
-        public Add_Spells(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Add_Spells(Device Device) : base(Device)
         {
             // Add_Spells
         }

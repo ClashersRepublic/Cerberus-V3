@@ -5,7 +5,7 @@
 
     internal class Help_Command : Debug
     {
-        public Help_Command(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Help_Command(Device Device) : base(Device)
         {
             // Help_Command
         }
@@ -34,7 +34,7 @@
                 "/maxlevels <village_id> (maximize your existing buildings' level) \n" +
                 "/setlevel <level> (sets your avatar XP level (example: '/setlevel 500') ) \n" +
                 "/setscore <amount> (sets your trophy count (example: '/setscore 5000') ) \n" +
-                "/maxresources (refills your storages) \n" + 
+                "/maxresources (refills your storages) \n" +
                 "/setbases (set your bases maxed - by inputting the desired TH level. Example: '/setbases 11' - will give you TH11 & BH8 maxed base. You can use TH levels from 1 to 11, as much times as you want.)");
         }
     }

@@ -8,7 +8,7 @@
 
     internal class Own_Base_Attack : Debug
     {
-        public Own_Base_Attack(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Own_Base_Attack(Device Device) : base(Device)
         {
             // Own_Base_Attack
         }
@@ -27,7 +27,7 @@
 
             new AvailableServerCommandMessage(this.Device)
             {
-                Command = new Search_Opponent(this.Device)
+                Command = new Search_Opponent(this.Device, null)
             }.Send();
         }
     }

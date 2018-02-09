@@ -7,7 +7,7 @@
 
     internal class Clear_All_Obstacles : Debug
     {
-        public Clear_All_Obstacles(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Clear_All_Obstacles(Device Device) : base(Device)
         {
             // Clear_All_Obstacles
         }

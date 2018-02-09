@@ -10,7 +10,7 @@
 
     internal class Clear_All_Spells : Debug
     {
-        public Clear_All_Spells(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Clear_All_Spells(Device Device) : base(Device)
         {
             // Clear_All_Spells
         }

@@ -12,7 +12,7 @@
 
     internal class Remove_All_Buildings : Debug
     {
-        public Remove_All_Buildings(Device Device, params string[] Parameters) : base(Device, Parameters)
+        public Remove_All_Buildings(Device Device) : base(Device)
         {
             // Remove_All_Buildings
         }
