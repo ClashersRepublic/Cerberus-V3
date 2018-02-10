@@ -5,7 +5,7 @@
 
     internal class Print_Account_ID : Debug
     {
-        public Print_Account_ID(Device Device) : base(Device)
+        public Print_Account_ID(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Print_Account_ID
         }

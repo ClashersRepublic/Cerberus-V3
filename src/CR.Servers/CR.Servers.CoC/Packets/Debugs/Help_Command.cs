@@ -5,7 +5,7 @@
 
     internal class Help_Command : Debug
     {
-        public Help_Command(Device Device) : base(Device)
+        public Help_Command(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Help_Command
         }

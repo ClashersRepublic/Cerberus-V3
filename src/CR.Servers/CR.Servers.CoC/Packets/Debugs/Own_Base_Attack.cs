@@ -8,7 +8,7 @@
 
     internal class Own_Base_Attack : Debug
     {
-        public Own_Base_Attack(Device Device) : base(Device)
+        public Own_Base_Attack(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Own_Base_Attack
         }

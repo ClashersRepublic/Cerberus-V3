@@ -10,7 +10,7 @@
 
     internal class Add_Units : Debug
     {
-        public Add_Units(Device Device) : base(Device)
+        public Add_Units(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Add_Units
         }

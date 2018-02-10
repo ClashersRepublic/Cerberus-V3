@@ -5,7 +5,7 @@
 
     internal class Server_Status : Debug
     {
-        public Server_Status(Device Device) : base(Device)
+        public Server_Status(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Server_Status
         }

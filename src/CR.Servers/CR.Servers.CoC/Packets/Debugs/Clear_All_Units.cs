@@ -10,7 +10,7 @@
 
     internal class Clear_All_Units : Debug
     {
-        public Clear_All_Units(Device Device) : base(Device)
+        public Clear_All_Units(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Clear_All_Units
         }

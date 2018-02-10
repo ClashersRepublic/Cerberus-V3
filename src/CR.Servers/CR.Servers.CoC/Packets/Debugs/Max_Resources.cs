@@ -9,7 +9,7 @@
 
     internal class Max_Resources : Debug
     {
-        public Max_Resources(Device Device) : base(Device)
+        public Max_Resources(Device Device, params string[] Parameters) : base(Device, Parameters)
         {
             // Max_Resources
         }
