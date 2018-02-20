@@ -66,7 +66,8 @@
             base.Load(Token);
             JsonHelper.GetJsonNumber(Token, "lvl", out this.Level);
 
-            if (JsonHelper.GetJsonNumber(Token, "donator_id", out long Id))
+            long Id;
+            if (JsonHelper.GetJsonNumber(Token, "donator_id", out Id))
             {
                 this.DonatorId = Id;
             }
@@ -74,8 +75,9 @@
 
         public override bool Equals(object obj)
         {
-            if (obj is UnitItem Item)
+            if (obj is UnitItem)
             {
+                UnitItem Item = (UnitItem)obj;
                 return Item.Data == this.Data && Item.Level == this.Level;
             }
 

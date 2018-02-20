@@ -34,16 +34,19 @@
 
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     Building.SpeedUpConstruction();
                 }
-                else if (GameObject is Trap Trap)
+                else if (GameObject is Trap)
                 {
+                    Trap Trap = (Trap)GameObject;
                     Trap.SpeedUpConstruction();
                 }
-                else if (GameObject is VillageObject VillageObject)
+                else if (GameObject is VillageObject)
                 {
+                    VillageObject VillageObject = (VillageObject)GameObject;
                     VillageObject.SpeedUpConstruction();
                 }
                 else

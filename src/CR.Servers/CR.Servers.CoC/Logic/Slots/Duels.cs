@@ -35,11 +35,13 @@
 
                 for (int i = 0; i + 1 < deviceKeys.Count; i++)
                 {
-                    if (this.WaitingDeviceQueue.TryRemove(deviceKeys[i], out Device attacker1))
+                    Device attacker1;
+                    if (this.WaitingDeviceQueue.TryRemove(deviceKeys[i], out attacker1))
                     {
                         retry:
 
-                        if (this.WaitingDeviceQueue.TryRemove(deviceKeys[++i], out Device attacker2))
+                        Device attacker2;
+                        if (this.WaitingDeviceQueue.TryRemove(deviceKeys[++i], out attacker2))
                         {
                             DuelBattle duelBattle = new DuelBattle(new Battle(attacker1, attacker1.GameMode.Level, attacker2.GameMode.Level, true), new Battle(attacker2, attacker2.GameMode.Level, attacker1.GameMode.Level, true));
 
@@ -93,6 +95,7 @@
         {
             if (device.Account != null)
             {
+                Device _;
                 if (this.WaitingDeviceQueue.TryRemove(device.Account.AccountId, out _))
                 {
                     new OwnHomeDataMessage(device).Send();

@@ -107,7 +107,8 @@
         {
             get
             {
-                return this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(1, out Component) ? (CombatComponent) Component : null;
             }
         }
 
@@ -249,7 +250,9 @@
         {
             TrapData Data = this.TrapData;
 
-            if (JsonHelper.GetJsonNumber(Json, "const_t", out int ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out int ConstructionTimeEnd))
+            int ConstructionTime;
+            int ConstructionTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "const_t", out ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out ConstructionTimeEnd))
             {
                 if (ConstructionTime > -1)
                 {
@@ -277,7 +280,8 @@
                 }
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "lvl", out int Level))
+            int Level;
+            if (JsonHelper.GetJsonNumber(Json, "lvl", out Level))
             {
                 if (Level < -1)
                 {

@@ -105,8 +105,10 @@
                                             {
                                                 if (Building.HeroBaseComponent != null)
                                                 {
-                                                    if (CSV.Tables.Get(Gamefile.Heroes).GetData(Data.HeroType) is HeroData HeroData)
+                                                    var data = CSV.Tables.Get(Gamefile.Heroes).GetData(Data.HeroType);
+                                                    if (data is HeroData)
                                                     {
+                                                        var HeroData = (HeroData)data;
                                                         Player.HeroUpgrades.Set(HeroData, 0);
                                                         Player.HeroStates.Set(HeroData, 3);
 
@@ -210,8 +212,10 @@
                                             {
                                                 if (Building.HeroBaseComponent != null)
                                                 {
-                                                    if (CSV.Tables.Get(Gamefile.Heroes).GetData(Data.HeroType) is HeroData HeroData)
+                                                    var data = CSV.Tables.Get(Gamefile.Heroes).GetData(Data.HeroType);
+                                                    if (data is HeroData)
                                                     {
+                                                        var HeroData = (HeroData)data;
                                                         Player.HeroUpgrades.Set(HeroData, 0);
                                                         Player.HeroStates.Set(HeroData, 3);
 

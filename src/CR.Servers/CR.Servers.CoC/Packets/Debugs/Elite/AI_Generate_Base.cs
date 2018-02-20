@@ -39,7 +39,8 @@
             bool AltMode = false;
             if (this.Parameters.Length >= 1)
             {
-                if (int.TryParse(this.Parameters[0], out int Id))
+                int Id;
+                if (int.TryParse(this.Parameters[0], out Id))
                 {
                     if (this.Parameters.Length >= 2)
                     {
@@ -49,11 +50,12 @@
                     if (Valid)
                     {
                         this.Device.GameMode.Level.Player.ModSlot.AILevel = new Level(true);
-                        Level AI = this.Device.GameMode.Level.Player.ModSlot.AILevel; 
+                        Level AI = this.Device.GameMode.Level.Player.ModSlot.AILevel;
 
-                        
-                        if (CSV.Tables.Get(Gamefile.Buildings).GetDataWithInstanceID(Id) is BuildingData BuildingData)
+                        var data = CSV.Tables.Get(Gamefile.Buildings).GetDataWithInstanceID(Id);
+                        if (data is BuildingData)
                         {
+                            BuildingData BuildingData = (BuildingData)data;
                             if (BuildingData.IsWall)
                             {
                                 var TownHallData = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001) as BuildingData;
@@ -175,7 +177,7 @@
                 {
                     StreamEntry = new AllianceMailAvatarStreamEntry(this.Device.GameMode.Level.Player)
                     {
-                        LowId = (int) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+                        LowId = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
                         SenderName = "[System] Command Manager",
                         SenderLeague = 22,
                         Message = Constants.AIBaseHelp.ToString()

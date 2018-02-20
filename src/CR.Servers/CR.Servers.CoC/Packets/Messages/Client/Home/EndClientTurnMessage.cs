@@ -89,8 +89,8 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     if (Command.IsServerCommand)
                     {
                         ServerCommand ServerCommand = (ServerCommand) Command;
-
-                        if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out ServerCommand OriginalCommand))
+                        ServerCommand OriginalCommand;
+                        if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out OriginalCommand))
                         {
                             this.Device.GameMode.CommandManager.ServerCommands.Remove(ServerCommand.Id);
                         }

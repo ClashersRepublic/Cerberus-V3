@@ -35,8 +35,9 @@
 
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     BuildingData Data = (BuildingData) Building.Data;
                     ResourceData ResourceData = Data.GearUpResourceData;
                     if (ResourceData != null)

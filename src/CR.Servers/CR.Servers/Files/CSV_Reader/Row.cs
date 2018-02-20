@@ -6,8 +6,11 @@ namespace CR.Servers.Files.CSV_Reader
     {
         public Row(Table table, string name)
         {
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             Name = name;
-            Table = table ?? throw new ArgumentNullException(nameof(table));
+            Table = table;
             Table._rows.Add(this);
         }
 

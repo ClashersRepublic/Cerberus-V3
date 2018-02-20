@@ -40,7 +40,9 @@
 
         internal void Load(JToken Token)
         {
-            if (JsonHelper.GetJsonNumber(Token, "cooldown", out int Cooldown) && JsonHelper.GetJsonNumber(Token, "cooldown_end", out int CooldownEnd))
+            int Cooldown;
+            int CooldownEnd;
+            if (JsonHelper.GetJsonNumber(Token, "cooldown", out Cooldown) && JsonHelper.GetJsonNumber(Token, "cooldown_end", out CooldownEnd))
             {
                 if (Cooldown > -1)
                 {

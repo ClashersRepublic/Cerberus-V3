@@ -25,7 +25,7 @@
         public Building(Data Data, Level Level) : base(Data, Level)
         {
             BuildingData BuildingData = this.BuildingData;
-            
+
             if (BuildingData.IsTrainingHousing)
             {
                 this.AddComponent(new UnitStorageComponent(this));
@@ -81,7 +81,7 @@
         {
             get
             {
-                return (BuildingData) this.Data;
+                return (BuildingData)this.Data;
             }
         }
 
@@ -197,7 +197,8 @@
         {
             get
             {
-                return this.TryGetComponent(0, out Component Component) ? (UnitStorageComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(0, out Component) ? (UnitStorageComponent)Component : null;
             }
         }
 
@@ -205,7 +206,8 @@
         {
             get
             {
-                return this.TryGetComponent(1, out Component Component) ? (CombatComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(1, out Component) ? (CombatComponent)Component : null;
             }
         }
 
@@ -213,7 +215,8 @@
         {
             get
             {
-                return this.TryGetComponent(5, out Component Component) ? (ResourceProductionComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(5, out Component) ? (ResourceProductionComponent)Component : null;
             }
         }
 
@@ -221,7 +224,8 @@
         {
             get
             {
-                return this.TryGetComponent(6, out Component Component) ? (ResourceStorageComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(6, out Component) ? (ResourceStorageComponent)Component : null;
             }
         }
 
@@ -229,7 +233,8 @@
         {
             get
             {
-                return this.TryGetComponent(7, out Component Component) ? (BunkerComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(7, out Component) ? (BunkerComponent)Component : null;
             }
         }
 
@@ -237,7 +242,8 @@
         {
             get
             {
-                return this.TryGetComponent(9, out Component Component) ? (UnitUpgradeComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(9, out Component) ? (UnitUpgradeComponent)Component : null;
             }
         }
 
@@ -245,7 +251,8 @@
         {
             get
             {
-                return this.TryGetComponent(10, out Component Component) ? (HeroBaseComponent) Component : null;
+                Component Component;
+                return this.TryGetComponent(10, out Component) ? (HeroBaseComponent)Component : null;
             }
         }
 
@@ -253,7 +260,8 @@
         {
             get
             {
-                return this.TryGetComponent(11, out Component Component) ? (UnitStorageV2Component) Component : null;
+                Component Component;
+                return this.TryGetComponent(11, out Component) ? (UnitStorageV2Component)Component : null;
             }
         }
 
@@ -349,8 +357,11 @@
 
             if (this.HeroBaseComponent != null)
             {
-                if (CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType) is HeroData HeroData)
+                var data = CSV.Tables.Get(Gamefile.Heroes).GetData(this.BuildingData.HeroType);
+                if (data is HeroData)
                 {
+                    HeroData HeroData = (HeroData)data;
+
                     this.Level.Player.HeroUpgrades.Set(HeroData, 0);
                     this.Level.Player.HeroStates.Set(HeroData, 3);
                     if (HeroData.HasAltMode)
@@ -370,7 +381,7 @@
                 this.SetUpgradeLevel(this.UpgradeLevel);
                 //Alt resource not supported yet
 
-                int resourceCount = (int) ((this.BuildingData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long) 1374389535) >> 32);
+                int resourceCount = (int)((this.BuildingData.BuildCost[this.UpgradeLevel + 1] * Globals.BuildCancelMultiplier * (long)1374389535) >> 32);
                 resourceCount = Math.Max((resourceCount >> 5) + (resourceCount >> 31), 0);
 
                 this.Level.Player.Resources.Plus(this.BuildingData.GlobalId, resourceCount);
@@ -548,11 +559,13 @@
                 JsonHelper.GetJsonBoolean(Json, "locked", out this.Locked);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "const_t", out int ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out int ConstructionTimeEnd))
+            int ConstructionTime;
+            int ConstructionTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "const_t", out ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out ConstructionTimeEnd))
             {
                 if (ConstructionTime > -1)
                 {
-                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
                     int duration = ConstructionTimeEnd - startTime;
                     if (duration < 0)
                     {
@@ -564,7 +577,8 @@
                     this.ConstructionTimer.StartTimer(this.Level.Player.LastTick, duration);
 
 
-                    if (JsonHelper.GetJsonBoolean(Json, "gearing", out bool Gearing))
+                    bool Gearing;
+                    if (JsonHelper.GetJsonBoolean(Json, "gearing", out Gearing))
                     {
                         this.Gearing = Gearing;
                         this.Level.WorkerManagerV2.AllocateWorker(this);
@@ -583,11 +597,13 @@
                 }
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "boost_t", out int BoostTime) && JsonHelper.GetJsonNumber(Json, "boost_t_end", out int BoostTimeEnd))
+            int BoostTime;
+            int BoostTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "boost_t", out BoostTime) && JsonHelper.GetJsonNumber(Json, "boost_t_end", out BoostTimeEnd))
             {
                 if (BoostTime > -1)
                 {
-                    int startTime = (int) TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
+                    int startTime = (int)TimeUtils.ToUnixTimestamp(this.Level.Player.LastTick);
                     int duration = BoostTimeEnd - startTime;
                     if (duration < 0)
                     {
@@ -601,7 +617,8 @@
 
             JsonHelper.GetJsonBoolean(Json, "boost_pause", out this.BoostPause);
 
-            if (JsonHelper.GetJsonNumber(Json, "lvl", out int Level))
+            int Level;
+            if (JsonHelper.GetJsonNumber(Json, "lvl", out Level))
             {
                 if (Level < -1)
                 {

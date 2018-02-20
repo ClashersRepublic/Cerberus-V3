@@ -1,14 +1,20 @@
-﻿namespace CR.Servers.Extensions
+﻿using System;
+
+namespace CR.Servers.Extensions
 {
     internal static class Extensions
     {
         /// <summary>
         /// Turn two integer into a single long.
         /// </summary>
-        /// <param name="Pair">The pair.</param>
+        /// <param name="pair">The pair.</param>
+#if !NETCORE2_0
+        public static long ToInt64(this Tuple<int, int> pair)
+#else
         public static long ToInt64(this (int, int) Pair)
+#endif
         {
-            return (long)Pair.Item1 << 32 | (long)(uint)Pair.Item2;
+            return (long)pair.Item1 << 32 | (long)(uint)pair.Item2;
         }
 
         /// <summary>
@@ -26,17 +32,15 @@
         /// Get index of the value in array. Return -1 if value is not in array.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="Array">The Array</param>
-        /// <param name="Value">The Value</param>
+        /// <param name="array">The Array</param>
+        /// <param name="value">The Value</param>
         /// <returns></returns>
-        public static int IndexOf<T>(this T[] Array, T Value)
+        public static int IndexOf<T>(this T[] array, T value)
         {
-            for (int i = 0; i < Array.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                if (Array[i].Equals(Value))
-                {
+                if (array[i].Equals(value))
                     return i;
-                }
             }
 
             return -1;

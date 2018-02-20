@@ -123,7 +123,8 @@
 
                 if (this.Productions.Count > 0)
                 {
-                    if (JsonHelper.GetJsonNumber(Json, "t", out int Time))
+                    int Time;
+                    if (JsonHelper.GetJsonNumber(Json, "t", out Time))
                     {
                         this.Timer.StartTimer(this.Level.Player.LastTick, Time);
                     }

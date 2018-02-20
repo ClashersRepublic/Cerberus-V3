@@ -50,7 +50,8 @@
         {
             base.Load(Json);
 
-            if (JsonHelper.GetJsonNumber(Json, "event", out int Event))
+            int Event;
+            if (JsonHelper.GetJsonNumber(Json, "event", out Event))
             {
                 this.Event = (AllianceEvent) Event;
             }

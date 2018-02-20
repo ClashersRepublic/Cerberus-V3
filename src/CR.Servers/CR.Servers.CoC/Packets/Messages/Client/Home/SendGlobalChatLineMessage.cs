@@ -48,7 +48,8 @@
                             {
                                 if (this.Message.StartsWith(Factory.Delimiter.ToString()))
                                 {
-                                    Debug Debug = Factory.CreateDebug(this.Message, this.Device, out string CommandName);
+                                    string CommandName;
+                                    Debug Debug = Factory.CreateDebug(this.Message, this.Device, out CommandName);
 
                                     new GlobalChatLineMessage(this.Device, this.Device.GameMode.Level.Player) {Message = this.Message}.Send();
 

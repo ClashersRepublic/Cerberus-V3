@@ -48,8 +48,9 @@
 
                 if (Stream != null)
                 {
-                    if (Stream is DonateStreamEntry DonationStream)
+                    if (Stream is DonateStreamEntry)
                     {
+                        DonateStreamEntry DonationStream = (DonateStreamEntry)Stream;
                         Player Target = Resources.Accounts.LoadAccount(Stream.SenderHighId, Stream.SenderLowId)?.Player;
                         if (Target != null)
                         {
@@ -59,8 +60,9 @@
                                 {
                                     if (this.UnitType == 1)
                                     {
-                                        if (this.Unit is SpellData SpellData)
+                                        if (this.Unit is SpellData)
                                         {
+                                            SpellData SpellData = (SpellData)this.Unit;
                                             if (DonationStream.MaxSpell >= DonationStream.UsedSpell + SpellData.HousingSpace)
                                             {
                                                 if (this.UseDiamonds)
@@ -94,11 +96,11 @@
                                                 Target.DonationReceived += HousingSpace;
                                                 Player.AddExperience(HousingSpace);
 
-                                                this.Device.GameMode.CommandManager.AddCommand(new Donate_Unit_Callback(this.Device) {StreamId = this.StreamId, UnitType = this.UnitType, UnitId = SpellData.GlobalId, UseDiamonds = this.UseDiamonds});
+                                                this.Device.GameMode.CommandManager.AddCommand(new Donate_Unit_Callback(this.Device) { StreamId = this.StreamId, UnitType = this.UnitType, UnitId = SpellData.GlobalId, UseDiamonds = this.UseDiamonds });
 
                                                 if (Target.Connected)
                                                 {
-                                                    Target.Level.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(Target.Level.GameMode.Device) {Donator = Player.Name, UnitType = this.UnitType, UnitId = SpellData.GlobalId, Level = UnitLevel});
+                                                    Target.Level.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(Target.Level.GameMode.Device) { Donator = Player.Name, UnitType = this.UnitType, UnitId = SpellData.GlobalId, Level = UnitLevel });
                                                 }
 
                                                 Alliance.Streams.Update(Stream);
@@ -107,8 +109,9 @@
                                     }
                                     else
                                     {
-                                        if (this.Unit is CharacterData CharacterData)
+                                        if (this.Unit is CharacterData)
                                         {
+                                            CharacterData CharacterData = (CharacterData)this.Unit;
                                             if (DonationStream.MaxTroop >= DonationStream.UsedTroop + CharacterData.HousingSpace)
                                             {
                                                 if (this.UseDiamonds)
@@ -142,11 +145,11 @@
                                                 Target.DonationReceived += HousingSpace;
                                                 Player.AddExperience(HousingSpace);
 
-                                                this.Device.GameMode.CommandManager.AddCommand(new Donate_Unit_Callback(this.Device) {StreamId = this.StreamId, UnitType = this.UnitType, UnitId = CharacterData.GlobalId, UseDiamonds = this.UseDiamonds});
+                                                this.Device.GameMode.CommandManager.AddCommand(new Donate_Unit_Callback(this.Device) { StreamId = this.StreamId, UnitType = this.UnitType, UnitId = CharacterData.GlobalId, UseDiamonds = this.UseDiamonds });
 
                                                 if (Target.Connected)
                                                 {
-                                                    Target.Level.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(Target.Level.GameMode.Device) {Donator = Player.Name, UnitType = this.UnitType, UnitId = CharacterData.GlobalId, Level = UnitLevel});
+                                                    Target.Level.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(Target.Level.GameMode.Device) { Donator = Player.Name, UnitType = this.UnitType, UnitId = CharacterData.GlobalId, Level = UnitLevel });
                                                 }
 
                                                 Alliance.Streams.Update(Stream);

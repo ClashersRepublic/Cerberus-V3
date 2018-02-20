@@ -34,8 +34,9 @@
 
             if (gameObject != null)
             {
-                if (gameObject is Building building)
+                if (gameObject is Building)
                 {
+                    Building building = (Building)gameObject;
                     HeroBaseComponent HeroBaseComponent = building.HeroBaseComponent;
 
                     if (HeroBaseComponent != null)

@@ -78,7 +78,8 @@
                                     {
                                         if (Target.AllianceMember.Role.Superior(ExecutorRole))
                                         {
-                                            if (Alliance.Members.Quit(Target, out Member Member))
+                                            Member Member;
+                                            if (Alliance.Members.Quit(Target, out Member))
                                             {
                                                 if (Target.Connected)
                                                 {
@@ -126,7 +127,8 @@
                                                 {
                                                     if (Target.AllianceMember.Role.Superior(ExecutorRole))
                                                     {
-                                                        if (Alliance.Members.Quit(Target, out Member Member))
+                                                        Member Member;
+                                                        if (Alliance.Members.Quit(Target, out Member))
                                                         {
                                                             if (Target.Connected)
                                                             {

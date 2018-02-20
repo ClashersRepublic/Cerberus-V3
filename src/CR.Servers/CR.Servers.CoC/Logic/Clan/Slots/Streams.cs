@@ -34,7 +34,8 @@
             {
                 if (this.Slots.Count > 50)
                 {
-                    if (this.Slots.TryRemove(this.Slots.Keys.First(), out StreamEntry Removed))
+                    var Removed = (StreamEntry)null;
+                    if (this.Slots.TryRemove(this.Slots.Keys.First(), out Removed))
                     {
                         this.RemoveEntry(Removed);
                     }
@@ -48,6 +49,7 @@
                     }
                     else
                     {
+                        Player _;
                         this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                     }
                 }
@@ -60,7 +62,8 @@
 
         internal void Remove(StreamEntry StreamEntry)
         {
-            if (this.Slots.TryRemove(StreamEntry.StreamId, out StreamEntry Removed))
+            StreamEntry Removed;
+            if (this.Slots.TryRemove(StreamEntry.StreamId, out Removed))
             {
                 this.RemoveEntry(Removed);
             }
@@ -68,7 +71,8 @@
 
         internal void Remove(long StreamId)
         {
-            if (this.Slots.TryRemove(StreamId, out StreamEntry Removed))
+            StreamEntry Removed;
+            if (this.Slots.TryRemove(StreamId, out Removed))
             {
                 this.RemoveEntry(Removed);
             }
@@ -84,6 +88,7 @@
                 }
                 else
                 {
+                    Player _;
                     this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                 }
             }
@@ -109,6 +114,7 @@
                 }
                 else
                 {
+                    Player _;
                     this.Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                 }
             }

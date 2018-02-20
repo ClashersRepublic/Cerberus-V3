@@ -33,8 +33,9 @@
 
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building )
                 {
+                    Building Building = (Building)GameObject;
                     if (!Building.Constructing)
                     {
                         Logging.Error(this.GetType(), $"Tried to cancel the construction of a building which is not in construction with game ID {this.BuildingID}.");
@@ -44,8 +45,9 @@
                         Building.CancelConstruction();
                     }
                 }
-                else if (GameObject is Trap Trap)
+                else if (GameObject is Trap)
                 {
+                    Trap Trap = (Trap)GameObject;
                     if (!Trap.Constructing)
                     {
                         Logging.Error(this.GetType(), $"Tried to cancel the construction of a trap which is not in construction with game ID {this.BuildingID}.");
@@ -55,8 +57,9 @@
                         Trap.CancelConstruction();
                     }
                 }
-                else if (GameObject is Obstacle Obstacle)
+                else if (GameObject is Obstacle )
                 {
+                    Obstacle Obstacle = (Obstacle)GameObject;
                     if (!Obstacle.ClearingOnGoing)
                     {
                         Logging.Error(this.GetType(), $"Tried to cancel the clearing of an obstacle which is not in clearing with game ID {this.BuildingID}.");

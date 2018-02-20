@@ -32,7 +32,8 @@
 
         internal void Add(Data Data, int Count)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Current))
             {
                 Current.Count += Count;
             }
@@ -44,7 +45,8 @@
 
         internal void Add(int Data, int Count)
         {
-            if (this.TryGet(T => T.Data == Data, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Data, out Current))
             {
                 Current.Count += Count;
             }
@@ -56,7 +58,8 @@
 
         internal new void Add(Item Item)
         {
-            if (this.TryGet(T => T.Data == Item.Data, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Item.Data, out Current))
             {
                 Current.Count += Item.Count;
             }
@@ -88,7 +91,8 @@
 
         internal void Remove(Data Data, int Count)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Current))
             {
                 Current.Count -= Count;
             }
@@ -100,7 +104,8 @@
 
         internal void Remove(Item Item, int Count)
         {
-            if (this.TryGet(T => T.Data == Item.Data, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Item.Data, out Current))
             {
                 Current.Count -= Count;
 
@@ -118,7 +123,8 @@
 
         internal void Set(int Id, int Count)
         {
-            if (this.TryGet(T => T.Data == Id, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Id, out Current))
             {
                 Current.Count = Count;
             }
@@ -130,7 +136,8 @@
 
         internal void Set(Data Data, int Count)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId, out Current))
             {
                 Current.Count = Count;
             }
@@ -142,7 +149,8 @@
 
         internal void Set(Item Item)
         {
-            if (this.TryGet(T => T.Data == Item.Data, out Item Current))
+            Item Current;
+            if (this.TryGet(T => T.Data == Item.Data, out Current))
             {
                 Current.Count = Item.Count;
             }

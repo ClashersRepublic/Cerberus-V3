@@ -38,7 +38,8 @@
                 {
                     if (Player.TownHallLevel2 > 0)
                     {
-                        if (!LevelFile.TownHallTemplate.TryGetValue(this.Level, out JObject Village))
+                        JObject Village;
+                        if (!LevelFile.TownHallTemplate.TryGetValue(this.Level, out Village))
                         {
                             if (File.Exists($"Gamefiles/level/townhall{this.Level}.json"))
                             {
@@ -85,8 +86,10 @@
                             Building Building = (Building) GameObject;
                             if (Building.HeroBaseComponent != null)
                             {
-                                if (CSV.Tables.Get(Gamefile.Heroes).GetData(Building.BuildingData.HeroType) is HeroData HeroData)
+                                var data = CSV.Tables.Get(Gamefile.Heroes).GetData(Building.BuildingData.HeroType);
+                                if (data is HeroData)
                                 {
+                                    HeroData HeroData = (HeroData)data;
                                     if (Player.HeroUpgrades.GetByGlobalId(HeroData.GlobalId) == null)
                                     {
                                         Player.HeroUpgrades.Set(HeroData, 0);
@@ -109,8 +112,11 @@
                             {
                                 if (Building.UnitStorageV2Component.Units?.Count > 0)
                                 {
-                                    if (CSV.Tables.GetWithGlobalId(Building.UnitStorageV2Component.Units[0].Data) is CharacterData UnitData)
+                                    var data = CSV.Tables.GetWithGlobalId(Building.UnitStorageV2Component.Units[0].Data);
+                                    if (data is CharacterData)
                                     {
+                                        CharacterData UnitData = (CharacterData)data;
+
                                         int UnitLevel = Player.GetUnitUpgradeLevel(UnitData);
                                         int UnitCount = UnitData.UnitsInCamp[UnitLevel];
                                         Player.Units2.Add(UnitData, UnitCount);
@@ -120,8 +126,10 @@
                             }
                             else if (Building.HeroBaseComponent != null)
                             {
-                                if (CSV.Tables.Get(Gamefile.Heroes).GetData(Building.BuildingData.HeroType) is HeroData HeroData)
+                                var data = CSV.Tables.Get(Gamefile.Heroes).GetData(Building.BuildingData.HeroType);
+                                if (data is HeroData)
                                 {
+                                    HeroData HeroData = (HeroData)data;
                                     if (Player.HeroUpgrades.GetByGlobalId(HeroData.GlobalId) == null)
                                     {
                                         Player.HeroUpgrades.Set(HeroData, 0);

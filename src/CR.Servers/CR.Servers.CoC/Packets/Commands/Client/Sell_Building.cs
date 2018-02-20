@@ -34,8 +34,9 @@
 
             if (Building != null)
             {
-                if (Building is Deco Deco)
+                if (Building is Deco)
                 {
+                    Deco Deco = (Deco)Building;
                     DecoData Data = Deco.DecoData;
                     ResourceData ResourceData = Data.BuildResourceData;
 

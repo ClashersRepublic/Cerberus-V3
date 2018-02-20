@@ -33,9 +33,11 @@
                 {
                     if (Device.Info.Locale != 0)
                     {
-                        if (this.TryGetValue(Device.Info.Locale, out ConcurrentStack<Chat> Chats))
+                        var Chats = (ConcurrentStack<Chat>)null;
+                        if (this.TryGetValue(Device.Info.Locale, out Chats))
                         {
-                            if (!Chats.TryPop(out Chat Chat))
+                            var Chat = (Chat)null;
+                            if (!Chats.TryPop(out Chat))
                             {
                                 Chat = new Chat();
                             }

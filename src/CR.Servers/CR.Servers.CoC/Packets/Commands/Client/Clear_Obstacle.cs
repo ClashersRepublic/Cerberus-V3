@@ -36,8 +36,9 @@
 
             if (GameObject != null)
             {
-                if (GameObject is Obstacle Obstacle)
+                if (GameObject is Obstacle)
                 {
+                    Obstacle Obstacle = (Obstacle)GameObject;
                     ObstacleData Data = Obstacle.ObstacleData;
                     ResourceData ResourceData = Data.ClearResourceData;
 

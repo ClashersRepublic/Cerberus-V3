@@ -31,7 +31,8 @@
             if (Level.Player.InAlliance)
             {
                 Alliance Alliance = Level.Player.Alliance;
-                if (Alliance.Members.Quit(Level.Player.UserId, out Member Member))
+                Member Member;
+                if (Alliance.Members.Quit(Level.Player.UserId, out Member))
                 {
                     if (Member.Role == Role.Leader)
                     {

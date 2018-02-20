@@ -36,8 +36,9 @@
             GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.Id);
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     if (Building.UpgradeAvailable)
                     {
                         BuildingData Data = (BuildingData) Building.Data;
@@ -110,8 +111,9 @@
                         Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
                     }
                 }
-                else if (GameObject is Trap Trap)
+                else if (GameObject is Trap)
                 {
+                    Trap Trap = (Trap)GameObject;
                     if (Trap.UpgradeAvailable)
                     {
                         TrapData Data = Trap.TrapData;
@@ -142,8 +144,9 @@
                         Logging.Error(this.GetType(), "Unable to upgrade the building. Upgrade is not available.");
                     }
                 }
-                else if (GameObject is VillageObject VillageObject)
+                else if (GameObject is VillageObject)
                 {
+                    VillageObject VillageObject = (VillageObject)GameObject;
                     VillageObjectData Data = VillageObject.VillageObjectData;
                     ResourceData ResourceData = Data.BuildResourceData;
 

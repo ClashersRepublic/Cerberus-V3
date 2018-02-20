@@ -456,7 +456,8 @@
             {
                 foreach (JToken Token in Obstacles)
                 {
-                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    int Id;
+                    if (JsonHelper.GetJsonNumber(Token, "id", out Id))
                     {
                         this.ObstaclesIndex[0] = Math.Max(this.ObstaclesIndex[0], Id % 1000000);
                     }
@@ -481,7 +482,8 @@
             {
                 foreach (JToken Token in Decos)
                 {
-                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    int Id;
+                    if (JsonHelper.GetJsonNumber(Token, "id", out Id))
                     {
                         this.DecoIndex[0] = Math.Max(this.DecoIndex[0], Id % 1000000);
                     }
@@ -521,7 +523,8 @@
             {
                 foreach (JToken Token in Obstacles2)
                 {
-                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    int Id;
+                    if (JsonHelper.GetJsonNumber(Token, "id", out Id))
                     {
                         this.ObstaclesIndex[1] = Math.Max(this.ObstaclesIndex[1], Id % 1000000);
                     }
@@ -546,7 +549,8 @@
             {
                 foreach (JToken Token in Decos2)
                 {
-                    if (JsonHelper.GetJsonNumber(Token, "id", out int Id))
+                    int Id;
+                    if (JsonHelper.GetJsonNumber(Token, "id", out Id))
                     {
                         this.DecoIndex[1] = Math.Max(this.DecoIndex[1], Id % 1000000);
                     }
@@ -567,12 +571,14 @@
 
             #endregion
 
-            if (JsonHelper.GetJsonObject(Json, "respawnVars", out JToken RespawnToken))
+            JToken RespawnToken;
+            if (JsonHelper.GetJsonObject(Json, "respawnVars", out RespawnToken))
             {
                 JsonHelper.GetJsonNumber(RespawnToken, "secondsFromLastRespawn", out this.SecondsFromLastRespawn);
                 JsonHelper.GetJsonNumber(RespawnToken, "obstacleClearCounter", out this.ObstacleClearCounter);
 
-                this.VRandom.Seed = JsonHelper.GetJsonNumber(RespawnToken, "respawnSeed", out int RandomSeed) ? RandomSeed : 112;
+                int RandomSeed;
+                this.VRandom.Seed = JsonHelper.GetJsonNumber(RespawnToken, "respawnSeed", out RandomSeed) ? RandomSeed : 112;
             }
             else
             {
@@ -580,12 +586,17 @@
                 this.VRandom.Seed = 112;
             }
 
-            this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out int SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
-            this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out int V2RandomSeed) ? V2RandomSeed : 112;
-            this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out int ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
+            int SecondsFromLastRespawnV2;
+            this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
+            int V2RandomSeed;
+            this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out  V2RandomSeed) ? V2RandomSeed : 112;
+            int ObstacleClearCounterV2;
+            this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
 
-            this.SecondsFromLastTgRespawn = JsonHelper.GetJsonNumber(Json, "tgsec", out int SecondsFromLastTGRespawn) ? SecondsFromLastTGRespawn : 0;
-            this.TgRandom.Seed = JsonHelper.GetJsonNumber(Json, "tgseed", out int TGRandomSed) ? TGRandomSed : 112;
+            int SecondsFromLastTGRespawn;
+            this.SecondsFromLastTgRespawn = JsonHelper.GetJsonNumber(Json, "tgsec", out SecondsFromLastTGRespawn) ? SecondsFromLastTGRespawn : 0;
+            int TGRandomSeed;
+            this.TgRandom.Seed = JsonHelper.GetJsonNumber(Json, "tgseed", out TGRandomSeed) ? TGRandomSeed : 112;
         }
 
 
@@ -911,7 +922,8 @@
 
         internal void LoadGameObject(JToken Token)
         {
-            if (JsonHelper.GetJsonNumber(Token, "data", out int DataID))
+            int DataID;
+            if (JsonHelper.GetJsonNumber(Token, "data", out DataID))
             {
                 Data Data = CSV.Tables.GetWithGlobalId(DataID);
 

@@ -107,7 +107,8 @@
         {
             base.Load(Json);
 
-            if (JsonHelper.GetJsonString(Json, "message", out string Message))
+            string Message;
+            if (JsonHelper.GetJsonString(Json, "message", out Message))
             {
                 this.Message = Message;
                 this.HaveMessage = true;

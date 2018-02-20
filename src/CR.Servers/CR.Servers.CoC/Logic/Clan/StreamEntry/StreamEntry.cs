@@ -114,7 +114,8 @@
                     this.SenderName = string.Empty;
                 }
 
-                JsonHelper.GetJsonNumber(Base, "sender_role", out int Role);
+                int Role;
+                JsonHelper.GetJsonNumber(Base, "sender_role", out Role);
                 JsonHelper.GetJsonDateTime(Base, "date", out this.Created);
 
                 this.SenderRole = (Role) Role;
@@ -168,7 +169,8 @@
         {
             JObject Token = JObject.Load(reader);
 
-            if (JsonHelper.GetJsonNumber(Token, "type", out int Type))
+            int Type;
+            if (JsonHelper.GetJsonNumber(Token, "type", out Type))
             {
                 StreamEntry Entry;
 

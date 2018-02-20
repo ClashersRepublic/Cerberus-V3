@@ -28,7 +28,8 @@
 
         internal override void Process()
         {
-            if (Resources.Duels.DuelBattles.TryGetValue(this.LiveId, out DuelBattle duel))
+            DuelBattle duel;
+            if (Resources.Duels.DuelBattles.TryGetValue(this.LiveId, out duel))
             {
                 Battle battle = duel.GetEnemyBattle(this.Device.GameMode.Level);
 

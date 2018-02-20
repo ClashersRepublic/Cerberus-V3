@@ -50,8 +50,9 @@
 
                 if (GameObject != null)
                 {
-                    if (GameObject is Building Building)
+                    if (GameObject is Building)
                     {
+                        Building Building = (Building)GameObject;
                         if (Building.UpgradeAvailable)
                         {
                             BuildingData Data = (BuildingData) Building.Data;

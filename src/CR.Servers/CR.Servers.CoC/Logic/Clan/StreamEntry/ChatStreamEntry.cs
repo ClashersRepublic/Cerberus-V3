@@ -37,7 +37,8 @@
         {
             base.Load(Json);
 
-            if (JsonHelper.GetJsonString(Json, "message", out string Message))
+            var Message = (string)null;
+            if (JsonHelper.GetJsonString(Json, "message", out Message))
             {
                 this.Message = Message ?? string.Empty;
             }

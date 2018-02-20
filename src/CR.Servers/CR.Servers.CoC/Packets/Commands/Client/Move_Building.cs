@@ -54,8 +54,9 @@
                             {
                                 foreach (GameObject TileObject in Tile.GameObjects)
                                 {
-                                    if (TileObject is Obstacle Obstacle)
+                                    if (TileObject is Obstacle)
                                     {
+                                        Obstacle Obstacle = (Obstacle)TileObject;
                                         if (Obstacle.ObstacleData.TallGrass)
                                         {
                                             Obstacle.Destructed = true;

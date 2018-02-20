@@ -42,7 +42,8 @@
         {
             base.Load(Json);
 
-            if (JsonHelper.GetJsonString(Json, "message", out string Message))
+            string Message;
+            if (JsonHelper.GetJsonString(Json, "message", out Message))
             {
                 this.Message = Message ?? string.Empty;
             }
@@ -51,7 +52,8 @@
                 this.Message = string.Empty;
             }
 
-            if (JsonHelper.GetJsonString(Json, "judge", out string Judge))
+            string Judge;
+            if (JsonHelper.GetJsonString(Json, "judge", out Judge))
             {
                 this.Judge = Judge ?? string.Empty;
             }
@@ -60,7 +62,8 @@
                 this.Judge = string.Empty;
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "state", out int State))
+            int State;
+            if (JsonHelper.GetJsonNumber(Json, "state", out State))
             {
                 this.State = (InviteState) State;
             }

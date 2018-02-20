@@ -29,7 +29,8 @@
             int Class = GlobalId / 1000000;
             int Instance = GlobalId % 1000000;
 
-            if (this.DataTables.TryGetValue(Class, out DataTable Table))
+            var Table = (DataTable)null;
+            if (this.DataTables.TryGetValue(Class, out Table))
             {
                 if (Table.Datas.Count > Instance)
                 {

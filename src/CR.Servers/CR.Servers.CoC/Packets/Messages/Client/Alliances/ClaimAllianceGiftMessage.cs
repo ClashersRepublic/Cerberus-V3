@@ -36,8 +36,9 @@
                 StreamEntry stream = level.Player.Alliance.Streams.Get(this.StreamId);
                 if (stream != null)
                 {
-                    if (stream is GiftStreamEntry StreamEntry)
+                    if (stream is GiftStreamEntry)
                     {
+                        GiftStreamEntry StreamEntry = (GiftStreamEntry)stream;
                         if (!StreamEntry.Claimers.Contains(level.Player.UserId))
                         {
                             StreamEntry.Claimers.Add(level.Player.UserId);

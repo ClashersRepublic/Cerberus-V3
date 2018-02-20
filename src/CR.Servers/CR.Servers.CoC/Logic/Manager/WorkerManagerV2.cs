@@ -51,8 +51,9 @@
                 {
                     int RemainingTime = -1;
 
-                    if (Construction is Building Building)
+                    if (Construction is Building)
                     {
+                        Building Building = (Building)Construction;
                         HeroBaseComponent HeroBaseComponent = Building.HeroBaseComponent;
                         if (HeroBaseComponent != null)
                         {
@@ -70,8 +71,9 @@
                             RemainingTime = Building.RemainingConstructionTime;
                         }
                     }
-                    else if (Construction is Obstacle Obstacle)
+                    else if (Construction is Obstacle)
                     {
+                        Obstacle Obstacle = (Obstacle)Construction;
                         if (!Obstacle.ClearingOnGoing)
                         {
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to obstacle with remaining clearing time 0");
@@ -81,8 +83,9 @@
                             RemainingTime = Obstacle.RemainingClearingTime;
                         }
                     }
-                    else if (Construction is Trap Trap)
+                    else if (Construction is Trap)
                     {
+                        Trap Trap = (Trap)Construction;
                         if (!Trap.Constructing)
                         {
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to Trap with remaining construction time 0");
@@ -92,8 +95,9 @@
                             RemainingTime = Trap.RemainingConstructionTime;
                         }
                     }
-                    else if (Construction is VillageObject VillageObject)
+                    else if (Construction is VillageObject)
                     {
+                        VillageObject VillageObject = (VillageObject)Construction;
                         if (!VillageObject.Constructing)
                         {
                             Logging.Error(this.GetType(), "GetShortestTaskGO() : Worker allocated to village object with remaining clearing time 0");
@@ -130,8 +134,9 @@
             GameObject GameObject = this.GetShortestTaskGO();
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     HeroBaseComponent HeroBaseComponent = Building.HeroBaseComponent;
                     if (Building.Constructing)
                     {
@@ -145,22 +150,25 @@
                         }
                     }
                 }
-                else if (GameObject is Obstacle Obstacle)
+                else if (GameObject is Obstacle)
                 {
+                    Obstacle Obstacle = (Obstacle)GameObject;
                     if (Obstacle.ClearingOnGoing)
                     {
                         Obstacle.SpeedUpClearing();
                     }
                 }
-                else if (GameObject is Trap Trap)
+                else if (GameObject is Trap)
                 {
+                    Trap Trap = (Trap)GameObject;
                     if (Trap.Constructing)
                     {
                         Trap.SpeedUpConstruction();
                     }
                 }
-                else if (GameObject is VillageObject VillageObject)
+                else if (GameObject is VillageObject)
                 {
+                    VillageObject VillageObject = (VillageObject)GameObject;
                     if (VillageObject.Constructing)
                     {
                         VillageObject.SpeedUpConstruction();

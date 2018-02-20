@@ -51,8 +51,9 @@
 
                         if (Stream != null)
                         {
-                            if (Stream is JoinRequestStreamEntry JoinRequest)
+                            if (Stream is JoinRequestStreamEntry)
                             {
+                                JoinRequestStreamEntry JoinRequest = (JoinRequestStreamEntry)Stream;
                                 if (this.Decision)
                                 {
                                     Player Target = Resources.Accounts.LoadAccount(JoinRequest.SenderHighId, JoinRequest.SenderLowId)?.Player;
@@ -66,7 +67,8 @@
                                                 Target.Inbox.Remove(entry);
                                             }
 
-                                            if (Alliance.Members.Join(Target, out Member member))
+                                            Member member;
+                                            if (Alliance.Members.Join(Target, out member))
                                             {
                                                 Target.SetAlliance(Alliance, member);
                                                 Target.AllianceHighId = Alliance.HighId;

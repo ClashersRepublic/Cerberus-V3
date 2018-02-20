@@ -31,8 +31,9 @@
 
         public CombatComponent(GameObject GameObject) : base(GameObject)
         {
-            if (GameObject is Building Building)
+            if (GameObject is Building)
             {
+                Building Building = (Building)GameObject;
                 BuildingData bd = Building.BuildingData;
 
                 if (bd.AmmoCount > 0)
@@ -50,8 +51,9 @@
                     this.AimRotateStep = true;
                 }
             }
-            else if (GameObject is Trap Trap)
+            else if (GameObject is Trap)
             {
+                Trap Trap = (Trap)GameObject;
                 TrapData td = Trap.TrapData;
                 if (td.HasAltMode)
                 {
@@ -76,7 +78,7 @@
         internal void FillAmmo()
         {
             Player ca = this.Parent.Level.Player;
-            BuildingData bd = (BuildingData) this.Parent.Data;
+            BuildingData bd = (BuildingData)this.Parent.Data;
             Data rd = CSV.Tables.Get(Gamefile.Resources).GetData(bd.AmmoResource);
             if (ca.Resources.GetCountByData(rd) >= bd.AmmoCost[0])
             {
@@ -87,27 +89,32 @@
 
         internal override void Load(JToken Json)
         {
-            if (JsonHelper.GetJsonNumber(Json, "gear", out int GearUp))
+            int GearUp;
+            if (JsonHelper.GetJsonNumber(Json, "gear", out GearUp))
             {
                 this.GearUp = GearUp;
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "ammo", out int Ammo))
+            int Ammo;
+            if (JsonHelper.GetJsonNumber(Json, "ammo", out Ammo))
             {
                 this.Ammo = Ammo;
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "wX", out int WallX))
+            int WallX;
+            if (JsonHelper.GetJsonNumber(Json, "wX", out WallX))
             {
                 this.WallX = WallX;
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "wP", out int WallP))
+            int WallP;
+            if (JsonHelper.GetJsonNumber(Json, "wP", out WallP))
             {
                 this.WallP = WallP;
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "wI", out int WallI))
+            int WallI;
+            if (JsonHelper.GetJsonNumber(Json, "wI", out WallI))
             {
                 this.WallI = WallI;
 
@@ -118,22 +125,27 @@
             }
 
 
-            if (JsonHelper.GetJsonBoolean(Json, "attack_mode", out bool AttackMode) && JsonHelper.GetJsonBoolean(Json, "attack_mode_draft", out bool AttackModeDraft))
+            bool AttackMode;
+            bool AttackModeDraft;
+            if (JsonHelper.GetJsonBoolean(Json, "attack_mode", out AttackMode) && JsonHelper.GetJsonBoolean(Json, "attack_mode_draft", out AttackModeDraft))
             {
                 this.AltAttackMode = true;
                 this.AttackMode = AttackMode;
                 this.AttackModeDraft = AttackModeDraft;
             }
 
-            if (JsonHelper.GetJsonBoolean(Json, "air_mode", out bool AirMode) && JsonHelper.GetJsonBoolean(Json, "air_mode", out bool AirModeDraft))
+            bool AirMode;
+            bool AirModeDraft;
+            if (JsonHelper.GetJsonBoolean(Json, "air_mode", out AirMode) && JsonHelper.GetJsonBoolean(Json, "air_mode", out AirModeDraft))
             {
                 this.AltTrapAttackMode = true;
                 this.AirMode = AirMode;
                 this.AirModeDraft = AirModeDraft;
             }
 
-
-            if (JsonHelper.GetJsonNumber(Json, "aim_angle", out int AimAngle) && JsonHelper.GetJsonNumber(Json, "aim_angle_draft", out int AimAngleDraft))
+            int AimAngle;
+            int AimAngleDraft;
+            if (JsonHelper.GetJsonNumber(Json, "aim_angle", out AimAngle) && JsonHelper.GetJsonNumber(Json, "aim_angle_draft", out AimAngleDraft))
             {
                 this.AimRotateStep = true;
                 this.AimAngle = AimAngle;
@@ -141,7 +153,9 @@
             }
 
 
-            if (JsonHelper.GetJsonNumber(Json, "trapd", out int TrapDirection) && JsonHelper.GetJsonNumber(Json, "trapd_draft", out int TrapDirectionDraft))
+            int TrapDirection;
+            int TrapDirectionDraft;
+            if (JsonHelper.GetJsonNumber(Json, "trapd", out TrapDirection) && JsonHelper.GetJsonNumber(Json, "trapd_draft", out TrapDirectionDraft))
             {
                 this.AltDirectionMode = true;
                 this.TrapDirection = TrapDirection;

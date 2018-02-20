@@ -117,6 +117,7 @@
                                 }
                                 else
                                 {
+                                    Player _;
                                     Alliance.Members.Connected.TryRemove(Player.UserId, out _);
                                 }
                             }

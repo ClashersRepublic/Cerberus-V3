@@ -47,7 +47,8 @@
                     Avatar.Inbox.Remove(entry);
                 }
 
-                if (Alliance.Members.Join(Avatar, out Member member))
+                Member member;
+                if (Alliance.Members.Join(Avatar, out member))
                 {
                     Avatar.SetAlliance(Alliance, member);
                     Avatar.AllianceHighId = Alliance.HighId;

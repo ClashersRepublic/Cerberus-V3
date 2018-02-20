@@ -155,7 +155,9 @@
 
         internal override void Load(JToken Json)
         {
-            if (JsonHelper.GetJsonNumber(Json, "res_time", out int Time) && JsonHelper.GetJsonNumber(Json, "res_time_end", out int TimeEnd))
+            int Time;
+            int TimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "res_time", out Time) && JsonHelper.GetJsonNumber(Json, "res_time_end", out TimeEnd))
             {
                 int startTime = (int) TimeUtils.ToUnixTimestamp(this.Parent.Level.Player.LastTick);
                 int duration = TimeEnd - startTime;

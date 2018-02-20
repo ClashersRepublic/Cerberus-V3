@@ -9,8 +9,11 @@ namespace CR.Servers.Files.CSV_Reader
     {
         public Column(Table table, string name)
         {
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             Name = name;
-            Table = table ?? throw new ArgumentNullException(nameof(table));
+            Table = table;
             Table._columns.Add(this);
 
             Data = new List<string>();

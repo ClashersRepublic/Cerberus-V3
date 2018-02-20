@@ -248,9 +248,12 @@
             {
                 if (JsonHelper.GetJsonNumber(UnitUpgrade, "unit_type", out this.UnitType))
                 {
-                    if (JsonHelper.GetJsonNumber(UnitUpgrade, "id", out int Id) &&
-                        JsonHelper.GetJsonNumber(UnitUpgrade, "t", out int Time) &&
-                        JsonHelper.GetJsonNumber(UnitUpgrade, "t_end", out int TimeEnd))
+                    int Id;
+                    int Time;
+                    int TimeEnd;
+                    if (JsonHelper.GetJsonNumber(UnitUpgrade, "id", out Id) &&
+                        JsonHelper.GetJsonNumber(UnitUpgrade, "t", out Time) &&
+                        JsonHelper.GetJsonNumber(UnitUpgrade, "t_end", out TimeEnd))
                     {
                         this.UnitData = this.UnitType > 0
                             ? CSV.Tables.Get(Gamefile.Spells).GetDataWithID(Id)

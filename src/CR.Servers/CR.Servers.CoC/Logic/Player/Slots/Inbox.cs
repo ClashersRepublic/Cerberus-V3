@@ -33,7 +33,8 @@
                 {
                     if (this.Entries.Count > 50)
                     {
-                        if (this.Entries.TryRemove(this.Entries.Keys.First(), out AvatarStreamEntry Removed))
+                        AvatarStreamEntry Removed;
+                        if (this.Entries.TryRemove(this.Entries.Keys.First(), out Removed))
                         {
                             this.RemoveEntry(Removed);
                         }
@@ -53,7 +54,8 @@
 
         internal void Remove(AvatarStreamEntry MailEntry)
         {
-            if (this.Entries.TryRemove(MailEntry.StreamId, out AvatarStreamEntry Removed))
+            AvatarStreamEntry Removed;
+            if (this.Entries.TryRemove(MailEntry.StreamId, out Removed))
             {
                 this.RemoveEntry(Removed);
             }
@@ -61,7 +63,8 @@
 
         internal void Remove(int StreamId)
         {
-            if (this.Entries.TryRemove(StreamId, out AvatarStreamEntry Removed))
+            AvatarStreamEntry Removed;
+            if (this.Entries.TryRemove(StreamId, out Removed))
             {
                 this.RemoveEntry(Removed);
             }

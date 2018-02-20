@@ -86,10 +86,8 @@
 
         public override bool Equals(object obj)
         {
-            if (obj is Item Item)
-            {
-                return Item.Data == this.Data;
-            }
+            if (obj is Item)
+                return ((Item)obj).Data == this.Data;
 
             return false;
         }

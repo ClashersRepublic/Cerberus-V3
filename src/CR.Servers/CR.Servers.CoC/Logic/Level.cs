@@ -201,7 +201,8 @@
             JsonHelper.GetJsonString(Token, "troop_req_msg", out this.TroopRequestMessage);
             JsonHelper.GetJsonString(Token, "war_req_msg", out this.WarRequestMessage);
 
-            if (JsonHelper.GetJsonArray(Token, "army_names", out JArray Army))
+            JArray Army;
+            if (JsonHelper.GetJsonArray(Token, "army_names", out Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();
             }
@@ -246,7 +247,8 @@
             JsonHelper.GetJsonString(Json, "troop_req_msg", out this.TroopRequestMessage);
             JsonHelper.GetJsonString(Json, "war_req_msg", out this.WarRequestMessage);
 
-            if (JsonHelper.GetJsonArray(Json, "army_names", out JArray Army))
+            JArray Army;
+            if (JsonHelper.GetJsonArray(Json, "army_names", out Army))
             {
                 this.ArmyNames = Army.ToObject<string[]>();
             }

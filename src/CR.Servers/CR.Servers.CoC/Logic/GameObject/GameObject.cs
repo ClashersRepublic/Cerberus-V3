@@ -153,7 +153,9 @@
 
         internal virtual void Load(JToken Json)
         {
-            if (JsonHelper.GetJsonNumber(Json, "x", out int X) && JsonHelper.GetJsonNumber(Json, "y", out int Y))
+            int X;
+            int Y;
+            if (JsonHelper.GetJsonNumber(Json, "x", out X) && JsonHelper.GetJsonNumber(Json, "y", out Y))
             {
                 this.Position.X = X << 9;
                 this.Position.Y = Y << 9;

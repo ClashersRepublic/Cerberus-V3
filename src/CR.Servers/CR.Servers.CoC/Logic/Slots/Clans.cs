@@ -58,7 +58,8 @@
         {
             if (this.ContainsKey(Clan.AllianceId))
             {
-                if (!this.TryRemove(Clan.AllianceId, out Alliance tmpClan))
+                Alliance tmpClan;
+                if (!this.TryRemove(Clan.AllianceId, out tmpClan))
                 {
                     Logging.Error(this.GetType(), "Unsuccessfuly removed the specified clan from the dictionnary.");
                 }
@@ -77,9 +78,10 @@
 
         internal async Task<Alliance> GetAsync(int HighID, int LowID, bool Store = true)
         {
-            long Id = ((long) HighID << 32) | (uint) LowID;
+            long Id = ((long)HighID << 32) | (uint)LowID;
 
-            if (!this.TryGetValue(Id, out Alliance Clan))
+            Alliance Clan;
+            if (!this.TryGetValue(Id, out Clan))
             {
                 Core.Database.Models.Mongo.Clans Save = await Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1)
                     .SingleOrDefaultAsync();
@@ -100,9 +102,10 @@
 
         internal Alliance Get(int HighID, int LowID, bool Store = true)
         {
-            long Id = ((long) HighID << 32) | (uint) LowID;
+            long Id = ((long)HighID << 32) | (uint)LowID;
 
-            if (!this.TryGetValue(Id, out Alliance Clan))
+            Alliance Clan;
+            if (!this.TryGetValue(Id, out Clan))
             {
                 Core.Database.Models.Mongo.Clans Save = Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1).SingleOrDefault();
 

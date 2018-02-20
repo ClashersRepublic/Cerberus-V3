@@ -74,8 +74,9 @@
 
             foreach (Data Building in Buildings)
             {
-                if (Building is BuildingData BuildingData)
+                if (Building is BuildingData)
                 {
+                    var BuildingData = (BuildingData)Building;
                     Help.AppendLine($" ID {BuildingData.InstanceId}\n Name: {BuildingData.Name}\n Alt Mode: {!string.IsNullOrEmpty(BuildingData.GearUpBuilding) || BuildingData.AltAttackMode}\n");
                 }
             }

@@ -209,7 +209,8 @@
 
         internal static Message CreateMessage(short Type, Device Device, Reader Reader)
         {
-            if (Factory.Messages.TryGetValue(Type, out Type MType))
+            Type MType;
+            if (Factory.Messages.TryGetValue(Type, out MType))
             {
                 return (Message) Activator.CreateInstance(MType, Device, Reader);
             }
@@ -221,7 +222,8 @@
 
         internal static Command CreateCommand(int Type, Device Device, Reader Reader)
         {
-            if (Factory.Commands.TryGetValue(Type, out Type CType))
+            Type CType;
+            if (Factory.Commands.TryGetValue(Type, out CType))
             {
                 return (Command) Activator.CreateInstance(CType, Device, Reader);
             }
@@ -236,7 +238,8 @@
             string[] Parameters = Message.Remove(0, 1).Split(' ');
             CommandName = Parameters[0];
 
-            if (Factory.Debugs.TryGetValue(Parameters[0], out Type DType))
+            Type DType;
+            if (Factory.Debugs.TryGetValue(Parameters[0], out DType))
             {
                 string[] args = Parameters.Skip(1).ToArray();
                 Debug Debug = (Debug) Activator.CreateInstance(DType, Device, args);

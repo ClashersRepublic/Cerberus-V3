@@ -92,8 +92,9 @@
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is Home Home)
+            if (value is Home)
             {
+                Home Home = (Home)value;
                 Home.Save().WriteTo(writer);
             }
             else

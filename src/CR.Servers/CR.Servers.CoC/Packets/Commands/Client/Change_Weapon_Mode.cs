@@ -36,8 +36,9 @@
 
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     CombatComponent CombatComponent = Building.CombatComponent;
 
                     if (CombatComponent != null)
@@ -55,8 +56,9 @@
                     }
                 }
 
-                else if (GameObject is Trap Trap)
+                else if (GameObject is Trap)
                 {
+                    Trap Trap = (Trap)GameObject;
                     CombatComponent CombatComponent = Trap.CombatComponent;
 
                     if (CombatComponent != null)

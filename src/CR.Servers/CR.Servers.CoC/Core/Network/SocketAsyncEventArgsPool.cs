@@ -24,10 +24,9 @@
 
         internal SocketAsyncEventArgs Dequeue()
         {
-            if (this.TryPop(out SocketAsyncEventArgs asyncEvent))
-            {
+            var asyncEvent = default(SocketAsyncEventArgs);
+            if (this.TryPop(out asyncEvent))
                 return asyncEvent;
-            }
 
             return null;
         }

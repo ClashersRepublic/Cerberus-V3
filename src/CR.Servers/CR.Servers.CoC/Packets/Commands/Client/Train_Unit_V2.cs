@@ -37,8 +37,9 @@
             GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
             if (GameObject != null)
             {
-                if (GameObject is Building Building)
+                if (GameObject is Building)
                 {
+                    Building Building = (Building)GameObject;
                     UnitStorageV2Component UnitStorageV2Component = Building.UnitStorageV2Component;
 
                     if (UnitStorageV2Component != null)

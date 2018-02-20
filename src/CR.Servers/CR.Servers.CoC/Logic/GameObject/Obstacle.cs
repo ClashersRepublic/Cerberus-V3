@@ -230,7 +230,9 @@
 
         internal override void Load(JToken Json)
         {
-            if (JsonHelper.GetJsonNumber(Json, "clear_t", out int ClearTime) && JsonHelper.GetJsonNumber(Json, "clear_t_end", out int ClearTimeEnd))
+            int ClearTime;
+            int ClearTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "clear_t", out ClearTime) && JsonHelper.GetJsonNumber(Json, "clear_t_end", out ClearTimeEnd))
             {
                 if (ClearTime > -1)
                 {

@@ -68,6 +68,7 @@
         {
             if (this.Slots.TryRemove(Player, out Member))
             {
+                Player _;
                 Interlocked.Decrement(ref this.Alliance.Header.NumberOfMembers);
                 this.Connected.TryRemove(Player, out _);
                 this.Alliance.DecrementTotalConnected();

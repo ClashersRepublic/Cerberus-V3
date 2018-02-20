@@ -59,7 +59,8 @@
                     }
                     else
                     {
-                        this.Alliance.Members.Quit(Member.PlayerId, out Member Player);
+                        var Player = (Member)null;
+                        this.Alliance.Members.Quit(Member.PlayerId, out Player);
                     }
                 }
 
@@ -81,7 +82,8 @@
                     }
                     else
                     {
-                        this.Alliance.Members.Quit(Member.PlayerId, out Member Player);
+                        var Player = (Member)null;
+                        this.Alliance.Members.Quit(Member.PlayerId, out Player);
                     }
                 }
 

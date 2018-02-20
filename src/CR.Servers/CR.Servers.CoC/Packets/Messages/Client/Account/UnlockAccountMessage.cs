@@ -50,7 +50,8 @@
 
             if (this.UnlockCode[0] == '/')
             {
-                if (int.TryParse(this.UnlockCode.Substring(1), out int n))
+                int n;
+                if (int.TryParse(this.UnlockCode.Substring(1), out n))
                 {
                     if (n == 0)
                     {

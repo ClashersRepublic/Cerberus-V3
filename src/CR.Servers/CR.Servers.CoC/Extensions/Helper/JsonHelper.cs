@@ -24,12 +24,14 @@
 
         internal static bool GetJsonData(JToken Token, string Key, out Data Data)
         {
-            return (Data = JsonHelper.GetJsonNumber(Token, Key, out int Id) ? CSV.Tables.GetWithGlobalId(Id) : null) != null;
+            int Id = 0;
+            return (Data = JsonHelper.GetJsonNumber(Token, Key, out Id) ? CSV.Tables.GetWithGlobalId(Id) : null) != null;
         }
 
         internal static bool GetJsonData<T>(JToken Token, string Key, out T Data) where T : Data
         {
-            return (Data = JsonHelper.GetJsonNumber(Token, Key, out int Id) ? CSV.Tables.GetWithGlobalId(Id) as T : null) != null;
+            int Id = 0;
+            return (Data = JsonHelper.GetJsonNumber(Token, Key, out Id) ? CSV.Tables.GetWithGlobalId(Id) as T : null) != null;
         }
 
         internal static bool GetJsonBoolean(JToken Token, string Key, out bool Bool)

@@ -43,7 +43,8 @@
         {
             while (true)
             {
-                while (this.ReceiveMessageQueue.TryDequeue(out Message message))
+                var message = (Message)null;
+                while (this.ReceiveMessageQueue.TryDequeue(out message))
                 {
                     this.HandleMessage(message);
                 }
@@ -87,7 +88,8 @@
         {
             while (true)
             {
-                while (SendMessageQueue.TryDequeue(out Message message))               
+                var message = (Message)null;
+                while (SendMessageQueue.TryDequeue(out message))               
                 {
                     this.SendMessage(message);
                 }

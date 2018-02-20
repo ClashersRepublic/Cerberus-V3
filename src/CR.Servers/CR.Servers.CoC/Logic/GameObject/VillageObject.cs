@@ -181,7 +181,9 @@
 
         internal override void Load(JToken Json)
         {
-            if (JsonHelper.GetJsonNumber(Json, "const_t", out int ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out int ConstructionTimeEnd))
+            int ConstructionTime;
+            int ConstructionTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "const_t", out ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out ConstructionTimeEnd))
             {
                 if (ConstructionTime > -1)
                 {
@@ -203,8 +205,8 @@
                 }
             }
 
-
-            if (JsonHelper.GetJsonNumber(Json, "lvl", out int Level))
+            int Level;
+            if (JsonHelper.GetJsonNumber(Json, "lvl", out Level))
             {
                 if (Level < -1)
                 {

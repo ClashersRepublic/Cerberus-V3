@@ -21,7 +21,14 @@ namespace CR.Servers.Files.CSV_Reader
         public int Count => _columns.Count;
         public Column this[int index] => _columns[index];
 
-        public Column this[string name] => !_name2index.TryGetValue(name, out int index) ? null : _columns[index];
+        public Column this[string name]
+        {
+            get
+            {
+                int index = 0;
+                return !_name2index.TryGetValue(name, out index) ? null : _columns[index];
+            }
+        }
 
         public void Add(Column column)
         {

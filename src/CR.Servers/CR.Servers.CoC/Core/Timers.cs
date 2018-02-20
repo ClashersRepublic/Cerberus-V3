@@ -91,7 +91,8 @@
 
         internal void Restart()
         {
-            if (!TimeSpan.TryParse(Extension.ParseConfigString("Server:RestartInterval"), out TimeSpan interval))
+            var interval = default(TimeSpan);
+            if (!TimeSpan.TryParse(Extension.ParseConfigString("Server:RestartInterval"), out interval))
             {
                 interval = TimeSpan.FromMinutes(30);
             }

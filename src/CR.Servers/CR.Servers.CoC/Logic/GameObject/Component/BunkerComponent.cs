@@ -118,7 +118,9 @@
         internal override void Load(JToken Json)
         {
             //TODO: Check if calculated duration is longer then time
-            if (JsonHelper.GetJsonNumber(Json, "unit_req_time", out int UnitRequestTime) && JsonHelper.GetJsonNumber(Json, "unit_req_time_end", out int UnitRequestTimeEnd))
+            int UnitRequestTime;
+            int UnitRequestTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "unit_req_time", out UnitRequestTime) && JsonHelper.GetJsonNumber(Json, "unit_req_time_end", out UnitRequestTimeEnd))
             {
                 int UnitRequestTimeDuration = 0;
                 if (UnitRequestTime >= 0)
@@ -140,7 +142,9 @@
                 this.UnitRequestTimer.StartTimer(this.Parent.Level.Player.LastTick, UnitRequestTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "clan_mail_time", out int ClanMailTime) && JsonHelper.GetJsonNumber(Json, "clan_mail_time_end", out int ClanMailTimeEnd))
+            int ClanMailTime;
+            int ClanMailTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "clan_mail_time", out ClanMailTime) && JsonHelper.GetJsonNumber(Json, "clan_mail_time_end", out ClanMailTimeEnd))
             {
                 int ClanMailTimeDuration = 0;
                 if (ClanMailTime >= 0)
@@ -162,7 +166,9 @@
                 this.ClanMailTimer.StartTimer(this.Parent.Level.Player.LastTick, ClanMailTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "share_replay_time", out int ShareReplayTime) && JsonHelper.GetJsonNumber(Json, "share_replay_time_end", out int ShareReplayTimeEnd))
+            int ShareReplayTime;
+            int ShareReplayTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "share_replay_time", out ShareReplayTime) && JsonHelper.GetJsonNumber(Json, "share_replay_time_end", out ShareReplayTimeEnd))
             {
                 int ShareReplayTimeDuration = 0;
                 if (ShareReplayTime >= 0)
@@ -184,7 +190,9 @@
                 this.ShareReplayTimer.StartTimer(this.Parent.Level.Player.LastTick, ShareReplayTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "elder_kick_time", out int ElderKickTime) && JsonHelper.GetJsonNumber(Json, "elder_kick_time_end", out int ElderKickTimeEnd))
+            int ElderKickTime;
+            int ElderKickTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "elder_kick_time", out ElderKickTime) && JsonHelper.GetJsonNumber(Json, "elder_kick_time_end", out ElderKickTimeEnd))
             {
                 int ElderKickTimeDuration = 0;
                 if (ElderKickTime >= 0)
@@ -206,7 +214,9 @@
                 this.ElderKickTimer.StartTimer(this.Parent.Level.Player.LastTick, ElderKickTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "challenge_time", out int ChallengeTime) && JsonHelper.GetJsonNumber(Json, "challenge_time_end", out int ChallengeTimeEnd))
+            int ChallengeTime;
+            int ChallengeTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "challenge_time", out ChallengeTime) && JsonHelper.GetJsonNumber(Json, "challenge_time_end", out ChallengeTimeEnd))
             {
                 int ChallengeTimeDuration = 0;
                 if (ChallengeTime >= 0)
@@ -228,7 +238,9 @@
                 this.ChallengeTimer.StartTimer(this.Parent.Level.Player.LastTick, ChallengeTimeDuration);
             }
 
-            if (JsonHelper.GetJsonNumber(Json, "arrwar_time", out int ArrangeWarTime) && JsonHelper.GetJsonNumber(Json, "arrwar_time_end", out int ArrangeWarTimeEnd))
+            int ArrangeWarTime;
+            int ArrangeWarTimeEnd;
+            if (JsonHelper.GetJsonNumber(Json, "arrwar_time", out ArrangeWarTime) && JsonHelper.GetJsonNumber(Json, "arrwar_time_end", out ArrangeWarTimeEnd))
             {
                 int ArrangeWarTimeDuration = 0;
                 if (ArrangeWarTime >= 0)

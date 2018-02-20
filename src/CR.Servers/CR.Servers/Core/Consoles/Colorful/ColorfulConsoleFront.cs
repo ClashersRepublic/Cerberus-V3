@@ -31,62 +31,62 @@ namespace CR.Servers.Core.Consoles.Colorful
 
         public static Color BackgroundColor
         {
-            get => colorManager.GetColor(System.Console.BackgroundColor);
-            set => System.Console.BackgroundColor = colorManager.GetConsoleColor(value);
+            get { return colorManager.GetColor(System.Console.BackgroundColor); }
+            set { System.Console.BackgroundColor = colorManager.GetConsoleColor(value); }
         }
 
         public static int BufferHeight
         {
-            get => System.Console.BufferHeight;
-            set => System.Console.BufferHeight = value;
+            get { return System.Console.BufferHeight; }
+            set { System.Console.BufferHeight = value; }
         }
 
         public static int BufferWidth
         {
-            get => System.Console.BufferWidth;
-            set => System.Console.BufferWidth = value;
+            get { return System.Console.BufferWidth; }
+            set { System.Console.BufferWidth = value; }
         }
 
         public static bool CapsLock => System.Console.CapsLock;
 
         public static int CursorLeft
         {
-            get => System.Console.CursorLeft;
-            set => System.Console.CursorLeft = value;
+            get { return System.Console.CursorLeft; }
+            set { System.Console.CursorLeft = value; }
         }
 
         public static int CursorSize
         {
-            get => System.Console.CursorSize;
-            set => System.Console.CursorSize = value;
+            get { return System.Console.CursorSize; }
+            set { System.Console.CursorSize = value; }
         }
 
         public static int CursorTop
         {
-            get => System.Console.CursorTop;
-            set => System.Console.CursorTop = value;
+            get { return System.Console.CursorTop; }
+            set { System.Console.CursorTop = value; }
         }
 
         public static bool CursorVisible
         {
-            get => System.Console.CursorVisible;
-            set => System.Console.CursorVisible = value;
+            get { return System.Console.CursorVisible; }
+            set { System.Console.CursorVisible = value; }
         }
 
         public static TextWriter Error => System.Console.Error;
 
         public static Color ForegroundColor
         {
-            get => colorManager.GetColor(System.Console.ForegroundColor);
-            set => System.Console.ForegroundColor = colorManager.GetConsoleColor(value);
+            get { return colorManager.GetColor(System.Console.ForegroundColor); }
+            set { System.Console.ForegroundColor = colorManager.GetConsoleColor(value); }
         }
 
         public static TextReader In => System.Console.In;
 
         public static Encoding InputEncoding
         {
-            get => System.Console.InputEncoding;
-            set => System.Console.InputEncoding = value;
+            get { return System.Console.InputEncoding; }
+            set { System.Console.InputEncoding = value; }
         }
 
         public static bool KeyAvailable => System.Console.KeyAvailable;
@@ -101,44 +101,44 @@ namespace CR.Servers.Core.Consoles.Colorful
 
         public static Encoding OutputEncoding
         {
-            get => System.Console.OutputEncoding;
-            set => System.Console.OutputEncoding = value;
+            get { return System.Console.OutputEncoding; }
+            set { System.Console.OutputEncoding = value; }
         }
 
         public static string Title
         {
-            get => System.Console.Title;
-            set => System.Console.Title = value;
+            get { return System.Console.Title; }
+            set { System.Console.Title = value; }
         }
 
         public static bool TreatControlCAsInput
         {
-            get => System.Console.TreatControlCAsInput;
-            set => System.Console.TreatControlCAsInput = value;
+            get { return System.Console.TreatControlCAsInput; }
+            set { System.Console.TreatControlCAsInput = value; }
         }
 
         public static int WindowHeight
         {
-            get => System.Console.WindowHeight;
-            set => System.Console.WindowHeight = value;
+            get { return System.Console.WindowHeight; }
+            set { System.Console.WindowHeight = value; }
         }
 
         public static int WindowLeft
         {
-            get => System.Console.WindowLeft;
-            set => System.Console.WindowLeft = value;
+            get { return System.Console.WindowLeft; }
+            set { System.Console.WindowLeft = value; }
         }
 
         public static int WindowTop
         {
-            get => System.Console.WindowTop;
-            set => System.Console.WindowTop = value;
+            get { return System.Console.WindowTop; }
+            set { System.Console.WindowTop = value; }
         }
 
         public static int WindowWidth
         {
-            get => System.Console.WindowWidth;
-            set => System.Console.WindowWidth = value;
+            get { return System.Console.WindowWidth; }
+            set { System.Console.WindowWidth = value; }
         }
 
         public static event ConsoleCancelEventHandler CancelKeyPress = delegate { };
@@ -537,31 +537,31 @@ namespace CR.Servers.Core.Consoles.Colorful
             // NOTE: The Intellisense for this overload of System.Console.Write is misleading, as the C# compiler
             //       actually resolves this overload to System.Console.Write(string format, object[] args)!
 
-            WriteInColor(System.Console.Write, format, new[] {arg0, arg1, arg2, arg3}, color);
+            WriteInColor(System.Console.Write, format, new[] { arg0, arg1, arg2, arg3 }, color);
         }
 
         public static void WriteAlternating(string format, object arg0, object arg1, object arg2, object arg3,
             ColorAlternator alternator)
         {
-            WriteInColorAlternating(System.Console.Write, format, new[] {arg0, arg1, arg2, arg3}, alternator);
+            WriteInColorAlternating(System.Console.Write, format, new[] { arg0, arg1, arg2, arg3 }, alternator);
         }
 
         public static void WriteStyled(string format, object arg0, object arg1, object arg2, object arg3,
             StyleSheet styleSheet)
         {
-            WriteInColorStyled(WRITE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, styleSheet);
+            WriteInColorStyled(WRITE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, styleSheet);
         }
 
         public static void WriteFormatted(string format, object arg0, object arg1, object arg2, object arg3,
             Color styledColor, Color defaultColor)
         {
-            WriteInColorFormatted(WRITE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, styledColor, defaultColor);
+            WriteInColorFormatted(WRITE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, styledColor, defaultColor);
         }
 
         public static void WriteFormatted(string format, Formatter arg0, Formatter arg1, Formatter arg2, Formatter arg3,
             Color defaultColor)
         {
-            WriteInColorFormatted(WRITE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, defaultColor);
+            WriteInColorFormatted(WRITE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, defaultColor);
         }
 
         public static void WriteLine()
@@ -974,31 +974,31 @@ namespace CR.Servers.Core.Consoles.Colorful
             // NOTE: The Intellisense for this overload of System.Console.WriteLine is misleading, as the C# compiler
             //       actually resolves this overload to System.Console.WriteLine(string format, object[] args)!
 
-            WriteInColor(System.Console.WriteLine, format, new[] {arg0, arg1, arg2, arg3}, color);
+            WriteInColor(System.Console.WriteLine, format, new[] { arg0, arg1, arg2, arg3 }, color);
         }
 
         public static void WriteLineAlternating(string format, object arg0, object arg1, object arg2, object arg3,
             ColorAlternator alternator)
         {
-            WriteInColorAlternating(System.Console.WriteLine, format, new[] {arg0, arg1, arg2, arg3}, alternator);
+            WriteInColorAlternating(System.Console.WriteLine, format, new[] { arg0, arg1, arg2, arg3 }, alternator);
         }
 
         public static void WriteLineStyled(string format, object arg0, object arg1, object arg2, object arg3,
             StyleSheet styleSheet)
         {
-            WriteInColorStyled(WRITELINE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, styleSheet);
+            WriteInColorStyled(WRITELINE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, styleSheet);
         }
 
         public static void WriteLineFormatted(string format, object arg0, object arg1, object arg2, object arg3,
             Color styledColor, Color defaultColor)
         {
-            WriteInColorFormatted(WRITELINE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, styledColor, defaultColor);
+            WriteInColorFormatted(WRITELINE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, styledColor, defaultColor);
         }
 
         public static void WriteLineFormatted(string format, Formatter arg0, Formatter arg1, Formatter arg2,
             Formatter arg3, Color defaultColor)
         {
-            WriteInColorFormatted(WRITELINE_TRAILER, format, new[] {arg0, arg1, arg2, arg3}, defaultColor);
+            WriteInColorFormatted(WRITELINE_TRAILER, format, new[] { arg0, arg1, arg2, arg3 }, defaultColor);
         }
 
         public static void WriteAscii(string value)

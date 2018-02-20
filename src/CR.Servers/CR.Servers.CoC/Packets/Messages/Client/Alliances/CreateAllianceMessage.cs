@@ -131,7 +131,8 @@
                                                     Description = this.Description
                                                 };
 
-                                                if (Alliance.Members.Join(Level.Player, out Member Member))
+                                                Member Member;
+                                                if (Alliance.Members.Join(Level.Player, out Member))
                                                 {
                                                     Member.Role = Role.Leader;
                                                     Resources.Clans.New(Alliance);

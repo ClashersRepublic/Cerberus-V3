@@ -39,7 +39,8 @@
                 string Value = this.Row.GetValue(Data.Name, this.DataTable.Datas.Count);
                 if (!string.IsNullOrEmpty(Value))
                 {
-                    if (int.TryParse(Value, out int Count))
+                    int Count = 0;
+                    if (int.TryParse(Value, out Count))
                     {
                         //Logging.Error(this.GetType(), $"Value for {Data.Name} is {Count}. Value {Value}");
                         this.Caps.Add(Data, Count);

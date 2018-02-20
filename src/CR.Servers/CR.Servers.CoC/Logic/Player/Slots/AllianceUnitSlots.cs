@@ -32,7 +32,8 @@
 
         internal void Add(Data Data, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out Current))
             {
                 Current.Count += Count;
             }
@@ -44,7 +45,8 @@
 
         internal void Add(int Data, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Data && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Data && T.Level == Level, out Current))
             {
                 Current.Count += Count;
             }
@@ -56,7 +58,8 @@
 
         internal new void Add(UnitItem Item)
         {
-            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level, out Current))
             {
                 Current.Count += Item.Count;
             }
@@ -68,7 +71,8 @@
 
         internal void Add(UnitItem Item, long DonatorId)
         {
-            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level && T.DonatorId == DonatorId, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level && T.DonatorId == DonatorId, out  Current))
             {
                 Current.Count += Item.Count;
             }
@@ -100,7 +104,8 @@
 
         internal void Remove(Data Data, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out Current))
             {
                 Current.Count -= Count;
             }
@@ -108,7 +113,8 @@
 
         internal void Remove(Item Item, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Item.Data && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Item.Data && T.Level == Level, out Current))
             {
                 Current.Count -= Count;
 
@@ -125,7 +131,8 @@
 
         internal void Set(int Id, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Id && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Id && T.Level == Level, out Current))
             {
                 Current.Count = Count;
             }
@@ -137,7 +144,8 @@
 
         internal void Set(Data Data, int Count, int Level)
         {
-            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Data.GlobalId && T.Level == Level, out Current))
             {
                 Current.Count = Count;
             }
@@ -149,7 +157,8 @@
 
         internal void Set(UnitItem Item)
         {
-            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level, out UnitItem Current))
+            UnitItem Current;
+            if (this.TryGet(T => T.Data == Item.Data && T.Level == Item.Level, out Current))
             {
                 Current.Count = Item.Count;
             }

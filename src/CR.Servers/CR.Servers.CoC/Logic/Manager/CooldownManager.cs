@@ -40,7 +40,8 @@
 
         internal void Load(JToken Token)
         {
-            if (JsonHelper.GetJsonArray(Token, "cooldowns", out JArray Cooldowns))
+            JArray Cooldowns;
+            if (JsonHelper.GetJsonArray(Token, "cooldowns", out Cooldowns))
             {
                 foreach (JToken Object in Cooldowns)
                 {

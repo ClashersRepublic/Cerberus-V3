@@ -36,7 +36,8 @@
         internal override void Load(JToken Json)
         {
             base.Load(Json);
-            if (JsonHelper.GetJsonBoolean(Json, "t", out bool Terminate))
+            bool Terminate;
+            if (JsonHelper.GetJsonBoolean(Json, "t", out Terminate))
             {
                 this.Terminate = Terminate;
             }

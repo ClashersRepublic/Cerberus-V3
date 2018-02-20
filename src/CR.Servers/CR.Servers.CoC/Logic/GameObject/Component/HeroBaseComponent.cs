@@ -212,7 +212,9 @@
 
             if (HeroUpgrade != null)
             {
-                if (JsonHelper.GetJsonNumber(HeroUpgrade, "t", out int UpgradeTime) && JsonHelper.GetJsonNumber(HeroUpgrade, "t_end", out int UpgradeTimeEnd))
+                int UpgradeTime;
+                int UpgradeTimeEnd;
+                if (JsonHelper.GetJsonNumber(HeroUpgrade, "t", out UpgradeTime) && JsonHelper.GetJsonNumber(HeroUpgrade, "t_end", out UpgradeTimeEnd))
                 {
                     if (UpgradeTime > -1)
                     {
@@ -240,7 +242,8 @@
                     }
                 }
 
-                if (JsonHelper.GetJsonNumber(HeroUpgrade, "level", out int Level))
+                int Level;
+                if (JsonHelper.GetJsonNumber(HeroUpgrade, "level", out Level))
                 {
                     if (Level > this.UpgradeLevel + 1)
                     {

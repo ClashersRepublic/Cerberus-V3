@@ -33,7 +33,8 @@
             JObject UnitProd = (JObject) Json["unit_prod"];
             if (UnitProd != null)
             {
-                if (JsonHelper.GetJsonBoolean(UnitProd, "unit_type", out bool IsSpellForge))
+                bool IsSpellForge;
+                if (JsonHelper.GetJsonBoolean(UnitProd, "unit_type", out IsSpellForge))
                 {
                     this.IsSpellForge = IsSpellForge;
                 }

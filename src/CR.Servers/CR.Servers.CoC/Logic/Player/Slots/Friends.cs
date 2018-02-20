@@ -74,6 +74,7 @@
                         }
                         else
                         {
+                            Friend _;
                             this.Remove(Friend.PlayerId, out _);
                         }
                     }
@@ -85,6 +86,7 @@
         {
             if (this.Slots.TryRemove(Player, out Friend))
             {
+                Player _;
                 this.Connected.TryRemove(Player, out _);
                 return true;
             }

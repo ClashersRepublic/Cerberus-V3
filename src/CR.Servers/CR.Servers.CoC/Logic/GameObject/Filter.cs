@@ -16,8 +16,9 @@
 
         internal List<GameObject> GetGameObjectsByData(Data Data)
         {
-            if (Data is BuildingData BuildingData)
+            if (Data is BuildingData)
             {
+                BuildingData BuildingData = (BuildingData)Data;
                 List<GameObject> Result = this.GameObjectManager.GameObjects[0][BuildingData.VillageType].FindAll(T => T.Data.GlobalId == Data.GlobalId);
 
                 return Result;

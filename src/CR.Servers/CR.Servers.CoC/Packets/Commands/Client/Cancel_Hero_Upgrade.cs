@@ -28,13 +28,14 @@
 
         internal override void Execute()
         {
-            Level level = this.Device.GameMode.Level;
-            GameObject gameObject = level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
-            if (gameObject != null)
+            Level Level = this.Device.GameMode.Level;
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.BuildingId);
+            if (GameObject != null)
             {
-                if (gameObject is Building building)
+                if (GameObject is Building)
                 {
-                    HeroBaseComponent HeroBaseComponent = building.HeroBaseComponent;
+                    Building Building = (Building)GameObject;
+                    HeroBaseComponent HeroBaseComponent = Building.HeroBaseComponent;
                     if (HeroBaseComponent != null)
                     {
                         if (!HeroBaseComponent.Upgrading)

@@ -159,7 +159,8 @@
         {
             JObject Token = JObject.Load(reader);
 
-            if (JsonHelper.GetJsonNumber(Token, "type", out int Type))
+            int Type;
+            if (JsonHelper.GetJsonNumber(Token, "type", out Type))
             {
                 AvatarStreamEntry Entry;
 

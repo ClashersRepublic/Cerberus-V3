@@ -27,7 +27,8 @@
         {
             if (this.Parameters.Length >= 1)
             {
-                if (int.TryParse(this.Parameters[0], out int Time))
+                int Time;
+                if (int.TryParse(this.Parameters[0], out Time))
                 {
                     if (Time > 0)
                     {

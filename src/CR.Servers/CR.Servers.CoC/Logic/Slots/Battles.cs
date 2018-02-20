@@ -48,7 +48,8 @@
 
         internal Core.Database.Models.Mongo.Battles Get(long replayId)
         {
-            if (!this.TryGetValue(replayId, out Core.Database.Models.Mongo.Battles replay))
+            Core.Database.Models.Mongo.Battles replay;
+            if (!this.TryGetValue(replayId, out replay))
             {
                 replay = Mongo.Battles.Find(T => T.HighId == (int) (replayId >> 32) && T.LowId == (int) replayId).Limit(1).SingleOrDefault();
             }
