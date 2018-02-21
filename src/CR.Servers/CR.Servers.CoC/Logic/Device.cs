@@ -203,7 +203,8 @@
                                     message.Version = (short) messageVersion;
                                     message.Timer = new Stopwatch();
                                     message.Timer.Start();
-                                    Resources.PacketManager.ReceiveMessageQueue.Enqueue(message);
+                                    /*Resources.Processor.ReceiveMessageQueue.Enqueue(message);*/
+                                    Resources.Processor.EnqueueIncoming(message);
                                 }
 
                                 /*else

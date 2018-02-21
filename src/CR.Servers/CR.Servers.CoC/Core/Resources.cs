@@ -29,7 +29,7 @@
         internal static Test Test;
         internal static Logger Logger;
         internal static Duels Duels;
-        internal static PacketManager PacketManager;
+        internal static Processor Processor;
 
         internal static bool Started;
         internal static bool Closing;
@@ -54,7 +54,7 @@
             Resources.Regex = new Regex("[ ]{2,}", RegexOptions.Compiled);
             Resources.Name = new Regex("^[a-zA-Z0-9- ]*$");
 
-            Resources.PacketManager = new PacketManager();
+            Resources.Processor = new Processor();
 
             Resources.Accounts = new Accounts();
             Resources.Battles = new Battles();

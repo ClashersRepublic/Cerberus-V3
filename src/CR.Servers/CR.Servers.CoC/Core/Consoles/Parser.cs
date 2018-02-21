@@ -31,62 +31,76 @@
                     switch (Command)
                     {
                         case "/stats":
-                        {
-                            if (Resources.Started)
                             {
-                                Console.WriteLine();
-                                Console.WriteLine("# " + DateTime.Now.ToString("d") + " ---- STATS ---- " + DateTime.Now.ToString("T") + " #");
-                                Console.WriteLine("# ----------------------------------- #");
-                                Console.WriteLine("# In-Memory Accounts # " + ConsolePad.Padding(Resources.Accounts.Count.ToString(), 15) + " #");
-                                Console.WriteLine("# Message Queues     # " + ConsolePad.Padding(Resources.PacketManager.ReceiveMessageQueue.Count + "-" + Resources.PacketManager.SendMessageQueue.Count, 15) + " #");
-                                //Console.WriteLine("# In-Memory Clans   # " + ConsolePad.Padding(Resources.Clans.Count.ToString(), 15) + " #");
-                                Console.WriteLine("# ----------------------------------- #");
-                            }
+                                if (Resources.Started)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("# " + DateTime.Now.ToString("d") + " ---- STATS ---- " + DateTime.Now.ToString("T") + " #");
+                                    Console.WriteLine("# ----------------------------------- #");
+                                    Console.WriteLine("# In-Memory Accounts # " + ConsolePad.Padding(Resources.Accounts.Count.ToString(), 15) + "#");
+                                    Console.WriteLine("# ----------------------------------- #");
 
-                            break;
-                        }
+                                    Console.WriteLine("# Incoming-Processors ->" + "#".PadLeft(39 - "# Incoming-Processors ->".Length));
+                                    foreach (var processor in Resources.Processor.IncomingThreads)
+                                    {
+                                        string line = $"# --- {processor.Count} In Queue";
+                                        Console.WriteLine(line + "#".PadLeft(39 - line.Length));
+                                    }
+
+                                    Console.WriteLine("# Outgoing-Processors ->" + "#".PadLeft(39 - "# Outgoing-Processors ->".Length));
+                                    foreach (var processor in Resources.Processor.OutgoingThreads)
+                                    {
+                                        string line = $"# --- {processor.Count} In Queue";
+                                        Console.WriteLine(line + "#".PadLeft(39 - line.Length));
+                                    }
+
+                                    Console.WriteLine("# ----------------------------------- #");
+                                }
+
+                                break;
+                            }
 
                         case "/test":
-                        {
-                            if (Resources.Started)
                             {
+                                if (Resources.Started)
+                                {
+                                }
+
+                                break;
                             }
 
-                            break;
-                        }
-
                         case "/clear":
-                        {
-                            Console.Clear();
-                            break;
-                        }
+                            {
+                                Console.Clear();
+                                break;
+                            }
 
                         case "/exit":
                         case "/shutdown":
                         case "/stop":
-                        {
-                            EventsHandler.Process();
-                            break;
-                        }
-
-                        case "/debug":
-                        {
-                            string[] Names = LogicDebug.GetListOfCommands();
-
-                            foreach (string name in Names)
                             {
-                                Console.WriteLine("[DEBUG] Logic : " + ConsolePad.Padding(name));
+                                EventsHandler.Process();
+                                break;
                             }
 
-                            break;
-                        }
+                        case "/debug":
+                            {
+                                string[] Names = LogicDebug.GetListOfCommands();
+
+                                foreach (string name in Names)
+                                {
+                                    Console.WriteLine("[DEBUG] Logic : " + ConsolePad.Padding(name));
+                                }
+
+                                break;
+                            }
 
                         default:
-                        {
-                            LogicDebug.Execute(Command, Resources.Accounts.Players.Values.ToArray());
-                            Console.WriteLine();
-                            break;
-                        }
+                            {
+                                LogicDebug.Execute(Command, Resources.Accounts.Players.Values.ToArray());
+                                Console.WriteLine();
+                                break;
+                            }
                     }
                 }
             }).Start();

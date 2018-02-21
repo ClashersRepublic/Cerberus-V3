@@ -1,11 +1,13 @@
-﻿using System;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Core.Network;
+using CR.Servers.CoC.Packets.Messages.Client.Home;
+using CR.Servers.Core.Consoles;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using CR.Servers.CoC.Core;
-using CR.Servers.Core.Consoles;
-using Microsoft.Extensions.Configuration;
 
 namespace CR.Servers.CoC
 {
