@@ -44,7 +44,7 @@
 
         internal static void Initialize()
         {
-            Mongo.Client = new MongoClient("mongodb://127.0.0.1:27017");
+            Mongo.Client = new MongoClient(Settings.GameDbServer);
             Mongo.Database = Mongo.Client.GetDatabase("ClashOfClans");
 
             Mongo.Clans = Mongo.Database.GetCollection<Clans>("Clans");

@@ -4,6 +4,7 @@
     "PatchURL": "http://cocbetatest1.ddns.net/patch/",
     "EventURL": "http://cocbetatest1.ddns.net/events/",
     "GameAssetsURL": "http://cocbetatest1.ddns.net/patch/",
+    "GameDbURI": "mongodb://localhost:27017",
     "ClientMajorVersion": "9",
     "ClientMinorVersion": "256",
     "StartingResources": {
