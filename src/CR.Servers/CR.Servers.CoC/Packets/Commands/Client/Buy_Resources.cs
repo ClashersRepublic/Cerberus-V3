@@ -87,7 +87,9 @@
                                         if (!this.Command.IsServerCommand)
                                         {
                                             this.Command.Execute();
+                                            /*
                                             Logging.Info(this.GetType(), "Embedded Command is handled! (" + this.Command.Type + ")");
+                                            */
                                         }
                                         else
                                         {

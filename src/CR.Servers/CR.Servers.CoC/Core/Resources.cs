@@ -1,20 +1,20 @@
-﻿namespace CR.Servers.CoC.Core
-{
-    using System;
-    using System.Text.RegularExpressions;
-    using CR.Servers.CoC.Core.Consoles;
-    using CR.Servers.CoC.Core.Database;
-    using CR.Servers.CoC.Core.Events;
-    using CR.Servers.CoC.Core.Network;
-    using CR.Servers.CoC.Extensions.Game;
-    using CR.Servers.CoC.Files;
-    using CR.Servers.CoC.Logic.Chat;
-    using CR.Servers.CoC.Logic.Slots;
-    using CR.Servers.CoC.Packets;
-    using CR.Servers.Core;
-    using CR.Servers.Logic.Enums;
-    using NLog;
+﻿using CR.Servers.CoC.Core.Consoles;
+using CR.Servers.CoC.Core.Database;
+using CR.Servers.CoC.Core.Events;
+using CR.Servers.CoC.Core.Network;
+using CR.Servers.CoC.Extensions.Game;
+using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Logic.Chat;
+using CR.Servers.CoC.Logic.Slots;
+using CR.Servers.CoC.Packets;
+using CR.Servers.Core;
+using CR.Servers.Logic.Enums;
+using NLog;
+using System;
+using System.Text.RegularExpressions;
 
+namespace CR.Servers.CoC.Core
+{
     internal class Resources
     {
         internal static Accounts Accounts;

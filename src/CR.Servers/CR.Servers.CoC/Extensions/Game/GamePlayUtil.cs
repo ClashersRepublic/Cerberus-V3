@@ -224,7 +224,7 @@
             {
                 MissionData Mission = CSV.Tables.Get(Gamefile.Missions).GetDataWithID(Global_ID) as MissionData;
 
-#if DEBUG
+#if Extra
                 Console.WriteLine($"Mission received {Mission.Name} marked as finished");
 #endif
                 if (!string.IsNullOrEmpty(Mission.RewardResource))
@@ -240,7 +240,7 @@
                     CharacterData CSV_Characters =
                         CSV.Tables.Get(Gamefile.Characters).GetData(Mission.RewardTroop) as CharacterData;
 
-#if DEBUG
+#if Extra
                     Console.WriteLine($"Player received {CSV_Characters.Name} as mission rewards");
 #endif
                     Player.Units.Add(CSV_Characters.GlobalId, Mission.RewardTroopCount);
@@ -251,7 +251,7 @@
                     int DependenciesID = CSV.Tables.Get(Gamefile.Missions).GetData(Mission.Dependencies).GlobalId;
                     if (Player.Tutorials.FindIndex(M => M == DependenciesID) < 0)
                     {
-#if DEBUG
+#if Extra
                         Console.WriteLine($"Mission Dependencies {(CSV.Tables.Get(Gamefile.Missions).GetDataWithID(DependenciesID) as MissionData).Name} marked as finished");
 #endif
                         Player.Mission_Finish(DependenciesID);

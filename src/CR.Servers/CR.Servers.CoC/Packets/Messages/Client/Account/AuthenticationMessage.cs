@@ -1,19 +1,16 @@
-﻿using System;
-
-namespace CR.Servers.CoC.Packets.Messages.Client.Account
+﻿namespace CR.Servers.CoC.Packets.Messages.Client.Account
 {
     using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Files;
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Packets.Enums;
     using CR.Servers.CoC.Packets.Messages.Server.Account;
     using CR.Servers.CoC.Packets.Messages.Server.Alliances;
     using CR.Servers.CoC.Packets.Messages.Server.Avatar;
-    using CR.Servers.CoC.Packets.Messages.Server.Friend;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System.Threading.Tasks;
 
     internal class AuthenticationMessage : Message
     {
@@ -32,13 +29,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Account
             this.Device.State = State.LOGIN;
         }
 
-        internal override short Type
-        {
-            get
-            {
-                return 10101;
-            }
-        }
+        internal override short Type => 10101;
 
         internal override void Decode()
         {
@@ -58,70 +49,37 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Account
             this.Device.Info.OpenUDID = this.Reader.ReadString();
             this.Device.Info.DeviceModel = this.Reader.ReadString();
 
-            if (!this.Reader.EndOfStream)
-            {
-                this.LocaleId = this.Reader.ReadInt32();
-                this.Device.Info.PreferredLanguage = this.Reader.ReadString();
+            this.LocaleId = this.Reader.ReadInt32();
+            this.Device.Info.PreferredLanguage = this.Reader.ReadString();
 
-                if (!this.Reader.EndOfStream)
-                {
-                    this.Device.Info.ADID = this.Reader.ReadString();
+            this.Device.Info.ADID = this.Reader.ReadString();
 
-                    if (!this.Reader.EndOfStream)
-                    {
-                        this.Device.Info.OSVersion = this.Reader.ReadString();
+            this.Device.Info.OSVersion = this.Reader.ReadString();
 
-                        if (!this.Reader.EndOfStream)
-                        {
-                            this.Device.Info.Android = this.Reader.ReadBoolean();
+            this.Device.Info.Android = this.Reader.ReadBoolean();
 
-                            if (!this.Reader.EndOfStream)
-                            {
-                                this.Reader.ReadString();
-                                this.Device.Info.AndroidID = this.Reader.ReadString();
+            this.Reader.ReadString();
+            this.Device.Info.AndroidID = this.Reader.ReadString();
 
-                                if (!this.Reader.EndOfStream)
-                                {
-                                    this.Reader.ReadString();
+            this.Reader.ReadString();
 
-                                    if (!this.Reader.EndOfStream)
-                                    {
-                                        this.Device.Info.Advertising = this.Reader.ReadBoolean();
-                                        this.Reader.ReadString();
+            this.Device.Info.Advertising = this.Reader.ReadBoolean();
+            this.Reader.ReadString();
 
-                                        if (!this.Reader.EndOfStream)
-                                        {
-                                            this.Device.EncryptionSeed = this.Reader.ReadInt32();
-                                            if (!this.Reader.EndOfStream)
-                                            {
-                                                this.Reader.ReadVInt();
-                                                this.Reader.ReadString();
-                                                this.Reader.ReadString();
+            this.Device.EncryptionSeed = this.Reader.ReadInt32();
+            this.Reader.ReadVInt();
+            this.Reader.ReadString();
+            this.Reader.ReadString();
 
-                                                if (!this.Reader.EndOfStream)
-                                                {
-                                                    this.Device.Info.ClientVersion = this.Reader.ReadString().Split('.');
+            this.Device.Info.ClientVersion = this.Reader.ReadString().Split('.');
 
-                                                    if (!this.Reader.EndOfStream)
-                                                    {
-                                                        this.Reader.ReadString();
-                                                        this.Reader.ReadString();
+            this.Reader.ReadString();
+            this.Reader.ReadString();
 
-                                                        this.Reader.ReadVInt();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            this.Reader.ReadVInt();
         }
 
-        internal override async void Process()
+        internal override async Task ProcessAsync()
         {
             if (!this.CheckClient())
             {
@@ -130,7 +88,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Account
 
             if (Resources.Closing)
             {
-                new AuthenticationFailedMessage(this.Device, LoginFailedReason.UpdateInProgress) {Message = "The server is currently exiting and saving data, and you cannot log-in during this time. Please try again in a few minutes."}.Send();
+                new AuthenticationFailedMessage(this.Device, LoginFailedReason.UpdateInProgress) { Message = "The server is currently exiting and saving data, and you cannot log-in during this time. Please try again in a few minutes." }.Send();
                 return;
             }
 

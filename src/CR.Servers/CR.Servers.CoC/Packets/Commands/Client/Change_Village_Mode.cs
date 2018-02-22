@@ -33,11 +33,11 @@
 
             if (this.State == 0 || this.State == 1)
             {
-                Level.Player.Variables.Set((int) Variable.VillageToGoTo, this.State);
+                Level.Player.Variables.Set((int)Variable.VillageToGoTo, this.State);
             }
 #if DEBUG
             Logging.Info(this.GetType(),
-                $"Village Manager : Changing mode to {(Village_Mode) Level.Player.Variables.GetCountByGlobalId((int) Variable.VillageToGoTo)}");
+                $"Village Manager : Changing mode to {(Village_Mode)Level.Player.Variables.GetCountByGlobalId((int)Variable.VillageToGoTo)}");
 #endif
         }
     }

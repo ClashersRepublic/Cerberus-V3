@@ -1,4 +1,4 @@
-﻿#define Extra
+﻿//#define Extra
 
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Packets.Messages.Server.Account;

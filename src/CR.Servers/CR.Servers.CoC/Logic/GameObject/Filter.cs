@@ -31,7 +31,10 @@
         {
             int Class = Id / 1000000 - 500;
 
+            /*
             if (this.GameObjectManager.GameObjects.Length > Class)
+            */
+            if (Class < GameObjectManager.GameObjects.Length)
             {
                 GameObject GameObject = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);
 

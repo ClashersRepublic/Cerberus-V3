@@ -1,4 +1,4 @@
-﻿#define Extra
+﻿//#define Extra
 
 namespace CR.Servers.CoC.Packets.Messages.Client.Battle
 {

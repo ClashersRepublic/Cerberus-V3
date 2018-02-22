@@ -8,31 +8,28 @@ namespace CR.Servers.CoC.Core.Network
 {
     internal class Processor
     {
-        private int _incomingIndex;
-        private int _outgoingIndex;
+        private long _incomingIndex;
+        private long _outgoingIndex;
 
-        private IncomingProcessorThread[] _incomingThreads;
-        private OutgoingProcessorThread[] _outgoingThreads;
+        private readonly int _processorCount;
+        private readonly IncomingProcessorThread[] _incomingThreads;
+        private readonly OutgoingProcessorThread[] _outgoingThreads;
 
         internal Processor()
         {
-            /*
-            _incomingIndex = -1;
-            _outgoingIndex = -1;
-            */
-
-            _incomingThreads = new IncomingProcessorThread[Environment.ProcessorCount];
-            _outgoingThreads = new OutgoingProcessorThread[Environment.ProcessorCount];
+            _processorCount = Environment.ProcessorCount;
+            _incomingThreads = new IncomingProcessorThread[_processorCount];
+            _outgoingThreads = new OutgoingProcessorThread[_processorCount];
 
             /* Initialize the processor threads. */
-            for (int i = 0; i < Environment.ProcessorCount; i++)
+            for (int i = 0; i < _processorCount; i++)
             {
                 _incomingThreads[i] = new IncomingProcessorThread();
                 _outgoingThreads[i] = new OutgoingProcessorThread();
             }
 
             /* Start the processor threads. */
-            for (int i = 0; i < Environment.ProcessorCount; i++)
+            for (int i = 0; i < _processorCount; i++)
             {
                 _incomingThreads[i].Start();
                 _outgoingThreads[i].Start();
@@ -42,40 +39,40 @@ namespace CR.Servers.CoC.Core.Network
         public IncomingProcessorThread[] IncomingThreads => _incomingThreads;
         public OutgoingProcessorThread[] OutgoingThreads => _outgoingThreads;
 
+        public int GetNextOutgoingQueueId()
+        {
+            return (int)(Interlocked.Increment(ref _outgoingIndex) % _processorCount);
+        }
+
+        public int GetNextIncomingQueueId()
+        {
+            return (int)(Interlocked.Increment(ref _incomingIndex) % _processorCount);
+        }
+
         /* Enqueues a message we're sending on a processing thread. */
         public void EnqueueOutgoing(Message message)
         {
-            /*
-            Interlocked.CompareExchange(ref _outgoingIndex, -1, _outgoingThreads.Length - 1);
-            var index = Interlocked.Increment(ref _outgoingIndex);
-            */
+            var index = GetNextOutgoingQueueId();
+            EnqueueOutgoing(message, index);
+        }
 
-            lock (_outgoingThreads)
-            {
-                var processor = _outgoingThreads[_outgoingIndex];
-                processor._queue.Enqueue(message);
-
-                if (++_outgoingIndex > _outgoingThreads.Length - 1)
-                    Interlocked.Exchange(ref _outgoingIndex, 0);
-            }
+        public void EnqueueOutgoing(Message message, int queueId)
+        {
+            var processor = _outgoingThreads[queueId];
+            processor._queue.Enqueue(message);
         }
 
         /* Enqueues a message we've received on a processing thread. */
         public void EnqueueIncoming(Message message)
         {
-            /*
-            Interlocked.CompareExchange(ref _outgoingIndex, -1, _outgoingThreads.Length - 1);
-            var index = Interlocked.Increment(ref _incomingIndex);
-            */
+            var index = GetNextIncomingQueueId();
+            EnqueueIncoming(message, index);
+        }
 
-            lock (_incomingThreads)
-            {
-                var processor = _incomingThreads[_incomingIndex];
-                processor._queue.Enqueue(message);
-
-                if (++_incomingIndex > _incomingThreads.Length - 1)
-                    Interlocked.Exchange(ref _incomingIndex, 0);
-            }
+        public void EnqueueIncoming(Message message, int queueId)
+        {
+            var processor = _incomingThreads[queueId];
+            processor._queue.Enqueue(message);
         }
 
         /* Represents a thread which processes incoming messages. */
@@ -97,7 +94,7 @@ namespace CR.Servers.CoC.Core.Network
                 _thread.Start();
             }
 
-            private void Process()
+            private async void Process()
             {
                 try
                 {
@@ -116,9 +113,15 @@ namespace CR.Servers.CoC.Core.Network
                                 try
                                 { message.Process(); }
                                 catch (Exception ex)
-                                { Logging.Error(message.GetType(), "Exception while processing message: " + ex); }
+                                { Logging.Error(message.GetType(), "Exception while processing incoming message: " + ex); }
+
+                                try
+                                { await message.ProcessAsync(); }
+                                catch (Exception ex)
+                                { Logging.Error(message.GetType(), "Exception while processing incoming message async: " + ex); }
 
                                 message.Timer.Stop();
+                                message.Device.Flush();
                             }
 
                             Thread.Sleep(1);
@@ -173,31 +176,35 @@ namespace CR.Servers.CoC.Core.Network
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while encoding message: " + ex); }
 
+                                byte[] body = message.Data.ToArray();
+
+                                if (device.SendEncrypter != null)
+                                {
+                                    /* Encrypt the message locking the Encrypter to avoid breaking the xor stream.*/
+                                    lock (device.SendEncrypter)
+                                        body = device.SendEncrypter.Encrypt(body);
+                                }
+
                                 try
                                 { message.Process(); }
                                 catch (Exception ex)
-                                { Logging.Error(message.GetType(), "Exception while processing incoming message: " + ex); }
+                                { Logging.Error(message.GetType(), "Exception while processing outgoing message: " + ex); }
 
-                                byte[] messageBytes = message.Data.ToArray();
-
-                                if (device.SendEncrypter != null)
-                                    messageBytes = device.SendEncrypter.Encrypt(messageBytes);
-
-                                byte[] packet = new byte[messageBytes.Length + 7];
+                                byte[] packet = new byte[body.Length + 7];
 
                                 /* Write header. */
                                 packet[1] = (byte)message.Type;
                                 packet[0] = (byte)(message.Type >> 8);
 
-                                packet[4] = (byte)messageBytes.Length;
-                                packet[3] = (byte)(messageBytes.Length >> 8);
-                                packet[2] = (byte)(messageBytes.Length >> 16);
+                                packet[4] = (byte)body.Length;
+                                packet[3] = (byte)(body.Length >> 8);
+                                packet[2] = (byte)(body.Length >> 16);
 
                                 packet[6] = (byte)message.Version;
                                 packet[5] = (byte)(message.Version >> 8);
 
                                 /* Write body. */
-                                Array.Copy(messageBytes, 0, packet, 7, messageBytes.Length);
+                                Array.Copy(body, 0, packet, 7, body.Length);
 
                                 Resources.Gateway.Send(packet, message.Device.Token);
 

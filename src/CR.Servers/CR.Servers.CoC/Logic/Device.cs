@@ -10,6 +10,7 @@
     using CR.Servers.CoC.Packets.Stream;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System.Collections.Concurrent;
 
     public class Device : IDisposable
     {
@@ -32,10 +33,14 @@
         internal Token Token;
         internal bool UseRC4;
 
+        private readonly ConcurrentQueue<Message> _messages;
+
         internal Device()
         {
             this.GameMode = new GameMode(this);
             this.LastKeepAlive = DateTime.UtcNow;
+
+            _messages = new ConcurrentQueue<Message>();
         }
 
         internal int Checksum
@@ -93,6 +98,23 @@
             get
             {
                 return this.Info.Android ? "Android" : "iOS";
+            }
+        }
+
+        public void Queue(Message message)
+        {
+            _messages.Enqueue(message);
+        }
+
+        public void Flush()
+        {
+            if (_messages.Count > 0)
+            {
+                var queueId = Resources.Processor.GetNextOutgoingQueueId();
+
+                Message message;
+                while (_messages.TryDequeue(out message))
+                    Resources.Processor.EnqueueOutgoing(message, queueId);
             }
         }
 

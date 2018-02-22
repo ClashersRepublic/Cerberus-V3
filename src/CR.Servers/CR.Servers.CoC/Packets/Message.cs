@@ -11,9 +11,12 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Extensions;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
-    internal abstract class Message
+    public abstract class Message
     {
+        private static readonly Task s_completedTask = Task.FromResult<object>(null);
+
         internal Stopwatch Timer;
         internal List<byte> Data;
 
@@ -54,6 +57,11 @@
             //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Processing.");
         }
 
+        internal virtual Task ProcessAsync()
+        {
+            return s_completedTask;
+        }
+
         internal virtual void SendChatMessage(string message)
         {
             new GlobalChatLineMessage(this.Device, this.Device.GameMode.Level.Player)
@@ -85,8 +93,8 @@
         internal void Send()
         {
             if (Device.Connected)
-                /*Resources.Processor.SendMessageQueue.Enqueue(this);*/
-                Resources.Processor.EnqueueOutgoing(this);
+                /*Resources.Processor.EnqueueOutgoing(this);*/
+                Device.Queue(this);
         }
 
         internal void Log()
