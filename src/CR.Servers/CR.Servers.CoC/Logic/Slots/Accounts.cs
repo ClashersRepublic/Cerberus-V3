@@ -33,11 +33,11 @@
         private static ConcurrentQueue<Player> _savePlayerQueue;
         private static ConcurrentQueue<Home> _saveHomeQueue;
 
-        private int Seed;
+        private int _seed;
 
         internal Accounts()
         {
-            this.Seed = Mongo.PlayerSeed;
+            this._seed = Mongo.PlayerSeed;
 
             this.Homes = new ConcurrentDictionary<long, WeakReference<Home>>();
             this.Players = new ConcurrentDictionary<long, WeakReference<Player>>();
@@ -110,6 +110,7 @@
                 if (tmpRef.TryGetTarget(out account))
                     return true;
 
+                TryRemove(id, out tmpRef);
                 return false;
             }
 
@@ -125,6 +126,7 @@
                 if (tmpRef.TryGetTarget(out home))
                     return true;
 
+                Homes.TryRemove(id, out tmpRef);
                 return false;
             }
 
@@ -140,6 +142,7 @@
                 if (tmpRef.TryGetTarget(out player))
                     return true;
 
+                Players.TryRemove(id, out tmpRef);
                 return false;
             }
 
@@ -147,59 +150,54 @@
             return false;
         }
 
-        internal Account CreateAccount()
+        internal async Task<Account> CreateAccountAsync()
         {
-            int LowID = Interlocked.Increment(ref this.Seed);
-
-            string Token = string.Empty;
-            string Password = string.Empty;
+            int lowId = Interlocked.Increment(ref _seed);
+            string token = string.Empty;
+            string password = string.Empty;
 
             for (int i = 0; i < 40; i++)
-            {
-                Token += (char)Resources.Random.Next('A', 'Z');
-            }
+                token += (char)Resources.Random.Next('A', 'Z');
 
             for (int i = 0; i < 12; i++)
-            {
-                Password += (char)Resources.Random.Next('A', 'Z');
-            }
+                password += (char)Resources.Random.Next('A', 'Z');
 
-            Player Player = new Player(null, Constants.ServerId, LowID)
+            Player player = new Player(null, Constants.ServerId, lowId)
             {
-                Token = Token,
-                Password = Password
+                Token = token,
+                Password = password
             };
 
-            Home Home = new Home(Constants.ServerId, LowID) { LastSave = LevelFile.StartingHome };
+            Home home = new Home(Constants.ServerId, lowId) { LastSave = LevelFile.StartingHome };
 
-            Mongo.Players.InsertOneAsync(new Players
+            await Mongo.Players.InsertOneAsync(new Players
             {
                 HighId = Constants.ServerId,
-                LowId = LowID,
+                LowId = lowId,
 
-                Player = BsonDocument.Parse(JsonConvert.SerializeObject(Player, this.Settings)),
-                Home = BsonDocument.Parse(JsonConvert.SerializeObject(Home, this.Settings))
+                Player = BsonDocument.Parse(JsonConvert.SerializeObject(player, this.Settings)),
+                Home = BsonDocument.Parse(JsonConvert.SerializeObject(home, this.Settings))
             });
 
-            Account account = new Account(Constants.ServerId, LowID, Player, Home);
+            Account account = new Account(Constants.ServerId, lowId, player, home);
 
-            this.Add(Player);
-            this.Add(Home);
+            this.Add(player);
+            this.Add(home);
             this.Add(account);
 
             Level Level = new Level();
-            Level.SetPlayer(Player);
-            Level.SetHome(Home);
+            Level.SetPlayer(player);
+            Level.SetHome(home);
             Level.FastForwardTime(0);
             Level.Process();
 
             return account;
         }
 
-        internal Account LoadRandomOfflineAccount(bool store = true)
+        internal async Task<Account> LoadRandomOfflineAccountAsync(bool store = true)
         {
             int serverId = Constants.ServerId;
-            int seed = this.Seed;
+            int seed = this._seed;
             int rnd = 0;
 
             Account account = null;
@@ -211,7 +209,7 @@
                 Account tmp;
                 if (!this.TryGetAccount(rnd, out tmp))
                 {
-                    account = this.LoadAccount(serverId, rnd, store);
+                    account = await this.LoadAccountAsync(serverId, rnd, store);
 
                     if (account != null)
                     {
@@ -532,21 +530,31 @@
 
         internal void Saves()
         {
-            WeakReference<Player>[] Players = this.Players.Values.ToArray();
-            WeakReference<Home>[] Homes = this.Homes.Values.ToArray();
+            KeyValuePair<long, WeakReference<Player>>[] players = this.Players.ToArray();
+            KeyValuePair<long, WeakReference<Home>>[] homes = this.Homes.ToArray();
 
-            foreach (WeakReference<Player> playerRef in Players)
+            foreach (var kv in players)
             {
                 Player player;
-                if (playerRef.TryGetTarget(out player))
+                if (kv.Value.TryGetTarget(out player))
                     _savePlayerQueue.Enqueue(player);
+                else
+                {
+                    WeakReference<Player> _;
+                    Players.TryRemove(kv.Key, out _);
+                }
             }
 
-            foreach (WeakReference<Home> homeRef in Homes)
+            foreach (var kv in homes)
             {
                 Home home;
-                if (homeRef.TryGetTarget(out home))
+                if (kv.Value.TryGetTarget(out home))
                     _saveHomeQueue.Enqueue(home);
+                else
+                {
+                    WeakReference<Home> _;
+                    Homes.TryRemove(kv.Key, out _);
+                }
             }
         }
 

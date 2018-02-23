@@ -4,17 +4,18 @@ using System.Net.Sockets;
 using CR.Servers.CoC.Logic;
 using CR.Servers.Logic.Enums;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace CR.Servers.CoC.Core.Network
 {
     internal class Gateway
     {
         private readonly Socket _listener;
-        private readonly List<Device> _connectedDevices;
+        private readonly ConcurrentDictionary<IntPtr, Device> _connectedDevices;
 
         internal Gateway()
         {
-            this._connectedDevices = new List<Device>(4096);
+            this._connectedDevices = new ConcurrentDictionary<IntPtr, Device>();
             this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
             this._listener.Listen(500);
@@ -62,8 +63,7 @@ namespace CR.Servers.CoC.Core.Network
                 Device device = new Device();
                 Token token = new Token(readEvent, device, socket);
 
-                lock (_connectedDevices)
-                    _connectedDevices.Add(device);
+                _connectedDevices.TryAdd(socket.Handle, device);
 
                 device.State = State.SESSION;
 
@@ -171,7 +171,7 @@ namespace CR.Servers.CoC.Core.Network
 
                     if (!token.Socket.SendAsync(writeEvent))
                     {
-                        this.OnSendCompleted(null, writeEvent);
+                        this.OnSendCompleted(token.Socket, writeEvent);
                     }
                 }
             }
@@ -179,6 +179,15 @@ namespace CR.Servers.CoC.Core.Network
 
         private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
+            var socket = (Socket)sender;
+            if (args.BytesTransferred < args.Count)
+            {
+                var offset = args.Offset + args.BytesTransferred;
+                var count = args.Count - offset;
+
+                args.SetBuffer(offset, count);
+                socket.SendAsync(args);
+            }
             args.Dispose();
         }
 
@@ -192,8 +201,8 @@ namespace CR.Servers.CoC.Core.Network
 
                 if (token != null)
                 {
-                    lock (_connectedDevices)
-                        _connectedDevices.Remove(token.Device);
+                    Device _;
+                    _connectedDevices.TryRemove(token.Socket.Handle, out _);
 
                     if (!token.Aborting)
                     {

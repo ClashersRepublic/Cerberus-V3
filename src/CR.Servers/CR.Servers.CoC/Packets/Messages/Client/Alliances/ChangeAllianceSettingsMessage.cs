@@ -10,6 +10,7 @@
     using CR.Servers.CoC.Packets.Messages.Server.Alliances;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System.Threading.Tasks;
 
     internal class ChangeAllianceSettingsMessage : Message
     {
@@ -55,7 +56,7 @@
             this.AmicalWar = this.Reader.ReadBooleanV2();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             if (this.Device.GameMode.Level.Player.InAlliance)
             {
@@ -90,7 +91,7 @@
                         //if (Foreground != null)
                         {
                             Level Level = this.Device.GameMode.Level;
-                            Alliance Alliance = Resources.Clans.Get(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
+                            Alliance Alliance = await Resources.Clans.GetAsync(Level.Player.AllianceHighId, Level.Player.AllianceLowId);
                             Alliance.Description = this.Description;
                             Alliance.Header.Badge = this.AllianceBadge;
                             Alliance.Header.Type = this.AllianceType;

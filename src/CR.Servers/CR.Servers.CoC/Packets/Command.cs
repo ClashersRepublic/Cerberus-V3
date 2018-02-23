@@ -13,9 +13,12 @@
     using CR.Servers.Extensions.List;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    
+    using System.Threading.Tasks;
+
     public class Command
     {
+        private static readonly Task s_completedTask = Task.FromResult<object>(null);
+
         internal Device Device;
         internal int ExecuteSubTick = -1;
 
@@ -64,6 +67,11 @@
 
         internal virtual void Execute()
         {
+        }
+
+        internal virtual Task ExecuteAsync()
+        {
+            return s_completedTask;
         }
 
         internal virtual void Load(JToken Token)

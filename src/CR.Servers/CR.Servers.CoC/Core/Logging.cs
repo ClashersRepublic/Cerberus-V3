@@ -1,4 +1,4 @@
-﻿#define Console
+﻿//#define Console
 
 namespace CR.Servers.CoC.Core
 {
@@ -15,7 +15,7 @@ namespace CR.Servers.CoC.Core
 #if Console
             Console.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #else
-            Debug.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
+            //Debug.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #endif
         }
 
@@ -26,7 +26,7 @@ namespace CR.Servers.CoC.Core
 #if Console
             Console.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #else
-            Debug.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
+            //Debug.WriteLine("[*] " + ConsolePad.Padding(Type.Name, 15) + " : " + Message);
 #endif
         }
 

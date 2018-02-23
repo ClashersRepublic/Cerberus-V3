@@ -10,6 +10,7 @@
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System;
     using System.Threading.Tasks;
 
     internal class AuthenticationMessage : Message
@@ -94,7 +95,7 @@
 
             if (this.HighId == 0 && this.LowId == 0 && this.Token == null)
             {
-                this.Login(Resources.Accounts.CreateAccount());
+                this.Login(await Resources.Accounts.CreateAccountAsync());
             }
             else
             {

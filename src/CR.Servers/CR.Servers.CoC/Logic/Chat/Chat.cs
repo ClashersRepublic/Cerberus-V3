@@ -4,28 +4,23 @@
     using System.Linq;
     using CR.Servers.CoC.Core.Network;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
+    using System.Collections.Concurrent;
+    using System;
 
     internal class Chat
     {
-        internal List<Device> Devices;
-
-        internal object Gate = new object();
+        internal ConcurrentDictionary<IntPtr, Device> Devices;
 
         public Chat()
         {
-            this.Devices = new List<Device>(50);
+            this.Devices = new ConcurrentDictionary<IntPtr, Device>();
         }
 
         internal bool TryAdd(Device Device)
         {
-            lock (this.Gate)
+            if (this.Devices.Count < 50)
             {
-                if (this.Devices.Count < 50)
-                {
-                    this.Devices.Add(Device);
-
-                    return true;
-                }
+                return this.Devices.TryAdd(Device.Token.Socket.Handle, Device);
             }
 
             return false;
@@ -33,25 +28,25 @@
 
         internal void Quit(Device Device)
         {
-            lock (this.Gate)
-            {
-                this.Devices.Remove(Device);
-            }
+            Device _;
+            this.Devices.TryRemove(Device.Token.Socket.Handle, out _);
         }
 
         internal void AddEntry(Device Device, string Message)
         {
+            /*
             Device[] Devices = this.Devices.ToArray();
+            */
 
-            if (Devices.Contains(Device))
+            if (Devices.ContainsKey(Device.Token.Socket.Handle))
             {
                 if (!string.IsNullOrEmpty(Message))
                 {
-                    foreach (Device Device2 in Devices)
+                    foreach (Device Device2 in Devices.Values)
                     {
                         if (Device2.Connected)
                         {
-                            new GlobalChatLineMessage(Device2, Device.GameMode.Level.Player) {Message = Message}.Send();
+                            new GlobalChatLineMessage(Device2, Device.GameMode.Level.Player) { Message = Message }.Send();
                         }
                         else
                         {

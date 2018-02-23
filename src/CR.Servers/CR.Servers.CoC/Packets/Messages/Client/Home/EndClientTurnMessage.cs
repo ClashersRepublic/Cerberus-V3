@@ -11,6 +11,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
     using CR.Servers.CoC.Core;
     using CR.Servers.CoC.Logic;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class EndClientTurnMessage : Message
     {
@@ -71,7 +72,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
             }
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             this.Device.GameMode.Time.SubTick = this.SubTick;
             this.Device.GameMode.Level.Tick();
@@ -88,7 +89,7 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
 
                     if (Command.IsServerCommand)
                     {
-                        ServerCommand ServerCommand = (ServerCommand) Command;
+                        ServerCommand ServerCommand = (ServerCommand)Command;
                         ServerCommand OriginalCommand;
                         if (this.Device.GameMode.CommandManager.ServerCommands.TryGetValue(ServerCommand.Id, out OriginalCommand))
                         {
@@ -106,16 +107,20 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                     if (Command.ExecuteSubTick <= this.SubTick)
                     {
                         try
-                        {
-                            Command.Execute();
-#if Extra
-                            Logging.Info(this.GetType(), "Command is handled! (" + Command.Type + ")");
-#endif
-                        }
+                        { Command.Execute(); }
                         catch (Exception Exception)
                         {
                             Logging.Error(Exception.GetType(),
                                 $"Exception while executing a command {Command.Type}. " + Exception.Message +
+                                Environment.NewLine + Exception.StackTrace);
+                        }
+
+                        try
+                        { await Command.ExecuteAsync(); }
+                        catch (Exception Exception)
+                        {
+                            Logging.Error(Exception.GetType(),
+                                $"Exception while executing a command {Command.Type} async. " + Exception.Message +
                                 Environment.NewLine + Exception.StackTrace);
                         }
                     }

@@ -10,6 +10,7 @@
     using CR.Servers.CoC.Packets.Commands.Server;
     using CR.Servers.CoC.Packets.Messages.Server.Alliances;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class JoinAllianceMessage : Message
     {
@@ -34,9 +35,9 @@
             this.ClanLowId = this.Reader.ReadInt32();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
-            Alliance Alliance = Resources.Clans.Get(this.ClanHighId, this.ClanLowId);
+            Alliance Alliance = await Resources.Clans.GetAsync(this.ClanHighId, this.ClanLowId);
 
             if (Alliance != null)
             {

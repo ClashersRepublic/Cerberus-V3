@@ -5,6 +5,7 @@
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class VisitHomeMessage : Message
     {
@@ -29,9 +30,9 @@
             this.LowId = this.Reader.ReadInt32();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
-            Player Player = Resources.Accounts.LoadAccount(this.HighId, this.LowId).Player;
+            Player Player = (await Resources.Accounts.LoadAccountAsync(this.HighId, this.LowId)).Player;
 
             if (Player.Level != null)
             {

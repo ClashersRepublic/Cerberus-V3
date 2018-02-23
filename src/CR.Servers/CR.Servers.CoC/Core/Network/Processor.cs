@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets;
+using System.Threading.Tasks;
 
 namespace CR.Servers.CoC.Core.Network
 {
@@ -115,13 +116,21 @@ namespace CR.Servers.CoC.Core.Network
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while processing incoming message: " + ex); }
 
+                                message.Timer.Restart();
+
                                 try
                                 { await message.ProcessAsync(); }
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while processing incoming message async: " + ex); }
 
                                 message.Timer.Stop();
-                                message.Device.Flush();
+
+                                /*
+                                if (message.Timer.Elapsed.TotalMilliseconds > 2000)
+                                    Console.WriteLine($"{message.GetType().Name}: Took {message.Timer.Elapsed.TotalMilliseconds} to process.");
+                                */
+
+                                message.Device.Flush();                                
                             }
 
                             Thread.Sleep(1);

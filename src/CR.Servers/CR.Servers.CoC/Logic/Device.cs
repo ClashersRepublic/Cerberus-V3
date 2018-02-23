@@ -173,7 +173,7 @@ namespace CR.Servers.CoC.Logic
             }
         }
 
-        internal void Process(byte[] buffer)
+        internal void Process(byte[] buffer, bool flush = true)
         {
             if (this.State != State.DISCONNECTED)
             {
@@ -234,10 +234,11 @@ namespace CR.Servers.CoC.Logic
                             {
                                 byte[] nextPacket = new byte[buffer.Length - 7 - messageLength];
                                 Array.Copy(buffer, messageLength + 7, nextPacket, 0, nextPacket.Length);
-                                this.Process(nextPacket);
+                                this.Process(nextPacket, false);
                             }
 
-                            Flush();
+                            if (flush)
+                                Flush();
                         }
                     }
                     else

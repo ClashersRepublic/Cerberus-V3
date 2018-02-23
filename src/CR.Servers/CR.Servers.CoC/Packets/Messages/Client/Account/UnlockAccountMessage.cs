@@ -9,6 +9,7 @@
     using CR.Servers.CoC.Packets.Messages.Server.Account;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System.Threading.Tasks;
 
     internal class UnlockAccountMessage : Message
     {
@@ -39,7 +40,7 @@
             this.UnlockCode = this.Reader.ReadString();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             this.ShowValues();
             if (this.UnlockCode.Length != 12 || string.IsNullOrEmpty(this.UnlockCode))
@@ -56,7 +57,7 @@
                     if (n == 0)
                     {
                         //Send new player
-                        new UnlockAccountOkMessage(this.Device) {Account = Resources.Accounts.CreateAccount().Player}.Send();
+                        new UnlockAccountOkMessage(this.Device) { Account = (await Resources.Accounts.CreateAccountAsync()).Player }.Send();
                         return;
                     }
 
@@ -68,16 +69,16 @@
                     if (Account != null)
                     {
                         Account.Player.Locked = true;
-                        new UnlockAccountOkMessage(this.Device) {Account = Account.Player}.Send();
+                        new UnlockAccountOkMessage(this.Device) { Account = Account.Player }.Send();
                     }
                     else
                     {
-                        new UnlockAccountFailedMessage(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
+                        new UnlockAccountFailedMessage(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
                     }
                 }
                 else
                 {
-                    new UnlockAccountFailedMessage(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
+                    new UnlockAccountFailedMessage(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
                 }
             }
             else
@@ -88,16 +89,16 @@
                     if (string.Equals(this.UnlockCode, Account.Password, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Account.Locked = false;
-                        new UnlockAccountOkMessage(this.Device) {Account = Account}.Send();
+                        new UnlockAccountOkMessage(this.Device) { Account = Account }.Send();
                     }
                     else
                     {
-                        new UnlockAccountFailedMessage(this.Device) {Reason = UnlockAccountReason.Default}.Send();
+                        new UnlockAccountFailedMessage(this.Device) { Reason = UnlockAccountReason.Default }.Send();
                     }
                 }
                 else
                 {
-                    new UnlockAccountFailedMessage(this.Device) {Reason = UnlockAccountReason.UnlockError}.Send();
+                    new UnlockAccountFailedMessage(this.Device) { Reason = UnlockAccountReason.UnlockError }.Send();
                 }
             }
         }

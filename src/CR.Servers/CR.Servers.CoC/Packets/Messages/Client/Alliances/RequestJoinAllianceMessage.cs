@@ -4,6 +4,7 @@
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Logic.Clan;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class RequestJoinAllianceMessage : Message
     {
@@ -30,10 +31,10 @@
             this.Message = this.Reader.ReadString();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             Player Player = this.Device.GameMode.Level.Player;
-            Alliance Alliance = Resources.Clans.Get(this.HighId, this.LowId);
+            Alliance Alliance = await Resources.Clans.GetAsync(this.HighId, this.LowId);
 
             if (Alliance != null)
             {

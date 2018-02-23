@@ -6,6 +6,7 @@
     using CR.Servers.CoC.Logic.Clan;
     using CR.Servers.CoC.Packets.Messages.Server.Alliances;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class AskForAllianceDataMessage : Message
     {
@@ -30,7 +31,7 @@
             this.AllianceLowId = this.Reader.ReadInt32();
         }
 
-        internal override async void Process()
+        internal override async Task ProcessAsync()
         {
             if (this.AllianceLowId > 0)
             {

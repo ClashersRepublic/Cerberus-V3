@@ -9,6 +9,7 @@
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Extensions.List;
     using CR.Servers.Logic.Enums;
+    using System.Threading.Tasks;
 
     internal class Search_Opponent : Command
     {
@@ -38,7 +39,7 @@
             base.Encode(Data);
         }
 
-        internal override void Execute()
+        internal override async Task ExecuteAsync()
         {
             if (this.Device.GameMode.Level.Player.ModSlot.AIAttack)
             {
@@ -73,7 +74,7 @@
                     this.Device.State = State.LOGGED;
                 }
 
-                Account rndAccount = Resources.Accounts.LoadRandomOfflineAccount();
+                Account rndAccount = await Resources.Accounts.LoadRandomOfflineAccountAsync();
 
                 if (rndAccount != null)
                 {
