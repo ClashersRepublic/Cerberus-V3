@@ -97,7 +97,8 @@
 
                         default:
                             {
-                                LogicDebug.Execute(Command, Resources.Accounts.Players.Values.ToArray());
+                                var players = Resources.Accounts.GetAllPlayers();
+                                LogicDebug.Execute(Command, players);
                                 Console.WriteLine();
                                 break;
                             }

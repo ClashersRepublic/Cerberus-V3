@@ -1,35 +1,20 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using CR.Servers.CoC.Logic;
+using CR.Servers.Logic.Enums;
+using System.Collections.Generic;
 
 namespace CR.Servers.CoC.Core.Network
 {
-    using System;
-    using System.Net;
-    using System.Net.Sockets;
-    using CR.Servers.CoC.Logic;
-    using CR.Servers.Logic.Enums;
-
     internal class Gateway
     {
-        private readonly byte[] _emptyBuffer = new byte[0];
         private readonly Socket _listener;
-       // private readonly SocketAsyncEventArgsPool _rcvPool;
-        //private readonly SocketAsyncEventArgsPool _sndPool;
+        private readonly List<Device> _connectedDevices;
 
         internal Gateway()
         {
-            //this._rcvPool = new SocketAsyncEventArgsPool(false);
-            //this._sndPool = new SocketAsyncEventArgsPool(true);
-
-            /*foreach (SocketAsyncEventArgs rcvArgs in this._rcvPool)
-            {
-                rcvArgs.Completed += this.OnReceiveCompleted;
-            }
-
-            foreach (SocketAsyncEventArgs sndArgs in this._sndPool)
-            {
-                sndArgs.Completed += this.OnSendCompleted;
-            }*/
-
+            this._connectedDevices = new List<Device>(4096);
             this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
             this._listener.Listen(500);
@@ -77,11 +62,13 @@ namespace CR.Servers.CoC.Core.Network
                 Device device = new Device();
                 Token token = new Token(readEvent, device, socket);
 
+                lock (_connectedDevices)
+                    _connectedDevices.Add(device);
+
                 device.State = State.SESSION;
 
                 try
                 {
-
                     if (!socket.ReceiveAsync(readEvent))
                     {
                         this.OnReceiveCompleted(null, readEvent);
@@ -112,9 +99,9 @@ namespace CR.Servers.CoC.Core.Network
             {
                 if (args.BytesTransferred > 0)
                 {
-                    Token token = (Token) args.UserToken;
+                    Token token = (Token)args.UserToken;
 
-                    if (!token.Aborting)
+                    if (token != null && !token.Aborting)
                     {
                         if (token.Socket.Connected)
                         {
@@ -180,7 +167,7 @@ namespace CR.Servers.CoC.Core.Network
                     writeEvent.Completed += this.OnSendCompleted;
                     writeEvent.UserToken = token;
                     writeEvent.SetBuffer(packet, 0, packet.Length);
-                   
+
 
                     if (!token.Socket.SendAsync(writeEvent))
                     {
@@ -201,10 +188,13 @@ namespace CR.Servers.CoC.Core.Network
 
             if (rcvArgs.UserToken != null)
             {
-                Token token = (Token) rcvArgs.UserToken;
+                Token token = (Token)rcvArgs.UserToken;
 
                 if (token != null)
                 {
+                    lock (_connectedDevices)
+                        _connectedDevices.Remove(token.Device);
+
                     if (!token.Aborting)
                     {
                         token.Dispose();

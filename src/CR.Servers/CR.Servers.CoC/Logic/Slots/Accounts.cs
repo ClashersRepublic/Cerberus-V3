@@ -12,8 +12,9 @@
     using MongoDB.Bson;
     using MongoDB.Driver;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
 
-    internal class Accounts : ConcurrentDictionary<long, Account>
+    internal class Accounts : ConcurrentDictionary<long, WeakReference<Account>>
     {
         private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -25,8 +26,8 @@
             Formatting = Formatting.None
         };
 
-        internal ConcurrentDictionary<long, Home> Homes;
-        internal ConcurrentDictionary<long, Player> Players;
+        internal ConcurrentDictionary<long, WeakReference<Home>> Homes;
+        internal ConcurrentDictionary<long, WeakReference<Player>> Players;
         private static Thread _savePlayerThread;
         private static Thread _saveHomeThread;
         private static ConcurrentQueue<Player> _savePlayerQueue;
@@ -38,8 +39,8 @@
         {
             this.Seed = Mongo.PlayerSeed;
 
-            this.Homes = new ConcurrentDictionary<long, Home>();
-            this.Players = new ConcurrentDictionary<long, Player>();
+            this.Homes = new ConcurrentDictionary<long, WeakReference<Home>>();
+            this.Players = new ConcurrentDictionary<long, WeakReference<Player>>();
 
             _savePlayerQueue = new ConcurrentQueue<Player>();
             _saveHomeQueue = new ConcurrentQueue<Home>();
@@ -60,7 +61,7 @@
         {
             if (!this.Players.ContainsKey(Player.UserId))
             {
-                if (!this.Players.TryAdd(Player.UserId, Player))
+                if (!this.Players.TryAdd(Player.UserId, new WeakReference<Player>(Player)))
                 {
                     Logging.Error(this.GetType(), "Unable to add the player avatar " + Player.HighID + "-" + Player.LowID + " in list.");
                 }
@@ -75,7 +76,7 @@
         {
             if (!this.Homes.ContainsKey(((long)Home.HighID << 32) | (uint)Home.LowID))
             {
-                if (!this.Homes.TryAdd(((long)Home.HighID << 32) | (uint)Home.LowID, Home))
+                if (!this.Homes.TryAdd(((long)Home.HighID << 32) | (uint)Home.LowID, new WeakReference<Home>(Home)))
                 {
                     Logging.Error(this.GetType(), "Unable to add the player home " + Home.HighID + "-" + Home.LowID + " in list.");
                 }
@@ -90,7 +91,7 @@
         {
             if (!this.ContainsKey(((long)account.HighId << 32) | (uint)account.LowId))
             {
-                if (!this.TryAdd(((long)account.HighId << 32) | (uint)account.LowId, account))
+                if (!this.TryAdd(((long)account.HighId << 32) | (uint)account.LowId, new WeakReference<Account>(account)))
                 {
                     Logging.Error(this.GetType(), "Unable to add the player account " + account.HighId + "-" + account.LowId + " in list.");
                 }
@@ -99,6 +100,51 @@
             {
                 Logging.Error(this.GetType(), "Unable to add the player account " + account.HighId + "-" + account.LowId + ". The player account is already in the dictionary.");
             }
+        }
+
+        private bool TryGetAccount(long id, out Account account)
+        {
+            WeakReference<Account> tmpRef;
+            if (TryGetValue(id, out tmpRef))
+            {
+                if (tmpRef.TryGetTarget(out account))
+                    return true;
+
+                return false;
+            }
+
+            account = null;
+            return false;
+        }
+
+        private bool TryGetHome(long id, out Home home)
+        {
+            WeakReference<Home> tmpRef;
+            if (Homes.TryGetValue(id, out tmpRef))
+            {
+                if (tmpRef.TryGetTarget(out home))
+                    return true;
+
+                return false;
+            }
+
+            home = null;
+            return false;
+        }
+
+        private bool TryGetPlayer(long id, out Player player)
+        {
+            WeakReference<Player> tmpRef;
+            if (Players.TryGetValue(id, out tmpRef))
+            {
+                if (tmpRef.TryGetTarget(out player))
+                    return true;
+
+                return false;
+            }
+
+            player = null;
+            return false;
         }
 
         internal Account CreateAccount()
@@ -163,7 +209,7 @@
                 rnd = Resources.Random.Next(1, seed + 1);
 
                 Account tmp;
-                if (!this.TryGetValue(rnd, out tmp))
+                if (!this.TryGetAccount(rnd, out tmp))
                 {
                     account = this.LoadAccount(serverId, rnd, store);
 
@@ -199,14 +245,14 @@
             long ID = ((long)HighID << 32) | (uint)LowID;
 
             Account Account;
-            if (!this.TryGetValue(ID, out Account))
+            if (!this.TryGetAccount(ID, out Account))
             {
                 Players Data = Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefault();
 
                 if (Data != null)
                 {
                     Player Player;
-                    if (!this.Players.TryGetValue(ID, out Player))
+                    if (!this.TryGetPlayer(ID, out Player))
                     {
                         Player = this.LoadPlayerFromSave(Data.Player.ToJson());
 
@@ -217,7 +263,7 @@
                     }
 
                     Home Home;
-                    if (!this.Homes.TryGetValue(ID, out Home))
+                    if (!this.TryGetHome(ID, out Home))
                     {
                         Home = this.LoadHomeFromSave(Data.Home.ToJson());
 
@@ -233,7 +279,8 @@
                         return new Account(-1, -1, null, null);
                     }
 
-                    this.TryAdd(ID, Account = new Account(HighID, LowID, Player, Home));
+                    Account = new Account(HighID, LowID, Player, Home);
+                    this.TryAdd(ID, new WeakReference<Account>(Account));
                 }
             }
 
@@ -261,10 +308,10 @@
             {
                 long ID = ((long)Data.HighId << 32) | (uint)Data.LowId;
 
-                if (!this.TryGetValue(ID, out Account))
+                if (!this.TryGetAccount(ID, out Account))
                 {
                     Player Player;
-                    if (!this.Players.TryGetValue(ID, out Player))
+                    if (!this.TryGetPlayer(ID, out Player))
                     {
                         Player = this.LoadPlayerFromSave(Data.Player.ToJson());
 
@@ -275,7 +322,7 @@
                     }
 
                     Home Home;
-                    if (!this.Homes.TryGetValue(ID, out Home))
+                    if (!this.TryGetHome(ID, out Home))
                     {
                         Home = this.LoadHomeFromSave(Data.Home.ToJson());
 
@@ -317,14 +364,14 @@
             long ID = ((long)HighID << 32) | (uint)LowID;
 
             Account Account;
-            if (!this.TryGetValue(((long)HighID << 32) | (uint)LowID, out Account))
+            if (!this.TryGetAccount(((long)HighID << 32) | (uint)LowID, out Account))
             {
                 Players Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
 
                 if (Data != null)
                 {
                     Player Player;
-                    if (!this.Players.TryGetValue(ID, out Player))
+                    if (!this.TryGetPlayer(ID, out Player))
                     {
                         Player = this.LoadPlayerFromSave(Data.Player.ToJson());
 
@@ -335,7 +382,7 @@
                     }
 
                     Home Home;
-                    if (!this.Homes.TryGetValue(ID, out Home))
+                    if (!this.TryGetHome(ID, out Home))
                     {
                         Home = this.LoadHomeFromSave(Data.Home.ToJson());
 
@@ -354,7 +401,7 @@
 
                     Account = new Account(HighID, LowID, Player, Home);
 
-                    this.TryAdd(ID, Account);
+                    this.TryAdd(ID, new WeakReference<Account>(Account));
                 }
             }
 
@@ -379,7 +426,7 @@
             long ID = ((long)HighID << 32) | (uint)LowID;
 
             Player Player;
-            if (!this.Players.TryGetValue(ID, out Player))
+            if (!this.TryGetPlayer(ID, out Player))
             {
                 Players Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
 
@@ -393,7 +440,7 @@
                     }
 
                     Home Home;
-                    if (!this.Homes.TryGetValue(ID, out Home))
+                    if (!this.TryGetHome(ID, out Home))
                     {
                         Home = this.LoadHomeFromSave(Data.Home.ToJson());
 
@@ -419,7 +466,7 @@
             long ID = ((long)HighID << 32) | (uint)LowID;
 
             Home Home;
-            if (!this.Homes.TryGetValue(ID, out Home))
+            if (!this.TryGetHome(ID, out Home))
             {
                 Players Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
 
@@ -433,7 +480,7 @@
                     }
 
                     Player Player;
-                    if (!this.Players.TryGetValue(ID, out Player))
+                    if (!this.TryGetPlayer(ID, out Player))
                     {
                         Player = this.LoadPlayerFromSave(Data.Player.ToJson());
 
@@ -485,19 +532,38 @@
 
         internal void Saves()
         {
-            Player[] Players = this.Players.Values.ToArray();
-            Home[] Homes = this.Homes.Values.ToArray();
+            WeakReference<Player>[] Players = this.Players.Values.ToArray();
+            WeakReference<Home>[] Homes = this.Homes.Values.ToArray();
 
-            foreach (Player Player in Players)
+            foreach (WeakReference<Player> playerRef in Players)
             {
-
-                _savePlayerQueue.Enqueue(Player);
+                Player player;
+                if (playerRef.TryGetTarget(out player))
+                    _savePlayerQueue.Enqueue(player);
             }
 
-            foreach (Home Home in Homes)
+            foreach (WeakReference<Home> homeRef in Homes)
             {
-                _saveHomeQueue.Enqueue(Home);
+                Home home;
+                if (homeRef.TryGetTarget(out home))
+                    _saveHomeQueue.Enqueue(home);
             }
+        }
+
+        internal Player[] GetAllPlayers()
+        {
+            WeakReference<Player>[] playerRefs = this.Players.Values.ToArray();
+            List<Player> players = new List<Player>(playerRefs.Length);
+
+            for(int i = 0; i < playerRefs.Length; i++)
+            {
+                WeakReference<Player> playerRef = playerRefs[i];
+                Player player;
+                if (playerRef.TryGetTarget(out player))
+                    players.Add(player);
+            }
+
+            return players.ToArray();
         }
 
         private static void SavePlayerTask()

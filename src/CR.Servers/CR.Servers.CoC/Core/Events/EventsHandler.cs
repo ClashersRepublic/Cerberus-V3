@@ -29,7 +29,8 @@
             Resources.Closing = true;
             Task.Run(() =>
             {
-                foreach (Player Player in Resources.Accounts.Players.Values.ToArray())
+                var players = Resources.Accounts.GetAllPlayers();
+                foreach (Player Player in players)
                 {
                     if (Player.Connected)
                     {

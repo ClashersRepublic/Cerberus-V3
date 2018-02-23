@@ -1,17 +1,17 @@
-﻿namespace CR.Servers.CoC.Logic
-{
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
-    using CR.Servers.CoC.Logic.Mode;
-    using CR.Servers.CoC.Packets;
-    using CR.Servers.CoC.Packets.Stream;
-    using CR.Servers.Extensions.Binary;
-    using CR.Servers.Logic.Enums;
-    using System.Collections.Concurrent;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Core.Network;
+using CR.Servers.CoC.Logic.Mode;
+using CR.Servers.CoC.Packets;
+using CR.Servers.CoC.Packets.Stream;
+using CR.Servers.Extensions.Binary;
+using CR.Servers.Logic.Enums;
+using System.Collections.Concurrent;
 
+namespace CR.Servers.CoC.Logic
+{
     public class Device : IDisposable
     {
         internal Account Account;
@@ -22,8 +22,8 @@
         internal int EncryptionSeed;
 
         internal GameMode GameMode;
-        internal DeviceInfo Info;
         internal DateTime LastKeepAlive;
+        internal DeviceInfo Info;
 
         internal StreamEncrypter ReceiveEncrypter;
         internal StreamEncrypter SendEncrypter;
@@ -33,88 +33,77 @@
         internal Token Token;
         internal bool UseRC4;
 
-        private readonly ConcurrentQueue<Message> _messages;
+        private readonly ConcurrentQueue<Message> _outgoingMessages;
+        private readonly ConcurrentQueue<Message> _incomingMessages;
 
-        internal Device()
+        public Device()
         {
             this.GameMode = new GameMode(this);
             this.LastKeepAlive = DateTime.UtcNow;
 
-            _messages = new ConcurrentQueue<Message>();
+            _outgoingMessages = new ConcurrentQueue<Message>();
+            _incomingMessages = new ConcurrentQueue<Message>();
         }
 
-        internal int Checksum
+        public int Checksum
         {
             get
             {
-                int Checksum = 0;
+                int checksum = 0;
 
-                Checksum += this.GameMode.Time.SubTick;
-                Checksum += this.GameMode.Time.TotalSecs;
+                checksum += this.GameMode.Time.SubTick;
+                checksum += this.GameMode.Time.TotalSecs;
 
                 if (this.GameMode.Level.Player != null)
                 {
-                    Checksum += this.GameMode.Level.Player.Checksum;
+                    checksum += this.GameMode.Level.Player.Checksum;
 
                     if (this.GameMode.Level.GameObjectManager != null)
-                    {
-                        Checksum += this.GameMode.Level.GameObjectManager.Checksum;
-                    }
+                        checksum += this.GameMode.Level.GameObjectManager.Checksum;
                 }
 
                 // Visitor
 
-                Checksum += Checksum;
+                checksum += checksum;
 
-                return Checksum;
+                return checksum;
             }
         }
 
-        internal long TimeSinceLastKeepAliveMs
+        internal long TimeSinceLastKeepAlive => (long)DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalSeconds;
+
+        internal bool Connected => !this.Disposed && this.Token.Connected;
+
+        internal string OS => this.Info.Android ? "Android" : "iOS";
+
+        public void EnqueueOutgoingMessage(Message message)
         {
-            get
-            {
-                return (long) DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalMilliseconds;
-            }
-        }
-        internal long TimeSinceLastKeepAlive
-        {
-            get
-            {
-                return (long)DateTime.UtcNow.Subtract(this.LastKeepAlive).TotalSeconds;
-            }
+            _outgoingMessages.Enqueue(message);
         }
 
-        internal bool Connected
+        public void EnqueueIncoming(Message message)
         {
-            get
-            {
-                return !this.Disposed && this.Token.Connected;
-            }
-        }
-
-        internal string OS
-        {
-            get
-            {
-                return this.Info.Android ? "Android" : "iOS";
-            }
-        }
-
-        public void Queue(Message message)
-        {
-            _messages.Enqueue(message);
+            _incomingMessages.Enqueue(message);
         }
 
         public void Flush()
         {
-            if (_messages.Count > 0)
+            if (_outgoingMessages.Count > 0)
             {
                 var queueId = Resources.Processor.GetNextOutgoingQueueId();
 
                 Message message;
-                while (_messages.TryDequeue(out message))
+                while (_outgoingMessages.TryDequeue(out message))
                     Resources.Processor.EnqueueOutgoing(message, queueId);
+            }
+
+            if (_incomingMessages.Count > 0)
+            {
+                var queueId = Resources.Processor.GetNextIncomingQueueId();
+
+                Message message;
+                while (_incomingMessages.TryDequeue(out message))
+                    Resources.Processor.EnqueueIncoming(message, queueId);
             }
         }
 
@@ -218,15 +207,14 @@
 
                             if (messageBytes != null)
                             {
-                                Message message = Factory.CreateMessage((short) messageType, this, new Reader(messageBytes));
+                                Message message = Factory.CreateMessage((short)messageType, this, new Reader(messageBytes));
 
                                 if (message != null)
                                 {
-                                    message.Version = (short) messageVersion;
+                                    message.Version = (short)messageVersion;
                                     message.Timer = new Stopwatch();
                                     message.Timer.Start();
-                                    /*Resources.Processor.ReceiveMessageQueue.Enqueue(message);*/
-                                    Resources.Processor.EnqueueIncoming(message);
+                                    EnqueueIncoming(message);
                                 }
 
                                 /*else
@@ -248,6 +236,8 @@
                                 Array.Copy(buffer, messageLength + 7, nextPacket, 0, nextPacket.Length);
                                 this.Process(nextPacket);
                             }
+
+                            Flush();
                         }
                     }
                     else

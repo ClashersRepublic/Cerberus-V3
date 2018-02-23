@@ -93,8 +93,7 @@
         internal void Send()
         {
             if (Device.Connected)
-                /*Resources.Processor.EnqueueOutgoing(this);*/
-                Device.Queue(this);
+                Device.EnqueueOutgoingMessage(this);
         }
 
         internal void Log()

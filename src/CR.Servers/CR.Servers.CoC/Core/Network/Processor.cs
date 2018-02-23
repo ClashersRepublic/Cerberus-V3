@@ -206,11 +206,9 @@ namespace CR.Servers.CoC.Core.Network
                                 /* Write body. */
                                 Array.Copy(body, 0, packet, 7, body.Length);
 
+                                /* Send data to the socket. */
                                 Resources.Gateway.Send(packet, message.Device.Token);
-
-                                /*
-                                Logging.Info(this.GetType(), "Message " + message.GetType().Name + " sent.");
-                                */
+                                message.Device.Flush();
                             }
 
                             Thread.Sleep(1);

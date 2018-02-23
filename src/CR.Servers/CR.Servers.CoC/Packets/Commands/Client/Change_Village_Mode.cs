@@ -35,6 +35,10 @@
             {
                 Level.Player.Variables.Set((int)Variable.VillageToGoTo, this.State);
             }
+            else
+            {
+                Logging.Error(GetType(), "------------------ State => " + State);
+            }
 #if DEBUG
             Logging.Info(this.GetType(),
                 $"Village Manager : Changing mode to {(Village_Mode)Level.Player.Variables.GetCountByGlobalId((int)Variable.VillageToGoTo)}");
