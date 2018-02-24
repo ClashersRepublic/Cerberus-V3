@@ -27,13 +27,13 @@ namespace CR.Servers.CoC.Core.Network
 
             if (Environment.ProcessorCount > 1)
             {
-                _normalPriorityProcessorCount = Environment.ProcessorCount - 1;
-                _highPriorityIncomingProcessor = Environment.ProcessorCount - 1;
-                _highPriorityOutgoingProcessor = Environment.ProcessorCount - 1;
+                _normalPriorityProcessorCount = _processorCount - 1;
+                _highPriorityIncomingProcessor = _processorCount - 1;
+                _highPriorityOutgoingProcessor = _processorCount - 1;
             }
             else
             {
-                _normalPriorityProcessorCount = Environment.ProcessorCount;
+                _normalPriorityProcessorCount = _processorCount;
                 _highPriorityIncomingProcessor = 0;
                 _highPriorityOutgoingProcessor = 0;
             }
@@ -100,12 +100,6 @@ namespace CR.Servers.CoC.Core.Network
         }
 
         /* Enqueues a message we're sending on a processing thread. */
-        public void EnqueueOutgoing(Message message)
-        {
-            var index = GetNextOutgoingQueueId();
-            EnqueueOutgoing(message, index);
-        }
-
         public void EnqueueOutgoing(Message message, int queueId)
         {
             if (queueId == -1)
@@ -116,12 +110,6 @@ namespace CR.Servers.CoC.Core.Network
         }
 
         /* Enqueues a message we've received on a processing thread. */
-        public void EnqueueIncoming(Message message)
-        {
-            var index = GetNextIncomingQueueId();
-            EnqueueIncoming(message, index);
-        }
-
         public void EnqueueIncoming(Message message, int queueId)
         {
             if (queueId == -1)
@@ -165,13 +153,6 @@ namespace CR.Servers.CoC.Core.Network
                                 { message.Decode(); }
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while decoding message: " + ex); }
-
-                                /*
-                                try
-                                { message.Process(); }
-                                catch (Exception ex)
-                                { Logging.Error(message.GetType(), "Exception while processing incoming message: " + ex); }
-                                */
 
                                 message.Timer.Restart();
                                 Task processTask = message.ProcessAsync();

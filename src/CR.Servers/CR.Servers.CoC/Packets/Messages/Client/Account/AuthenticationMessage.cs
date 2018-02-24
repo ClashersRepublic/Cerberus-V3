@@ -95,7 +95,7 @@
 
             if (this.HighId == 0 && this.LowId == 0 && this.Token == null)
             {
-                this.Login(await Resources.Accounts.CreateAccountAsync());
+                await this.LoginAsync(await Resources.Accounts.CreateAccountAsync());
             }
             else
             {
@@ -123,7 +123,7 @@
                                         }
                                     }
 
-                                    this.Login(account);
+                                    await this.LoginAsync(account);
                                 }
                                 else
                                 {
@@ -195,7 +195,7 @@
             return false;
         }
 
-        internal void Login(Account account)
+        internal async Task LoginAsync(Account account)
         {
             account.Device = this.Device;
 
@@ -225,7 +225,7 @@
                         goto sendAllianceMessage;
                     }
 
-                    account.Battle.EndBattle();
+                    await account.Battle.EndBattleAsync();
                     account.Battle = null;
                 }
                 else

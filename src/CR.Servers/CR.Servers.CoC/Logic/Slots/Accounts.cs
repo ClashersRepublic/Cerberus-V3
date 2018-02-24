@@ -618,11 +618,17 @@
                 Player Player;
                 while (_savePlayerQueue.TryDequeue(out Player))
                 {
-                    Mongo.Players.UpdateOne(Save => Save.HighId == Player.HighID && Save.LowId == Player.LowID,
-                        Builders<Players>
-                            .Update.Set(Save => Save.Player,
-                                BsonDocument.Parse(JsonConvert.SerializeObject(Player, Resources.Accounts.Settings))));
-                    //Mongo.Players.ReplaceOne(T => T. == account.UserId, BsonDocument.Parse(JsonConvert.SerializeObject(account, Accounts.Settings)));
+                    try
+                    {
+                        Mongo.Players.UpdateOne(Save => Save.HighId == Player.HighID && Save.LowId == Player.LowID,
+                            Builders<Players>
+                                .Update.Set(Save => Save.Player,
+                                    BsonDocument.Parse(JsonConvert.SerializeObject(Player, Resources.Accounts.Settings))));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.Error(typeof(Accounts), "Failed to save player: " + ex);
+                    }
                 }
 
                 Thread.Sleep(5);
@@ -636,11 +642,17 @@
                 Home Home;
                 while (_saveHomeQueue.TryDequeue(out Home))
                 {
-                    Mongo.Players.UpdateOne(Save => Save.HighId == Home.HighID && Save.LowId == Home.LowID,
-                        Builders<Players>
-                            .Update.Set(Save => Save.Home,
-                                BsonDocument.Parse(JsonConvert.SerializeObject(Home, Resources.Accounts.Settings))));
-                    //Mongo.Players.ReplaceOne(T => T. == account.UserId, BsonDocument.Parse(JsonConvert.SerializeObject(account, Accounts.Settings)));
+                    try
+                    {
+                        Mongo.Players.UpdateOne(Save => Save.HighId == Home.HighID && Save.LowId == Home.LowID,
+                            Builders<Players>
+                                .Update.Set(Save => Save.Home,
+                                    BsonDocument.Parse(JsonConvert.SerializeObject(Home, Resources.Accounts.Settings))));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.Error(typeof(Accounts), "Failed to save home: " + ex);
+                    }
                 }
 
                 Thread.Sleep(5);

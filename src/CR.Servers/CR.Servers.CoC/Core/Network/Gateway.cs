@@ -173,6 +173,12 @@ namespace CR.Servers.CoC.Core.Network
 
         private void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
+            if (args.BytesTransferred == 0)
+            {
+                Disconnect(args);
+                return;
+            }
+
             var socket = (Socket)sender;
             if (args.BytesTransferred < args.Count)
             {

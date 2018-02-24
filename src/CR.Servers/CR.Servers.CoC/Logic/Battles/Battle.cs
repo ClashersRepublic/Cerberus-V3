@@ -11,6 +11,7 @@
     using CR.Servers.CoC.Packets.Messages.Server.Battle;
     using CR.Servers.CoC.Packets.Messages.Server.Home;
     using Timer = System.Timers.Timer;
+    using System.Threading.Tasks;
 
     internal class Battle
     {
@@ -78,7 +79,7 @@
             }
         }
 
-        internal void EndBattle()
+        internal async Task EndBattleAsync()
         {
             if (this.Ended)
             {
@@ -87,9 +88,11 @@
 
             this.Timer.Dispose();
 
+            Task savePlayer = null;
+            Task saveHome = null;
             if (this.Started)
             {
-                this.Replay = Resources.Battles.Save(this);
+                this.Replay = await Resources.Battles.Save(this);
 
                 if (!this.Duel)
                 {
@@ -99,8 +102,8 @@
 
                 if (this.Commands.Count > 0)
                 {
-                    Resources.Accounts.SavePlayer(this.Defender.Player);
-                    Resources.Accounts.SaveHome(this.Defender.Home);
+                    savePlayer = Resources.Accounts.SavePlayer(this.Defender.Player);
+                    saveHome = Resources.Accounts.SaveHome(this.Defender.Home);
                 }
             }
 
@@ -115,6 +118,7 @@
                 }
             }
 
+            await Task.WhenAll(saveHome, savePlayer);
             this.Ended = true;
         }
 
@@ -194,7 +198,7 @@
 
                         case 703:
                         {
-                            this.EndBattle();
+                            var _ = this.EndBattleAsync();
                             break;
                         }
 
@@ -231,7 +235,7 @@
                 int LastClientTurnSeconds = (int) DateTime.UtcNow.Subtract(this.LastClientTurn).TotalSeconds;
                 if (LastClientTurnSeconds > 5)
                 {
-                    this.EndBattle();
+                    var _ = this.EndBattleAsync();
 
                     if (this.Device.TimeSinceLastKeepAlive > 5)
                     {

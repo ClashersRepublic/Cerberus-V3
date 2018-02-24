@@ -10,6 +10,7 @@ using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -34,6 +35,8 @@ namespace CR.Servers.CoC.Logic
         internal Token Token;
         internal bool UseRC4;
 
+        internal readonly KeepAliveServerMessage KeepAliveServerMessage;
+
         private readonly ConcurrentQueue<Message> _outgoingMessages;
         private readonly ConcurrentQueue<Message> _incomingMessages;
 
@@ -42,6 +45,7 @@ namespace CR.Servers.CoC.Logic
             this.GameMode = new GameMode(this);
             this.LastKeepAlive = DateTime.UtcNow;
 
+            KeepAliveServerMessage = new KeepAliveServerMessage(this);
             _outgoingMessages = new ConcurrentQueue<Message>();
             _incomingMessages = new ConcurrentQueue<Message>();
         }
@@ -127,7 +131,7 @@ namespace CR.Servers.CoC.Logic
                         {
                             if (this.Account.Battle.Attacker == this.Account.Home.Level)
                             {
-                                this.Account.Battle.EndBattle();
+                                this.Account.Battle.EndBattleAsync();
                                 this.Account.Battle = null;
                             }
                         }

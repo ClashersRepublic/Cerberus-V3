@@ -7,6 +7,7 @@
     using CR.Servers.CoC.Logic.Battles;
     using MongoDB.Driver;
     using Newtonsoft.Json;
+    using System.Threading.Tasks;
 
     internal class Battles : ConcurrentDictionary<long, Core.Database.Models.Mongo.Battles>
     {
@@ -32,7 +33,7 @@
             }
         }
 
-        internal Core.Database.Models.Mongo.Battles Save(Battle battle)
+        internal async Task<Core.Database.Models.Mongo.Battles> Save(Battle battle)
         {
             Core.Database.Models.Mongo.Battles battleSave = new Core.Database.Models.Mongo.Battles
             {
@@ -41,7 +42,7 @@
                 Replay = battle.Recorder.Save().ToString(Formatting.None)
             };
 
-            Mongo.Battles.InsertOneAsync(battleSave);
+            await Mongo.Battles.InsertOneAsync(battleSave);
 
             return battleSave;
         }

@@ -63,7 +63,7 @@
                 {
                     if (this.Device.Account.Battle != null)
                     {
-                        this.Device.Account.Battle.EndBattle();
+                        await this.Device.Account.Battle.EndBattleAsync();
                         this.Device.Account.Battle = null;
                     }
                     else
