@@ -51,14 +51,9 @@ namespace CR.Servers.CoC
             Thread.Sleep(-1);
         }
 
-        public static void Connected()
+        public static void UpdateTitle()
         {
-            Console.Title = Constants.Title + Interlocked.Increment(ref Op);
-        }
-
-        public static void Disconnected()
-        {
-            Console.Title = Constants.Title + Interlocked.Decrement(ref Op);
+            Console.Title = Constants.Title + Resources.Devices.Count;
         }
     }
 }

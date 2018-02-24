@@ -12,6 +12,7 @@
     using CR.Servers.CoC.Packets.Messages.Server.Alliances;
     using CR.Servers.Extensions.Binary;
     using CR.Servers.Logic.Enums;
+    using System.Threading.Tasks;
 
     internal class CreateAllianceMessage : Message
     {
@@ -58,7 +59,7 @@
             this.AmicalWar = this.Reader.ReadBooleanV2();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             Level Level = this.Device.GameMode.Level;
             if (Level.Player.Resources.GetCountByData(Globals.AllianceCreateResourceData) >= Globals.AllianceCreateCost)
@@ -135,7 +136,7 @@
                                                 if (Alliance.Members.Join(Level.Player, out Member))
                                                 {
                                                     Member.Role = Role.Leader;
-                                                    Resources.Clans.New(Alliance);
+                                                    await Resources.Clans.NewAsync(Alliance);
 
                                                     Level.Player.SetAlliance(Alliance, Member);
                                                     Level.Player.AllianceHighId = Alliance.HighId;

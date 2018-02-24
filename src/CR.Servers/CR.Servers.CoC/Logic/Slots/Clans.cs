@@ -1,19 +1,19 @@
-﻿namespace CR.Servers.CoC.Logic.Slots
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Database;
-    using CR.Servers.CoC.Logic.Clan;
-    using MongoDB.Bson;
-    using MongoDB.Driver;
-    using Newtonsoft.Json;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Core.Database;
+using CR.Servers.CoC.Logic.Clan;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-    internal class Clans : ConcurrentDictionary<long, Alliance>
+namespace CR.Servers.CoC.Logic.Slots
+{
+    internal class Clans : ConcurrentDictionary<long, WeakReference<Alliance>>
     {
         private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -36,18 +36,34 @@
             Logging.Info(this.GetType(), this.Count + " alliances loaded to the memory.");
         }
 
+        private bool TryGetClan(long id, out Alliance clan)
+        {
+            WeakReference<Alliance> tmpRef;
+            if (TryGetValue(id, out tmpRef))
+            {
+                if (tmpRef.TryGetTarget(out clan))
+                    return true;
+
+                TryRemove(id, out tmpRef);
+                return false;
+            }
+
+            clan = null;
+            return false;
+        }
+
         internal void Add(Alliance Clan)
         {
             if (this.ContainsKey(Clan.AllianceId))
             {
-                if (!this.TryUpdate(Clan.AllianceId, this[Clan.AllianceId], Clan))
+                if (!this.TryUpdate(Clan.AllianceId, this[Clan.AllianceId], new WeakReference<Alliance>(Clan)))
                 {
                     Logging.Error(this.GetType(), "Unsuccessfuly update the specified clan to the dictionnary.");
                 }
             }
             else
             {
-                if (!this.TryAdd(Clan.AllianceId, Clan))
+                if (!this.TryAdd(Clan.AllianceId, new WeakReference<Alliance>(Clan)))
                 {
                     Logging.Error(this.GetType(), "Unsuccessfuly add the specified clan to the dictionnary.");
                 }
@@ -58,7 +74,7 @@
         {
             if (this.ContainsKey(Clan.AllianceId))
             {
-                Alliance tmpClan;
+                WeakReference<Alliance> tmpClan;
                 if (!this.TryRemove(Clan.AllianceId, out tmpClan))
                 {
                     Logging.Error(this.GetType(), "Unsuccessfuly removed the specified clan from the dictionnary.");
@@ -81,7 +97,7 @@
             long Id = ((long)HighID << 32) | (uint)LowID;
 
             Alliance Clan;
-            if (!this.TryGetValue(Id, out Clan))
+            if (!this.TryGetClan(Id, out Clan))
             {
                 Core.Database.Models.Mongo.Clans Save = await Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1)
                     .SingleOrDefaultAsync();
@@ -105,7 +121,7 @@
             long Id = ((long)HighID << 32) | (uint)LowID;
 
             Alliance Clan;
-            if (!this.TryGetValue(Id, out Clan))
+            if (!this.TryGetClan(Id, out Clan))
             {
                 Core.Database.Models.Mongo.Clans Save = Mongo.Clans.Find(T => T.HighId == HighID && T.LowId == LowID).Limit(1).SingleOrDefault();
 
@@ -146,33 +162,12 @@
             return Clans;
         }
 
-        internal Alliance New(bool Store = true)
-        {
-            Alliance Clan = new Alliance(Constants.ServerId, Interlocked.Increment(ref this.Seed));
-
-            Mongo.Clans.InsertOneAsync(new Core.Database.Models.Mongo.Clans
-            {
-                HighId = Clan.HighId,
-                LowId = Clan.LowId,
-                Data = BsonDocument.Parse(JsonConvert.SerializeObject(Clan, this.Settings))
-            });
-
-            if (Store)
-            {
-                this.Add(Clan);
-            }
-
-            return Clan;
-        }
-
-        internal Alliance New(Alliance Clan, bool Store = true)
+        internal async Task<Alliance> NewAsync(Alliance Clan, bool Store = true)
         {
             if (Clan.LowId == 0)
-            {
                 Clan.LowId = Interlocked.Increment(ref this.Seed);
-            }
 
-            Mongo.Clans.InsertOneAsync(new Core.Database.Models.Mongo.Clans
+            await Mongo.Clans.InsertOneAsync(new Core.Database.Models.Mongo.Clans
             {
                 HighId = Clan.HighId,
                 LowId = Clan.LowId,
@@ -180,9 +175,7 @@
             });
 
             if (Store)
-            {
                 this.Add(Clan);
-            }
 
             return Clan;
         }
@@ -192,21 +185,60 @@
             await Mongo.Clans.UpdateOneAsync(T => T.HighId == Clan.HighId && T.LowId == Clan.LowId, Builders<Core.Database.Models.Mongo.Clans>.Update.Set(T => T.Data, BsonDocument.Parse(JsonConvert.SerializeObject(Clan, this.Settings))));
         }
 
+        internal List<Alliance> GetAllClans()
+        {
+            List<Alliance> Alliances = new List<Alliance>();
+            WeakReference<Alliance>[] Clans = this.Values.ToArray();
+
+            foreach (var ClanRef in Clans)
+            {
+                Alliance Clan;
+                if (ClanRef.TryGetTarget(out Clan))
+                    Alliances.Add(Clan);
+            }
+
+            return Alliances;
+        }
+
         internal async Task Saves()
         {
-            Alliance[] Clans = this.Values.ToArray();
+            WeakReference<Alliance>[] Clans = this.Values.ToArray();
 
-            foreach (Alliance Clan in Clans)
+            foreach (var ClanRef in Clans)
             {
+                Alliance Clan = null;
                 try
                 {
-                    await this.Save(Clan);
+                    if (ClanRef.TryGetTarget(out Clan))
+                        await this.Save(Clan);
                 }
                 catch (Exception Exception)
                 {
                     Logging.Error(this.GetType(), "An error has been throwed when the save of the clan id " + Clan + " due to " + Exception + ".");
                 }
             }
+        }
+
+        internal Task[] SaveAll()
+        {
+            List<Task> tasks = new List<Task>();
+            WeakReference<Alliance>[] Clans = this.Values.ToArray();
+
+            foreach (var ClanRef in Clans)
+            {
+                Alliance Clan = null;
+                try
+                {
+                    if (ClanRef.TryGetTarget(out Clan))
+                        tasks.Add(this.Save(Clan));
+                }
+                catch (Exception Exception)
+                {
+                    Logging.Error(this.GetType(), "An error has been throwed when the save of the clan id " + Clan + " due to " + Exception + ".");
+                }
+            }
+
+            return tasks.ToArray();
         }
     }
 }

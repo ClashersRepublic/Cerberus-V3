@@ -9,6 +9,7 @@ using CR.Servers.CoC.Packets.Stream;
 using CR.Servers.Extensions.Binary;
 using CR.Servers.Logic.Enums;
 using System.Collections.Concurrent;
+using System.Net.Sockets;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -44,6 +45,8 @@ namespace CR.Servers.CoC.Logic
             _outgoingMessages = new ConcurrentQueue<Message>();
             _incomingMessages = new ConcurrentQueue<Message>();
         }
+
+        public Socket Socket => Token.Socket;
 
         public int Checksum
         {
@@ -81,7 +84,7 @@ namespace CR.Servers.CoC.Logic
             _outgoingMessages.Enqueue(message);
         }
 
-        public void EnqueueIncoming(Message message)
+        public void EnqueueIncomingMessage(Message message)
         {
             _incomingMessages.Enqueue(message);
         }
@@ -94,7 +97,7 @@ namespace CR.Servers.CoC.Logic
 
                 Message message;
                 while (_outgoingMessages.TryDequeue(out message))
-                    Resources.Processor.EnqueueOutgoing(message, queueId);
+                    Resources.Processor.EnqueueOutgoing(message, message.Priority == MessagePriority.High ? -1 : queueId);
             }
 
             if (_incomingMessages.Count > 0)
@@ -103,7 +106,7 @@ namespace CR.Servers.CoC.Logic
 
                 Message message;
                 while (_incomingMessages.TryDequeue(out message))
-                    Resources.Processor.EnqueueIncoming(message, queueId);
+                    Resources.Processor.EnqueueIncoming(message, message.Priority == MessagePriority.High ? -1 : queueId);
             }
         }
 
@@ -214,7 +217,7 @@ namespace CR.Servers.CoC.Logic
                                     message.Version = (short)messageVersion;
                                     message.Timer = new Stopwatch();
                                     message.Timer.Start();
-                                    EnqueueIncoming(message);
+                                    EnqueueIncomingMessage(message);
                                 }
 
                                 /*else

@@ -1,21 +1,17 @@
-﻿using System;
+﻿using CR.Servers.CoC.Logic;
+using CR.Servers.Logic.Enums;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using CR.Servers.CoC.Logic;
-using CR.Servers.Logic.Enums;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 namespace CR.Servers.CoC.Core.Network
 {
     internal class Gateway
     {
         private readonly Socket _listener;
-        private readonly ConcurrentDictionary<IntPtr, Device> _connectedDevices;
 
         internal Gateway()
         {
-            this._connectedDevices = new ConcurrentDictionary<IntPtr, Device>();
             this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
             this._listener.Listen(500);
@@ -58,12 +54,10 @@ namespace CR.Servers.CoC.Core.Network
                 readEvent.Completed += this.OnReceiveCompleted;
                 readEvent.DisconnectReuseSocket = false;
 
-                Program.Connected();
-
                 Device device = new Device();
                 Token token = new Token(readEvent, device, socket);
 
-                _connectedDevices.TryAdd(socket.Handle, device);
+                Resources.Devices.OnConnect(device);
 
                 device.State = State.SESSION;
 
@@ -186,23 +180,36 @@ namespace CR.Servers.CoC.Core.Network
                 var count = args.Count - offset;
 
                 args.SetBuffer(offset, count);
-                socket.SendAsync(args);
+
+                try
+                {
+                    if (!socket.SendAsync(args))
+                        OnSendCompleted(socket, args);
+                }
+                catch (ObjectDisposedException)
+                {
+                    args.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Logging.Error(this.GetType(), "Exception in OnSendCompleted. trace: " + ex);
+                }
             }
-            args.Dispose();
+            else
+            {
+                args.Dispose();
+            }
         }
 
         internal void Disconnect(SocketAsyncEventArgs rcvArgs)
         {
-            Program.Disconnected();
-
             if (rcvArgs.UserToken != null)
             {
                 Token token = (Token)rcvArgs.UserToken;
 
                 if (token != null)
                 {
-                    Device _;
-                    _connectedDevices.TryRemove(token.Socket.Handle, out _);
+                    Resources.Devices.OnDisconnect(token.Device);
 
                     if (!token.Aborting)
                     {

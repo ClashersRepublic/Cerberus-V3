@@ -5,6 +5,7 @@
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Packets.Messages.Server.Api;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class BindFacebookAccountMessage : Message
     {
@@ -32,13 +33,13 @@
             this.Token = this.Reader.ReadString();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             Level level = this.Device.GameMode.Level;
 
             if (!string.IsNullOrEmpty(this.Identifier))
             {
-                Player Player = Resources.Accounts.LoadAccountViaFacebook(this.Identifier)?.Player;
+                Player Player = (await Resources.Accounts.LoadAccountViaFacebookAsync(this.Identifier))?.Player;
 
                 if (Player != null)
                 {

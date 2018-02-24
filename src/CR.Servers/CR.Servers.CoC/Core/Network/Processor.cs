@@ -4,21 +4,40 @@ using System.Threading;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Packets;
 using System.Threading.Tasks;
+using CR.Servers.CoC.Packets.Messages.Client.Home;
 
 namespace CR.Servers.CoC.Core.Network
 {
     internal class Processor
     {
-        private long _incomingIndex;
-        private long _outgoingIndex;
-
         private readonly int _processorCount;
+        /* Number of processor that processes non-high priority messages. */
+        private readonly int _normalPriorityProcessorCount;
+
+        /* Processors that processes messages like KeepAlive. */
+        private readonly int _highPriorityIncomingProcessor;
+        private readonly int _highPriorityOutgoingProcessor;
+
         private readonly IncomingProcessorThread[] _incomingThreads;
         private readonly OutgoingProcessorThread[] _outgoingThreads;
 
         internal Processor()
         {
             _processorCount = Environment.ProcessorCount;
+
+            if (Environment.ProcessorCount > 1)
+            {
+                _normalPriorityProcessorCount = Environment.ProcessorCount - 1;
+                _highPriorityIncomingProcessor = Environment.ProcessorCount - 1;
+                _highPriorityOutgoingProcessor = Environment.ProcessorCount - 1;
+            }
+            else
+            {
+                _normalPriorityProcessorCount = Environment.ProcessorCount;
+                _highPriorityIncomingProcessor = 0;
+                _highPriorityOutgoingProcessor = 0;
+            }
+
             _incomingThreads = new IncomingProcessorThread[_processorCount];
             _outgoingThreads = new OutgoingProcessorThread[_processorCount];
 
@@ -42,12 +61,42 @@ namespace CR.Servers.CoC.Core.Network
 
         public int GetNextOutgoingQueueId()
         {
-            return (int)(Interlocked.Increment(ref _outgoingIndex) % _processorCount);
+            /* Select a processor with the least load. */
+            int index = 0;
+            int min = int.MaxValue;
+            int count = _normalPriorityProcessorCount;
+
+            for (int i = 0; i < count; i++)
+            {
+                int messageCount = _outgoingThreads[i].Count;
+                if (messageCount < min)
+                {
+                    min = messageCount;
+                    index = i;
+                }
+            }
+
+            return index;
         }
 
         public int GetNextIncomingQueueId()
         {
-            return (int)(Interlocked.Increment(ref _incomingIndex) % _processorCount);
+            /* Select a processor with the least load. */
+            int index = 0;
+            int min = int.MaxValue;
+            int count = _normalPriorityProcessorCount;
+
+            for (int i = 0; i < count; i++)
+            {
+                int messageCount = _incomingThreads[i].Count;
+                if (messageCount < min)
+                {
+                    min = messageCount;
+                    index = i;
+                }
+            }
+
+            return index;
         }
 
         /* Enqueues a message we're sending on a processing thread. */
@@ -59,6 +108,9 @@ namespace CR.Servers.CoC.Core.Network
 
         public void EnqueueOutgoing(Message message, int queueId)
         {
+            if (queueId == -1)
+                queueId = _highPriorityOutgoingProcessor;
+
             var processor = _outgoingThreads[queueId];
             processor._queue.Enqueue(message);
         }
@@ -72,6 +124,9 @@ namespace CR.Servers.CoC.Core.Network
 
         public void EnqueueIncoming(Message message, int queueId)
         {
+            if (queueId == -1)
+                queueId = _highPriorityIncomingProcessor;
+
             var processor = _incomingThreads[queueId];
             processor._queue.Enqueue(message);
         }
@@ -111,26 +166,35 @@ namespace CR.Servers.CoC.Core.Network
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while decoding message: " + ex); }
 
+                                /*
                                 try
                                 { message.Process(); }
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while processing incoming message: " + ex); }
+                                */
 
                                 message.Timer.Restart();
+                                Task processTask = message.ProcessAsync();
+                                message.Timer.Stop();
 
                                 try
-                                { await message.ProcessAsync(); }
+                                { await processTask; }
                                 catch (Exception ex)
                                 { Logging.Error(message.GetType(), "Exception while processing incoming message async: " + ex); }
 
-                                message.Timer.Stop();
 
-                                /*
                                 if (message.Timer.Elapsed.TotalMilliseconds > 2000)
-                                    Console.WriteLine($"{message.GetType().Name}: Took {message.Timer.Elapsed.TotalMilliseconds} to process.");
-                                */
+                                {
+                                    Console.WriteLine($"{message.GetType().Name}: Blocking processor -> {message.Timer.Elapsed.TotalMilliseconds}ms.");
+                                    if (message is EndClientTurnMessage)
+                                    {
+                                        var endClientTurn = (EndClientTurnMessage)message;
+                                        foreach (var command in endClientTurn.Commands)
+                                            Console.WriteLine($" ----> {command.GetType().Name}");
+                                    }
+                                }
 
-                                message.Device.Flush();                                
+                                message.Device.Flush();
                             }
 
                             Thread.Sleep(1);

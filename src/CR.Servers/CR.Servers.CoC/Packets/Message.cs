@@ -1,68 +1,77 @@
-﻿namespace CR.Servers.CoC.Packets
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Logic;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
+using CR.Servers.Extensions;
+using CR.Servers.Extensions.Binary;
+using System.Threading.Tasks;
+
+namespace CR.Servers.CoC.Packets
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reflection;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
-    using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Packets.Messages.Server.Home;
-    using CR.Servers.Extensions;
-    using CR.Servers.Extensions.Binary;
-    using System.Threading.Tasks;
+    public enum MessagePriority
+    {
+        Normal,
+        High
+    };
 
     public abstract class Message
     {
         private static readonly Task s_completedTask = Task.FromResult<object>(null);
 
         internal Stopwatch Timer;
-        internal List<byte> Data;
 
-        internal Device Device;
-        internal int Length;
+        private readonly List<byte> _data;
+        private readonly Device _device;
+        private readonly Reader _reader;
 
-        internal int Offset;
-
-        internal Reader Reader;
-        internal short Version;
-
-        internal Message(Device Device)
+        protected Message(Device device)
         {
-            this.Device = Device;
-            this.Data = new List<byte>();
+            _device = device;
+            _reader = null;
+            _data = new List<byte>();
         }
 
-        internal Message(Device Device, Reader Reader)
+        protected Message(Device device, Reader reader)
         {
-            this.Device = Device;
-            this.Reader = Reader;
+            _device = device;
+            _reader = reader;
         }
 
+        public Reader Reader => _reader;
+        public Device Device => _device;
+        public List<byte> Data => _data;
+        public short Version { get; set; }
+        public virtual MessagePriority Priority => MessagePriority.Normal;
         internal abstract short Type { get; }
 
         internal virtual void Decode()
         {
-            //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Decoding.");
+            // Space
         }
 
         internal virtual void Encode()
         {
-            //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Encoding.");
+            // Space
         }
 
         internal virtual void Process()
         {
-            //Trace.WriteLine("[*] " + this.GetType().Name + " : " + "Processing.");
+            // Space
         }
 
         internal virtual Task ProcessAsync()
         {
+            /* Run the normal Process method. */
+            Process();
+
             return s_completedTask;
         }
 
-        internal virtual void SendChatMessage(string message)
+        protected virtual void SendChatMessage(string message)
         {
             new GlobalChatLineMessage(this.Device, this.Device.GameMode.Level.Player)
             {
@@ -76,7 +85,7 @@
 
         internal void ShowBuffer()
         {
-            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
+            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
         }
 
         internal void ShowValues()
@@ -84,9 +93,7 @@
             foreach (FieldInfo Field in this.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (Field != null)
-                {
                     Logging.Info(this.GetType(), ConsolePad.Padding(Field.Name) + " : " + ConsolePad.Padding(!string.IsNullOrEmpty(Field.Name) ? (Field.GetValue(this) != null ? Field.GetValue(this).ToString() : "(null)") : "(null)", 40));
-                }
             }
         }
 
@@ -98,7 +105,7 @@
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - UserId ({(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + "-" + this.Device.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - UserId ({(this.Device.GameMode?.Level?.Player != null ? this.Device.GameMode.Level.Player.HighID + "-" + this.Device.GameMode.Level.Player.LowID : "-")}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

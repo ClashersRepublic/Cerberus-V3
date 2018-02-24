@@ -55,7 +55,7 @@
             new AllianceListMessage(this.Device)
             {
                 TextSearch = this.TextSearch,
-                Alliances = Resources.Clans.Values.Where(T =>
+                Alliances = Resources.Clans.GetAllClans().Where(T =>
                         LikeOperator.LikeString(T.Header.Name, this.TextSearch, CompareMethod.Text) &&
                         T.Header.NumberOfMembers >= this.MinimumMembers &&
                         T.Header.NumberOfMembers <= this.MaximumMembers &&

@@ -65,7 +65,7 @@
                     int LowId = 0;
 
                     this.ToHighAndLow(n, ref HighId, ref LowId);
-                    Account Account = Resources.Accounts.LoadAccount(HighId, LowId);
+                    Account Account = await Resources.Accounts.LoadAccountAsync(HighId, LowId);
                     if (Account != null)
                     {
                         Account.Player.Locked = true;

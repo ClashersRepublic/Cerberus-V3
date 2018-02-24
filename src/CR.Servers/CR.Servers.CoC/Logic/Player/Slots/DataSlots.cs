@@ -71,12 +71,26 @@
 
         internal Item GetByData(Data Data)
         {
-            return this.Find(T => T.Data == Data.GlobalId);
+            for (int i = 0; i < Count; i++)
+            {
+                var item = this[i];
+                if (item.Data == Data.GlobalId)
+                    return item;
+            }
+
+            return null;
         }
 
         internal Item GetByGlobalId(int Id)
         {
-            return this.Find(T => T.Data == Id);
+            for (int i = 0; i < Count;i++)
+            {
+                var item = this[i];
+                if (item.Data == Id)
+                    return item;
+            }
+
+            return null;
         }
 
         internal int GetCountByData(Data Data)
@@ -164,7 +178,8 @@
         {
             Packet.AddInt(this.Count);
 
-            this.ForEach(Item => { Item.Encode(Packet); });
+            for (int i = 0; i < Count; i++)
+                this[i].Encode(Packet);
         }
 
         internal JArray Save()

@@ -1,20 +1,17 @@
-﻿namespace CR.Servers.CoC.Packets
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Extensions.Helper;
-    using CR.Servers.CoC.Logic;
-    using CR.Servers.CoC.Packets.Commands.Client.Battle;
-    using CR.Servers.Extensions;
-    using CR.Servers.Extensions.Binary;
-    using CR.Servers.Extensions.List;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Logic;
+using CR.Servers.Extensions;
+using CR.Servers.Extensions.Binary;
+using CR.Servers.Extensions.List;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
+namespace CR.Servers.CoC.Packets
+{
     public class Command
     {
         private static readonly Task s_completedTask = Task.FromResult<object>(null);
@@ -26,6 +23,7 @@
 
         public Command()
         {
+            // Space
         }
 
         public Command(Device Device)
@@ -67,6 +65,7 @@
 
         internal virtual void Execute()
         {
+            // Space
         }
 
         internal virtual Task ExecuteAsync()
@@ -95,7 +94,7 @@
 
         internal void ShowBuffer()
         {
-            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
+            Logging.Info(this.GetType(), BitConverter.ToString(this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position))));
         }
 
         internal void ShowValues()
@@ -111,7 +110,7 @@
 
         internal void Log()
         {
-            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int) (this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
+            File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\Dumps\\" + $"{this.GetType().Name} ({this.Type}) - {DateTime.Now:yy_MM_dd__hh_mm_ss}.bin", this.Reader.ReadBytes((int)(this.Reader.BaseStream.Length - this.Reader.BaseStream.Position)));
         }
     }
 }

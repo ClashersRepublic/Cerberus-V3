@@ -297,10 +297,10 @@
             return Account;
         }
 
-        internal Account LoadAccountViaFacebook(string FacebookID, bool Store = true)
+        internal async Task<Account> LoadAccountViaFacebookAsync(string FacebookID, bool Store = true)
         {
             Account Account = null;
-            Players Data = Mongo.Players.Find(T => T.FacebookId == FacebookID).SingleOrDefault();
+            Players Data = await Mongo.Players.Find(T => T.FacebookId == FacebookID).SingleOrDefaultAsync();
 
             if (Data != null)
             {
@@ -558,12 +558,49 @@
             }
         }
 
+        internal Task[] SaveAll()
+        {
+            KeyValuePair<long, WeakReference<Player>>[] players = this.Players.ToArray();
+            KeyValuePair<long, WeakReference<Home>>[] homes = this.Homes.ToArray();
+            List<Task> tasks = new List<Task>();
+
+            foreach (var kv in players)
+            {
+                Player player;
+                if (kv.Value.TryGetTarget(out player))
+                {
+                    tasks.Add(SavePlayer(player));
+                }
+                else
+                {
+                    WeakReference<Player> _;
+                    Players.TryRemove(kv.Key, out _);
+                }
+            }
+
+            foreach (var kv in homes)
+            {
+                Home home;
+                if (kv.Value.TryGetTarget(out home))
+                {
+                    tasks.Add(SaveHome(home));
+                }
+                else
+                {
+                    WeakReference<Home> _;
+                    Homes.TryRemove(kv.Key, out _);
+                }
+            }
+
+            return tasks.ToArray();
+        }
+
         internal Player[] GetAllPlayers()
         {
             WeakReference<Player>[] playerRefs = this.Players.Values.ToArray();
             List<Player> players = new List<Player>(playerRefs.Length);
 
-            for(int i = 0; i < playerRefs.Length; i++)
+            for (int i = 0; i < playerRefs.Length; i++)
             {
                 WeakReference<Player> playerRef = playerRefs[i];
                 Player player;

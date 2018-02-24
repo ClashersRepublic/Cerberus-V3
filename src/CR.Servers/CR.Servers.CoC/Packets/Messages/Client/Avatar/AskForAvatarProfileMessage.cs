@@ -5,6 +5,7 @@
     using CR.Servers.CoC.Logic;
     using CR.Servers.CoC.Packets.Messages.Server.Avatar;
     using CR.Servers.Extensions.Binary;
+    using System.Threading.Tasks;
 
     internal class AskForAvatarProfileMessage : Message
     {
@@ -37,11 +38,11 @@
             this.Reader.ReadBooleanV2();
         }
 
-        internal override void Process()
+        internal override async Task ProcessAsync()
         {
             if (this.AvatarHighId >= 0 && this.AvatarLowId > 0)
             {
-                Player Player = Resources.Accounts.LoadAccount(this.AvatarHighId, this.AvatarLowId)?.Player;
+                Player Player = (await Resources.Accounts.LoadAccountAsync(this.AvatarHighId, this.AvatarLowId))?.Player;
 
                 if (Player?.Level != null)
                 {

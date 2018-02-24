@@ -39,9 +39,9 @@
                 }
             });
 
-            
-            Resources.Accounts.Saves();
-            Task.WaitAll(Resources.Clans.Saves());
+
+            Task.WaitAll(Resources.Accounts.SaveAll());
+            Task.WaitAll(Resources.Clans.SaveAll());
             //Task AllSave = Task.Run(() => Resources.Clans.Save());
 
             //AllSave.Wait();

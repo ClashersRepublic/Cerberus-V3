@@ -8,6 +8,14 @@
         {
         }
 
+        public override MessagePriority Priority
+        {
+            get
+            {
+                return MessagePriority.High;
+            }
+        }
+
         internal override short Type
         {
             get

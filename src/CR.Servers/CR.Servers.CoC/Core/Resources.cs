@@ -4,6 +4,7 @@ using CR.Servers.CoC.Core.Events;
 using CR.Servers.CoC.Core.Network;
 using CR.Servers.CoC.Extensions.Game;
 using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Chat;
 using CR.Servers.CoC.Logic.Slots;
 using CR.Servers.CoC.Packets;
@@ -17,6 +18,7 @@ namespace CR.Servers.CoC.Core
 {
     internal class Resources
     {
+        internal static Devices Devices;
         internal static Accounts Accounts;
         internal static Battles Battles;
         internal static Clans Clans;
@@ -56,6 +58,7 @@ namespace CR.Servers.CoC.Core
 
             Resources.Processor = new Processor();
 
+            Resources.Devices = new Devices();
             Resources.Accounts = new Accounts();
             Resources.Battles = new Battles();
             Resources.Clans = new Clans();
