@@ -32,7 +32,6 @@
 
         internal Player Player;
         internal SpellProductionManager SpellProductionManager;
-        internal TileMap TileMap;
 
         internal string TroopRequestMessage = "I need reinforcements";
         internal UnitProductionManager UnitProductionManager;
@@ -51,8 +50,6 @@
             //this.CooldownManager = new CooldownManager(this);
             /*
             this.MissionManager = new MissionManager(this);*/
-
-            this.TileMap = new TileMap(50, 50);
         }
 
         public Level(GameMode GameMode) : this()
@@ -309,114 +306,6 @@
             // this.MissionManager.Tick();
 
             //this.CooldownManager.Update(this.Time);
-        }
-
-        internal bool IsValidPlaceForObstacle(ObstacleData Data, int X, int Y, int Width, int Height, bool Edge)
-        {
-            bool Valid = false;
-
-            if (X >= 0 && Y >= 0)
-            {
-                if (Width + X <= 50 && Height + Y <= 50)
-                {
-                    if (Edge)
-                    {
-                        Width += 2;
-                        Height += 2;
-                        X--;
-                        Y--;
-                    }
-
-                    Valid = true;
-
-                    if (Width > 0 && Height > 0)
-                    {
-                        for (int i = 0; i < Width; i++)
-                        {
-                            for (int j = 0; j < Height; j++)
-                            {
-
-                                if (TileMap.Exists(X + i, Y + j, Data.VillageType))
-                                {
-                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
-                                    if (!Tile.IsBuildable())
-                                    {
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return Valid;
-        }
-
-        internal bool IsValidPlaceForBuilding(ObstacleData Data, int X, int Y, int Width, int Height)
-        {
-            bool Valid = false;
-
-            if (X >= 0 && Y >= 0)
-            {
-                if (Width + X <= 50 && Height + Y <= 50)
-                {
-                    Valid = true;
-
-                    if (Width > 0 && Height > 0)
-                    {
-                        for (int i = 0; i < Width; i++)
-                        {
-                            for (int j = 0; j < Height; j++)
-                            {
-                                if (TileMap.Exists(X + i, Y+ j, Data.VillageType))
-                                {
-                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
-                                    if (!Tile.IsBuildable())
-                                    {
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return Valid;
-        }
-
-        internal bool IsValidPlaceForBuilding(BuildingData Data, int X, int Y, int Width, int Height)
-        {
-            bool Valid = false;
-
-            if (X >= 0 && Y >= 0)
-            {
-                if (Width + X <= 50 && Height + Y <= 50)
-                {
-                    Valid = true;
-
-                    if (Width > 0 && Height > 0)
-                    {
-                        for (int i = 0; i < Width; i++)
-                        {
-                            for (int j = 0; j < Height; j++)
-                            {
-                                if (TileMap.Exists(X + i, Y + j, Data.VillageType))
-                                {
-                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
-                                    if (!Tile.IsBuildable())
-                                    {
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return Valid;
         }
     }
 }

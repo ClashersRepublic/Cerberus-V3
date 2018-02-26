@@ -50,147 +50,143 @@
                     Level Level = this.Device.GameMode.Level;
                     //if (!Level.IsBuildingCapReached(this.BuildingData))
                     {
-                        BuildingClassData BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingData.BuildingClass);
                         ResourceData ResourceData = this.BuildingData.BuildResourceData;
 
-                        if (BuildingClassData.CanBuy)
+                        if (this.BuildingData.VillageType == 0)
                         {
-                            if (this.BuildingData.VillageType == 0)
+                            if (this.BuildingData.TownHallLevel[0] <= Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
                             {
-                                if (this.BuildingData.TownHallLevel[0] <= Level.GameObjectManager.TownHall.GetUpgradeLevel() + 1)
+                                if (this.BuildingData.IsWorker)
                                 {
-                                    if (this.BuildingData.IsWorker)
+                                    int Cost;
+
+                                    switch (Level.WorkerManager.WorkerCount)
                                     {
-                                        int Cost;
+                                        case 1:
+                                            Cost = Globals.WorkerCost2Nd;
+                                            break;
+                                        case 2:
+                                            Cost = Globals.WorkerCost3Rd;
+                                            break;
+                                        case 3:
+                                            Cost = Globals.WorkerCost4Th;
+                                            break;
+                                        case 4:
+                                            Cost = Globals.WorkerCost5Th;
+                                            break;
 
-                                        switch (Level.WorkerManager.WorkerCount)
-                                        {
-                                            case 1:
-                                                Cost = Globals.WorkerCost2Nd;
-                                                break;
-                                            case 2:
-                                                Cost = Globals.WorkerCost3Rd;
-                                                break;
-                                            case 3:
-                                                Cost = Globals.WorkerCost4Th;
-                                                break;
-                                            case 4:
-                                                Cost = Globals.WorkerCost5Th;
-                                                break;
-
-                                            default:
-                                                Cost = this.BuildingData.BuildCost[0];
-                                                break;
-                                        }
-
-                                        if (Level.Player.HasEnoughDiamonds(Cost))
-                                        {
-                                            Level.Player.UseDiamonds(Cost);
-                                            this.StartConstruction(Level);
-                                        }
-
-                                        return;
+                                        default:
+                                            Cost = this.BuildingData.BuildCost[0];
+                                            break;
                                     }
 
-                                    if (Level.Player.Resources.GetCountByData(ResourceData) >=
-                                        this.BuildingData.BuildCost[0])
+                                    if (Level.Player.HasEnoughDiamonds(Cost))
                                     {
-                                        if (Level.WorkerManager.FreeWorkers > 0)
-                                        {
-                                            Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
-                                            this.StartConstruction(Level);
-                                        }
-
-                                        //else
-                                        //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
+                                        Level.Player.UseDiamonds(Cost);
+                                        this.StartConstruction(Level);
                                     }
+
+                                    return;
+                                }
+
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >=
+                                    this.BuildingData.BuildCost[0])
+                                {
+                                    if (Level.WorkerManager.FreeWorkers > 0)
+                                    {
+                                        Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
+                                        this.StartConstruction(Level);
+                                    }
+
+                                    //else
+                                    //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                 }
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (this.BuildingData.TownHallLevel2[0] <= Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1)
                             {
-                                if (this.BuildingData.TownHallLevel2[0] <= Level.GameObjectManager.TownHall2.GetUpgradeLevel() + 1)
+                                if (this.BuildingData.IsTroopHousingV2)
                                 {
-                                    if (this.BuildingData.IsTroopHousingV2)
+                                    int TroopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
+                                    int Cost;
+                                    int Time;
+
+                                    switch (TroopHousing)
                                     {
-                                        int TroopHousing = Level.GameObjectManager.Filter.GetGameObjectCount(this.BuildingData);
-                                        int Cost;
-                                        int Time;
+                                        case 1:
+                                        case 2:
+                                        case 3:
+                                        case 4:
+                                            Cost = Globals.TroopHousingV2Cost[TroopHousing];
+                                            Time = Globals.TroopHousingV2BuildTimeSeconds[TroopHousing];
+                                            break;
 
-                                        switch (TroopHousing)
-                                        {
-                                            case 1:
-                                            case 2:
-                                            case 3:
-                                            case 4:
-                                                Cost = Globals.TroopHousingV2Cost[TroopHousing];
-                                                Time = Globals.TroopHousingV2BuildTimeSeconds[TroopHousing];
-                                                break;
-
-                                            default:
-                                                Cost = Globals.TroopHousingV2Cost[4];
-                                                Time = Globals.TroopHousingV2BuildTimeSeconds[1];
-                                                break;
-                                        }
-
-                                        if (Level.Player.Resources.GetCountByData(ResourceData) >= Cost)
-                                        {
-                                            if (Level.WorkerManagerV2.FreeWorkers > 0)
-                                            {
-                                                Level.Player.Resources.Remove(ResourceData, Cost);
-                                                this.StartConstruction(Level, Time);
-                                            }
-
-                                            //else
-                                            // Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
-                                        }
-
-                                        return;
+                                        default:
+                                            Cost = Globals.TroopHousingV2Cost[4];
+                                            Time = Globals.TroopHousingV2BuildTimeSeconds[1];
+                                            break;
                                     }
 
-                                    if (this.BuildingData.IsWorker2)
-                                    {
-                                        int Cost;
-
-                                        switch (Level.WorkerManagerV2.WorkerCount)
-                                        {
-                                            case 1:
-                                                Cost = Globals.WorkerCost2Nd;
-                                                break;
-                                            case 2:
-                                                Cost = Globals.WorkerCost3Rd;
-                                                break;
-                                            case 3:
-                                                Cost = Globals.WorkerCost4Th;
-                                                break;
-                                            case 4:
-                                                Cost = Globals.WorkerCost5Th;
-                                                break;
-
-                                            default:
-                                                Cost = this.BuildingData.BuildCost[0];
-                                                break;
-                                        }
-
-                                        if (Level.Player.HasEnoughDiamonds(Cost))
-                                        {
-                                            Level.Player.UseDiamonds(Cost);
-                                            this.StartConstruction(Level);
-                                        }
-
-                                        return;
-                                    }
-
-                                    if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
+                                    if (Level.Player.Resources.GetCountByData(ResourceData) >= Cost)
                                     {
                                         if (Level.WorkerManagerV2.FreeWorkers > 0)
                                         {
-                                            Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
-                                            this.StartConstruction(Level);
+                                            Level.Player.Resources.Remove(ResourceData, Cost);
+                                            this.StartConstruction(Level, Time);
                                         }
 
                                         //else
-                                        //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
+                                        // Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                     }
+
+                                    return;
+                                }
+
+                                if (this.BuildingData.IsWorker2)
+                                {
+                                    int Cost;
+
+                                    switch (Level.WorkerManagerV2.WorkerCount)
+                                    {
+                                        case 1:
+                                            Cost = Globals.WorkerCost2Nd;
+                                            break;
+                                        case 2:
+                                            Cost = Globals.WorkerCost3Rd;
+                                            break;
+                                        case 3:
+                                            Cost = Globals.WorkerCost4Th;
+                                            break;
+                                        case 4:
+                                            Cost = Globals.WorkerCost5Th;
+                                            break;
+
+                                        default:
+                                            Cost = this.BuildingData.BuildCost[0];
+                                            break;
+                                    }
+
+                                    if (Level.Player.HasEnoughDiamonds(Cost))
+                                    {
+                                        Level.Player.UseDiamonds(Cost);
+                                        this.StartConstruction(Level);
+                                    }
+
+                                    return;
+                                }
+
+                                if (Level.Player.Resources.GetCountByData(ResourceData) >= this.BuildingData.BuildCost[0])
+                                {
+                                    if (Level.WorkerManagerV2.FreeWorkers > 0)
+                                    {
+                                        Level.Player.Resources.Remove(ResourceData, this.BuildingData.BuildCost[0]);
+                                        this.StartConstruction(Level);
+                                    }
+
+                                    //else
+                                    //Logging.Error(this.GetType(), "Unable to buy building. The player doesn't have any free worker!");
                                 }
                             }
                         }

@@ -254,5 +254,29 @@
 
             return Valid;
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            if (this.Buildings != null)
+            {
+                if (this.Buildings.Count != 0)
+                {
+                    do
+                    {
+                        this.Buildings.RemoveAt(0);
+                    } while (this.Buildings.Count != 0);
+                }
+
+                this.Buildings = null;
+            }
+
+            if (this.TileMap != null)
+            {
+                this.TileMap.Destruct();
+                this.TileMap = null;
+            }
+        }
     }
 }

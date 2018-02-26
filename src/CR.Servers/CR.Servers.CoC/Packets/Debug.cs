@@ -39,7 +39,7 @@
             }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.Parameters = null;
         }

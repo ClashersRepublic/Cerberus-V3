@@ -62,8 +62,9 @@
                                         else
                                         {
                                             Debug.SendChatMessage("Debug command failed. Insufficient privileges.");
-                                            return;
                                         }
+
+                                        Debug.Dispose();
                                     }
                                     else
                                     {

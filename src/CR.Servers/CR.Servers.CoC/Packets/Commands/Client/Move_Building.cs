@@ -44,34 +44,6 @@
                 if (GameObject.Type != 3)
                 {
                     GameObject.SetPositionXY(this.X, this.Y);
-
-                    if (GameObject.VillageType == 1)
-                    {
-                        List<Tile> Tiles = this.Device.GameMode.Level.TileMap.GetTile(GameObject, this.X, this.Y, 1);
-                        if (Tiles != null)
-                        {
-                            foreach (Tile Tile in Tiles)
-                            {
-                                foreach (GameObject TileObject in Tile.GameObjects)
-                                {
-                                    if (TileObject is Obstacle)
-                                    {
-                                        Obstacle Obstacle = (Obstacle)TileObject;
-                                        if (Obstacle.ObstacleData.TallGrass)
-                                        {
-                                            Obstacle.Destructed = true;
-                                            this.Device.GameMode.Level.GameObjectManager
-                                                .RemoveGameObject(TileObject, 1);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Logging.Error(this.GetType(), "Unexpected issue while moving building! Tiles is null");
-                        }
-                    }
                 }
             }
             else

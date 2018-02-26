@@ -87,7 +87,6 @@
             };
 
             Level.GameObjectManager.GameObjects[6][this.DecoData.VillageType].Add(GameObject);
-            Level.TileMap.AddGameObject(GameObject);
         }
     }
 }

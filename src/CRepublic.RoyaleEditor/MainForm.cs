@@ -492,5 +492,34 @@ namespace CR.Assets.Editor
         {
             Export();
         }
+
+        private void exportShapeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Exporting chunk from export name is currently experimenetal.\nProceed?", "Experimental Exporting", MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.Yes)
+            {
+                using (var fbd = new FolderBrowserDialog())
+                {
+                    DialogResult result1 = fbd.ShowDialog();
+                    if (result1 == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    {
+                        Export data = (Export) treeView1.SelectedNode.Tag;
+
+                        Console.WriteLine($"Shape count: {data.Children.Count}");
+
+                        foreach (Shape Shape in data.Children)
+                        {
+                            foreach (ShapeChunk Chunk in Shape.GetChunks())
+                            {
+                                Chunk.Render(new RenderingOptions()).Save(fbd.SelectedPath + $"/{data.GetName()}_shape{Shape.Id}_chunk{Chunk.Id}.png");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

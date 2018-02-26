@@ -28,5 +28,21 @@
         {
             this.GameObjects.Remove(GameObject);
         }
+
+        public void Destruct()
+        {
+            if (this.GameObjects != null)
+            {
+                if (this.GameObjects.Count != 0)
+                {
+                    do
+                    {
+                        this.GameObjects.RemoveAt(0);
+                    } while (this.GameObjects.Count != 0);
+                }
+
+                this.GameObjects = null;
+            }
+        }
     }
 }

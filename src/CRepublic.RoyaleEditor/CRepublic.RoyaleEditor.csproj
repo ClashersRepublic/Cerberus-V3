@@ -91,12 +91,6 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\Prefixed.cs" />
     <Compile Include="Helpers\Utils.cs" />
-    <Compile Include="Interface.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Interface.Designer.cs">
-      <DependentUpon>Interface.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,9 +150,6 @@
     <Compile Include="Sc\ScFormatVersion.cs" />
     <Compile Include="Sc\ScLoader.cs" />
     <Compile Include="Sc\ScData.cs" />
-    <EmbeddedResource Include="Interface.resx">
-      <DependentUpon>Interface.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

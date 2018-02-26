@@ -64,7 +64,7 @@
 
 	"respawnVars": {
 		"secondsFromLastRespawn": 0,
-		"respawnSeed": 162879964,
+		"respawnSeed": 0,
 		"obstacleClearCounter": 0
 	},
 	"buildings2": [

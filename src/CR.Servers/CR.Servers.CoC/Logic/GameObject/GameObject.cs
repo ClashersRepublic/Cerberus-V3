@@ -127,8 +127,6 @@
 
             this.Position.X = TileX << 9;
             this.Position.Y = TileY << 9;
-
-            this.Level.TileMap.GameObjectMoved(this, OldX, OldY);
         }
 
         internal bool TryGetComponent(int Type, out Component Component)

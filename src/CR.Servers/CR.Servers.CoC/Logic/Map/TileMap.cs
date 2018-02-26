@@ -9,7 +9,7 @@ namespace CR.Servers.CoC.Logic.Map
 {
     internal class TileMap
     {
-        private readonly Tile[][] Tiles;
+        private Tile[][] Tiles;
 
         public TileMap(int Width, int Height)
         {
@@ -101,6 +101,23 @@ namespace CR.Servers.CoC.Logic.Map
             }
 
             return Tiles;
+        }
+
+        public void Destruct()
+        {
+            if (this.Tiles != null)
+            {
+                for (int i = 0; i < this.Tiles.Length; i++)
+                {
+                    for (int j = 0; j < this.Tiles[j].Length; j++)
+                    {
+                        this.Tiles[i][j].Destruct();
+                    }
+                    this.Tiles[i] = null;
+                }
+
+                this.Tiles = null;
+            }
         }
     }
 }

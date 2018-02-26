@@ -29,14 +29,6 @@ namespace CR.Servers.CoC.Logic
         internal int[] ObstaclesIndex;
         internal int[] DecoIndex;
 
-        internal int SecondsFromLastRespawn;
-        internal int SecondsFromLastRespawnV2;
-        internal int SecondsFromLastTgRespawn;
-
-        internal Random TgRandom;
-        internal Random V2Random;
-        internal Random VRandom;
-
         public GameObjectManager(Level Level)
         {
             this.GameObjects = new List<GameObject>[10][];
@@ -54,9 +46,6 @@ namespace CR.Servers.CoC.Logic
             }
 
             this.Filter = new Filter(this);
-            this.VRandom = new Random();
-            this.V2Random = new Random();
-            this.TgRandom = new Random();
 
             this.Level = Level;
         }
@@ -148,121 +137,12 @@ namespace CR.Servers.CoC.Logic
 
             GameObject.Id = GlobalId.Create(500 + GType, this.GameObjects[GType][GameObject.VillageType].Count);
             this.GameObjects[GType][GameObject.VillageType].Add(GameObject);
-            this.Level.TileMap.AddGameObject(GameObject);
         }
 
         public void RemoveGameObject(GameObject go, int Map)
         {
             this.GameObjects[go.Type][Map].Remove(go);
-        }
-
-        internal void CreateTallGrass()
-        {
-            List<Data> Tables = CSV.Tables.Get(Gamefile.Obstacles).Datas;
-
-            if (Tables.Count < 1)
-            {
-                return;
-            }
-
-            int Weight = 0;
-
-            foreach (ObstacleData Data in Tables)
-            {
-                if (Data.VillageType == 1 && Data.TallGrass)
-                {
-                    Weight += Data.RespawnWeight;
-                }
-            }
-
-            int RandomWeight = this.TgRandom.Rand(Weight);
-
-            Weight = 0;
-
-            foreach (ObstacleData Data in Tables)
-            {
-                if (Data.VillageType == 1 && Data.TallGrass)
-                {
-                    Weight += Data.RespawnWeight;
-
-                    if (Weight > RandomWeight)
-                    {
-                        this.RandomlyPlaceObstacle(Data, this.TgRandom);
-                        break;
-                    }
-                }
-            }
-        }
-
-        internal void CreateObstacle(int Type)
-        {
-            List<Data> Tables = CSV.Tables.Get(Gamefile.Obstacles).Datas;
-
-            if (Tables.Count < 1)
-            {
-                return;
-            }
-
-            int Weight = 0;
-
-            foreach (ObstacleData Data in Tables)
-            {
-                if (Data.VillageType == Type)
-                {
-                    Weight += Data.RespawnWeight;
-                }
-            }
-
-            int RandomWeight = Type == 0 ? this.VRandom.Rand(Weight) : this.V2Random.Rand(Weight);
-
-            Weight = 0;
-
-            foreach (ObstacleData Data in Tables)
-            {
-                if (Data.VillageType == Type)
-                {
-                    Weight += Data.RespawnWeight;
-
-                    if (Weight > RandomWeight)
-                    {
-                        this.RandomlyPlaceObstacle(Data, Type == 0 ? this.VRandom : this.V2Random);
-                        break;
-                    }
-                }
-            }
-        }
-
-        internal void RandomlyPlaceObstacle(ObstacleData Data, Random Random)
-        {
-            int WidthInTiles = this.Level.WidthInTiles;
-            int HeightInTiles = this.Level.HeightInTiles;
-
-            for (int i = 0; i <= 20; i++)
-            {
-                int X = Random.Rand(WidthInTiles + 1 - Data.Width);
-                int Y = Random.Rand(HeightInTiles + 1 - Data.Height);
-
-                if (this.Level.IsValidPlaceForObstacle(Data, X, Y, Data.Width, Data.Height, true))
-                {
-                    Obstacle Obstacle = new Obstacle(Data, this.Level)
-                    {
-                        Position =
-                        {
-                            X = X << 9,
-                            Y = Y << 9
-                        },
-                        Id = GlobalId.Create(503, this.ObstaclesIndex[Data.VillageType]++)
-                    };
-
-                    this.GameObjects[3][Data.VillageType].Add(Obstacle);
-                    this.Level.TileMap.AddGameObject(Obstacle);
-
-                    //Logging.Info(this.GetType(),"Village:" + Data.VillageType +"   X:" + X + "   Y:" + Y);
-
-                    break;
-                }
-            }
-        }
+        }    
 
         internal void FastForwardTime(int Secs)
         {
@@ -278,16 +158,6 @@ namespace CR.Servers.CoC.Logic
                     gameObject[1][j].FastForwardTime(Secs);
                 }
             }
-
-            //TODO Make auto respawn work.. Create timer system?
-            this.SecondsFromLastRespawn += Secs;
-            this.SecondsFromLastRespawnV2 += Secs;
-            this.SecondsFromLastTgRespawn += Secs;
-
-            this.VRandom.Rand(1);
-            this.V2Random.Rand(1);
-            this.TgRandom.Rand(1);
-            this.RespawnObstacles();
         }
 
         internal void RecalculateAllIds()
@@ -389,48 +259,6 @@ namespace CR.Servers.CoC.Logic
 
             for (int i = 0; i < GameObjects[4][1].Count; i++)
                 GameObjects[4][1][i].Process();
-        }
-
-        internal void RespawnObstacles()
-        {
-            int TombStoneCount = this.Level.TombStoneCount;
-            int TombStoneV2Count = this.Level.TombStoneV2Count;
-
-            while (this.SecondsFromLastRespawn >= Globals.ObstacleRespawnSeconds)
-            {
-                if (this.GameObjects[3][0].Count - TombStoneCount >= Globals.ObstacleCountMax)
-                {
-                    this.SecondsFromLastRespawn = 0;
-                    break;
-                }
-
-                this.CreateObstacle(0);
-                this.SecondsFromLastRespawn -= Globals.ObstacleRespawnSeconds;
-            }
-
-            while (this.SecondsFromLastRespawnV2 >= Globals.ObstacleRespawnSeconds)
-            {
-                if (this.GameObjects[3][1].Count - TombStoneV2Count >= Globals.ObstacleCountMax)
-                {
-                    this.SecondsFromLastRespawnV2 = 0;
-                    break;
-                }
-
-                this.CreateObstacle(1);
-                this.SecondsFromLastRespawnV2 -= Globals.ObstacleRespawnSeconds;
-            }
-
-            while (this.SecondsFromLastTgRespawn >= Globals.TallGrassRespawnSeconds)
-            {
-                if (this.GameObjects[3][1].Count - TombStoneV2Count >= Globals.ObstacleCountMax)
-                {
-                    this.SecondsFromLastTgRespawn = 0;
-                    break;
-                }
-
-                this.CreateTallGrass();
-                this.SecondsFromLastTgRespawn -= Globals.TallGrassRespawnSeconds;
-            }
         }
 
         internal void Load(JToken Json)
@@ -575,29 +403,12 @@ namespace CR.Servers.CoC.Logic
             JToken RespawnToken;
             if (JsonHelper.GetJsonObject(Json, "respawnVars", out RespawnToken))
             {
-                JsonHelper.GetJsonNumber(RespawnToken, "secondsFromLastRespawn", out this.SecondsFromLastRespawn);
                 JsonHelper.GetJsonNumber(RespawnToken, "obstacleClearCounter", out this.ObstacleClearCounter);
-
-                int RandomSeed;
-                this.VRandom.Seed = JsonHelper.GetJsonNumber(RespawnToken, "respawnSeed", out RandomSeed) ? RandomSeed : 112;
             }
             else
             {
                 Logging.Info(this.GetType(), "Load() - Can't find respawn variables.");
-                this.VRandom.Seed = 112;
-            }
-
-            int SecondsFromLastRespawnV2;
-            this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
-            int V2RandomSeed;
-            this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out V2RandomSeed) ? V2RandomSeed : 112;
-            int ObstacleClearCounterV2;
-            this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
-
-            int SecondsFromLastTGRespawn;
-            this.SecondsFromLastTgRespawn = JsonHelper.GetJsonNumber(Json, "tgsec", out SecondsFromLastTGRespawn) ? SecondsFromLastTGRespawn : 0;
-            int TGRandomSeed;
-            this.TgRandom.Seed = JsonHelper.GetJsonNumber(Json, "tgseed", out TGRandomSeed) ? TGRandomSeed : 112;
+            }      
         }
 
 
@@ -773,9 +584,9 @@ namespace CR.Servers.CoC.Logic
 
             JObject RespawnVars = new JObject
             {
-                {"secondsFromLastRespawn", this.SecondsFromLastRespawn},
+                {"secondsFromLastRespawn", 0},
                 {"obstacleClearCounter", this.ObstacleClearCounter},
-                {"respawnSeed", this.VRandom.Seed},
+                {"respawnSeed", 112},
                 {"time_to_gembox_drop", 999999999}
             };
 
@@ -790,11 +601,10 @@ namespace CR.Servers.CoC.Logic
             Json.Add("traps2", Traps2);
             Json.Add("decos2", Decos2);
             Json.Add("vobjs2", VillageObjects2);
-            Json.Add("v2rs", this.SecondsFromLastRespawnV2);
-            Json.Add("v2rseed", this.V2Random.Seed);
+            Json.Add("v2rs", 0);
+            Json.Add("v2rseed", 112);
             Json.Add("v2ccounter", this.ObstacleClearCounterV2);
-            Json.Add("tgsec", this.SecondsFromLastTgRespawn);
-            Json.Add("tgseed", this.TgRandom.Seed);
+            Json.Add("tgsec", 0);
             Json.Add("last_news_seen", 999999999);
         }
 
@@ -886,9 +696,9 @@ namespace CR.Servers.CoC.Logic
 
             JObject RespawnVars = new JObject
             {
-                {"secondsFromLastRespawn", this.SecondsFromLastRespawn},
+                {"secondsFromLastRespawn", 0},
                 {"obstacleClearCounter", this.ObstacleClearCounter},
-                {"respawnSeed", this.VRandom.Seed},
+                {"respawnSeed", 112},
                 {"time_to_gembox_drop", 999999999}
             };
 
