@@ -186,7 +186,8 @@
         {
             JArray Array = new JArray();
 
-            this.ForEach(Item => { Array.Add(Item.Save()); });
+            for (int i = 0; i < Count; i++)
+                Array.Add(this[i].Save());
 
             return Array;
         }

@@ -33,7 +33,7 @@
         internal override void Execute()
         {
             Level Level = this.Device.GameMode.Level;
-            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectByPreciseId(this.Id);
+            GameObject GameObject = Level.GameObjectManager.Filter.GetGameObjectById(this.Id);
             if (GameObject != null)
             {
                 if (GameObject is Building)
@@ -41,7 +41,7 @@
                     Building Building = (Building)GameObject;
                     if (Building.UpgradeAvailable)
                     {
-                        BuildingData Data = (BuildingData) Building.Data;
+                        BuildingData Data = (BuildingData)Building.Data;
                         ResourceData ResourceData = this.UseAltResource ? Data.AltBuildResourceData(Building.GetUpgradeLevel() + 1) : Data.BuildResourceData;
 
                         if (ResourceData != null)
@@ -57,25 +57,22 @@
                                     {
                                         if (Level.Player.TownHallLevel2 == 0)
                                         {
-                                            Parallel.ForEach(Level.GameObjectManager.GameObjects[0][1].ToArray(),
-                                                Object =>
+                                            foreach (var gameObject in Level.GameObjectManager.GameObjects[0][1])
+                                            {
+                                                Building building2 = (Building)gameObject;
+                                                BuildingData data2 = building2.BuildingData;
+                                                if (building2.Locked)
                                                 {
-                                                    Building b2 = (Building) Object;
-                                                    BuildingData bd2 = b2.BuildingData;
-                                                    if (b2.Locked)
-                                                    {
-                                                        if (bd2.Locked)
-                                                        {
-                                                            return;
-                                                        }
+                                                    if (data2.Locked)
+                                                        return;
 
 #if DEBUG
-                                                        Logging.Info(this.GetType(),
-                                                            $"Builder Building: Unlocking {bd2.Name} with ID {Object.Id}");
+                                                    Logging.Info(this.GetType(),
+                                                        $"Builder Building: Unlocking {data2.Name} with ID {gameObject.Id}");
 #endif
-                                                        b2.Locked = false;
-                                                    }
-                                                });
+                                                    building2.Locked = false;
+                                                }
+                                            }
                                         }
 
                                         Level.Player.TownHallLevel2++;
@@ -178,6 +175,9 @@
             else
             {
                 Logging.Error(this.GetType(), "Unable to upgrade the gameObject. GameObject is null");
+#if COMMAND_DEBUG
+                Device.Account.Player.Debug.Dump();
+#endif
             }
         }
     }

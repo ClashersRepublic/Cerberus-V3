@@ -1,15 +1,14 @@
-﻿namespace CR.Servers.CoC.Logic.Slots
-{
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Core.Network;
-    using CR.Servers.CoC.Logic.Battles;
-    using CR.Servers.CoC.Packets.Messages.Server.Battle;
-    using CR.Servers.CoC.Packets.Messages.Server.Home;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Logic.Battles;
+using CR.Servers.CoC.Packets.Messages.Server.Battle;
+using CR.Servers.CoC.Packets.Messages.Server.Home;
 
+namespace CR.Servers.CoC.Logic.Slots
+{
     internal class Duels
     {
         internal int Seed;

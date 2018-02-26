@@ -44,7 +44,7 @@
                 return 16 * this.RemainingBattleTime / 1000;
             }
         }
-        
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Battle" /> class.
         /// </summary>
@@ -96,7 +96,7 @@
 
                 if (!this.Duel)
                 {
-                    this.Defender.Player.Inbox.Add(new BattleReportStreamEntry(this.Attacker.Player, this, (long) this.Replay.HighId << 32 | (uint)this.Replay.LowId, 2));
+                    this.Defender.Player.Inbox.Add(new BattleReportStreamEntry(this.Attacker.Player, this, (long)this.Replay.HighId << 32 | (uint)this.Replay.LowId, 2));
                     this.Attacker.Player.Inbox.Add(new BattleReportStreamEntry(this.Defender.Player, this, (long)this.Replay.HighId << 32 | (uint)this.Replay.LowId, 7));
                 }
 
@@ -118,7 +118,8 @@
                 }
             }
 
-            await Task.WhenAll(saveHome, savePlayer);
+            if (saveHome != null && savePlayer != null)
+                await Task.WhenAll(saveHome, savePlayer);
             this.Ended = true;
         }
 
@@ -134,7 +135,7 @@
             this.EndSubTick = subTick;
             this.Recorder.EndTick = subTick;
             this.LastClientTurn = DateTime.UtcNow;
-            
+
             if (commands != null)
             {
                 for (int i = 0; i < commands.Count; i++)
@@ -184,37 +185,37 @@
                     switch (commands[i].Type)
                     {
                         case 700:
-                        {
-                            Place_Attacker placeAttacker = (Place_Attacker) commands[i];
-                            this.BattleLog.IncrementUnit(placeAttacker.Character);
-                            break;
-                        }
+                            {
+                                Place_Attacker placeAttacker = (Place_Attacker)commands[i];
+                                this.BattleLog.IncrementUnit(placeAttacker.Character);
+                                break;
+                            }
 
                         case 701:
-                        {
-                            this.BattleLog.AlliancePortalDeployed();
-                            break;
-                        }
+                            {
+                                this.BattleLog.AlliancePortalDeployed();
+                                break;
+                            }
 
                         case 703:
-                        {
-                            var _ = this.EndBattleAsync();
-                            break;
-                        }
+                            {
+                                var _ = this.EndBattleAsync();
+                                break;
+                            }
 
                         case 704:
-                        {
-                            Place_Spell placeSpell = (Place_Spell) commands[i];
-                            this.BattleLog.IncrementSpell(placeSpell.Spell);
-                            break;
-                        }
+                            {
+                                Place_Spell placeSpell = (Place_Spell)commands[i];
+                                this.BattleLog.IncrementSpell(placeSpell.Spell);
+                                break;
+                            }
 
                         case 705:
-                        {
-                            Place_Hero placeHero = (Place_Hero) commands[i];
-                            this.BattleLog.HeroDeployed(placeHero.Hero);
-                            break;
-                        }
+                            {
+                                Place_Hero placeHero = (Place_Hero)commands[i];
+                                this.BattleLog.HeroDeployed(placeHero.Hero);
+                                break;
+                            }
                     }
                 }
             }
@@ -232,7 +233,7 @@
             this.Timer.AutoReset = true;
             this.Timer.Elapsed += (Aidid, Mike) =>
             {
-                int LastClientTurnSeconds = (int) DateTime.UtcNow.Subtract(this.LastClientTurn).TotalSeconds;
+                int LastClientTurnSeconds = (int)DateTime.UtcNow.Subtract(this.LastClientTurn).TotalSeconds;
                 if (LastClientTurnSeconds > 5)
                 {
                     var _ = this.EndBattleAsync();

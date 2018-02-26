@@ -122,7 +122,13 @@
 
         internal Data GetData(string _Name)
         {
-            return this.Datas.Find(_Data => _Data.Row.Name == _Name);
+            for (int i = 0; i < Datas.Count; i++)
+            {
+                var data = Datas[i];
+                if (data.Row.Name == _Name)
+                    return data;
+            }
+            return null;
         }
     }
 }

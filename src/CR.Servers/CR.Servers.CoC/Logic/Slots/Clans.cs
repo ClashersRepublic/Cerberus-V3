@@ -188,13 +188,18 @@ namespace CR.Servers.CoC.Logic.Slots
         internal List<Alliance> GetAllClans()
         {
             List<Alliance> Alliances = new List<Alliance>();
-            WeakReference<Alliance>[] Clans = this.Values.ToArray();
+            KeyValuePair<long, WeakReference<Alliance>>[] ClansKv = this.ToArray();
 
-            foreach (var ClanRef in Clans)
+            foreach (var kv in ClansKv)
             {
                 Alliance Clan;
-                if (ClanRef.TryGetTarget(out Clan))
+                if (kv.Value.TryGetTarget(out Clan))
                     Alliances.Add(Clan);
+                else
+                {
+                    WeakReference<Alliance> _;
+                    TryRemove(kv.Key, out _);
+                }
             }
 
             return Alliances;
@@ -202,15 +207,20 @@ namespace CR.Servers.CoC.Logic.Slots
 
         internal async Task Saves()
         {
-            WeakReference<Alliance>[] Clans = this.Values.ToArray();
+            KeyValuePair<long, WeakReference<Alliance>>[] ClansKv = this.ToArray();
 
-            foreach (var ClanRef in Clans)
+            foreach (var kv in ClansKv)
             {
                 Alliance Clan = null;
                 try
                 {
-                    if (ClanRef.TryGetTarget(out Clan))
+                    if (kv.Value.TryGetTarget(out Clan))
                         await this.Save(Clan);
+                    else
+                    {
+                        WeakReference<Alliance> _;
+                        TryRemove(kv.Key, out _);
+                    }
                 }
                 catch (Exception Exception)
                 {
@@ -222,15 +232,20 @@ namespace CR.Servers.CoC.Logic.Slots
         internal Task[] SaveAll()
         {
             List<Task> tasks = new List<Task>();
-            WeakReference<Alliance>[] Clans = this.Values.ToArray();
+            KeyValuePair<long, WeakReference<Alliance>>[] ClansKv = this.ToArray();
 
-            foreach (var ClanRef in Clans)
+            foreach (var kv in ClansKv)
             {
                 Alliance Clan = null;
                 try
                 {
-                    if (ClanRef.TryGetTarget(out Clan))
+                    if (kv.Value.TryGetTarget(out Clan))
                         tasks.Add(this.Save(Clan));
+                    else
+                    {
+                        WeakReference<Alliance> _;
+                        TryRemove(kv.Key, out _);
+                    }
                 }
                 catch (Exception Exception)
                 {

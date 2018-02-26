@@ -1,42 +1,43 @@
-﻿namespace CR.Servers.CoC.Logic
-{
-    using System.Collections.Generic;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Extensions.Game;
-    using CR.Servers.CoC.Extensions.Helper;
-    using CR.Servers.CoC.Files;
-    using CR.Servers.CoC.Files.CSV_Helpers;
-    using CR.Servers.CoC.Files.CSV_Logic.Logic;
-    using CR.Servers.CoC.Logic.Enums;
-    using Newtonsoft.Json.Linq;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Extensions.Game;
+using CR.Servers.CoC.Extensions.Helper;
+using CR.Servers.CoC.Files;
+using CR.Servers.CoC.Files.CSV_Helpers;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using CR.Servers.CoC.Logic.Enums;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
+namespace CR.Servers.CoC.Logic
+{
     internal class GameObjectManager
     {
-        internal Building Bunker;
-        internal int[] DecoIndex;
-
-        internal Filter Filter;
-
-        internal List<GameObject>[][] GameObjects;
-        internal Building Laboratory;
         internal Level Level;
-        internal int ObstacleClearCounter;
-        internal int ObstacleClearCounterV2;
-        internal int[] ObstaclesIndex;
 
-        internal int SecondsFromLastRespawn;
-
-        internal int SecondsFromLastRespawnV2;
-
-        internal int SecondsFromLastTgRespawn;
-        internal Random TgRandom;
+        internal Building Laboratory;
+        internal Building Bunker;
         internal Building TownHall;
         internal Building TownHall2;
         internal VillageObject Boat;
+
+        internal Filter Filter;
+
+        internal readonly List<GameObject>[][] GameObjects;
+
+        internal int ObstacleClearCounter;
+        internal int ObstacleClearCounterV2;
+        internal int[] ObstaclesIndex;
+        internal int[] DecoIndex;
+
+        internal int SecondsFromLastRespawn;
+        internal int SecondsFromLastRespawnV2;
+        internal int SecondsFromLastTgRespawn;
+
+        internal Random TgRandom;
         internal Random V2Random;
         internal Random VRandom;
 
-        public GameObjectManager()
+        public GameObjectManager(Level Level)
         {
             this.GameObjects = new List<GameObject>[10][];
             this.ObstaclesIndex = new int[2];
@@ -56,13 +57,9 @@
             this.VRandom = new Random();
             this.V2Random = new Random();
             this.TgRandom = new Random();
-        }
 
-        public GameObjectManager(Level Level) : this()
-        {
             this.Level = Level;
         }
-
 
         internal int Checksum
         {
@@ -110,7 +107,7 @@
 
             if (GType == 0)
             {
-                Building Building = (Building) GameObject;
+                Building Building = (Building)GameObject;
                 BuildingData Data = Building.BuildingData;
 
                 if (Data.IsTownHall)
@@ -297,13 +294,13 @@
         {
             for (int i = 0; i < this.GameObjects[0][0].Count; i++)
             {
-                Building Building = (Building) this.GameObjects[0][0][i];
+                Building Building = (Building)this.GameObjects[0][0][i];
                 Building.Id = GlobalId.Create(500, i);
             }
 
             for (int i = 0; i < this.GameObjects[0][1].Count; i++)
             {
-                Building Building = (Building) this.GameObjects[0][1][i];
+                Building Building = (Building)this.GameObjects[0][1][i];
                 Building.Id = GlobalId.Create(500, i);
             }
 
@@ -311,7 +308,7 @@
 
             for (int i = 0; i < this.GameObjects[3][0].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle) this.GameObjects[3][0][i];
+                Obstacle Obstacle = (Obstacle)this.GameObjects[3][0][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -327,7 +324,7 @@
 
             for (int i = 0; i < this.GameObjects[3][1].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle) this.GameObjects[3][1][i];
+                Obstacle Obstacle = (Obstacle)this.GameObjects[3][1][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -350,7 +347,7 @@
 
             for (int i = 0; i < this.GameObjects[3][0].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle) this.GameObjects[3][0][i];
+                Obstacle Obstacle = (Obstacle)this.GameObjects[3][0][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -366,7 +363,7 @@
 
             for (int i = 0; i < this.GameObjects[3][1].Count; i++)
             {
-                Obstacle Obstacle = (Obstacle) this.GameObjects[3][1][i];
+                Obstacle Obstacle = (Obstacle)this.GameObjects[3][1][i];
 
                 if (Obstacle.Destructed)
                 {
@@ -381,13 +378,17 @@
 
         internal void Process()
         {
-            this.GameObjects[0][0].ForEach(GameObject => { GameObject.Process(); });
+            for (int i = 0; i < GameObjects[0][0].Count; i++)
+                GameObjects[0][0][i].Process();
 
-            this.GameObjects[0][1].ForEach(GameObject => { GameObject.Process(); });
+            for (int i = 0; i < GameObjects[0][1].Count; i++)
+                GameObjects[0][1][i].Process();
 
-            this.GameObjects[4][0].ForEach(GameObject => { GameObject.Process(); });
+            for (int i = 0; i < GameObjects[4][0].Count; i++)
+                GameObjects[4][0][i].Process();
 
-            this.GameObjects[4][1].ForEach(GameObject => { GameObject.Process(); });
+            for (int i = 0; i < GameObjects[4][1].Count; i++)
+                GameObjects[4][1][i].Process();
         }
 
         internal void RespawnObstacles()
@@ -436,7 +437,7 @@
         {
             #region Village 1
 
-            JArray Buildings = (JArray) Json["buildings"];
+            JArray Buildings = (JArray)Json["buildings"];
 
             if (Buildings != null)
             {
@@ -450,7 +451,7 @@
                 Logging.Error(this.GetType(), "An error has been throwed the load of the game objects. Building array is NULL!");
             }
 
-            JArray Obstacles = (JArray) Json["obstacles"];
+            JArray Obstacles = (JArray)Json["obstacles"];
 
             if (Obstacles != null)
             {
@@ -466,7 +467,7 @@
                 }
             }
 
-            JArray Traps = (JArray) Json["traps"];
+            JArray Traps = (JArray)Json["traps"];
 
             if (Traps != null)
             {
@@ -476,7 +477,7 @@
                 }
             }
 
-            JArray Decos = (JArray) Json["decos"];
+            JArray Decos = (JArray)Json["decos"];
 
             if (Decos != null)
             {
@@ -492,7 +493,7 @@
                 }
             }
 
-            JArray VillageObjects = (JArray) Json["vobjs"];
+            JArray VillageObjects = (JArray)Json["vobjs"];
 
             if (VillageObjects != null)
             {
@@ -506,7 +507,7 @@
 
             #region Village 2
 
-            JArray Buildings2 = (JArray) Json["buildings2"];
+            JArray Buildings2 = (JArray)Json["buildings2"];
 
             if (Buildings2 != null)
             {
@@ -516,7 +517,7 @@
                 }
             }
 
-            JArray Obstacles2 = (JArray) Json["obstacles2"];
+            JArray Obstacles2 = (JArray)Json["obstacles2"];
 
 
             if (Obstacles2 != null)
@@ -533,7 +534,7 @@
                 }
             }
 
-            JArray Traps2 = (JArray) Json["traps2"];
+            JArray Traps2 = (JArray)Json["traps2"];
 
             if (Traps2 != null)
             {
@@ -543,7 +544,7 @@
                 }
             }
 
-            JArray Decos2 = (JArray) Json["decos2"];
+            JArray Decos2 = (JArray)Json["decos2"];
 
             if (Decos2 != null)
             {
@@ -559,7 +560,7 @@
                 }
             }
 
-            JArray VillageObjects2 = (JArray) Json["vobjs2"];
+            JArray VillageObjects2 = (JArray)Json["vobjs2"];
 
             if (VillageObjects2 != null)
             {
@@ -589,7 +590,7 @@
             int SecondsFromLastRespawnV2;
             this.SecondsFromLastRespawnV2 = JsonHelper.GetJsonNumber(Json, "v2rs", out SecondsFromLastRespawnV2) ? SecondsFromLastRespawnV2 : 0;
             int V2RandomSeed;
-            this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out  V2RandomSeed) ? V2RandomSeed : 112;
+            this.V2Random.Seed = JsonHelper.GetJsonNumber(Json, "v2rseed", out V2RandomSeed) ? V2RandomSeed : 112;
             int ObstacleClearCounterV2;
             this.ObstacleClearCounterV2 = JsonHelper.GetJsonNumber(Json, "v2ccounter", out ObstacleClearCounterV2) ? ObstacleClearCounterV2 : 0;
 

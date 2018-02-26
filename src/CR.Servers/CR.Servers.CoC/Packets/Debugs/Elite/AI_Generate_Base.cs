@@ -238,10 +238,9 @@
                         {
                             for (int j = 0; j < Height; j++)
                             {
-                                Tile Tile = this.TileMap[X + i, Y + j, 0];
-
-                                if (Tile != null)
+                                if (TileMap.Exists(X + i, Y + j, 0))
                                 {
+                                    Tile Tile = this.TileMap[X + i, Y + j, 0];
                                     if (!Tile.IsBuildable())
                                     {
                                         return false;

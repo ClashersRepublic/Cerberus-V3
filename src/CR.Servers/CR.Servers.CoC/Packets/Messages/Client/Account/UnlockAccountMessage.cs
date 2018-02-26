@@ -83,7 +83,7 @@
             }
             else
             {
-                Player Account = Resources.Accounts.LoadPlayerAsync(this.HighId, this.LowId).Result;
+                Player Account = await Resources.Accounts.LoadPlayerAsync(this.HighId, this.LowId);
                 if (Account != null)
                 {
                     if (string.Equals(this.UnlockCode, Account.Password, StringComparison.CurrentCultureIgnoreCase))

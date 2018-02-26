@@ -5,8 +5,10 @@
 
     internal class SocketAsyncEventArgsPool : ConcurrentStack<SocketAsyncEventArgs>
     {
-        internal SocketAsyncEventArgsPool(bool sendPool)
+        internal SocketAsyncEventArgsPool()
         {
+
+            /*
             for (int i = 0; i < (sendPool ? Constants.MaxSends : Constants.MaxPlayers); i++)
             {
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
@@ -20,6 +22,7 @@
 
                 this.Enqueue(args);
             }
+            */
         }
 
         internal SocketAsyncEventArgs Dequeue()
@@ -33,14 +36,14 @@
 
         internal void Enqueue(SocketAsyncEventArgs asyncEvent)
         {
-            asyncEvent.AcceptSocket = null;
-            asyncEvent.RemoteEndPoint = null;
-            asyncEvent.UserToken = null;
+            if (Count > 4096)
+                return;
 
-            if (asyncEvent.DisconnectReuseSocket)
-            {
-                this.Push(asyncEvent);
-            }
+            asyncEvent.UserToken = null;
+            asyncEvent.AcceptSocket = null;
+            asyncEvent.SetBuffer(null, 0, 0);
+
+            Push(asyncEvent);
         }
     }
 }

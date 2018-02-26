@@ -133,47 +133,62 @@
 
         internal bool TryGetComponent(int Type, out Component Component)
         {
-            Component = this.Components.Find(T => T.Type == Type);
-            return Component != null;
+            for (int i = 0; i < Components.Count; i++)
+            {
+                Component component = Components[i];
+                if (component.Type == Type)
+                {
+                    Component = component;
+                    return true;
+                }
+            }
+
+            Component = null;
+            return false;
         }
 
         internal virtual void FastForwardTime(int Secs)
         {
-            this.Components.ForEach(Component => { Component.FastForwardTime(Secs); });
+            for (int i = 0; i < Components.Count; i++)
+                Components[i].FastForwardTime(Secs);
         }
 
         internal virtual void Tick()
         {
-            this.Components.ForEach(Component => { Component.Tick(); });
+            for (int i = 0; i < Components.Count; i++)
+                Components[i].Tick();
         }
 
         internal virtual void Process()
         {
+            // Space
         }
 
-        internal virtual void Load(JToken Json)
+        internal virtual void Load(JToken json)
         {
-            int X;
-            int Y;
-            if (JsonHelper.GetJsonNumber(Json, "x", out X) && JsonHelper.GetJsonNumber(Json, "y", out Y))
+            int x;
+            int y;
+            if (JsonHelper.GetJsonNumber(json, "x", out x) && JsonHelper.GetJsonNumber(json, "y", out y))
             {
-                this.Position.X = X << 9;
-                this.Position.Y = Y << 9;
+                this.Position.X = x << 9;
+                this.Position.Y = y << 9;
             }
             else
             {
                 Logging.Error(this.GetType(), "An error has been throwed when the load of game object. Position X or Y is null!");
             }
 
-            this.Components.ForEach(Component => { Component.Load(Json); });
+            for (int i = 0; i < Components.Count; i++)
+                Components[i].Load(json);
         }
 
-        internal virtual void Save(JObject Json)
+        internal virtual void Save(JObject json)
         {
-            Json.Add("x", this.TileX);
-            Json.Add("y", this.TileY);
+            json.Add("x", this.TileX);
+            json.Add("y", this.TileY);
 
-            this.Components.ForEach(Component => { Component.Save(Json); });
+            for (int i = 0; i < Components.Count; i++)
+                Components[i].Save(json);
         }
     }
 }

@@ -191,6 +191,11 @@
             Level.FastForwardTime(0);
             Level.Process();
 
+#if COMMAND_DEBUG
+            /* Capture the state of the village. */
+            player.Debug.Capture();
+#endif
+
             return account;
         }
 
@@ -362,7 +367,7 @@
             long ID = ((long)HighID << 32) | (uint)LowID;
 
             Account Account;
-            if (!this.TryGetAccount(((long)HighID << 32) | (uint)LowID, out Account))
+            if (!this.TryGetAccount(ID, out Account))
             {
                 Players Data = await Mongo.Players.Find(T => T.HighId == HighID && T.LowId == LowID).SingleOrDefaultAsync();
 
@@ -412,6 +417,11 @@
                     Level.SetHome(Account.Home);
                     Level.FastForwardTime(0);
                     Level.Process();
+
+#if COMMAND_DEBUG
+                    /* Capture the state of the village. */
+                    Account.Player.Debug.Capture();
+#endif
                 }
             }
 
@@ -597,21 +607,27 @@
 
         internal Player[] GetAllPlayers()
         {
-            WeakReference<Player>[] playerRefs = this.Players.Values.ToArray();
-            List<Player> players = new List<Player>(playerRefs.Length);
+            KeyValuePair<long, WeakReference<Player>>[] playerRefsKv = this.Players.ToArray();
+            List<Player> players = new List<Player>(playerRefsKv.Length);
 
-            for (int i = 0; i < playerRefs.Length; i++)
+            for (int i = 0; i < playerRefsKv.Length; i++)
             {
-                WeakReference<Player> playerRef = playerRefs[i];
                 Player player;
-                if (playerRef.TryGetTarget(out player))
+                KeyValuePair<long, WeakReference<Player>> playerRefKv = playerRefsKv[i];
+
+                if (playerRefKv.Value.TryGetTarget(out player))
                     players.Add(player);
+                else
+                {
+                    WeakReference<Player> _;
+                    Players.TryRemove(playerRefKv.Key, out _);
+                }
             }
 
             return players.ToArray();
         }
 
-        private static void SavePlayerTask()
+        private void SavePlayerTask()
         {
             while (true)
             {
@@ -631,7 +647,18 @@
                     }
                 }
 
-                Thread.Sleep(5);
+                /* Look for dead references. */
+                foreach (var kv in this)
+                {
+                    Account _;
+                    if (!kv.Value.TryGetTarget(out _))
+                    {
+                        WeakReference<Account> __;
+                        TryRemove(kv.Key, out __);
+                    }
+                }
+
+                Thread.Sleep(200);
             }
         }
 

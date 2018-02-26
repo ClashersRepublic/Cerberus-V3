@@ -9,18 +9,31 @@ namespace CR.Servers.CoC.Core.Network
     internal class Gateway
     {
         private readonly Socket _listener;
+        private readonly SocketAsyncEventArgsPool _sendPool;
 
         internal Gateway()
         {
-            this._listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this._listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
-            this._listener.Listen(500);
+            _sendPool = new SocketAsyncEventArgsPool();
+
+            _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _listener.Bind(new IPEndPoint(IPAddress.Any, 9339));
+            _listener.Listen(500);
+
 
             Logging.Info(this.GetType(), "Gateway started :)");
 
             SocketAsyncEventArgs acceptEvent = new SocketAsyncEventArgs();
             acceptEvent.Completed += this.OnAcceptCompleted;
             this.Accept(acceptEvent);
+        }
+
+        internal SocketAsyncEventArgs GetSendArgs()
+        {
+            var args = _sendPool.Dequeue();
+            if (args == null)
+                return new SocketAsyncEventArgs();
+
+            return args;
         }
 
         internal void Accept(SocketAsyncEventArgs args)
@@ -156,12 +169,11 @@ namespace CR.Servers.CoC.Core.Network
             {
                 if (token.Socket.Connected)
                 {
-                    SocketAsyncEventArgs writeEvent = new SocketAsyncEventArgs();
+                    SocketAsyncEventArgs writeEvent = GetSendArgs();
 
                     writeEvent.Completed += this.OnSendCompleted;
                     writeEvent.UserToken = token;
                     writeEvent.SetBuffer(packet, 0, packet.Length);
-
 
                     if (!token.Socket.SendAsync(writeEvent))
                     {
@@ -203,7 +215,8 @@ namespace CR.Servers.CoC.Core.Network
             }
             else
             {
-                args.Dispose();
+                args.Completed -= OnSendCompleted;
+                _sendPool.Enqueue(args);
             }
         }
 

@@ -8,14 +8,6 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="Vector2" /> class.
         /// </summary>
-        public Vector2()
-        {
-            // Vector2.
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Vector2" /> class.
-        /// </summary>
         public Vector2(int X, int Y)
         {
             this.X = X;
@@ -173,12 +165,7 @@
         /// </summary>
         internal bool IsEqual(Vector2 Vector2)
         {
-            if (Vector2 != null)
-            {
-                return this.X == Vector2.X && this.Y == Vector2.Y;
-            }
-
-            return false;
+            return this.X == Vector2.X && this.Y == Vector2.Y;
         }
 
         /// <summary>

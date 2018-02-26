@@ -1,7 +1,12 @@
-﻿namespace CR.Servers.CoC.Logic.Map
-{
-    using System.Collections.Generic;
+﻿#define VERBOSE
 
+#if VERBOSE
+using CR.Servers.CoC.Core;
+#endif
+using System.Collections.Generic;
+
+namespace CR.Servers.CoC.Logic.Map
+{
     internal class TileMap
     {
         private readonly Tile[][] Tiles;
@@ -15,8 +20,8 @@
 
             for (int i = 0; i < Width * Height; i++)
             {
-                this.Tiles[0][i] = new Tile();
-                this.Tiles[1][i] = new Tile();
+                this.Tiles[0][i] = new Tile(new List<GameObject>(4));
+                this.Tiles[1][i] = new Tile(new List<GameObject>(4));
             }
         }
 
@@ -25,14 +30,22 @@
             get
             {
                 int Index = 50 * X + Y;
-
                 if (50 * 50 > Index && Index >= 0)
-                {
                     return this.Tiles[Map][Index];
-                }
 
-                return null;
+#if VERBOSE
+                Logging.Error(typeof(TileMap), "Unable to find tile -> use TileMap.Exists before?");
+#endif
+                return default(Tile);
             }
+        }
+
+        internal bool Exists(int X, int Y, int Map)
+        {
+            int Index = 50 * X + Y;
+            if (50 * 50 > Index && Index >= 0)
+                return true;
+            return false;
         }
 
         internal void AddGameObject(GameObject GameObject)

@@ -11,6 +11,7 @@ using CR.Servers.Logic.Enums;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
+using System.Collections.Generic;
 
 namespace CR.Servers.CoC.Logic
 {
@@ -152,7 +153,14 @@ namespace CR.Servers.CoC.Logic
                         }
                         */
 
-                        this.Account.Player.Alliance?.DecrementTotalConnected();
+                        if (this.Account.Player.Alliance != null)
+                        {
+                            Player _;
+                            long id = ((long)this.Account.HighId) << 32 | (uint)this.Account.LowId;
+
+                            this.Account.Player.Alliance.DecrementTotalConnected();
+                            this.Account.Player.Alliance.Members.Connected.TryRemove(id, out _);
+                        }
                     }
 
                     if (this.Account.Home != null)
@@ -177,6 +185,14 @@ namespace CR.Servers.CoC.Logic
                         Logging.Error(this.GetType(), "CommandManager != null but ServerCommands == null");
                     }
                 }
+
+                /*
+                Account = null;
+                Chat = null;
+                GameMode = null;
+                */
+                ReceiveEncrypter = null;
+                SendEncrypter = null;
             }
         }
 
@@ -220,7 +236,6 @@ namespace CR.Servers.CoC.Logic
                                 {
                                     message.Version = (short)messageVersion;
                                     message.Timer = new Stopwatch();
-                                    message.Timer.Start();
                                     EnqueueIncomingMessage(message);
                                 }
 

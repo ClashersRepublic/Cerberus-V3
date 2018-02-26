@@ -21,7 +21,7 @@
 
         internal override void Execute()
         {
-            Level Level = this.Device.GameMode.Level;
+            // Space
         }
 
         internal override void Load(JToken Token)

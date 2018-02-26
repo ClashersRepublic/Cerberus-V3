@@ -1,10 +1,10 @@
-﻿namespace CR.Servers.CoC.Logic
-{
-    using System.Collections.Generic;
-    using CR.Servers.CoC.Core;
-    using CR.Servers.CoC.Files.CSV_Helpers;
-    using CR.Servers.CoC.Files.CSV_Logic.Logic;
+﻿using CR.Servers.CoC.Core;
+using CR.Servers.CoC.Files.CSV_Helpers;
+using CR.Servers.CoC.Files.CSV_Logic.Logic;
+using System.Collections.Generic;
 
+namespace CR.Servers.CoC.Logic
+{
     internal class Filter
     {
         internal GameObjectManager GameObjectManager;
@@ -31,9 +31,6 @@
         {
             int Class = Id / 1000000 - 500;
 
-            /*
-            if (this.GameObjectManager.GameObjects.Length > Class)
-            */
             if (Class < GameObjectManager.GameObjects.Length)
             {
                 GameObject GameObject = this.GameObjectManager.GameObjects[Class][this.GameObjectManager.Map].Find(g => g.Id == Id);

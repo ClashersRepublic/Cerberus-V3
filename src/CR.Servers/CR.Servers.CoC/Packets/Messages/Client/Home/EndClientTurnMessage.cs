@@ -123,6 +123,10 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                                 $"Exception while executing a command {Command.Type} async. " + Exception.Message +
                                 Environment.NewLine + Exception.StackTrace);
                         }
+
+#if COMMAND_DEBUG
+                        Device.Account.Player.Debug.Record(Command);
+#endif
                     }
                     else
                     {

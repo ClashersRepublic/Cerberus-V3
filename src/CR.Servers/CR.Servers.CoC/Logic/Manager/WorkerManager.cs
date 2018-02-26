@@ -46,8 +46,9 @@
             {
                 Task Task = new Task();
 
-                this.GameObjects.ForEach(Construction =>
+                for (int i = 0; i < GameObjects.Count; i++)
                 {
+                    GameObject Construction = GameObjects[i];
                     int RemainingTime = -1;
 
                     if (Construction is Building)
@@ -120,7 +121,7 @@
                             Task.RemainingSeconds = RemainingTime;
                         }
                     }
-                });
+                };
 
                 return Task.GameObject;
             }

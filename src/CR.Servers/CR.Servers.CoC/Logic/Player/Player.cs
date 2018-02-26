@@ -13,9 +13,14 @@
     using CR.Servers.Logic.Enums;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using Packets;
 
     internal class Player : PlayerBase
     {
+#if COMMAND_DEBUG
+        internal CommandDebug Debug;
+#endif
+
         internal Alliance Alliance;
         internal Member AllianceMember;
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
@@ -87,6 +92,9 @@
 
         internal Player()
         {
+#if COMMAND_DEBUG
+            this.Debug = new CommandDebug(this);
+#endif
             this.Inbox = new Inbox(this);
             this.Friends = new Friends(this);
             this.ModSlot = new ModSlot();
@@ -100,7 +108,8 @@
 
             this.Facebook = new Facebook(this);
             this.Google = new Google(this);
-            this.Gamecenter = new Gamecenter(this);*/
+            this.Gamecenter = new Gamecenter(this);
+            */
         }
 
         internal Player(Level Level, int HighID, int LowID) : this()

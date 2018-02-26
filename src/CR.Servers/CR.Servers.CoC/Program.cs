@@ -1,6 +1,4 @@
 ﻿using CR.Servers.CoC.Core;
-using CR.Servers.CoC.Core.Network;
-using CR.Servers.CoC.Packets.Messages.Client.Home;
 using CR.Servers.Core.Consoles;
 using Microsoft.Extensions.Configuration;
 using System;

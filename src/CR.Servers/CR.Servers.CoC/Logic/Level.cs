@@ -335,10 +335,10 @@
                         {
                             for (int j = 0; j < Height; j++)
                             {
-                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
 
-                                if (Tile != null)
+                                if (TileMap.Exists(X + i, Y + j, Data.VillageType))
                                 {
+                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
                                     if (!Tile.IsBuildable())
                                     {
                                         return false;
@@ -369,10 +369,9 @@
                         {
                             for (int j = 0; j < Height; j++)
                             {
-                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
-
-                                if (Tile != null)
+                                if (TileMap.Exists(X + i, Y+ j, Data.VillageType))
                                 {
+                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
                                     if (!Tile.IsBuildable())
                                     {
                                         return false;
@@ -403,10 +402,9 @@
                         {
                             for (int j = 0; j < Height; j++)
                             {
-                                Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
-
-                                if (Tile != null)
+                                if (TileMap.Exists(X + i, Y + j, Data.VillageType))
                                 {
+                                    Tile Tile = this.TileMap[X + i, Y + j, Data.VillageType];
                                     if (!Tile.IsBuildable())
                                     {
                                         return false;

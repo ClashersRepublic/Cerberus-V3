@@ -6,6 +6,7 @@
     using CR.Servers.CoC.Logic.Duel.Entry;
     using CR.Servers.CoC.Packets;
     using CR.Servers.CoC.Packets.Messages.Server.Avatar;
+    using Core;
 
     internal class DuelBattle
     {
@@ -66,6 +67,9 @@
                         new Village2AttackEntryUpdateMessage(this.Battle2.Device, new Village2AttackProgressEntry(this.BattleId, this.Battle1, this.Battle2)).Send();
 
                         this.Ended = true;
+
+                        DuelBattle _;
+                        Resources.Duels.DuelBattles.TryRemove(BattleId, out _);
 
                         return;
                     }
