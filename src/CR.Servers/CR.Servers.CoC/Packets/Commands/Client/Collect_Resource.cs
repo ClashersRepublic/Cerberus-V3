@@ -38,9 +38,9 @@
                 {
                     List<GameObject> Buildings = Level.GameObjectManager.Filter.GetGameObjectsByData(Building.Data);
 
-                    Buildings.ForEach(GameObject =>
+                    for (int i = 0; i < Buildings.Count; i++)
                     {
-                        Building building = (Building) GameObject;
+                        Building building = (Building) Buildings[i];
 
                         if (!building.Constructing)
                         {
@@ -48,7 +48,7 @@
 
                             ResourceProductionComponent?.CollectResources();
                         }
-                    });
+                    }
                 }
                 else
                 {

@@ -21,7 +21,11 @@
         internal void Encode(List<byte> Packet)
         {
             Packet.AddInt(this.Count);
-            this.ForEach(Packet.AddInt);
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                Packet.AddInt(this[i]);
+            }
         }
     }
 }

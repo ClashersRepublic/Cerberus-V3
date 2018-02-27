@@ -111,15 +111,17 @@
             {
                 int Count = 0;
 
-                this.GameObjectManager.GameObjects[3][0].ForEach(GameObject =>
+                var GameObjects = this.GameObjectManager.GameObjects[3][0].ToArray();
+
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Obstacle Obstacle = (Obstacle) GameObject;
+                    Obstacle Obstacle = (Obstacle) GameObjects[i];
 
                     if (Obstacle.ObstacleData.IsTombstone)
                     {
                         ++Count;
                     }
-                });
+                }
 
                 return Count;
             }
@@ -131,15 +133,17 @@
             {
                 int Count = 0;
 
-                this.GameObjectManager.GameObjects[3][1].ForEach(GameObject =>
+                var GameObjects = this.GameObjectManager.GameObjects[3][1].ToArray();
+
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Obstacle Obstacle = (Obstacle) GameObject;
+                    Obstacle Obstacle = (Obstacle) GameObjects[i];
 
                     if (Obstacle.ObstacleData.IsTombstone)
                     {
                         ++Count;
                     }
-                });
+                }
 
                 return Count;
             }

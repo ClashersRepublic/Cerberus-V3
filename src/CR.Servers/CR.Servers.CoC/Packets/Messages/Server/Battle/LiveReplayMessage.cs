@@ -33,11 +33,11 @@
             this.Data.AddInt(this.ClientTick);
             this.Data.AddInt(this.Commands.Count);
 
-            this.Commands.ForEach(Command =>
+            for (int i = 0; i < this.Commands.Count; i++)
             {
-                this.Data.AddInt(Command.Type);
-                Command.Encode(this.Data);
-            });
+                this.Data.AddInt(this.Commands[i].Type);
+                this.Commands[i].Encode(this.Data);
+            }
 
             this.Data.AddInt(1);
         }

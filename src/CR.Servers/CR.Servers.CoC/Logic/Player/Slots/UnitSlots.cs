@@ -20,7 +20,10 @@
         {
             int Total = 0;
 
-            this.ForEach(Slot => { Total += Slot.Count; });
+            for (int i = 0; i < this.Count; i++)
+            {
+                Total += this[i].Count;
+            }
 
             return Total;
         }
@@ -29,11 +32,11 @@
         {
             int Total = 0;
 
-            this.ForEach(Slot =>
+            for (int i = 0; i < this.Count; i++)
             {
-                Data Data = CSV.Tables.GetWithGlobalId(Slot.Data);
-                Total += Slot.Count * (Data.GetDataType() == 4 ? ((CharacterData) Data).HousingSpace : ((SpellData) Data).HousingSpace);
-            });
+                Data Data = CSV.Tables.GetWithGlobalId(this[i].Data);
+                Total += this[i].Count * (Data.GetDataType() == 4 ? ((CharacterData)Data).HousingSpace : ((SpellData)Data).HousingSpace);
+            }
 
             return Total;
         }

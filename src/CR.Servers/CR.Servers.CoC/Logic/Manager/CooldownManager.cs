@@ -23,7 +23,10 @@
 
         internal void FastForwardTime(int Seconds)
         {
-            this.Cooldowns.ForEach(Cooldown => Cooldown.FastForwardTime(Seconds));
+            for (int i = 0; i < this.Cooldowns.Count; i++)
+            {
+             this.Cooldowns[i].FastForwardTime(Seconds);   
+            }
         }
 
         internal int GetCooldownSeconds(int TargetID)
@@ -56,7 +59,12 @@
         {
             JArray Cooldowns = new JArray();
 
-            this.Cooldowns.ForEach(Cooldown => { Cooldowns.Add(Cooldown.Save()); });
+            for (int t = 0; t < this.Cooldowns.Count; t++)
+            {
+
+                Cooldowns.Add(this.Cooldowns[t].Save());
+                
+            }
 
             Json.Add("cooldowns", Cooldowns);
         }

@@ -24,7 +24,10 @@
             {
                 int Checksum = 0;
 
-                this.ForEach(Item => { Checksum += Item.Checksum; });
+                for (int i = 0; i < this.Count; i++)
+                {
+                    Checksum += this[i].Checksum;
+                }
 
                 return Checksum;
             }

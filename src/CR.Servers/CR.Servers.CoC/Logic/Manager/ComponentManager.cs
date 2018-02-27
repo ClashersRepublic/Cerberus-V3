@@ -30,9 +30,11 @@
             {
                 List<Building> TroopHousings = new List<Building>(8);
 
-                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                var GameObjects = this.Level.GameObjectManager.GameObjects[0][0].ToArray();
+
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Building Building = (Building) GameObject;
+                    Building Building = (Building) GameObjects[i];
 
                     if (Building.BuildingData.IsTrainingHousing)
                     {
@@ -41,7 +43,7 @@
                             TroopHousings.Add(Building);
                         }
                     }
-                });
+                }
 
                 return TroopHousings;
             }
@@ -53,9 +55,11 @@
             {
                 List<Building> DarkSpellForge = new List<Building>();
 
-                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                var GameObjects = this.Level.GameObjectManager.GameObjects[0][0].ToArray();
+
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Building Building = (Building) GameObject;
+                    Building Building = (Building) GameObjects[i];
 
                     if (Building.BuildingData.IsSpellForge && Building.BuildingData.IsMiniSpellForge)
                     {
@@ -64,7 +68,7 @@
                             DarkSpellForge.Add(Building);
                         }
                     }
-                });
+                }
 
                 return DarkSpellForge;
             }
@@ -76,10 +80,11 @@
             get
             {
                 List<Building> DarkBarracks = new List<Building>();
+                var GameObjects = this.Level.GameObjectManager.GameObjects[0][0].ToArray();
 
-                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Building Building = (Building) GameObject;
+                    Building Building = (Building) GameObjects[i];
 
                     if (Building.BuildingData.IsDarkBarrack)
                     {
@@ -88,7 +93,7 @@
                             DarkBarracks.Add(Building);
                         }
                     }
-                });
+                }
 
                 return DarkBarracks;
             }
@@ -100,10 +105,11 @@
             {
                 List<Building> SpellForge = new List<Building>();
 
-                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
-                {
-                    Building Building = (Building) GameObject;
+                var GameObjects = this.Level.GameObjectManager.GameObjects[0][0].ToArray();
 
+                for (int i = 0; i < GameObjects.Length; i++)
+                {
+                    Building Building = (Building) GameObjects[i];
                     if (Building.BuildingData.IsSpellForge && !Building.BuildingData.IsMiniSpellForge)
                     {
                         if (Building.GetUpgradeLevel() > -1)
@@ -111,7 +117,7 @@
                             SpellForge.Add(Building);
                         }
                     }
-                });
+                }
 
                 return SpellForge;
             }
@@ -122,10 +128,11 @@
             get
             {
                 List<Building> Barracks = new List<Building>();
+                var GameObjects = this.Level.GameObjectManager.GameObjects[0][0].ToArray();
 
-                this.Level.GameObjectManager.GameObjects[0][0].ForEach(GameObject =>
+                for (int i = 0; i < GameObjects.Length; i++)
                 {
-                    Building Building = (Building) GameObject;
+                    Building Building = (Building) GameObjects[i];
 
                     if (Building.BuildingData.IsBarrack)
                     {
@@ -134,7 +141,7 @@
                             Barracks.Add(Building);
                         }
                     }
-                });
+                }
 
                 return Barracks;
             }
@@ -146,8 +153,9 @@
             {
                 int Count = 0;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
+                    var Component = this.Components[0][i];
                     if (Component.Type == 0)
                     {
                         UnitStorageComponent Storage = (UnitStorageComponent) Component;
@@ -156,7 +164,7 @@
                             Count += ((UnitStorageComponent) Component).HousingSpace;
                         }
                     }
-                });
+                }
 
                 return Count;
             }
@@ -169,8 +177,10 @@
             {
                 int Count = 0;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
+                    var Component = this.Components[0][i];
+
                     if (Component.Type == 0)
                     {
                         UnitStorageComponent Storage = (UnitStorageComponent) Component;
@@ -179,7 +189,7 @@
                             Count += ((UnitStorageComponent) Component).HousingSpace;
                         }
                     }
-                });
+                }
 
                 return Count;
             }
@@ -191,15 +201,15 @@
             {
                 int MaxLevel = -1;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
-                    Building Building = (Building) Component.Parent;
+                    Building Building = (Building) this.Components[0][i].Parent;
 
                     if (Building.BuildingData.IsBarrack)
                     {
                         MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
-                });
+                }
 
                 return MaxLevel;
             }
@@ -211,16 +221,16 @@
             {
                 int MaxLevel = -1;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
-                    Building Building = (Building) Component.Parent;
+                    Building Building = (Building)this.Components[0][i].Parent;
 
                     if (Building.BuildingData.IsSpellForge && !Building.BuildingData.IsMiniSpellForge)
                     {
                         MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
-                });
-
+                }
+               
                 return MaxLevel;
             }
         }
@@ -231,15 +241,15 @@
             {
                 int MaxLevel = -1;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
-                    Building Building = (Building) Component.Parent;
+                    Building Building = (Building)this.Components[0][i].Parent;
 
                     if (Building.BuildingData.IsDarkBarrack)
                     {
                         MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
-                });
+                }
 
                 return MaxLevel;
             }
@@ -251,15 +261,15 @@
             {
                 int MaxLevel = -1;
 
-                this.Components[0].ForEach(Component =>
+                for (int i = 0; i < this.Components[0].Count; i++)
                 {
-                    Building Building = (Building) Component.Parent;
+                    Building Building = (Building)this.Components[0][i].Parent;
 
                     if (Building.BuildingData.IsSpellForge && Building.BuildingData.IsMiniSpellForge)
                     {
                         MaxLevel = Math.Max(MaxLevel, Building.GetUpgradeLevel());
                     }
-                });
+                }
 
                 return MaxLevel;
             }
@@ -279,34 +289,35 @@
         {
             List<Component> Components = new List<Component>(16);
 
-            this.Components[0].ForEach(Component =>
+            for (int i = 0; i < this.Components[0].Count; i++)
             {
-                if (Match(Component))
+                if (Match(this.Components[0][i]))
                 {
-                    Components.Add(Component);
+                    Components.Add(this.Components[0][i]);
                 }
-            });
+            }
 
-            this.Components[1].ForEach(Component =>
+            for (int i = 0; i < this.Components[1].Count; i++)
             {
-                if (Match(Component))
+                if (Match(this.Components[1][i]))
                 {
-                    Components.Add(Component);
+                    Components.Add(this.Components[1][i]);
                 }
-            });
+            }
         }
 
         internal List<Component> FindAll(int GameObjectType, Predicate<Component> Match)
         {
             List<Component> Components = new List<Component>(16);
-
-            this.Components[GameObjectType].ForEach(Component =>
+            for (int i = 0; i < this.Components[GameObjectType].Count; i++)
             {
-                if (Match(Component))
+
+                if (Match(this.Components[GameObjectType][i]))
                 {
-                    Components.Add(Component);
+                    Components.Add(this.Components[GameObjectType][i]);
                 }
-            });
+
+            }
 
             return Components;
         }
@@ -316,21 +327,25 @@
             if (this.Level.Player != null)
             {
                 Player Player = this.Level.Player;
-
-                Player.ResourceCaps.ForEach(Slot => { Slot.Count = 0; });
-
-                this.Components[0].ForEach(Component =>
+                
+                for (int i = 0; i < Player.ResourceCaps.Count; i++)
                 {
-                    if (Component.Type == 6)
+                    Player.ResourceCaps[i].Count = 0;
+                }
+
+                for (int i = 0; i < this.Components[0].Count; i++)
+                {
+                    if (this.Components[0][i].Type == 6)
                     {
-                        ResourceStorageComponent StorageComponent = (ResourceStorageComponent) Component;
+                        ResourceStorageComponent StorageComponent = (ResourceStorageComponent) this.Components[0][i];
 
                         foreach (ResourceData Data in CSV.Tables.Get(Gamefile.Resources).Datas)
                         {
                             Player.ResourceCaps.Add(Data, StorageComponent.GetMax(Data.GetId()));
                         }
                     }
-                });
+                    
+                }
             }
             else
             {
@@ -343,13 +358,13 @@
             Component Closest = null;
             int ClosestDistance = 0;
 
-            Components.ForEach(Component =>
+            for (int i = 0; i < Components.Count; i++)
             {
-                if (Closest == null || ClosestDistance > Component.Parent.Position.GetDistanceSquaredHelper(X, Y))
+                if (Closest == null || ClosestDistance > Components[i].Parent.Position.GetDistanceSquaredHelper(X, Y))
                 {
-                    Closest = Component;
+                    Closest = Components[i];
                 }
-            });
+            }
 
             return Closest;
         }
