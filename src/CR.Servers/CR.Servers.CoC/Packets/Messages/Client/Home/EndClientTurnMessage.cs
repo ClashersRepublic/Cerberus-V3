@@ -100,7 +100,6 @@ namespace CR.Servers.CoC.Packets.Messages.Client.Home
                             this.Reader.BaseStream.Position = 0;
                             this.Log();
                             Logging.Error(this.GetType(), this.Device, "Execute command failed! Server Command " + Command.Type + " is not available.");
-                            return;
                         }
                     }
 

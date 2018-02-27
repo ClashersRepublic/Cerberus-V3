@@ -73,22 +73,6 @@
                                                 }
                                             }
                                         }
-
-                                        Level.Player.TownHallLevel2++;
-                                    }
-                                    else if (Data.IsAllianceCastle)
-                                    {
-                                        Level.Player.CastleLevel++;
-                                        Level.Player.CastleTotalCapacity = Data.HousingSpace[Level.Player.CastleLevel];
-                                        Level.Player.CastleTotalSpellCapacity = Data.HousingSpaceAlt[Level.Player.CastleLevel];
-                                    }
-                                    else if (Data.IsTownHall)
-                                    {
-                                        Level.Player.TownHallLevel++;
-                                    }
-                                    else if (Data.IsBarrack2)
-                                    {
-                                        Level.Player.Variables.Village2BarrackLevel++;
                                     }
                                 }
                             }

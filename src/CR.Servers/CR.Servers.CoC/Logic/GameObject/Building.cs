@@ -485,6 +485,29 @@
         {
             this.UpgradeLevel = UpgradeLevel;
 
+            if (this.Level.Player != null)
+            {
+                if (BuildingData.IsAllianceCastle)
+                {
+                    if (!this.Locked)
+                    {
+                        this.Level.Player.SetAllianceCastleLevel(UpgradeLevel);
+                    }
+                }
+                else if (BuildingData.IsTownHall)
+                {
+                    this.Level.Player.TownHallLevel = UpgradeLevel;
+                }
+                else if (BuildingData.IsTownHall2)
+                {
+                    this.Level.Player.TownHallLevel2 = UpgradeLevel;
+                }
+                else if (BuildingData.IsBarrack2)
+                {
+                    this.Level.Player.Variables.Village2BarrackLevel = UpgradeLevel;
+                }
+            }
+
             ResourceProductionComponent ResourceProductionComponent = this.ResourceProductionComponent;
 
             ResourceProductionComponent?.SetProduction();

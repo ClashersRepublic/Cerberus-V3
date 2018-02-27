@@ -69,13 +69,6 @@
 
                         Player.Level.Load(Village);
 
-                        Player.TownHallLevel = GameObjectManager.TownHall.GetUpgradeLevel();
-                        Player.TownHallLevel2 = GameObjectManager.TownHall2.GetUpgradeLevel();
-                        Player.CastleLevel = GameObjectManager.Bunker.GetUpgradeLevel();
-
-                        Player.CastleTotalCapacity = GameObjectManager.Bunker.BuildingData.HousingSpace[Player.CastleLevel];
-                        Player.CastleTotalSpellCapacity = GameObjectManager.Bunker.BuildingData.HousingSpaceAlt[Player.CastleLevel];
-
                         if (this.Level >= 4)
                         {
                             GameObjectManager.Boat.SetUpgradeLevel(GameObjectManager.Boat.VillageObjectData.MaxLevel);
@@ -140,10 +133,6 @@
                                         }
                                     }
                                 }
-                            }
-                            else if (Building.BuildingData.IsBarrack2)
-                            {
-                                Player.Variables.Village2BarrackLevel = Building.GetUpgradeLevel();
                             }
                         }
 

@@ -568,6 +568,24 @@
             return Copy;
         }
 
+        internal void SetAllianceCastleLevel(int level)
+        {
+            this.CastleLevel = level;
+
+            if (this.CastleLevel == -1)
+            {
+                this.CastleTotalCapacity = 0;
+                this.CastleTotalSpellCapacity = 0;
+            }
+            else
+            {
+                BuildingData allianceCastleData = CSV.AllianceCastleData;
+
+                this.CastleTotalCapacity = allianceCastleData.HousingSpace[level];
+                this.CastleTotalSpellCapacity = allianceCastleData.HousingSpaceAlt[level];
+            }
+        }
+
         public override string ToString()
         {
             return this.HighID + "-" + this.LowID;

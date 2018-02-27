@@ -55,18 +55,6 @@
                                         Building.ConstructionTimer = null;
                                     }
 
-                                    if (Data.IsTownHall)
-                                    {
-                                        Player.TownHallLevel = Data.MaxLevel;
-                                    }
-
-                                    if (Data.IsAllianceCastle)
-                                    {
-                                        Player.CastleLevel = Data.MaxLevel;
-                                        Player.CastleTotalCapacity = Data.HousingSpace[Player.CastleLevel];
-                                        Player.CastleTotalSpellCapacity = Data.HousingSpaceAlt[Player.CastleLevel];
-                                    }
-
                                     Building.SetUpgradeLevel(Data.MaxLevel);
                                 });
 
@@ -128,16 +116,6 @@
                                             Building.ConstructionTimer = null;
                                         }
 
-                                        if (Data.IsTownHall2)
-                                        {
-                                            Player.TownHallLevel2 = Data.MaxLevel;
-                                        }
-
-                                        if (Data.IsBarrack2)
-                                        {
-                                            Player.Variables.Village2BarrackLevel = Data.MaxLevel;
-                                        }
-
                                         Building.SetUpgradeLevel(Data.MaxLevel);
                                     });
 
@@ -185,18 +163,7 @@
                                         {
                                             Building.ConstructionTimer = null;
                                         }
-
-                                        if (Data.IsTownHall)
-                                        {
-                                            Player.TownHallLevel = Data.MaxLevel;
-                                        }
-
-                                        if (Data.IsAllianceCastle)
-                                        {
-                                            Player.CastleLevel = Data.MaxLevel;
-                                            Player.CastleTotalCapacity = Data.HousingSpace[Player.CastleLevel];
-                                            Player.CastleTotalSpellCapacity = Data.HousingSpaceAlt[Player.CastleLevel];
-                                        }
+                                        
 
                                         Building.SetUpgradeLevel(Data.MaxLevel);
                                     });
@@ -233,16 +200,6 @@
                                         if (Building.Constructing)
                                         {
                                             Building.ConstructionTimer = null;
-                                        }
-
-                                        if (Data.IsTownHall2)
-                                        {
-                                            Player.TownHallLevel2 = Data.MaxLevel;
-                                        }
-
-                                        if (Data.IsBarrack2)
-                                        {
-                                            Player.Variables.Village2BarrackLevel = Data.MaxLevel;
                                         }
 
                                         Building.SetUpgradeLevel(Data.MaxLevel);

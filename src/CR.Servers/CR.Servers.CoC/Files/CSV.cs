@@ -17,6 +17,9 @@
 
         internal static Gamefiles Tables;
         internal static CharacterData Village2StartUnit;
+        internal static BuildingData TownHallData;
+        internal static BuildingData TownHallVillage2Data;
+        internal static BuildingData AllianceCastleData;
 
         internal static void Initialize()
         {
@@ -68,6 +71,26 @@
             CSV.Village2StartUnit = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(((GlobalData) CSV.Tables.Get(Gamefile.Globals).GetData("VILLAGE2_START_UNIT")).TextValue);
 
             List<Data> Buildings = CSV.Tables.Get(Gamefile.Buildings).Datas;
+
+            for (int i = 0; i < Buildings.Count; i++)
+            {
+                BuildingData buildingData = (BuildingData) Buildings[i];
+
+                if (buildingData.IsAllianceCastle)
+                {
+                    CSV.AllianceCastleData = buildingData;
+                }
+                else if (buildingData.IsTownHall)
+                {
+                    CSV.TownHallData = buildingData;
+                }
+
+                else if(buildingData.IsTownHall2)
+                {
+                    CSV.TownHallVillage2Data = buildingData;
+                }
+            }
+            
             StringBuilder Help = new StringBuilder();
             Help.AppendLine("Clashers Republic - AI Base Generator");
             Help.AppendLine("Available Building:");
