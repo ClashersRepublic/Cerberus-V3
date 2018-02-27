@@ -46,11 +46,10 @@
                             if (data.VillageType == 0)
                             {
                                 level.Player.Resources.Remove(resourceData, data.BuildCost[0]);
+
                                 if (data.IsAllianceCastle)
                                 {
-                                    level.Player.CastleLevel++;
-                                    level.Player.CastleTotalCapacity = data.HousingSpace[level.Player.CastleLevel];
-                                    level.Player.CastleTotalSpellCapacity = data.HousingSpaceAlt[level.Player.CastleLevel];
+                                    level.Player.SetAllianceCastleLevel(0);
                                 }
 
                                 building.Locked = false;
