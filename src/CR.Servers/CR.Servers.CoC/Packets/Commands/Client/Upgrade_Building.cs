@@ -63,14 +63,13 @@
                                                 BuildingData data2 = building2.BuildingData;
                                                 if (building2.Locked)
                                                 {
-                                                    if (data2.Locked)
-                                                        return;
-
+                                                    if (!data2.Locked)
+                                                    {
 #if DEBUG
-                                                    Logging.Info(this.GetType(),
-                                                        $"Builder Building: Unlocking {data2.Name} with ID {gameObject.Id}");
+                                                        Logging.Info(this.GetType(), $"Builder Building: Unlocking {data2.Name} with ID {gameObject.Id}");
 #endif
-                                                    building2.Locked = false;
+                                                        building2.Locked = false;
+                                                    }
                                                 }
                                             }
                                         }
