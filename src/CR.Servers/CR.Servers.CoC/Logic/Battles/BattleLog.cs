@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using CR.Servers.CoC.Files.CSV_Logic.Logic;
     using Newtonsoft.Json.Linq;
+    using CR.Servers.Titan;
 
     internal class BattleLog
     {
@@ -10,12 +11,12 @@
 
         internal Battle Battle;
 
-        internal List<JArray> Loots;
-        internal List<JArray> AvailableLoots;
-        internal List<JArray> Units;
-        internal List<JArray> CastleUnits;
-        internal List<JArray> Spells;
-        internal List<JArray> Levels;
+        internal LogicArrayList<JArray> Loots;
+        internal LogicArrayList<JArray> AvailableLoots;
+        internal LogicArrayList<JArray> Units;
+        internal LogicArrayList<JArray> CastleUnits;
+        internal LogicArrayList<JArray> Spells;
+        internal LogicArrayList<JArray> Levels;
 
         // Stats
 
@@ -45,12 +46,12 @@
         {
             this.Battle = battle;
 
-            this.Loots = new List<JArray>(8);
-            this.AvailableLoots = new List<JArray>(8);
-            this.Units = new List<JArray>(8);
-            this.CastleUnits = new List<JArray>(8);
-            this.Spells = new List<JArray>(8);
-            this.Levels = new List<JArray>(8);
+            this.Loots = new LogicArrayList<JArray>(8);
+            this.AvailableLoots = new LogicArrayList<JArray>(8);
+            this.Units = new LogicArrayList<JArray>(8);
+            this.CastleUnits = new LogicArrayList<JArray>(8);
+            this.Spells = new LogicArrayList<JArray>(8);
+            this.Levels = new LogicArrayList<JArray>(8);
 
             this.TownHallDestroyed = true;
             this.DestructionPercentage = 100;

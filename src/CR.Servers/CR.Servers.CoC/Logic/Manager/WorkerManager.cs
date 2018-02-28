@@ -24,20 +24,11 @@
 
         internal void AllocateWorker(GameObject GameObject)
         {
-            int index = -1;
+            int index = this.GameObjects.IndexOf(GameObject);
 
-            for (int i = 0; i < this.GameObjects.Count; i++)
+            if (index != -1)
             {
-                if (this.GameObjects[i].Id == GameObject.Id)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index == -1)
-            {
-                Logging.Error(this.GetType(), "LogicWorkerManager::allocateWorker called twice for same target!");
+                Logging.Error(this.GetType(), "WorkerManager::allocateWorker called twice for same target!");
                 return;
             }
 
@@ -46,24 +37,12 @@
 
         internal void DeallocateWorker(GameObject GameObject)
         {
-            int index = -1;
+            int index = this.GameObjects.IndexOf(GameObject);
 
-            for (int i = 0; i < this.GameObjects.Count; i++)
+            if (index != -1)
             {
-                if (this.GameObjects[i].Id == GameObject.Id)
-                {
-                    index = i;
-                    break;
-                }
+                this.GameObjects.Remove(index);
             }
-
-            if (index == -1)
-            {
-                Logging.Error(this.GetType(), "DeallocateWorker() - GameObject is not in array!");
-                return;
-            }
-
-            this.GameObjects.Remove(index);
         }
 
         internal GameObject GetShortestTaskGO()

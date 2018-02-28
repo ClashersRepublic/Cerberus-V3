@@ -1,9 +1,9 @@
 ﻿{
   "Game": {
-    "UpdateURL": "http://cocbetatest1.ddns.net/",
-    "PatchURL": "http://cocbetatest1.ddns.net/patch/",
-    "EventURL": "http://cocbetatest1.ddns.net/events/",
-    "GameAssetsURL": "http://cocbetatest1.ddns.net/patch/",
+    "UpdateURL": "http://192.168.0.105/",
+    "PatchURL": "http://192.168.0.105/patch/",
+    "EventURL": "http://192.168.0.105/events/",
+    "GameAssetsURL": "http://192.168.0.105/patch/",
     "GameDbURI": "mongodb://localhost:27017",
     "ClientMajorVersion": "9",
     "ClientMinorVersion": "256",

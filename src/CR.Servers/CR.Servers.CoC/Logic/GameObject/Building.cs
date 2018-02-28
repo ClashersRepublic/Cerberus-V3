@@ -577,6 +577,15 @@
         {
             BuildingData Data = this.BuildingData;
 
+            if (this.VillageType == 0)
+            {
+                this.Level.WorkerManager.DeallocateWorker(this);
+            }
+            else
+            {
+                this.Level.WorkerManagerV2.DeallocateWorker(this);
+            }
+            
             if (Data.Locked)
             {
                 JsonHelper.GetJsonBoolean(Json, "locked", out this.Locked);

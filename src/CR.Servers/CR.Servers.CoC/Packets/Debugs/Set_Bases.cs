@@ -53,6 +53,26 @@
                             }
                         }
 
+                        var WorkerManager = this.Device.GameMode.Level.WorkerManager;
+                        if (WorkerManager.GameObjects.Count != 0)
+                        {
+                            do
+                            {
+                                WorkerManager.GameObjects.Remove(0);
+                            } while (WorkerManager.GameObjects.Count != 0);
+
+                        }
+
+                        var WorkerManagerV2 = this.Device.GameMode.Level.WorkerManagerV2;
+                        if (WorkerManagerV2.GameObjects.Count != 0)
+                        {
+                            do
+                            {
+                                WorkerManagerV2.GameObjects.Remove(0);
+                            } while (WorkerManagerV2.GameObjects.Count != 0);
+
+                        }
+
                         for (int i = 0; i < GameObjectManager.GameObjects.Length; i++)
                         {
                             GameObjectManager.GameObjects[i][0].Clear();

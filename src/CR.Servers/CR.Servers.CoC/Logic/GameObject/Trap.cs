@@ -250,6 +250,15 @@
         {
             TrapData Data = this.TrapData;
 
+            if (this.VillageType == 0)
+            {
+                this.Level.WorkerManager.DeallocateWorker(this);
+            }
+            else
+            {
+                this.Level.WorkerManagerV2.DeallocateWorker(this);
+            }
+
             int ConstructionTime;
             int ConstructionTimeEnd;
             if (JsonHelper.GetJsonNumber(Json, "const_t", out ConstructionTime) && JsonHelper.GetJsonNumber(Json, "const_t_end", out ConstructionTimeEnd))
