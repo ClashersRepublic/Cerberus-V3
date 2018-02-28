@@ -2,15 +2,16 @@
 {
     using System.Collections.Generic;
     using CR.Servers.CoC.Core;
+    using CR.Servers.Titan;
 
     internal class WorkerManager
     {
-        internal List<GameObject> GameObjects;
+        internal LogicArrayList<GameObject> GameObjects;
         internal int WorkerCount;
 
         public WorkerManager()
         {
-            this.GameObjects = new List<GameObject>();
+            this.GameObjects = new LogicArrayList<GameObject>();
         }
 
         internal int FreeWorkers
@@ -23,9 +24,20 @@
 
         internal void AllocateWorker(GameObject GameObject)
         {
-            if (this.GameObjects.Contains(GameObject))
+            int index = -1;
+
+            for (int i = 0; i < this.GameObjects.Count; i++)
             {
-                Logging.Error(this.GetType(), "AllocateWorker() called twice for same target!");
+                if (this.GameObjects[i].Id == GameObject.Id)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
+            {
+                Logging.Error(this.GetType(), "LogicWorkerManager::allocateWorker called twice for same target!");
                 return;
             }
 
@@ -34,10 +46,24 @@
 
         internal void DeallocateWorker(GameObject GameObject)
         {
-            if (!this.GameObjects.Remove(GameObject))
+            int index = -1;
+
+            for (int i = 0; i < this.GameObjects.Count; i++)
+            {
+                if (this.GameObjects[i].Id == GameObject.Id)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
             {
                 Logging.Error(this.GetType(), "DeallocateWorker() - GameObject is not in array!");
+                return;
             }
+
+            this.GameObjects.Remove(index);
         }
 
         internal GameObject GetShortestTaskGO()
