@@ -92,12 +92,16 @@
         internal void Restart()
         {
             var interval = default(TimeSpan);
-            if (!TimeSpan.TryParse(Extension.ParseConfigString("Server:RestartInterval"), out interval))
+            if (int.TryParse(Extension.ParseConfigString("Server:RestartIntervalInMinute"), out int Minute))
+            {
+                interval = TimeSpan.FromMinutes(Minute);
+            }
+            else
             {
                 interval = TimeSpan.FromMinutes(30);
             }
 
-            if (Math.Abs(interval.TotalSeconds) > 60)
+            if (Math.Abs(interval.TotalMinutes) > 1)
             {
                 Console.WriteLine($"Server Restarter has been loaded successfully. Restart Interval : {interval.TotalSeconds} seconds");
 

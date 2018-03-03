@@ -18,6 +18,6 @@
     }
   },
   "Server": {
-    "RestartInterval" :  0 
+    "RestartIntervalInMinute" : 1
   } 
 }
