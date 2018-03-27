@@ -251,3 +251,4 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/src/CR.Servers/CR.Servers.CoC.5.X/CR.Servers.CoC.csproj.DotSettings
