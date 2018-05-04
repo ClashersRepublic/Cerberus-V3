@@ -186,6 +186,7 @@
 
         private static void LoadDebugs()
         {
+            Factory.Debugs.Add("AddCastleUnit", typeof(Add_Castle_Unit));
             Factory.Debugs.Add("AddSpells", typeof(Add_Spells));
             Factory.Debugs.Add("AddUnits", typeof(Add_Units));
             Factory.Debugs.Add("AiBase", typeof(AI_Generate_Base)); // Elite Command.

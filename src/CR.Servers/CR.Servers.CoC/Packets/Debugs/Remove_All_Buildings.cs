@@ -53,11 +53,6 @@
                     Player.AllianceUnits.Clear();
                 }
 
-                if (Player.AllianceSpells != null)
-                {
-                    Player.AllianceSpells.Clear();
-                }
-
                 Data TownHall = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000001);
                 Data Castle = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000014);
                 Data Builder = CSV.Tables.Get(Gamefile.Buildings).GetDataWithID(1000015);

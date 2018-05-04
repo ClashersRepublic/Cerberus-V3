@@ -16,7 +16,6 @@
 
         [JsonProperty] internal int AllianceHighId;
         [JsonProperty] internal int AllianceLowId;
-        [JsonProperty] internal AllianceUnitSlots AllianceSpells;
         [JsonProperty] internal AllianceUnitSlots AllianceUnits;
 
         [JsonProperty] internal int CastleLevel = -1;
@@ -65,7 +64,6 @@
             this.SpellUpgrades = new DataSlots();
             this.HeroUpgrades = new DataSlots();
             this.AllianceUnits = new AllianceUnitSlots();
-            this.AllianceSpells = new AllianceUnitSlots();
 
             this.HeroHealth = new DataSlots();
             this.HeroStates = new DataSlots();

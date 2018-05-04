@@ -84,7 +84,7 @@
 
                                                 DonationStream.New = false;
 
-                                                Target.AllianceSpells.Add(Unit);
+                                                Target.AllianceUnits.Add(Unit);
                                                 Unit.DonatorId = Player.UserId;
                                                 DonationStream.Units.Add(Unit, Player.UserId);
 

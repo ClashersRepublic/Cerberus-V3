@@ -380,7 +380,7 @@
             this.HeroHealth.Encode(_Packet);
             this.HeroStates.Encode(_Packet);
 
-            _Packet.AddInt(this.AllianceUnits.Count + this.AllianceSpells.Count);
+            _Packet.AddInt(this.AllianceUnits.Count);
 
             foreach (UnitItem Unit in this.AllianceUnits)
             {
@@ -388,15 +388,7 @@
                 _Packet.AddInt(Unit.Count);
                 _Packet.AddInt(Unit.Level);
             }
-
-            foreach (UnitItem Spell in this.AllianceSpells)
-            {
-                _Packet.AddInt(Spell.Data);
-                _Packet.AddInt(Spell.Count);
-                _Packet.AddInt(Spell.Level);
-            }
-
-
+             
             _Packet.AddInt(this.Tutorials.Count);
             foreach (int Tutorial in this.Tutorials)
             {

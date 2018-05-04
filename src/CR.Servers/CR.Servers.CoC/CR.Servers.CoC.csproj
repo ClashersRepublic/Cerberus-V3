@@ -436,6 +436,7 @@
     <Compile Include="Packets\Commands\Client\Upgrade_Hero.cs" />
     <Compile Include="Packets\Commands\Client\Speed_Up_All_Training_V2.cs" />
     <Compile Include="Packets\Debug.cs" />
+    <Compile Include="Packets\Debugs\Add_Castle_Unit.cs" />
     <Compile Include="Packets\Debugs\Add_Spells.cs" />
     <Compile Include="Packets\Debugs\Add_Units.cs" />
     <Compile Include="Packets\Debugs\Clear_All_Obstacles.cs" />
