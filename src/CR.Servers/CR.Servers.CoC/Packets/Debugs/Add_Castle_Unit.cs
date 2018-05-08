@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CR.Servers.CoC.Core;
 using CR.Servers.CoC.Files;
 using CR.Servers.CoC.Files.CSV_Logic.Logic;
 using CR.Servers.CoC.Logic;
 using CR.Servers.CoC.Logic.Enums;
 using CR.Servers.CoC.Packets.Commands.Server;
+using CR.Servers.CoC.Packets.Messages.Server.Avatar;
 using CR.Servers.CoC.Packets.Messages.Server.Home;
 using CR.Servers.Logic.Enums;
 using NLog.Targets;
@@ -31,32 +33,50 @@ namespace CR.Servers.CoC.Packets.Debugs
 
         internal override void Process()
         {
-            Level level = this.Device.GameMode.Level;
-            level.Player.AllianceUnits.Clear();
-            foreach (CharacterData Data in CSV.Tables.Get(Gamefile.Characters).Datas)
+            if (this.Parameters.Length >= 1)
             {
-                if (!Data.DisableProduction)
+                int Id;
+                if (int.TryParse(this.Parameters[0], out Id))
                 {
-                    if (Data.VillageType == 0)
-                    {
-                        if (!Data.IsSecondaryTroop)
-                        {
-                            if (!Data.EnabledByCalendar)
-                            {
-                                int UnitLevel = level.Player.GetUnitUpgradeLevel(Data);
-                                this.Device.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(this.Device)
-                                {
-                                    Donator = "❤DebugCommand❤",
-                                    UnitType = 0,
-                                    UnitId = Data.GlobalId,
-                                    Level = UnitLevel
-                                });
+                    CharacterData data = (CharacterData)CSV.Tables.Get(Gamefile.Characters).GetDataWithInstanceID(Id);
 
-                                level.Player.AllianceUnits.Add(Data.GlobalId, 999, UnitLevel);
-                            }
-                        }
-                    }
+                    Level level = this.Device.GameMode.Level;
+                    level.Player.AllianceUnits.Clear();
+
+                    int CastleMax = level.Player.CastleTotalCapacity;
+
+                    do
+                    {
+                        int UnitLevel = level.Player.GetUnitUpgradeLevel(data);
+                        this.Device.GameMode.CommandManager.AddCommand(new Alliance_Unit_Received(this.Device)
+                        {
+                            Donator = "❤DebugCommand❤",
+                            UnitType = 0,
+                            UnitId = data.GlobalId,
+                            Level = UnitLevel
+                        });
+
+
+                        level.Player.AllianceUnits.Add(data.GlobalId, 1, UnitLevel);
+                        CastleMax -= data.HousingSpace;
+
+                    } while (CastleMax >= data.HousingSpace);
                 }
+            }
+            else
+            {
+                new AvatarStreamEntryMessage(this.Device)
+                {
+                    StreamEntry = new AllianceMailAvatarStreamEntry(this.Device.GameMode.Level.Player)
+                    {
+                        LowId = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+                        SenderName = "[System] Command Manager",
+                        SenderLeague = 22,
+                        Message = Constants.DonationHelp.ToString()
+                    }
+                }.Send();
+
+                this.SendChatMessage("Please check your MailBox!");
             }
         }
     }
