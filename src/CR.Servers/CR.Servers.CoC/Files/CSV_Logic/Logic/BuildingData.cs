@@ -1,18 +1,31 @@
+using System;
+using CR.Servers.CoC.Files.CSV_Helpers;
+using CR.Servers.CoC.Logic.Enums;
+using CR.Servers.Files.CSV_Reader;
+
 ﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
-    using System;
-    using CR.Servers.CoC.Files.CSV_Helpers;
-    using CR.Servers.CoC.Logic.Enums;
-    using CR.Servers.Files.CSV_Reader;
-
     internal class BuildingData : Data
     {
+        internal BuildingData GearUpBuildingData;
+
+        internal ResourceData BuildResourceData;
+        internal ResourceData ProducesResourceData;
+        internal ResourceData AmmoResourceData;
+
+        internal CharacterData DefenceTroopCharacterData;
+        internal CharacterData DefenceTroopCharacter2Data;
+        internal CharacterData PreferredTargetData;
+
         internal BuildingClassData BuildingClassData;
         internal BuildingClassData SecondaryTargetingClassData;
         internal BuildingClassData ShopBuildingClassData;
 
-        internal ResourceData BuildResourceData;
-        internal ResourceData ProducesResourceData;
+        internal SpellData AOESpellData;
+        internal SpellData AOESpellAlternateData;
+        internal SpellData HitSpellData;
+
+        internal HeroData HeroTypeData;
 
         public BuildingData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
@@ -369,23 +382,43 @@
 
         internal override void Process()
         {
+            this.GearUpBuildingData = (BuildingData) CSV.Tables.Get(Gamefile.Buildings).GetData(this.GearUpBuilding);
+ 
+            if(this.GearUpResourceData != null)
+            {
+              if(this.GearUpBuildingData == null)
+              {
+                throw new Exception("Buildings.csv: Gearup Building does not exist.");
+              }
+            }
+
+            this.ProducesResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.ProducesResource);
+            this.AmmoResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.AmmoResource);
+            this.BuildResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
+      
+            if(this.BuildResourceData == null)
+            {
+              throw new Exception("Buildings.csv: Build Resource is invalid!.");
+            }
+
+            this.DefenceTroopCharacterData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.DefenceTroopCharacter);
+            this.DefenceTroopCharacter2Data = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.DefenceTroopCharacter2);
+            this.PreferredTargetData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.PreferredTarget);
+
             this.BuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.BuildingClass);
             this.SecondaryTargetingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.SecondaryTargetingClass);
             this.ShopBuildingClassData = (BuildingClassData) CSV.Tables.Get(Gamefile.Building_Classes).GetData(this.ShopBuildingClass);
-
-
-            this.BuildResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.BuildResource);
-            this.ProducesResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.ProducesResource);
-
-            if (this.BuildingClassData == null)
+ 
+            if(this.BuildingClassData == null)
             {
-                throw new Exception("Buildings.csv: Building Class does not exist.");
+              throw new Exception("Buildings.csv: Building Class does not exist.");
             }
 
-            if (this.BuildResourceData == null)
-            {
-                throw new Exception("Buildings.csv: Build Resource is invalid!.");
-            }
+            this.AOESpellData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.AOESpell);
+            this.AOESpellAlternateData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.AOESpellAlternate);
+            this.HitSpellData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.HitSpell);
+
+            this.HeroTypeData = (HeroData) CSV.Tables.Get(Gamefile.Heroes).GetData(this.HeroType);
         }
 
         internal int GetBuildTime(int Level)
