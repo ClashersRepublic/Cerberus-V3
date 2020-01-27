@@ -9,7 +9,6 @@ All programs developed by the Clashers' Republic Development Team are licensed b
 * CR.Servers.CoC - Clash of Clans Server
 * CR.Servers.CR - Clash Royale Server
 * CR.Hasher - Hash Generator
-* CR.Proxy - Supercell Proxy
 * CR.SCEditor - SC Editor
 * CR.LZMAManager - LZMA Manager
 * CR.LibraryPatcher - Library Patcher
