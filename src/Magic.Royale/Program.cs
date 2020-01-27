@@ -7,6 +7,7 @@ using Magic.Royale.Logic.Structure.Game;
 using Magic.Royale.Logic.Structure.Slots;
 using Magic.Royale.Logic.Structure.Slots.Items;
 using Newtonsoft.Json;
+//old Clash royale 8.709 MySQL
 
 namespace Magic.Royale
 {
