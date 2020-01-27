@@ -11,6 +11,7 @@ namespace Magic.ClashOfClans
     internal class Program
     {
         public static int OP;
+//old Code MySQL
 
         public static void Main(string[] args)
         {
