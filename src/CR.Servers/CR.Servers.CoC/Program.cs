@@ -17,6 +17,7 @@ namespace CR.Servers.CoC
         public static IConfigurationRoot Configuration { get; set; }
 
         public static int Op;
+//new mongodb Clash of Clans 9.256.x
 
         private static void Main()
         {
