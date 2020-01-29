@@ -11,7 +11,7 @@ namespace CRepublic.LibraryPatcher
         internal static void Main(string[] args)
         {
             Console.Title = $"Clashers' Republic Library Patcher";
-
+            Directory.CreateDirectory("Files");
             DirectoryInfo _folder = Directory.CreateDirectory("Patched");
             string[] _paths = Directory.GetFiles("Files", "*lib*", SearchOption.TopDirectoryOnly);
 
@@ -30,7 +30,7 @@ namespace CRepublic.LibraryPatcher
                         {
                             Console.WriteLine("    - Offest       : " + (Offset - 32) + " [0x" + (Offset - 32).ToString("X") + "]");
                             Console.WriteLine("    - Key (Hex)    : " + "0x" + BitConverter.ToString(_file.ToList().GetRange((int)Offset - 32, 32).ToArray()).Replace("-", ", 0x"));
-                            Console.WriteLine("    - Replace Key and Patch SharedKey Generation?");
+                            Console.WriteLine("Replace Key and pach? [Y/N]");
                             Console.Write("\b");
 
                             if (Console.ReadKey(false).Key == ConsoleKey.Y)
@@ -50,7 +50,7 @@ namespace CRepublic.LibraryPatcher
                                 Patched.InsertRange((int)4251436, Constants.SharedKeyPatch);
 
 
-                                using (FileStream FStream = File.Create(_folder.FullName + "/CoC-libg.so", Patched.Count, FileOptions.None))
+                                using (FileStream FStream = File.Create(_folder.FullName + "/libg.so", Patched.Count, FileOptions.None))
                                 {
                                     FStream.Write(Patched.ToArray(), 0, Patched.Count);
                                 }
@@ -85,7 +85,7 @@ namespace CRepublic.LibraryPatcher
                         {
                             Console.WriteLine("    - Offest       : " + (Offset - 32) + " [0x" + (Offset - 32).ToString("X") + "]");
                             Console.WriteLine("    - Key (Hex)    : " + "0x" + BitConverter.ToString(_file.ToList().GetRange((int)Offset - 32, 32).ToArray()).Replace("-", ", 0x"));
-                            Console.WriteLine("    - Replace?");
+                            Console.WriteLine("Replace Key? [Y/N]");
                             Console.Write("\b");
 
                             if (Console.ReadKey(false).Key == ConsoleKey.Y)
@@ -94,7 +94,7 @@ namespace CRepublic.LibraryPatcher
                                 Patched.RemoveRange((int)Offset - 32, 32);
                                 Patched.InsertRange((int)Offset - 32, Constants.CustomKey);
 
-                                using (FileStream FStream = File.Create(_folder.FullName + "/CR-libg.so", Patched.Count, FileOptions.None))
+                                using (FileStream FStream = File.Create(_folder.FullName + "/libg.so", Patched.Count, FileOptions.None))
                                 {
                                     FStream.Write(Patched.ToArray(), 0, Patched.Count);
                                 }
@@ -140,7 +140,7 @@ namespace CRepublic.LibraryPatcher
                         {
                             Console.WriteLine("    - Offest       : " + (Offset - 32) + " [0x" + (Offset - 32).ToString("X") + "]");
                             Console.WriteLine("    - Key (Hex)    : " + "0x" + BitConverter.ToString(_file.ToList().GetRange((int)Offset - 32, 32).ToArray()).Replace("-", ", 0x"));
-                            Console.WriteLine("    - Replace?");
+                            Console.WriteLine("Replace Key? [Y/N]");
                             Console.Write("\b");
 
                         }
