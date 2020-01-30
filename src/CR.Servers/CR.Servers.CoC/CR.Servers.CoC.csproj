@@ -254,6 +254,7 @@
     <Compile Include="Logic\Devices.cs" />
     <Compile Include="Logic\Duel\Entry\Village2AttackProgressEntry.cs" />
     <Compile Include="Logic\Duel\Entry\Village2AttackEntry.cs" />
+    <Compile Include="Logic\Enums\AchievementsType.cs" />
     <Compile Include="Logic\Enums\AllianceEvent.cs" />
     <Compile Include="Logic\Enums\AvatarStream.cs" />
     <Compile Include="Logic\Enums\FriendGameState.cs" />
