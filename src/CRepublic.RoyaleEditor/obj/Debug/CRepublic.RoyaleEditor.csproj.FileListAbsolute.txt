@@ -1,0 +1,42 @@
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\SupercellUtil.dll
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.exe.config
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.exe
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.pdb
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\MathNet.Numerics.dll
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\System.dll
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\MathNet.Numerics.xml
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\Builds\Debug\System.xml
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csprojAssemblyReference.cache
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.g.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.MainForm.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.ChooseTextureType.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.SearchExport.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.ReplaceTexture.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.CloneExport.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.Properties.Resources.resources
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.GenerateResource.cache
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.CoreCompileInputs.cache
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.CopyComplete
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.exe
+C:\Users\e3xme\Desktop\HuzaClash\Cerberus-V3-7828761df237849717ea5f400e410bbbcb40c4b5\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.pdb
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\SupercellUtil.dll
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.exe.config
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.exe
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\Clashers Republic Assets Editor.pdb
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\MathNet.Numerics.dll
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\System.dll
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\MathNet.Numerics.xml
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\Builds\Debug\System.xml
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csprojAssemblyReference.cache
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.g.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.MainForm.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.ChooseTextureType.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.SearchExport.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.ReplaceTexture.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.CloneExport.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CR.Assets.Editor.Properties.Resources.resources
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.GenerateResource.cache
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.CoreCompileInputs.cache
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\CRepublic.RoyaleEditor.csproj.CopyComplete
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.exe
+C:\Users\e3xme\Desktop\Huza-Clash-master\src\CRepublic.RoyaleEditor\obj\Debug\Clashers Republic Assets Editor.pdb
