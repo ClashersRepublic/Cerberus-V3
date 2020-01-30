@@ -23,7 +23,9 @@
         {
             SendChatMessage("~ Server Status ~ \n" +
                 "* Online Players : " + (Resources.Devices.Count.ToString() + " \n" +
-                "* RAM usage of the Emulator : " + System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / (1024 * 1024) + " MB / 32768 MB \n"));
+                "* In-Memory Players :" + (Resources.Accounts.Count.ToString() + " \n" +
+                "* In-Memory Clans :" + (Resources.Clans.Count.ToString() + " \n" +
+                "* RAM usage of the Emulator : " + System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / (1024 * 1024) + " MB / 32768 MB \n"))));
         }
     }
 }
