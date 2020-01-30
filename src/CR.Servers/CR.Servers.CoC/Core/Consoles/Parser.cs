@@ -92,25 +92,14 @@
                             }
                         case "/help":
                             {
-                                Console.Clear();
-                                Console.ResetColor();
-                                Console.SetOut(new Prefixed());
-                                Console.SetBufferSize(System.Console.WindowWidth, System.Console.WindowHeight);
-                                Console.WriteLine(Environment.NewLine);
-                                //Console.ForegroundColor = ConsoleColor.Blue;
-                                Servers.Core.Consoles.Colorful.Console.Write(@"
-
-                                                    !---- HELP ----!
-                                       # ------------------------------------- #
-                                       # ---------/stats  server status------- #
-                                       # --/stop,/exit,/shutdown stop server-- #
-                                       # --------/clear clear Screaen--------- #
-                                       # --/debug GetListOfCommands before use-# 
-                                       # ------------------------------------- #
-
-                            ", Color.BlueViolet);
-                                Console.ResetColor();
-                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine();
+                                Console.WriteLine("!---- HELP ----!");
+                                Console.WriteLine("# ------------------------------------- #");
+                                Console.WriteLine("# ---------/stats  server status------- #");
+                                Console.WriteLine("# --/stop,/exit,/shutdown stop server-- #");
+                                Console.WriteLine("# --------/clear clear Screaen--------- #");
+                                Console.WriteLine("# --/debug GetListOfCommands before use-#");
+                                Console.WriteLine("# ------------------------------------- #");
                                 break;
                             }
 
