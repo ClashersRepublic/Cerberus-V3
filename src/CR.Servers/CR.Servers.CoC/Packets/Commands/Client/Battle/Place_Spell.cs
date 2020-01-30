@@ -45,7 +45,7 @@
 
                 if (this.IsAllianceSpell)
                 {
-                    Item Unit = Level.Player.AllianceUnits.GetByData(this.Spell, this.Level);
+                    Item Unit = Level.Player.AllianceSpells.GetByData(this.Spell, this.Level);
 
                     if (Unit != null)
                     {
