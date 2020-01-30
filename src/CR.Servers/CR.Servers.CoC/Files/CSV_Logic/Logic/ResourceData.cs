@@ -1,14 +1,10 @@
-using System;
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
 ﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class ResourceData : Data
     {
-        internal ResourceData  WarRefResourceData;
-
         public ResourceData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
         }
@@ -32,10 +28,5 @@ using CR.Servers.Files.CSV_Reader;
         public string WarRefResource { get; set; }
         public string BundleIconExportName { get; set; }
         public int VillageType { get; set; }
-
-        internal override void Process()
-        {
-            this.WarRefResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.WarRefResource);
-        }
     }
 }

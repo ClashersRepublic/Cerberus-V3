@@ -9,9 +9,6 @@
         internal ResourceData TrainingResourceData;
         internal ResourceData UpgradeResourceData;
 
-        internal ObstacleData SpawnObstacleData;
-        internal CharacterData SummonTroopData;
-
         public SpellData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
         }
@@ -104,9 +101,6 @@
         {
             this.TrainingResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
             this.UpgradeResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
-
-            this.SpawnObstacleData = (ObstacleData) CSV.Tables.Get(Gamefile.Obstacles).GetData(this.SpawnObstacle);
-            this.SummonTroopData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.SummonTroop);
         }
 
         internal int GetUpgradeTime(int Level)

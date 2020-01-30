@@ -32,24 +32,6 @@
         public int CartLootCapDarkElixir { get; set; }
         public int CartLootReengagementDarkElixir { get; set; }
 
-        public int StrengthMaxTroopTypes { get; set; }
-        public int Totem { get; set; }
-        public int TreasuryGold { get; set; }
-        public int TreasuryElixir { get; set; }
-        public int TreasuryDarkElixir { get; set; }
-        public int TreasuryWarGold { get; set; }
-        public int TreasuryWarElixir { get; set; }
-        public int TreasuryWarDarkElixir { get; set; }
-        public int FriendlyCost { get; set; }
-        public int PackElixir { get; set; }
-        public int PackGold { get; set; }
-        public int PackDarkElixir { get; set; }
-        public int PackGold2 { get; set; }
-        public int PackElixir2 { get; set; }
-        public int DuelPrizeResourceCap { get; set; }
-        public int AttackCostVillage2 { get; set; }
-        public int ChangeTroopCost { get; set; }
-
         private void LoadTable(DataTable Table)
         {
             Table.Datas.ForEach(Data =>

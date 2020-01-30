@@ -1,8 +1,8 @@
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.Files.CSV_Reader;
-
 ﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class ShieldData : Data
     {
         public ShieldData(Row Row, DataTable DataTable) : base(Row, DataTable)
@@ -18,31 +18,5 @@ using CR.Servers.Files.CSV_Reader;
         public string IconSWF { get; set; }
         public string IconExportName { get; set; }
         public int CooldownS { get; set; }
-        public int LockedAboveScore { get; set; }
-
-        internal int GetShieldTimeH()
-        {
-            return this.TimeH * 3600;
-        }
-
-        internal int GetGuardTimeH()
-        {
-            return this.GuardTimeH * 3600;
-        }
-
-        internal int GetDiamondsCost()
-        {
-            return this.Diamonds;
-        }
-
-        internal int GetCooldownSecond()
-        {
-            return this.CooldownS;
-        }
-
-        internal int GetLockedAboveScore()
-        {
-            return this.LockedAboveScore;
-        }
     }
 }

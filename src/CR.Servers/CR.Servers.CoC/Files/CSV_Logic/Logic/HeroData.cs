@@ -1,19 +1,12 @@
-using CR.Servers.CoC.Files.CSV_Helpers;
-using CR.Servers.CoC.Logic.Enums;
-using CR.Servers.Files.CSV_Reader;
-
 ﻿namespace CR.Servers.CoC.Files.CSV_Logic.Logic
 {
+    using CR.Servers.CoC.Files.CSV_Helpers;
+    using CR.Servers.CoC.Logic.Enums;
+    using CR.Servers.Files.CSV_Reader;
+
     internal class HeroData : Data
     {
         internal ResourceData UpgradeResourceData;
-        internal ResourceData TrainingResourceData;
-
-        internal CharacterData AbilityAffectsCharacterData;
-        internal CharacterData AbilitySummonTroopData;
-
-        internal SpellData AuraSpellData;
-        internal SpellData RetributionSpellData;
 
         public HeroData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
@@ -140,31 +133,11 @@ using CR.Servers.Files.CSV_Reader;
         internal override void Process()
         {
             this.UpgradeResourceData = (ResourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.UpgradeResource);
-            this.TrainingResourceData = (ReaourceData) CSV.Tables.Get(Gamefile.Resources).GetData(this.TrainingResource);
-
-            this.AbilityAffectsCharacterData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.AbilityAffectsCharacter);
-            this.AbilitySummonTroopData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.AbilitySummonTroop);
-
-            this.AuraSpellData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.AuraSpell);
-            this.RetributionSpellData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.RetributionSpell);
         }
 
         internal int GetUpgradeTime(int Level)
         {
             return this.UpgradeTimeH[Level] * 3600;
-        }
-
-        internal int GetRegenerationTimeMinutes(int Level)
-        {
-            return this.RegenerationTimeMinutes * 60;
-        }
-
-        internal SpellData GetAbilitySpell(int Level)
-        {
-            get
-            {
-                return (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.AbilitySpell[Level]);
-            }
         }
     }
 }
