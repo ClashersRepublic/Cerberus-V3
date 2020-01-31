@@ -9,6 +9,12 @@
     {
         internal ResourceData BuildResourceData;
 
+        internal SpellData SpellsData;
+
+        internal CharacterData PreferredTargetData;
+        internal CharacterData SpawnedCharGroundData;
+        internal CharacterData SpawnedCharAirData;
+
         public TrapData(Row Row, DataTable DataTable) : base(Row, DataTable)
         {
         }
@@ -78,6 +84,7 @@
         public bool EnabledByCalendar { get; set; }
         public int DirectionCount { get; set; }
         public bool HasAltMode { get; set; }
+        public int UpgradeLevelByTH { get; set; }
 
         internal int MaxLevel
         {
@@ -95,6 +102,13 @@
             {
                 throw new Exception("Traps.csv: Build Resource is invalid!.");
             }
+
+            this.SpellsData = (SpellData) CSV.Tables.Get(Gamefile.Spells).GetData(this.Spell);
+
+            this.PreferredTargetData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.PreferredTarget);
+            this.SpawnedCharGroundData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.SpawnedCharGround);
+            this.SpawnedCharAirData = (CharacterData) CSV.Tables.Get(Gamefile.Characters).GetData(this.SpawnedCharAir);
+
         }
 
         internal int GetBuildTime(int Level)
